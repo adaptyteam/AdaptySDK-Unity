@@ -1,0 +1,3 @@
+include ':unitywrapper'
+include ':app'
+rootProject.name = "unity"

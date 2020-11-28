@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dependencies>
+
+  <androidPackages>
+    <androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:0.7.+">
+      <repositories>
+        <repository>https://jitpack.io</repository>
+      </repositories>
+    </androidPackage>
+  </androidPackages>
+
+  <iosPods>
+    <iosPod name="Adapty" version="~> 1.10.0" minTargetSdk="9.0">
+    </iosPod>
+  </iosPods>
+
+</dependencies>
