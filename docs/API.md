@@ -153,12 +153,35 @@ Adapty.getPaywalls(this);
 - `offerId`, string (optional), an identifier of promotional offer from App Store Connect.
 - `gameObject`, MonoBehaviour, game object with a script that implements [OnMakePurchase](#OnMakePurchase) callback.
 
-Fetch products.
+Initiate purchasing of a product.
 
 *Example:*
 
 ```c#
+// Retrieve products using Adapty.getPaywalls(), when the user selects a product for purchase, pass it to the Adapty.makePurchase() method.
+ProductModel product = selectedProduct;
+
 Adapty.makePurchase(product, null, this);
+```
+
+When the purchase is completed, the [OnMakePurchase](#OnMakePurchase) callback is invoked.
+```c#
+public void OnMakePurchase(PurchaserInfoModel purchaserInfo, string receipt, Dictionary<string, object> validationResult, ProductModel product, AdaptyError error) {
+	// Check if there was an error.
+	if (error != null) {
+		Debug.Log("Error message: " + error.message + ", code: " + error.code);
+	} else {
+		// No error - the purchase is successful.
+		// User information, who made the purchase, if previously identified.
+		if (purchaserInfo != null) {
+			Debug.Log("Purchaser customerUserId: " + purchaserInfo.customerUserId);
+		}
+		// Confirmation receipt from Apple or purchase token from Google.
+		Debug.Log("Receipt/PurchaseToken: " + receipt);
+		// The purchased product.
+		Debug.Log("Product vendorProductId: " + product.vendorProductId);
+	}
+}
 ```
 
 ---
