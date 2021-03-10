@@ -1,7 +1,9 @@
-<h1 align="center">
-<img src="https://raw.githubusercontent.com/adaptyteam/AdaptySDK-iOS/master/adapty.png"><br />
-Adapty Unity SDK
-</h1>
+# [Adapty](https://adapty.io) Unity SDK — in-app purchases start here
+
+<img src="https://github.com/adaptyteam/AdaptySDK-iOS/blob/master/adapty-schema.png">
+Adapty Unity SDK is an open-source framework that makes implementing in-app subscriptions fast and easy. It’s 100% open-source and lightweight.
+
+## Table of content
 
 * [Requirements](#requirements)
 * [Installation](#installation)
