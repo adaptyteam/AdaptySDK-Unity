@@ -3,6 +3,10 @@
 <img src="https://github.com/adaptyteam/AdaptySDK-iOS/blob/master/adapty-schema.png">
 Adapty Unity SDK is an open-source framework that makes implementing in-app subscriptions fast and easy. It’s 100% open-source and lightweight.
 
+## [Join our Discord community](https://go.adapty.io/subhub-community-unity-rep)
+
+We've created a community for mobile app developers and marketers. Learn how to monetize your app, ask questions, post jobs, read industry news and analytics. Ad free.
+
 ## Table of content
 
 * [Requirements](#requirements)
