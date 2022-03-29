@@ -1,4 +1,20 @@
-# [Adapty](https://adapty.io) Unity SDK — in-app purchases start here
+<h1 align="center" style="border-bottom: none">
+    <b>
+        <a href="https://adapty.io/?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity">Adapty</a> Unity SDK<br>
+    </b>
+    ⭐️  In-app purchases start here  ⭐️ <br>
+</h1>
+
+<p align="center">
+<a href="https://go.adapty.io/subhub-community-unity-rep"><img src="https://img.shields.io/badge/Adapty-discord-purple"></a>
+</p>
+
+
+<p align="center">
+    <a href="https://adapty.io/?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity"><b>Website</b></a> •
+    <a href="https://go.adapty.io/subhub-community-unity-rep"><b>Discord</b></a> •
+    <a href="https://twitter.com/AdaptyTeam"><b>Twitter</b></a>
+</p>
 
 <img src="https://github.com/adaptyteam/AdaptySDK-iOS/blob/master/adapty-schema.png">
 Adapty Unity SDK is an open-source framework that makes implementing in-app subscriptions fast and easy. It’s 100% open-source and lightweight.
