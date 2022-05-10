@@ -2,340 +2,459 @@ package com.adapty.unity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
 
 import com.adapty.Adapty;
-import com.adapty.api.AdaptyError;
-import com.adapty.api.AttributionType;
-import com.adapty.api.entity.DataState;
-import com.adapty.api.entity.paywalls.OnPromoReceivedListener;
-import com.adapty.api.entity.paywalls.PaywallModel;
-import com.adapty.api.entity.paywalls.ProductModel;
-import com.adapty.api.entity.paywalls.PromoModel;
-import com.adapty.api.entity.profile.update.ProfileParameterBuilder;
-import com.adapty.api.entity.purchaserInfo.OnPurchaserInfoUpdatedListener;
-import com.adapty.api.entity.purchaserInfo.model.PurchaserInfoModel;
-import com.adapty.api.entity.validate.GoogleValidationResult;
-import com.adapty.purchase.PurchaseType;
+import com.adapty.errors.AdaptyError;
+import com.adapty.errors.AdaptyErrorCode;
+import com.adapty.models.AttributionType;
+import com.adapty.models.GoogleValidationResult;
+import com.adapty.models.PaywallModel;
+import com.adapty.models.ProductModel;
+import com.adapty.models.ProductSubscriptionPeriodModel;
+import com.adapty.models.PromoModel;
+import com.adapty.models.PurchaserInfoModel;
+import com.adapty.models.SubscriptionUpdateParamModel;
 import com.adapty.utils.AdaptyLogLevel;
-
+import com.adapty.utils.ProfileParameterBuilder;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
-import org.jetbrains.annotations.NotNull;
+import com.unity3d.player.UnityPlayer;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import kotlin.Unit;
 
 public class AdaptyAndroidWrapper {
-    private final static String tag = "AdaptyAndroidWrapper";
 
-    private static final String Callback_identify = "OnIdentify";
-    private static final String Callback_logout = "OnLogout";
-    private static final String Callback_getPaywalls = "OnGetPaywalls";
-    private static final String Callback_makePurchase = "OnMakePurchase";
-    private static final String Callback_restorePurchases = "OnRestorePurchases";
-    private static final String Callback_syncPurchases = "OnSyncPurchases";
-    private static final String Callback_validatePurchase = "OnValidateGooglePurchase";
-    private static final String Callback_getPurchaserInfo = "OnGetPurchaserInfo";
-    private static final String Callback_setOnPurchaserInfoUpdatedListener = "OnPurchaserInfoUpdated";
-    private static final String Callback_updateAttribution = "OnUpdateAttribution";
-    private static final String Callback_updateProfile = "OnUpdateProfile";
-    private static final String Callback_getPromo = "OnGetPromo";
-    private static final String Callback_setOnPromoReceivedListener = "OnPromoReceived";
+    private static final Gson gson =
+            new GsonBuilder()
+                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                    .registerTypeAdapter(ProductSubscriptionPeriodModel.class, new ProductSubscriptionPeriodModelSerializer())
+                    .registerTypeAdapter(ProductModel.class, new ProductModelSerializer())
+                    .registerTypeAdapter(SubscriptionUpdateParamModel.class, new SubscriptionUpdateParamModelDeserializer())
+                    .registerTypeAdapter(ProfileParameterBuilder.class, new ProfileParameterBuilderDeserializer())
+                    .registerTypeAdapter(AdaptyError.class, new AdaptyErrorSerializer())
+                    .create();
 
-    private static final Stack<Callback> callbacks = new Stack<>();
+    private static final ReentrantReadWriteLock paywallsProductsLock = new ReentrantReadWriteLock();
+    private static final List<PaywallModel> paywalls = new ArrayList<>();
+    private static final Map<String, ProductModel> products = new HashMap<>();
+    private static PaywallModel promoPaywall = null;
+    private static volatile AdaptyUnityPushHandler pushHandler = null;
 
-    public static Callback getCallback() {
-        if (!callbacks.empty()) {
-            return callbacks.pop();
+    private static Handler unityMainThreadHandler;
+    private static AdaptyAndroidMessageHandler messageHandler;
+
+    public static void registerMessageHandler(AdaptyAndroidMessageHandler handler) {
+        messageHandler = handler;
+        if(unityMainThreadHandler == null) {
+            unityMainThreadHandler = new Handler();
+            listenPurchaserInfoUpdates();
+            listenPromoUpdates();
+            listenRemoteConfigUpdates();
         }
-        return null;
     }
 
-    public static void SendMessage(String objectName, String method, String message) {
-        Callback callback = new Callback();
-        callback.objectName = objectName;
-        callback.method = method;
-        callback.message = message;
-        callbacks.push(callback);
+    public static void runOnUnityThread(Runnable runnable) {
+        if(unityMainThreadHandler != null && runnable != null) {
+            unityMainThreadHandler.post(runnable);
+        }
     }
 
-    public static void setLogLevel(int logLevel) {
-        Log.d(tag, "setLogLevel");
+    public static void setLogLevel(String logLevel) {
         switch (logLevel) {
-            case 0:
-                Adapty.setLogLevel(AdaptyLogLevel.NONE);
-                break;
-
-            case 1:
+            case "errors":
                 Adapty.setLogLevel(AdaptyLogLevel.ERROR);
                 break;
-
-            case 2:
+            case "verbose":
                 Adapty.setLogLevel(AdaptyLogLevel.VERBOSE);
+                break;
+            case "all":
+                Adapty.setLogLevel(AdaptyLogLevel.ALL);
+                break;
+            default:
+                Adapty.setLogLevel(AdaptyLogLevel.NONE);
                 break;
         }
     }
 
-    public static void activate(Context context, String key) {
-        Log.d(tag, "activate");
-        Adapty.activate(context, key);
+    public static void activate(Context context, String key, String customerUserId, boolean observerMode) {
+        Adapty.activate(context, key, customerUserId, observerMode);
     }
 
-    public static void identify(String customerUserId, String objectName) {
-        Log.d(tag, "identify");
+    public static void identify(String customerUserId, AdaptyAndroidCallback callback) {
         Adapty.identify(customerUserId, (AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
-            }
-            Gson gson = new Gson();
-            SendMessage(objectName, Callback_identify, gson.toJson(message));
+            sendEmptyResultOrError(error, callback);
             return Unit.INSTANCE;
         });
     }
 
-    public static void logout(String objectName) {
-        Log.d(tag, "logout");
+    public static void logout(AdaptyAndroidCallback callback) {
         Adapty.logout((AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
-            }
-            Gson gson = new Gson();
-            SendMessage(objectName, Callback_logout, gson.toJson(message));
+            sendEmptyResultOrError(error, callback);
             return Unit.INSTANCE;
         });
     }
 
-    public static void getPaywalls(String objectName) {
-        Log.d(tag, "getPaywalls");
-        Adapty.getPaywalls((List<PaywallModel> paywalls, ArrayList<ProductModel> products, DataState state, AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (paywalls != null) {
-                ArrayList<Map<String, Object>> paywallsArray = new ArrayList<>();
-                for (PaywallModel paywall : paywalls) {
-                    paywallsArray.add(AdaptyModels.paywallToHashtable(paywall));
+    public static void getPaywalls(boolean forceUpdate, AdaptyAndroidCallback callback) {
+        Adapty.getPaywalls(forceUpdate, (List<PaywallModel> paywalls, List<ProductModel> products, AdaptyError error) -> {
+            Map<String, Object> message = new HashMap<>();
+            if (error != null) {
+                message.put("error", error);
+            } else {
+                Map<String, Object> successMessage = new HashMap<>();
+                if (paywalls != null) {
+                    cachePaywalls(paywalls);
+                    successMessage.put("paywalls", paywalls);
                 }
-                message.put("paywalls", paywallsArray);
-            }
-            if (products != null) {
-                ArrayList<Map<String, Object>> productsArray = new ArrayList<>();
-                for (ProductModel product : products) {
-                    productsArray.add(AdaptyModels.productToHashtable(product));
+                if (products != null) {
+                    cacheProducts(products);
+                    successMessage.put("products", products);
                 }
-                message.put("products", productsArray);
+                message.put("success", successMessage);
             }
-            message.put("state", state.toString().toLowerCase());
-            if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
-            }
-            Gson gson = new Gson();
-            SendMessage(objectName, Callback_getPaywalls, gson.toJson(message));
+            sendMessageWithResult(gson.toJson(message), callback);
             return Unit.INSTANCE;
         });
     }
 
-    public static void makePurchase(Activity activity, String productJson, String objectName) {
-        Log.d(tag, "makePurchase");
-        Gson gson = new Gson();
-        ProductModel product = AdaptyModels.hashtableToProduct(gson.fromJson(productJson, new TypeToken<Map<String, Object>>(){}.getType()));
-        Adapty.makePurchase(activity, product, (PurchaserInfoModel purchaserInfo, String purchaseToken, GoogleValidationResult googleValidationResult, ProductModel _product, AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (purchaserInfo != null) {
-                message.put("purchaserInfo", AdaptyModels.purchaserInfoToHashtable(purchaserInfo));
-            }
-            if (purchaseToken != null) {
-                message.put("purchaseToken", purchaseToken);
-            }
-            if (googleValidationResult != null) {
-                message.put("validationResult", googleValidationResult);
-            }
-            if (_product != null) {
-                message.put("product", AdaptyModels.productToHashtable(_product));
-            }
-            if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
-            }
-            SendMessage(objectName, Callback_makePurchase, gson.toJson(message));
-            return Unit.INSTANCE;
-        });
-    }
-
-    public static void restorePurchases(String objectName) {
-        Log.d(tag, "restorePurchases");
-        Adapty.restorePurchases((PurchaserInfoModel purchaserInfo, List<GoogleValidationResult> googleValidationResults, AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (purchaserInfo != null) {
-                message.put("purchaserInfo", AdaptyModels.purchaserInfoToHashtable(purchaserInfo));
-            }
-            if (googleValidationResults != null) {
-                ArrayList<Map<String, Object>> validationResultsArray = new ArrayList<>();
-                    for (GoogleValidationResult googleValidationResult : googleValidationResults) {
-                        validationResultsArray.add(AdaptyModels.googleValidationResultToHashtable(googleValidationResult));
-                    }
-                    message.put("validationResults",  validationResultsArray);
-            }
-            if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
-            }
-            Gson gson = new Gson();
-            SendMessage(objectName, Callback_restorePurchases, gson.toJson(message));
-            return Unit.INSTANCE;
-        });
-    }
-
-    public static void syncPurchases(String objectName) {
-        Log.d(tag, "syncPurchases");
-        Adapty.syncPurchases((AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
-            }
-            Gson gson = new Gson();
-            SendMessage(objectName, Callback_syncPurchases, gson.toJson(message));
-            return Unit.INSTANCE;
-        });
-    }
-
-    public static void validatePurchase(int purchaseTypeInt, String productId, String purchaseToken, String purchaseOrderId, String productJson, String objectName) {
-        Log.d(tag, "validatePurchase");
-        PurchaseType purchaseType = PurchaseType.INAPP;
-        if (purchaseTypeInt == 1) {
-            purchaseType = PurchaseType.SUBS;
+    public static void makePurchase(String productId, String variationId, String subscriptionUpdateParamsJson, AdaptyAndroidCallback callback) {
+        SubscriptionUpdateParamModel subscriptionUpdateParams = isNullOrBlank(subscriptionUpdateParamsJson) ? null : gson.fromJson(subscriptionUpdateParamsJson, SubscriptionUpdateParamModel.class);
+        ProductModel product = findProduct(productId, variationId);
+        if (product == null) {
+            sendBridgeRelatedError(10001, "Not found product (id: " + productId + ", variationId: " + variationId + ")", callback);
+            return;
         }
-        Gson gson = new Gson();
-        ProductModel product = AdaptyModels.hashtableToProduct(gson.fromJson(productJson, new TypeToken<Map<String, Object>>(){}.getType()));
-        Adapty.validatePurchase(purchaseType, productId, purchaseToken, purchaseOrderId, product,
-                (PurchaserInfoModel purchaserInfo, String _purchaseToken, GoogleValidationResult googleValidationResult, AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (purchaserInfo != null) {
-                message.put("purchaserInfo", AdaptyModels.purchaserInfoToHashtable(purchaserInfo));
-            }
-            if (googleValidationResult != null) {
-                message.put("validationResult", googleValidationResult);
-            }
+        Adapty.makePurchase(UnityPlayer.currentActivity, product, subscriptionUpdateParams, (PurchaserInfoModel purchaserInfo, String purchaseToken, GoogleValidationResult googleValidationResult, ProductModel _product, AdaptyError error) -> {
+            Map<String, Object> message = new HashMap<>();
             if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
+                message.put("error", error);
+            } else {
+                Map<String, Object> successMessage = new HashMap<>();
+                if (purchaserInfo != null) {
+                    successMessage.put("purchaser_info", purchaserInfo);
+                }
+                if (purchaseToken != null) {
+                    successMessage.put("purchase_token", purchaseToken);
+                }
+                if (_product != null) {
+                    successMessage.put("product", _product);
+                }
+                message.put("success", successMessage);
             }
-            SendMessage(objectName, Callback_validatePurchase, gson.toJson(message));
+            sendMessageWithResult(gson.toJson(message), callback);
             return Unit.INSTANCE;
         });
     }
 
-    public static void getPurchaserInfo(String objectName) {
-        Log.d(tag, "getPurchaserInfo");
-        Adapty.getPurchaserInfo((PurchaserInfoModel purchaserInfo, DataState state, AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (purchaserInfo != null) {
-                message.put("purchaserInfo", AdaptyModels.purchaserInfoToHashtable(purchaserInfo));
-            }
-            message.put("state", state.toString().toLowerCase());
+    public static void restorePurchases(AdaptyAndroidCallback callback) {
+        Adapty.restorePurchases((PurchaserInfoModel purchaserInfo, List<GoogleValidationResult> googleValidationResults, AdaptyError error) -> {
+            Map<String, Object> message = new HashMap<>();
             if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
+                message.put("error", error);
+            } else {
+                Map<String, Object> successMessage = new HashMap<>();
+                if (purchaserInfo != null) {
+                    successMessage.put("purchaser_info", purchaserInfo);
+                }
+                message.put("success", successMessage);
             }
-            Gson gson = new Gson();
-            SendMessage(objectName, Callback_getPurchaserInfo, gson.toJson(message));
+            sendMessageWithResult(gson.toJson(message), callback);
             return Unit.INSTANCE;
         });
     }
 
-    public static void setOnPurchaserInfoUpdatedListener(String objectName) {
-        Log.d(tag, "setOnPurchaserInfoUpdatedListener");
-        OnPurchaserInfoUpdatedListener listener = new OnPurchaserInfoUpdatedListener() {
-            @Override
-            public void onPurchaserInfoReceived(@NotNull PurchaserInfoModel purchaserInfo) {
-                Hashtable<String, Object> message = new Hashtable<>();
-                message.put("purchaserInfo", AdaptyModels.purchaserInfoToHashtable(purchaserInfo));
-                Gson gson = new Gson();
-                SendMessage(objectName, Callback_setOnPurchaserInfoUpdatedListener, gson.toJson(message));
+    public static void getPurchaserInfo(boolean forceUpdate, AdaptyAndroidCallback callback) {
+        Adapty.getPurchaserInfo(forceUpdate, (PurchaserInfoModel purchaserInfo, AdaptyError error) -> {
+            if (purchaserInfo != null) {
+                Map<String, Object> message = new HashMap<>();
+                message.put("success", purchaserInfo);
+                sendMessageWithResult(gson.toJson(message), callback);
             }
-        };
-        Adapty.setOnPurchaserInfoUpdatedListener(listener);
+            if (error != null) {
+                sendEmptyResultOrError(error, callback);
+            }
+            return Unit.INSTANCE;
+        });
     }
 
-    public static void updateAttribution(String attributionJson, int sourceInt, String networkUserId, String objectName) {
-        Log.d(tag, "getPurchaserInfo");
-        Gson gson = new Gson();
+    public static void listenPurchaserInfoUpdates() {
+        Adapty.setOnPurchaserInfoUpdatedListener(purchaserInfo -> {
+            sendDataToMessageHandler("purchaser_info_update", gson.toJson(purchaserInfo));
+        });
+    }
+
+    public static void updateAttribution(String attributionJson, String sourceName, String networkUserId, AdaptyAndroidCallback callback) {
         Map<String, Object> attribution = gson.fromJson(attributionJson, new TypeToken<Map<String, Object>>(){}.getType());
         AttributionType source;
-        switch (sourceInt) {
+        switch (sourceName) {
             default:
-            case 0:
+            case "appsflyer":
                 source = AttributionType.APPSFLYER;
                 break;
 
-            case 1:
+            case "adjust":
                 source = AttributionType.ADJUST;
                 break;
 
-            case 2:
+            case "branch":
                 source = AttributionType.BRANCH;
                 break;
 
-            case 3:
+            case "custom":
                 source = AttributionType.CUSTOM;
                 break;
         }
         Adapty.updateAttribution(attribution, source, networkUserId, (AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
-            }
-            SendMessage(objectName, Callback_updateAttribution, gson.toJson(message));
+            sendEmptyResultOrError(error, callback);
             return Unit.INSTANCE;
         });
     }
 
-    public static void updateProfile(String paramsJson, String objectName) {
-        Log.d(tag, "updateProfile");
-        Gson gson = new Gson();
-        Map<String, Object> paramsDictionary = gson.fromJson(paramsJson, new TypeToken<Map<String, Object>>(){}.getType());
-        ProfileParameterBuilder params = AdaptyModels.hashtableToProfileParameterBuilder(paramsDictionary);
+    public static void setExternalAnalyticsEnabled(boolean enabled, AdaptyAndroidCallback callback) {
+        Adapty.setExternalAnalyticsEnabled(enabled, error -> {
+            sendEmptyResultOrError(error, callback);
+            return Unit.INSTANCE;
+        });
+    }
+
+    public static void setTransactionVariationId(String transactionId, String variationId, AdaptyAndroidCallback callback) {
+        if (isNullOrBlank(transactionId)) {
+            sendMissingParamError("No transaction id passed", callback);
+            return;
+        }
+        if (isNullOrBlank(variationId)) {
+            sendMissingParamError("No variation id passed", callback);
+            return;
+        }
+        Adapty.setTransactionVariationId(transactionId, variationId, error -> {
+            sendEmptyResultOrError(error, callback);
+            return Unit.INSTANCE;
+        });
+    }
+
+    public static void logShowPaywall(String variationId, AdaptyAndroidCallback callback) {
+        PaywallModel paywall = findPaywall(variationId);
+        if (paywall != null) {
+            Adapty.logShowPaywall(paywall);
+            sendEmptyResultOrError(null, callback);
+        } else {
+            sendBridgeRelatedError(10002, "Not found paywall (with variationId: " + variationId + ")", callback);
+        }
+    }
+
+    public static void setFallbackPaywalls(String paywalls, AdaptyAndroidCallback callback) {
+        if (paywalls == null) {
+            sendMissingParamError("No paywalls passed", callback);
+        } else {
+            Adapty.setFallbackPaywalls(paywalls, error -> {
+                sendEmptyResultOrError(error, callback);
+                return Unit.INSTANCE;
+            });
+        }
+    }
+
+    public static void updateProfile(String paramsJson, AdaptyAndroidCallback callback) {
+        ProfileParameterBuilder params = gson.fromJson(paramsJson, ProfileParameterBuilder.class);
 
         Adapty.updateProfile(params, (AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
-            if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
-            }
-            SendMessage(objectName, Callback_updateProfile, gson.toJson(message));
+            sendEmptyResultOrError(error, callback);
             return Unit.INSTANCE;
         });
     }
 
-    public static void getPromo(String objectName) {
-        Log.d(tag, "getPromo");
+    public static void getPromo(AdaptyAndroidCallback callback) {
         Adapty.getPromo((PromoModel promo, AdaptyError error) -> {
-            Hashtable<String, Object> message = new Hashtable<>();
+            Map<String, Object> message = new HashMap<>();
             if (promo != null) {
-                message.put("promo", AdaptyModels.promoToHashtable(promo));
+                message.put("success", promo);
+                sendMessageWithResult(gson.toJson(message), callback);
+            } else if (error == null) {
+                try {
+                    paywallsProductsLock.writeLock().lock();
+                    promoPaywall = null;
+                } finally {
+                    paywallsProductsLock.writeLock().unlock();
+                }
+                message.put("success", null);
+                sendMessageWithResult(gson.toJson(message), callback);
             }
             if (error != null) {
-                message.put("error", AdaptyModels.adaptyErrorToHashtable(error));
+                sendEmptyResultOrError(error, callback);
             }
-            Gson gson = new Gson();
-            SendMessage(objectName, Callback_getPromo, gson.toJson(message));
             return Unit.INSTANCE;
         });
     }
 
-    public static void setOnPromoReceivedListener(String objectName) {
-        Log.d(tag, "setOnPromoReceivedListener");
-        OnPromoReceivedListener listener = new OnPromoReceivedListener() {
-            @Override
-            public void onPromoReceived(@NotNull PromoModel promo) {
-                Hashtable<String, Object> message = new Hashtable<>();
-                message.put("promo", AdaptyModels.promoToHashtable(promo));
-                Gson gson = new Gson();
-                SendMessage(objectName, Callback_setOnPromoReceivedListener, gson.toJson(message));
+    public static void listenPromoUpdates() {
+        Adapty.setOnPromoReceivedListener(promo -> {
+            try {
+                paywallsProductsLock.writeLock().lock();
+                promoPaywall = promo.getPaywall();
+            } finally {
+                paywallsProductsLock.writeLock().unlock();
             }
-        };
-        Adapty.setOnPromoReceivedListener(listener);
+            sendDataToMessageHandler("promo_received", gson.toJson(promo));
+        });
+    }
+
+    public static void listenRemoteConfigUpdates() {
+        Adapty.setOnPaywallsForConfigReceivedListener(paywalls -> {
+            sendDataToMessageHandler("remote_config_update", gson.toJson(paywalls));
+        });
+    }
+
+    public static void newPushToken(String pushToken) {
+        if (!isNullOrBlank(pushToken)) {
+            Adapty.refreshPushToken(pushToken);
+        }
+    }
+
+    public static void pushReceived(String pushMessageJson) {
+        Map<String, String> data = gson.fromJson(pushMessageJson, new TypeToken<Map<String, String>>(){}.getType());
+        AdaptyUnityPushHandler pushHandler = getOrCreatePushHandler();
+        if (pushHandler != null) {
+            pushHandler.handleNotification(data);
+        }
+    }
+
+    public static void handlePromoIntent(Intent intent) {
+        Adapty.handlePromoIntent(intent, (promoModel, adaptyError) -> Unit.INSTANCE);
+    }
+
+    private static ProductModel findProduct(String productId, String variationId) {
+        try {
+            paywallsProductsLock.readLock().lock();
+            if (variationId != null) {
+                PaywallModel paywall = findPaywall(variationId);
+                if (paywall != null) {
+                    for (ProductModel product: paywall.getProducts()) {
+                        if (product.getVendorProductId().equals(productId)) {
+                            return product;
+                        }
+                    }
+                }
+                return null;
+            } else {
+                return products.get(productId);
+            }
+        } finally {
+            paywallsProductsLock.readLock().unlock();
+        }
+    }
+
+    private static PaywallModel findPaywall(String variationId) {
+        if (variationId == null) return null;
+        try {
+            paywallsProductsLock.readLock().lock();
+            for (PaywallModel paywall: paywalls) {
+                if (variationId.equals(paywall.getVariationId())) {
+                    return paywall;
+                }
+            }
+            return (promoPaywall != null && variationId.equals(promoPaywall.getVariationId())) ? promoPaywall : null;
+        } finally {
+            paywallsProductsLock.readLock().unlock();
+        }
+    }
+
+    private static void cachePaywalls(List<PaywallModel> newPaywalls) {
+        try {
+            paywallsProductsLock.writeLock().lock();
+            paywalls.clear();
+            paywalls.addAll(newPaywalls);
+        } finally {
+            paywallsProductsLock.writeLock().unlock();
+        }
+    }
+
+    private static void cacheProducts(List<ProductModel> newProducts) {
+        try {
+            paywallsProductsLock.writeLock().lock();
+            products.clear();
+            for (ProductModel product: newProducts) {
+                products.put(product.getVendorProductId(), product);
+            }
+        } finally {
+            paywallsProductsLock.writeLock().unlock();
+        }
+    }
+
+    private static AdaptyUnityPushHandler getOrCreatePushHandler() {
+        if (pushHandler == null) {
+            synchronized (AdaptyAndroidWrapper.class) {
+                if (pushHandler == null) {
+                    Activity activity = UnityPlayer.currentActivity;
+                    if (activity != null) {
+                        try {
+                            Bundle metadata = activity.getPackageManager()
+                                    .getApplicationInfo(activity.getPackageName(), PackageManager.GET_META_DATA)
+                                    .metaData;
+                            AdaptyUnityPushHandler handler = new AdaptyUnityPushHandler(
+                                    activity.getApplicationContext(),
+                                    (metadata != null && metadata.getString("AdaptyNotificationClickAction") != null) ? metadata.getString("AdaptyNotificationClickAction") : "ADAPTY_PROMO_CLICK_ACTION",
+                                    (metadata != null) ? metadata.getInt("AdaptyNotificationSmallIcon", R.drawable.ic_adapty_promo_push) : R.drawable.ic_adapty_promo_push
+                            );
+                            pushHandler = handler;
+                        } catch (Exception e) { }
+                    }
+                }
+            }
+        }
+        return pushHandler;
+    }
+
+    private static boolean isNullOrBlank(String str) {
+        return str == null || str.equals("") || str.trim().equals("");
+    }
+
+    private static void sendMessageWithResult(String message, AdaptyAndroidCallback callback) {
+        runOnUnityThread(() -> callback.onHandleResult(message));
+    }
+
+    private static void sendMissingParamError(String errorMessage, AdaptyAndroidCallback callback) {
+        Map<String, Object> message = new HashMap<>();
+        Map<String, Object> errorMap = new HashMap<>();
+        errorMap.put("message", errorMessage);
+        errorMap.put("adapty_code", AdaptyErrorCode.MISSING_PARAMETER.getValue());
+        message.put("error", errorMap);
+        sendMessageWithResult(gson.toJson(message), callback);
+    }
+
+    private static void sendEmptyResultOrError(AdaptyError error, AdaptyAndroidCallback callback) {
+        Map<String, Object> message = new HashMap<>();
+        if (error != null) {
+            message.put("error", error);
+        } else {
+            message.put("success", true);
+        }
+        sendMessageWithResult(gson.toJson(message), callback);
+    }
+
+    private static void sendBridgeRelatedError(int code, String text, AdaptyAndroidCallback callback) {
+        Map<String, Object> message = new HashMap<>();
+        Map<String, Object> error = new HashMap<>();
+        error.put("adapty_code", code);
+        error.put("message", text);
+        message.put("error", error);
+        sendMessageWithResult(gson.toJson(message), callback);
+    }
+
+    private static void sendDataToMessageHandler(String key, String data) {
+        runOnUnityThread(() -> {
+            if (messageHandler != null) {
+                messageHandler.onMessage(key, data);
+            }
+        });
     }
 }

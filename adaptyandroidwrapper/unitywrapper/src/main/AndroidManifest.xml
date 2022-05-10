@@ -1,5 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.adapty.unity">
 
-    /
+    <application>
+        <provider
+            android:name=".AdaptyInitProvider"
+            android:authorities="${applicationId}.AdaptyInitProvider"
+            android:enabled="true"
+            android:exported="false"
+            android:initOrder="200" />
+
+    </application>
 </manifest>

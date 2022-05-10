@@ -1,17 +1,19 @@
-**.meta
-*.meta
 .DS_Store
 *.log
+*.vs
+*.vscode
+*.vsconfig
+/obj
 Logs/
 Packages/
-ProjectSettings/
 Temp/
 Library/
 /*/outputs/
-adapty-*.unitypackage
 
 
 #android studio
+*.sln
+*.csproj
 build
 gen
 .gradle
