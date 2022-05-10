@@ -1,39 +1,39 @@
 <h1 align="center" style="border-bottom: none">
     <b>
-        <a href="https://adapty.io?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter">Adapty</a> Unity SDK<br>
+        <a href="https://adapty.io?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity">Adapty</a> Unity SDK<br>
     </b>
     ⭐️  In-app purchases start here  ⭐️ <br>
 </h1>
 
 <p align="center">
 <a href="https://go.adapty.io/subhub-community-flutter-rep"><img src="https://img.shields.io/badge/Adapty-discord-purple"></a>
-<a href="https://github.com/adaptyteam/AdaptySDK-Flutter/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg"></a>
+<a href="https://github.com/adaptyteam/AdaptySDK-Unity/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg"></a>
 </p>
 
 
 <p align="center">
-    <a href="https://adapty.io?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter"><b>Website</b></a> •
+    <a href="https://adapty.io?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity"><b>Website</b></a> •
     <a href="https://go.adapty.io/subhub-community-flutter-repp"><b>Discord</b></a> •
     <a href="https://twitter.com/AdaptyTeam"><b>Twitter</b></a>
 </p>
 
 ![Adapty: CRM for mobile apps with subscriptions](adapty-schema.png)
 
-Adapty SDK is an open-source framework that makes implementing in-app subscriptions in Flutter fast and easy. It’s 100% open-source, native and lightweight.
+Adapty SDK is an open-source framework that makes implementing in-app subscriptions in Unity fast and easy. It’s 100% open-source, native and lightweight.
 
 ## Install SDK to grow subscriptions:
 
-- [Price testing for paywalls on the fly](https://docs.adapty.io/docs/ab-test?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter)
+- [Price testing for paywalls on the fly](https://docs.adapty.io/docs/ab-test?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity)
 Test different prices, durations, offers, messages, and designs simultaneously, all without new app releases.
-- [Win back subscribers](https://docs.adapty.io/docs/promo-campaigns?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter)
+- [Win back subscribers](https://docs.adapty.io/docs/promo-campaigns?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity)
 Return churned subscribers with promotional trigger-based push notifications.
-- [Get your customer's payment history](https://docs.adapty.io/docs/profiles-crm?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter)
+- [Get your customer's payment history](https://docs.adapty.io/docs/profiles-crm?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity)
 Explore user's payment events from starting the trial to subscription cancellation or billing issues.
-- [Forward in-app purchases events](https://docs.adapty.io/docs/events?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter)
+- [Forward in-app purchases events](https://docs.adapty.io/docs/events?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity)
 Send subscription events to 3rd party analytics, attribution, and ad services with no coding. Even if a user uninstalled an app.
-- [Implement in-app purchases with no server code](https://docs.adapty.io/docs/flutter-sdk-configuration?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter)
+- [Implement in-app purchases with no server code](https://docs.adapty.io/docs/flutter-sdk-configuration?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity)
 In-app purchases with server-side receipt validation in minutes. Apple Promotional Offers supported out-of-the-box.
-- [Analytics](https://docs.adapty.io/docs/analytics-charts?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter)
+- [Analytics](https://docs.adapty.io/docs/analytics-charts?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity)
 Start analyzing real-time metrics of your app with advanced filters, such as ad network, ad campaign, country, A/B test, etc.
 - 24/7 support
 
@@ -42,7 +42,6 @@ Start analyzing real-time metrics of your app with advanced filters, such as ad 
 * [External Dependency Manager plugin](https://github.com/googlesamples/unity-jar-resolver)
 
 ## Getting Started
-<!-- [documentation](https://docs.adapty.io/docs/flutter-sdk-installation?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Flutter) -->
 
 Please refer to our documentation to install and configure Adapty SDK. Set up purchases in hours instead of weeks :rocket:
 - [Installation](/docs/installation.md)
