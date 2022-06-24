@@ -37,8 +37,6 @@ namespace AdaptySDK.Android
             return new CallbackHandler(action);
         }
 
-#if !UNITY_EDITOR
-
         private static readonly object m_Lock = new object();
 
         private static bool m_IsInitialized = false;
@@ -52,11 +50,7 @@ namespace AdaptySDK.Android
                 }
             }
         }
-#else
-        internal static void InitializeOnce() { }
-#endif
 
     }
 #endif
-
 }

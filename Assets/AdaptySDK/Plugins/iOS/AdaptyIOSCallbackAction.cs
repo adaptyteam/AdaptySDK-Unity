@@ -4,6 +4,16 @@ using UnityEngine;
 
 namespace AdaptySDK.iOS
 {
+    internal static class ExceptionGetFullMessage
+    {
+        internal static string GetFullMessage(this Exception ex)
+        {
+            return ex.InnerException == null
+                 ? ex.Message
+                 : ex.Message + " --> " + ex.InnerException.GetFullMessage();
+        }
+    }
+
 #if UNITY_IOS
     internal static class AdaptyIOSCallbackAction {
         private delegate void MessageDelegate(string type, string data);
@@ -34,7 +44,7 @@ namespace AdaptySDK.iOS
                 }
             }
             catch(Exception e) {
-                Debug.LogError("Failed to invoke callback " + action + " with arg " + data + ": " + e.Message);
+                Debug.LogError("Failed to invoke callback " + action + " with arg " + data + ": " + e.GetFullMessage());
             }
         }
 
@@ -55,7 +65,6 @@ namespace AdaptySDK.iOS
             return ObjectToIntPtr(action);
         }
 
-#if !UNITY_EDITOR
 
         private static readonly object m_Lock = new object();
         private static bool m_IsInitialized = false;
@@ -70,13 +79,9 @@ namespace AdaptySDK.iOS
                 }
             }
         }
-#else
-        internal static void InitializeOnce() { }
-#endif
 
-
-            [DllImport("__Internal", EntryPoint = "AdaptyUnity_registerCallbackHandler")]
+        [DllImport("__Internal", EntryPoint = "AdaptyUnity_registerCallbackHandler")]
         private static extern void RegisterCallbackDelegate(MessageDelegate messageDelegate,CallbackDelegate callbackDelegate);
     }
 #endif
-    }
+}
