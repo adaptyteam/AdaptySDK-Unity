@@ -107,14 +107,11 @@ namespace AdaptySDK
             }
         }
 
-
-        internal static bool ResponseHasError(JSONNode response)
+        internal static Error ExtructErrorFromResponse(JSONNode response)
         {
-            if (response == null || response.IsNull) return false;
-            var error = response["error"];
-            return error != null && !error.IsNull;
+            if (response == null || response.IsNull || !response.IsObject) return null;
+            return ErrorFromJSON(response["error"]);
         }
-
 
 
         public static Error ErrorFromJSON(JSONNode response)

@@ -9,13 +9,6 @@ using AdaptyAndroidCallback = AdaptyAndroidCallbackAction;
 
 internal static class AdaptyAndroid
 {
-        private static bool ResponseHasError(JSONNode response)
-        {
-            if (response == null || response.IsNull) return false;
-            var error = response["error"];
-            return error != null && !error.IsNull;
-        }
-
         private static AndroidJavaClass AdaptyAndroidClass = new AndroidJavaClass("com.adapty.unity.AdaptyAndroidWrapper");
 
         //internal static void Activate(string key, bool observeMode, string customerUserId)
@@ -37,15 +30,15 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(new Adapty.Error(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
-
             }));
         }
 
@@ -55,13 +48,14 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -72,13 +66,15 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : new Adapty.GetPaywallsResponse(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(new Adapty.GetPaywallsResponse(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.GetPaywallsResponse,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -89,13 +85,15 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : Adapty.PurchaserInfoFromJSON(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(Adapty.PurchaserInfoFromJSON(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.PurchaserInfo,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -106,13 +104,15 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : new Adapty.RestorePurchasesResponse(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(new Adapty.RestorePurchasesResponse(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.RestorePurchasesResponse,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -123,13 +123,15 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : new Adapty.MakePurchaseResponse(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(new Adapty.MakePurchaseResponse(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.MakePurchaseResponse,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -139,13 +141,14 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -155,13 +158,14 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -171,13 +175,15 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : Adapty.PromoFromJSON(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(Adapty.PromoFromJSON(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -187,13 +193,14 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -204,13 +211,14 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -224,13 +232,14 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -241,13 +250,14 @@ internal static class AdaptyAndroid
             {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }

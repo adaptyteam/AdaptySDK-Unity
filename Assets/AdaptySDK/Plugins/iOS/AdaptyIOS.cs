@@ -39,12 +39,14 @@ namespace AdaptySDK.iOS
             _Identify(customerUserId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
-                } else
+                    completionHandler(error);
+                }
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -57,13 +59,14 @@ namespace AdaptySDK.iOS
             _Logout(AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -76,13 +79,15 @@ namespace AdaptySDK.iOS
             _GetPaywalls(forceUpdate, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : new Adapty.GetPaywallsResponse(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(new Adapty.GetPaywallsResponse(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.GetPaywallsResponse,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -95,13 +100,15 @@ namespace AdaptySDK.iOS
             _GetPurchaserInfo(forceUpdate, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : Adapty.PurchaserInfoFromJSON(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(Adapty.PurchaserInfoFromJSON(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.PurchaserInfo,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -114,13 +121,15 @@ namespace AdaptySDK.iOS
             _RestorePurchases(AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : new Adapty.RestorePurchasesResponse(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(new Adapty.RestorePurchasesResponse(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.RestorePurchasesResponse,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -133,13 +142,15 @@ namespace AdaptySDK.iOS
             _MakePurchase(productId, variationId, offerId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : new Adapty.MakePurchaseResponse(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(new Adapty.MakePurchaseResponse(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.MakePurchaseResponse,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -152,13 +163,15 @@ namespace AdaptySDK.iOS
             _MakeDeferredPurchase(productId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : new Adapty.MakePurchaseResponse(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(new Adapty.MakePurchaseResponse(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.MakePurchaseResponse,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -171,13 +184,14 @@ namespace AdaptySDK.iOS
             _LogShowPaywall(paywall.VariationId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -190,13 +204,14 @@ namespace AdaptySDK.iOS
             _SetFallbackPaywalls(paywalls, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -209,13 +224,15 @@ namespace AdaptySDK.iOS
             _GetPromo(AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                var result = error != null ? null : Adapty.PromoFromJSON(response["success"]);
+                try
                 {
-                    completionHandler(null, Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(result, error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(Adapty.PromoFromJSON(response["success"]), null);
+                    throw new Exception("Failed to invoke Action<Adapty.Promo,Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -228,13 +245,14 @@ namespace AdaptySDK.iOS
             _UpdateProfile(param.ToJSONString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -247,13 +265,14 @@ namespace AdaptySDK.iOS
             _UpdateAttribution(jsonstring, source.AttributionNetworkToString(), networkUserId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -271,13 +290,14 @@ namespace AdaptySDK.iOS
             _SetExternalAnalyticsEnabled(enabled, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -290,13 +310,14 @@ namespace AdaptySDK.iOS
             _SetVariationForTransaction(variationId, transactionId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
@@ -315,13 +336,14 @@ namespace AdaptySDK.iOS
             _HandlePushNotification(userInfo, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
                 if (completionHandler == null) return;
                 var response = (string.IsNullOrEmpty(json)) ? new JSONObject() :  JSON.Parse(json);
-                if (Adapty.ResponseHasError(response))
+                var error = Adapty.ExtructErrorFromResponse(response);
+                try
                 {
-                    completionHandler(Adapty.ErrorFromJSON(response["error"]));
+                    completionHandler(error);
                 }
-                else
+                catch (Exception e)
                 {
-                    completionHandler(null);
+                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
                 }
             }));
         }
