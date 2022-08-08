@@ -426,7 +426,7 @@ public class AdaptyAndroidWrapper {
         Map<String, Object> message = new HashMap<>();
         Map<String, Object> errorMap = new HashMap<>();
         errorMap.put("message", errorMessage);
-        errorMap.put("adapty_code", AdaptyErrorCode.MISSING_PARAMETER.getValue());
+        errorMap.put("adapty_code", Utils.intFromErrorCode(AdaptyErrorCode.MISSING_PARAMETER));
         message.put("error", errorMap);
         sendMessageWithResult(gson.toJson(message), callback);
     }

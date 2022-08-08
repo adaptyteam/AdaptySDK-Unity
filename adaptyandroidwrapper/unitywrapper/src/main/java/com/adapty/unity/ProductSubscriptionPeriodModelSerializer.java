@@ -13,7 +13,7 @@ class ProductSubscriptionPeriodModelSerializer implements JsonSerializer<Product
     @Override
     public JsonElement serialize(ProductSubscriptionPeriodModel src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonSubscriptionPeriod = new JsonObject();
-        jsonSubscriptionPeriod.addProperty("unit", src.getUnit() != null ? src.getUnit().getPeriod() : "unknown");
+        jsonSubscriptionPeriod.addProperty("unit", src.getUnit() != null ? Utils.getPeriodString(src.getUnit()) : "unknown");
         jsonSubscriptionPeriod.addProperty("number_of_units", src.getNumberOfUnits() != null ? src.getNumberOfUnits() : 0);
         return jsonSubscriptionPeriod;
     }

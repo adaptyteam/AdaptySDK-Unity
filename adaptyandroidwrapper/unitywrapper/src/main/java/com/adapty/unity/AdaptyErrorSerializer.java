@@ -14,7 +14,7 @@ class AdaptyErrorSerializer implements JsonSerializer<AdaptyError> {
     public JsonElement serialize(AdaptyError src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonError = new JsonObject();
         jsonError.addProperty("message", src.getMessage());
-        jsonError.addProperty("adapty_code", src.getAdaptyErrorCode().getValue());
+        jsonError.addProperty("adapty_code", Utils.intFromErrorCode(src.getAdaptyErrorCode()));
         return jsonError;
     }
 }
