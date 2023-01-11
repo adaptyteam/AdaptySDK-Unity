@@ -170,18 +170,6 @@ import Adapty
         }
     }
 
-    @objc public func getPromo(_ completion: JSONStringCompletion? = nil) {
-        Adapty.getPromo { promo, error in
-            let result: AdaptyResult<PromoModel>
-            if let error = error {
-                result = .error(error)
-            } else {
-                result = .success(promo)
-            }
-            completion?(AdaptyUnityPlugin.toJSONString(result))
-        }
-    }
-
     @objc public func updateProfile(_ jsonString: String, completion: JSONStringCompletion? = nil) {
         let builder = ProfileParameterBuilder()
         if let params = AdaptyUnityPlugin.toDictionary(jsonString) {
@@ -236,28 +224,7 @@ import Adapty
         }
     }
 
-    @objc public func getApnsToken() -> String? {
-        Adapty.apnsTokenString
-    }
-
-    @objc public func setApnsToken(_ value: String) {
-        Adapty.apnsTokenString = value
-    }
-
     @objc public func presentCodeRedemptionSheet() {
         Adapty.presentCodeRedemptionSheet()
-    }
-
-    @objc public func handlePushNotification(_ userInfo: String, completion: JSONStringCompletion? = nil) {
-        let userInfo = AdaptyUnityPlugin.toDictionary(userInfo) ?? [:]
-        Adapty.handlePushNotification(userInfo) { error in
-            let result: AdaptyResult<Bool>
-            if let error = error {
-                result = .error(error)
-            } else {
-                result = .success(true)
-            }
-            completion?(AdaptyUnityPlugin.toJSONString(result))
-        }
     }
 }

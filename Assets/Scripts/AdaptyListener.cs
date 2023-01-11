@@ -1,61 +1,126 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using System.Collections.Generic;
 using AdaptySDK;
+using UnityEngine;
+using UnityEngine.UI;
+using static AdaptySDK.Adapty;
 
-namespace AdaptyExample {
-	public class AdaptyListener : MonoBehaviour, AdaptyEventListener {
+namespace AdaptyExample
+{
+    public class AdaptyListener : MonoBehaviour, AdaptyEventListener
+    {
 
-		public AdaptyRouter Router;
-		public Text LoggerText;
+        AdaptyRouter Router;
 
-		public void Log(string message) {
-			Debug.Log("#AdaptyListener# " + message);
-		}
+        public void Log(string message)
+        {
+            Debug.Log("#AdaptyListener# " + message);
+        }
 
-		void Start() {
-			this.Router = GetComponent<AdaptyRouter>();
-			Adapty.SetEventListener(this);
-		}
+        void Start()
+        {
+            this.Router = this.GetComponent<AdaptyRouter>();
 
-		public void Log(string message, bool clearLog = false) {
-			Debug.Log($"#AdaptyListener# {message}");
+            Adapty.SetLogLevel(Adapty.LogLevel.Debug);
+            Adapty.SetEventListener(this);
+        }
 
-			if (clearLog) {
-				LoggerText.text = message;
-			} else {
-				LoggerText.text = $"{LoggerText.text}\n{message}";
-			}
-		}
+        public void Log(string message, bool clearLog = false)
+        {
+            Debug.Log($"#AdaptyListener# {message}");
+        }
 
-		public void ClearLog() {
-			LoggerText.text = "";
-		}
+        public void GetProfile()
+        {
+            this.Log("--> GetPurchaserInfo");
+            Adapty.GetProfile((profile, error) =>
+            {
+                this.Router.UpdateProfile(profile);
 
-		public void CopyLogToClipBoard() {
-			GUIUtility.systemCopyBuffer = LoggerText.text;
-		}
+                if (profile != null)
+                {
+                    this.Log("<-- GetPurchaserInfo success");
+                }
+                else
+                {
+                    this.Log("<-- GetPurchaserInfo error");
+                }
+            });
+        }
 
-		// – AdaptyEventListener
+        public void GetPaywall(string id, Action<Adapty.Paywall> completionHandler)
+        {
+            this.Log("--> GetPaywall");
 
-		public void OnReceiveUpdatedPurchaserInfo(Adapty.PurchaserInfo purchaserInfo) {
-			Debug.Log("#AdaptyListener# OnReceiveUpdatedPurchaserInfo called");
+            this.Router.SetIsLoading(true);
 
-			this.Router.RootPanel.UpdatePurchaserInfo(purchaserInfo);
-		}
+            Adapty.GetPaywall(id, (paywall, error) =>
+            {
+                this.Router.SetIsLoading(false);
 
-		public void OnReceivePromo(Adapty.Promo promo) {
-			Debug.Log("#AdaptyListener# OnReceivePromo called");
+                if (error != null)
+                {
+                    this.Log("<-- GetPaywall error");
+                }
+                else if (paywall != null)
+                {
+                    this.Log("<-- GetPaywall success");
 
-			this.Router.RootPanel.UpdatePromo(promo);
-		}
+                    completionHandler.Invoke(paywall);
+                }
 
-		public void OnDeferredPurchasesProduct(Adapty.Product product) {
-			Debug.Log("#AdaptyListener# OnDeferredPurchasesProduct called");
-		}
+                completionHandler.Invoke(null);
+            });
+        }
 
-		public void OnReceivePaywallsForConfig(Adapty.Paywall[] paywalls) {
-			Debug.Log("#AdaptyListener# OnReceivePaywallsForConfig called");
-		}
-	}
+        public void GetPaywallProducts(Adapty.Paywall paywall, Action<IList<PaywallProduct>> completionHandler)
+        {
+
+            this.Log("--> GetPaywallProducts");
+
+            Adapty.GetPaywallProducts(paywall, (products, error) =>
+            {
+
+
+                if (error != null)
+                {
+                    this.Log("<-- GetPaywallProducts error");
+                }
+                else if (products != null)
+                {
+                    this.Log("<-- GetPaywallProducts success");
+                    completionHandler.Invoke(products);
+                }
+            });
+
+        }
+
+        public void MakePurchase(Adapty.PaywallProduct product)
+        {
+            this.Log("--> MakePurchase");
+
+            Adapty.MakePurchase(product, null, (response, error) =>
+            {
+                if (error != null)
+                {
+                    this.Log("<-- MakePurchase error");
+                }
+                else if (response != null)
+                {
+                    this.Log("<-- MakePurchase success");
+                }
+            });
+        }
+
+
+        // – AdaptyEventListener
+
+        public void OnLoadLatestProfile(Adapty.Profile profile)
+        {
+            Debug.Log("#AdaptyListener# OnReceiveUpdatedProfile called");
+
+            this.Router.ProfileInfoSection.UpdateProfile(profile);
+        }
+    }
 
 }

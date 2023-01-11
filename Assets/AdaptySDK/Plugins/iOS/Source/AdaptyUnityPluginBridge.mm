@@ -152,13 +152,6 @@ void AdaptyUnity_setFallbackPaywalls( const char * paywalls, UnityAction callbac
      }];
 }
 
-void AdaptyUnity_getPromo(UnityAction callback) {
-    [[AdaptyUnityPlugin shared]
-     getPromo:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
-}
-
 void AdaptyUnity_updateProfile( const char * params, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      updateProfile:cstringToString(params)
@@ -189,24 +182,6 @@ void AdaptyUnity_setVariationForTransaction( const char * variationId, const cha
     [[AdaptyUnityPlugin shared]
      setVariationId:cstringToString(variationId)
      forTransactionId:cstringToString(transactionId)
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
-}
-
-void AdaptyUnity_setApnsToken( const char * apnsToken) {
-    [[AdaptyUnityPlugin shared]
-     setApnsToken: cstringToString(apnsToken)
-    ];
-}
-
-char * AdaptyUnity_getApnsToken() {
-    return makeStringCopy(cstringFromString([[AdaptyUnityPlugin shared] getApnsToken]));
-}
-
-void AdaptyUnity_handlePushNotification( const char * userInfo, UnityAction callback) {
-    [[AdaptyUnityPlugin shared]
-     handlePushNotification:cstringToString(userInfo)
      completion:^(NSString * _Nullable response) {
              SendCallbackToUnity(callback, response);
      }];

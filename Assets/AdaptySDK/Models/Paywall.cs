@@ -1,16 +1,28 @@
-﻿using System;
+﻿//
+//  Paywall.cs
+//  Adapty
+//
+//  Created by Aleksei Valiano on 20.12.2022.
+//
+
+using System;
 using System.Collections.Generic;
 using AdaptySDK.SimpleJSON;
-using UnityEngine;
 
 namespace AdaptySDK
 {
     public static partial class Adapty
     {
-        public class Paywall
+        public partial class Paywall
         {
             /// The identifier of the paywall, configured in Adapty Dashboard.
-            public readonly string DeveloperId;
+            public readonly string Id;
+
+            /// Paywall name
+            public readonly string Name;
+
+            /// Paywall A/B test name
+            public readonly string ABTestName;
 
             /// The identifier of the variation, used to attribute purchases to the paywall.
             public readonly string VariationId;
@@ -19,82 +31,50 @@ namespace AdaptySDK
             /// Every change within the paywall creates a new revision.
             public readonly int Revision;
 
-            /// Whether this paywall is a part of the Promo Campaign.
-            public readonly bool IsPromo;
-
-            /// An array of ProductModel objects related to this paywall.
-            public readonly Product[] Products;
-
-            /// The custom JSON formatted data configured in Adapty Dashboard.
-            public Dictionary<string, dynamic> CustomPayload;
-
             /// The custom JSON formatted data configured in Adapty Dashboard.
             /// (String representation)
-            public readonly string CustomPayloadString;
+            public readonly string RemoteConfigString;
 
-            /// Paywall A/B test name
-            public readonly string ABTestName;
+            /// An array of ProductModel objects related to this paywall.
+            private readonly IList<BackendProduct> _Products;
 
-            /// Paywall name
-            public readonly string Name;
+            private readonly int _Version;
+            private readonly string _PayloadData;
 
-
-            internal Paywall(JSONNode response)
+            /// Array of related products ids.
+            public IList<string> VendorProductIds
             {
-
-                DeveloperId = response["developer_id"];
-                VariationId = response["variation_id"];
-                Revision = response["revision"];
-                IsPromo = response["is_promo"];
-                var products = response["products"];
-                if (products != null && !products.IsNull && products.IsArray)
+                get
                 {
-                    var list = new List<Product>();
-                    foreach (var item in products)
+                    var list = new List<string>();
+                    foreach (var item in _Products)
                     {
-                        var value = ProductFromJSON(item);
-                        if (value != null)
-                        {
-                            list.Add(value);
-                        }
+                        list.Add(item.VendorId);
                     }
-                    this.Products = list.ToArray();
+                    return list;
                 }
-                CustomPayloadString = response["custom_payload_string"] ?? response["custom_payload"]; 
-                ABTestName = response["ab_test_name"] ?? response["a_b_test_name"];
-                Name = response["name"] ?? response["paywall_name"]; 
+            }
 
-                if (!string.IsNullOrEmpty(CustomPayloadString))
-                {
-                    CustomPayload = JSON.Parse(CustomPayloadString).ToDictionary();
-                }
-
-             }
-
-            public override string ToString()
+            /// A custom dictionary configured in Adapty Dashboard for this paywall (same as `remoteConfigString`)
+            public IDictionary<string, dynamic> RemoteConfig
             {
-                return $"{nameof(DeveloperId)}: {DeveloperId}, " +
+                get
+                {
+                    if (string.IsNullOrEmpty(RemoteConfigString)) return null;
+                    return JSONNode.Parse(RemoteConfigString).GetDictionary();
+                }
+            }
+
+            public override string ToString() => $"{nameof(Id)}: {Id}, " +
+                       $"{nameof(Name)}: {Name}, " +
+                       $"{nameof(ABTestName)}: {ABTestName}, " +
                        $"{nameof(VariationId)}: {VariationId}, " +
                        $"{nameof(Revision)}: {Revision}, " +
-                       $"{nameof(IsPromo)}: {IsPromo}, " +
-                       $"{nameof(Products)}: {Products}, " +
-                       $"{nameof(CustomPayloadString)}: {CustomPayloadString}, " +
-                       $"{nameof(ABTestName)}: {ABTestName}, " +
-                       $"{nameof(Name)}: {Name}";
-            }
-        }
-
-        public static Paywall PaywallFromJSON(JSONNode response)
-        {
-            if (response == null || response.IsNull || !response.IsObject) return null;
-            try { 
-                return new Paywall(response);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Exception on decoding Paywall: {e} source: {response}");
-                return null;
-            }
+                       $"{nameof(_Products)}: {_Products}, " +
+                       $"{nameof(_Version)}: {_Version}";
         }
     }
 }
+
+
+

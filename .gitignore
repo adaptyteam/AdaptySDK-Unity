@@ -9,7 +9,7 @@ Packages/
 Temp/
 Library/
 /*/outputs/
-
+/[Uu]ser[Ss]ettings/
 
 #android studio
 *.sln

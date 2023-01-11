@@ -9,351 +9,262 @@ namespace AdaptySDK.iOS
     internal static class AdaptyIOS
     {
 
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_setIdfaCollectionDisabled")]
-        internal static extern void SetIdfaCollectionDisabled(bool disabled);
-
-        //[DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_activate")]
-        //internal static extern void Activate(string key, bool observeMode, string customerUserId);
-
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getLogLevel")]
-        private static extern string _GetLogLevel();
-
-        internal static Adapty.LogLevel GetLogLevel()
-        {
-            return Adapty.LogLevelFromString(_GetLogLevel());
-        }
-
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_setLogLevel")]
         private static extern void _SetLogLevel(string value);
 
-        internal static void SetLogLevel(Adapty.LogLevel value)
-        {
-            _SetLogLevel(value.LogLevelToString());
-        }
+        internal static void SetLogLevel(Adapty.LogLevel value) => _SetLogLevel(value.ToJSON());
+
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_identify")]
         private static extern void _Identify(string customerUserId, IntPtr callback);
 
         internal static void Identify(string customerUserId, Action<Adapty.Error> completionHandler)
+            => _Identify(customerUserId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _Identify(customerUserId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+            }
+        }));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_logout")]
         private static extern void _Logout(IntPtr callback);
 
         internal static void Logout(Action<Adapty.Error> completionHandler)
+            => _Logout(AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _Logout(AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+            }
+        }));
 
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPaywalls")]
-        private static extern void _GetPaywalls(bool forceUpdate, IntPtr callback);
+        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPaywall")]
+        private static extern void _GetPaywall(string id, IntPtr callback);
 
-        internal static void GetPaywalls(bool forceUpdate, Action<Adapty.GetPaywallsResponse,Adapty.Error> completionHandler)
+        internal static void GetPaywall(string id, Action<Adapty.Paywall, Adapty.Error> completionHandler)
+            => _GetPaywall(id, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _GetPaywalls(forceUpdate, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                var result = error != null ? null : new Adapty.GetPaywallsResponse(response["success"]);
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.GetPaywallsResponse,Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var response = JSONNode.Parse(json);
+            var error = response.GetErrorIfPresent("error");
+            var result = error != null ? null : response.GetPaywall("success");
+            try
+            {
+                completionHandler(result, error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Paywall,Adapty.Error> completionHandler", e);
+            }
+        }));
 
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPurchaserInfo")]
-        private static extern void _GetPurchaserInfo(bool forceUpdate, IntPtr callback);
+        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPaywallProducts")]
+        private static extern void _GetPaywallProducts(string paywall, IntPtr callback);
 
-        internal static void GetPurchaserInfo(bool forceUpdate, Action<Adapty.PurchaserInfo,Adapty.Error> completionHandler)
+        internal static void GetPaywallProducts(Adapty.Paywall paywall, Adapty.IOSProductsFetchPolicy fetchPolicy, Action<IList<Adapty.PaywallProduct>, Adapty.Error> completionHandler)
+            => _GetPaywallProducts(paywall.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _GetPurchaserInfo(forceUpdate, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                var result = error != null ? null : Adapty.PurchaserInfoFromJSON(response["success"]);
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.PurchaserInfo,Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var response = JSONNode.Parse(json);
+            var error = response.GetErrorIfPresent("error");
+            var result = error != null ? null : response.GetPaywallProductList("success");
+            try
+            {
+                completionHandler(result, error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<IList<Adapty.PaywallProduct>,Adapty.Error> completionHandler", e);
+            }
+        }));
+
+
+        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getProfile")]
+        private static extern void _GetProfile(IntPtr callback);
+
+        internal static void GetProfile(Action<Adapty.Profile, Adapty.Error> completionHandler)
+            => _GetProfile(AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+        {
+            if (completionHandler == null) return;
+            var response = JSONNode.Parse(json);
+            var error = response.GetErrorIfPresent("error");
+            var result = error != null ? null : response.GetProfile("success");
+            try
+            {
+                completionHandler(result, error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler", e);
+            }
+        }));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_restorePurchases")]
         private static extern void _RestorePurchases(IntPtr callback);
 
-        internal static void RestorePurchases(Action<Adapty.RestorePurchasesResponse, Adapty.Error> completionHandler)
+        internal static void RestorePurchases(Action<Adapty.Profile, Adapty.Error> completionHandler)
+            => _RestorePurchases(AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _RestorePurchases(AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                var result = error != null ? null : new Adapty.RestorePurchasesResponse(response["success"]);
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.RestorePurchasesResponse,Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var response = JSONNode.Parse(json);
+            var error = response.GetErrorIfPresent("error");
+            var result = error != null ? null : response.GetProfile("success");
+            try
+            {
+                completionHandler(result, error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler", e);
+            }
+        }));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_makePurchase")]
-        private static extern void _MakePurchase(string productId, string variationId, string offerId, IntPtr callback);
+        private static extern void _MakePurchase(string product, IntPtr callback);
 
-        internal static void MakePurchase(string productId, string variationId, string offerId, Action<Adapty.MakePurchaseResponse, Adapty.Error> completionHandler)
+        internal static void MakePurchase(Adapty.PaywallProduct product, Action<Adapty.Profile, Adapty.Error> completionHandler)
+            => _MakePurchase(product.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _MakePurchase(productId, variationId, offerId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                var result = error != null ? null : new Adapty.MakePurchaseResponse(response["success"]);
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.MakePurchaseResponse,Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var response = JSONNode.Parse(json);
+            var error = response.GetErrorIfPresent("error");
+            var result = error != null ? null : response.GetProfile("success");
+            try
+            {
+                completionHandler(result, error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler", e);
+            }
+        }));
 
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_makeDeferredPurchase")]
-        private static extern void _MakeDeferredPurchase(string productId, IntPtr callback);
 
-        internal static void MakeDeferredPurchase(string productId, Action<Adapty.MakePurchaseResponse,Adapty.Error> completionHandler)
-        {
-            _MakeDeferredPurchase(productId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                var result = error != null ? null : new Adapty.MakePurchaseResponse(response["success"]);
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.MakePurchaseResponse,Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_logShowPaywall")]
-        private static extern void _LogShowPaywall(string variationId, IntPtr callback);
+        private static extern void _LogShowPaywall(string paywall, IntPtr callback);
 
         internal static void LogShowPaywall(Adapty.Paywall paywall, Action<Adapty.Error> completionHandler)
+            => _LogShowPaywall(paywall.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _LogShowPaywall(paywall.VariationId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+            }
+        }));
+
+        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_logShowOnboarding")]
+        private static extern void _LogShowOnboarding(string onboardingScreenParameters, IntPtr callback);
+
+        internal static void LogShowOnboarding(Adapty.OnboardingScreenParameters onboardingScreenParameters, Action<Adapty.Error> completionHandler)
+            => _LogShowOnboarding(onboardingScreenParameters.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+        {
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+            }
+        }));
+
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_setFallbackPaywalls")]
         private static extern void _SetFallbackPaywalls(string paywalls, IntPtr callback);
 
         internal static void SetFallbackPaywalls(string paywalls, Action<Adapty.Error> completionHandler)
+            => _SetFallbackPaywalls(paywalls, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _SetFallbackPaywalls(paywalls, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
-
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPromo")]
-        private static extern void _GetPromo(IntPtr callback);
-
-        internal static void GetPromo(Action<Adapty.Promo, Adapty.Error> completionHandler)
-        {
-            _GetPromo(AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                var result = error != null ? null : Adapty.PromoFromJSON(response["success"]);
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Promo,Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+            }
+        }));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_updateProfile")]
         private static extern void _UpdateProfile(string param, IntPtr callback);
 
-        internal static void UpdateProfile(Adapty.ProfileParameterBuilder param, Action<Adapty.Error> completionHandler)
+        internal static void UpdateProfile(Adapty.ProfileParameters param, Action<Adapty.Error> completionHandler)
+            => _UpdateProfile(param.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _UpdateProfile(param.ToJSONString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+            }
+        }));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_updateAttribution")]
         private static extern void _UpdateAttribution(string attributions, string source, string networkUserId, IntPtr callback);
 
-        internal static void UpdateAttribution(string jsonstring, Adapty.AttributionNetwork source, string networkUserId, Action<Adapty.Error> completionHandler)
+        internal static void UpdateAttribution(string jsonstring, Adapty.AttributionSource source, string networkUserId, Action<Adapty.Error> completionHandler)
+            => _UpdateAttribution(jsonstring, source.ToJSON(), networkUserId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _UpdateAttribution(jsonstring, source.AttributionNetworkToString(), networkUserId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+            }
+        }));
 
-        internal static void UpdateAttribution(Dictionary<string, dynamic> attribution, Adapty.AttributionNetwork source, string networkUserId, Action<Adapty.Error> completionHandler)
-        {
-            UpdateAttribution(DictionaryExtensions.ToJSON(attribution).ToString(),source,networkUserId,completionHandler);
-        }
-
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_setExternalAnalyticsEnabled")]
-        private static extern void _SetExternalAnalyticsEnabled(bool enabled, IntPtr callback);
-
-        internal static void SetExternalAnalyticsEnabled(bool enabled, Action<Adapty.Error> completionHandler)
-        {
-            _SetExternalAnalyticsEnabled(enabled, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_setVariationForTransaction")]
         private static extern void _SetVariationForTransaction(string variationId, string transactionId, IntPtr callback);
 
         internal static void SetVariationForTransaction(string variationId, string transactionId, Action<Adapty.Error> completionHandler)
+            => _SetVariationForTransaction(variationId, transactionId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
-            _SetVariationForTransaction(variationId, transactionId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() : JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+            }
+        }));
 
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getApnsToken")]
-        internal static extern string GetApnsToken();
-
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_setApnsToken")]
-        internal static extern void SetApnsToken(string apnsToken);
-
-        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_handlePushNotification")]
-        private static extern void _HandlePushNotification(string userInfo, IntPtr callback);
-
-        internal static void HandlePushNotification(string userInfo, Action<Adapty.Error> completionHandler)
-        {
-            _HandlePushNotification(userInfo, AdaptyIOSCallbackAction.ActionToIntPtr((string json) => {
-                if (completionHandler == null) return;
-                var response = (string.IsNullOrEmpty(json)) ? new JSONObject() :  JSON.Parse(json);
-                var error = Adapty.ExtructErrorFromResponse(response);
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
-                }
-            }));
-        }
-
-        internal static void HandlePushNotification(Dictionary<string, dynamic> userInfo, Action<Adapty.Error> completionHandler)
-        {
-            HandlePushNotification(DictionaryExtensions.ToJSON(userInfo).ToString(), completionHandler);
-        }
-
-            [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_presentCodeRedemptionSheet")]
+        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_presentCodeRedemptionSheet")]
         internal static extern void PresentCodeRedemptionSheet();
 
     }
