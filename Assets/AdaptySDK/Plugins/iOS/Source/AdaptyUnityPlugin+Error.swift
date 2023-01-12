@@ -5,15 +5,12 @@
 //  Created by Aleksei Valiano on 23.04.2022.
 //
 
+import Adapty
 import Foundation
 
 extension AdaptyUnityPlugin {
     struct PluginError: Error, Encodable {
-        enum Code: Int {
-            case none = 0
-        }
-
-        let errorCode: Code
+        let errorCode: Int
         let message: String
         let detail: String
 
@@ -25,9 +22,29 @@ extension AdaptyUnityPlugin {
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(errorCode.rawValue, forKey: .errorCode)
+            try container.encode(errorCode, forKey: .errorCode)
             try container.encode(message, forKey: .message)
             try container.encode(detail, forKey: .detail)
+        }
+
+        static func encodingFailed(_ error: String) -> PluginError {
+            PluginError(errorCode: AdaptyError.ErrorCode.encodingFailed.rawValue,
+                        message: "Encoding failed",
+                        detail: "AdaptyPluginError.encodingFailed(\(error))")
+        }
+
+        static func encodingFailed(_ error: Error) -> PluginError {
+            encodingFailed("\(error)")
+        }
+
+        static func decodingFailed(_ error: String) -> PluginError {
+            PluginError(errorCode: AdaptyError.ErrorCode.decodingFailed.rawValue,
+                        message: "Decoding failed",
+                        detail: "AdaptyPluginError.decodingFailed(\(error))")
+        }
+
+        static func decodingFailed(_ error: Error) -> PluginError {
+            decodingFailed("\(error)")
         }
     }
 }
