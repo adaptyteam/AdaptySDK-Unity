@@ -1,77 +1,64 @@
 #import <Foundation/Foundation.h>
-#include "UnityFramework/UnityFramework-Swift.h"
 #include "AdaptyUnityPluginCallback.h"
+#include "UnityFramework/UnityFramework-Swift.h"
 
-static NSString *cstringToString(const char *str) {
+static NSString * cstringToString(const char *str) {
     return str ? [NSString stringWithUTF8String:str] : nil;
 }
 
-static const char *cstringFromString(NSString *str) {
+static const char * cstringFromString(NSString *str) {
     return str ? [str cStringUsingEncoding:NSUTF8StringEncoding] : nil;
 }
 
-static char* makeStringCopy (const char* string)
-{
-    if (string == NULL) return NULL;
-    char* res = (char*)malloc(strlen(string) + 1);
+static char * makeStringCopy(const char *string) {
+    if (string == NULL) {
+        return NULL;
+    }
+
+    char *res = (char *)malloc(strlen(string) + 1);
     strcpy(res, string);
     return res;
 }
 
-typedef void (*MessageDelegate)(const char* type, const char* data);
+typedef void (*MessageDelegate)(const char *type, const char *data);
 
-typedef void (*CallbackDelegate)(UnityAction action, const char* data);
+typedef void (*CallbackDelegate)(UnityAction action, const char *data);
 
 static CallbackDelegate _callbackDelegate = NULL;
 static MessageDelegate _messageDelegate = NULL;
 
-void SendMessageToUnity(NSString* type, NSString* data) {
+void SendMessageToUnity(NSString *type, NSString *data) {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if(_messageDelegate != NULL) {
+        if (_messageDelegate != NULL) {
             _messageDelegate(cstringFromString(type), cstringFromString(data));
         }
     });
 }
 
-void SendCallbackToUnity(UnityAction action, NSString* data) {
-    if(action == NULL) { return; }
+void SendCallbackToUnity(UnityAction action, NSString *data) {
+    if (action == NULL) {
+        return;
+    }
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        if(_callbackDelegate != NULL) {
-            _callbackDelegate(action, cstringFromString(data ));
+        if (_callbackDelegate != NULL) {
+            _callbackDelegate(action, cstringFromString(data));
         }
     });
 }
 
 extern "C" {
-void AdaptyUnity_registerCallbackHandler(MessageDelegate messageDelegate, CallbackDelegate callbackDelegate ) {
+void AdaptyUnity_registerCallbackHandler(MessageDelegate messageDelegate, CallbackDelegate callbackDelegate) {
     _messageDelegate = messageDelegate;
     _callbackDelegate = callbackDelegate;
 }
 
-    #pragma mark - Test
-
-void AdaptyUnity_testCallback(UnityAction callback) {
-    SendCallbackToUnity(callback, @"bla-bla-bla");
-}
-
     #pragma mark - Adapty
 
-void AdaptyUnity_setIdfaCollectionDisabled( bool disabled) {
+void AdaptyUnity_setIdfaCollectionDisabled(bool disabled) {
     [[AdaptyUnityPlugin shared]
-     setIdfaCollectionDisabled: disabled
+     setIdfaCollectionDisabled:disabled
     ];
-}
-
-void AdaptyUnity_activate(const char *key, bool observeMode, const char * _Nullable customerUserId) {
-    [[AdaptyUnityPlugin shared]
-     activate: cstringToString(key)
-     observerMode: observeMode
-     customerUserId: cstringToString(customerUserId)
-    ];
-}
-
-char * AdaptyUnity_getLogLevel() {
-    return makeStringCopy(cstringFromString([[AdaptyUnityPlugin shared] getLogLevel]));
 }
 
 void AdaptyUnity_setLogLevel(const char *value) {
@@ -82,109 +69,107 @@ void AdaptyUnity_setLogLevel(const char *value) {
 
 void AdaptyUnity_identify(const char *customerUserId, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     identify:cstringToString(customerUserId)
-     completion:^(NSString * _Nullable error) {
-             SendCallbackToUnity(callback, error);
-     }];
+          identify:cstringToString(customerUserId)
+        completion:^(NSString *_Nullable error) {
+            SendCallbackToUnity(callback, error);
+        }];
 }
 
 void AdaptyUnity_logout(UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     logout:^(NSString * _Nullable error) {
-             SendCallbackToUnity(callback, error);
-     }];
+     logout:^(NSString *_Nullable error) {
+            SendCallbackToUnity(callback, error);
+        }];
 }
 
-void AdaptyUnity_getPaywalls(bool forceUpdate, UnityAction callback) {
+void AdaptyUnity_getPaywall(const char *paywallId, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     getPaywalls:forceUpdate
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+     getPaywall:cstringToString(paywallId)
+     completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
-void AdaptyUnity_getPurchaserInfo(bool forceUpdate, UnityAction callback) {
+void AdaptyUnity_getPaywallProducts(const char *paywall, const char *fetchPolicy, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     getPurchaserInfo:forceUpdate
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+     getPaywallProducts:cstringToString(paywall)
+            fetchPolicy:cstringToString(fetchPolicy)
+             completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
+}
+
+void AdaptyUnity_getProfile(UnityAction callback) {
+    [[AdaptyUnityPlugin shared]
+     getProfileWithCompletion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
 void AdaptyUnity_restorePurchases(UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     restorePurchases:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+     restorePurchases:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
-void AdaptyUnity_makePurchase(const char * productId, const char * variationId, const char * offerId, UnityAction callback) {
+void AdaptyUnity_makePurchase(const char *product, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     makePurchase:cstringToString(productId)
-     variationId:cstringToString(variationId)
-     offerId:cstringToString(offerId)
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+     makePurchase:cstringToString(product)
+       completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
-void AdaptyUnity_makeDeferredPurchase(const char * productId, UnityAction callback) {
+void AdaptyUnity_logShowPaywall(const char *paywall, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     makeDeferredPurchase:cstringToString(productId)
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+     logShowPaywall:cstringToString(paywall)
+         completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
-void AdaptyUnity_logShowPaywall(const char * variationId, UnityAction callback) {
+void AdaptyUnity_logShowOnboarding(const char *parameters, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     logShowPaywall:cstringToString(variationId)
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+     logShowOnboarding:cstringToString(parameters)
+            completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
-void AdaptyUnity_setFallbackPaywalls( const char * paywalls, UnityAction callback) {
+void AdaptyUnity_setFallbackPaywalls(const char *paywalls, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      setFallbackPaywalls:cstringToString(paywalls)
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+              completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
-void AdaptyUnity_updateProfile( const char * params, UnityAction callback) {
+void AdaptyUnity_updateProfile(const char *params, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      updateProfile:cstringToString(params)
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+        completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
-void AdaptyUnity_updateAttribution( const char * attributions, const char * source, const char * networkUserId,UnityAction callback) {
+void AdaptyUnity_updateAttribution(const char *attributions, const char *source, const char *networkUserId, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      updateAttribution:cstringToString(attributions)
-     source:cstringToString(source)
-     networkUserId:cstringToString(networkUserId)
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+                source:cstringToString(source)
+         networkUserId:cstringToString(networkUserId)
+            completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
-void AdaptyUnity_setExternalAnalyticsEnabled( bool enabled,UnityAction callback) {
+void AdaptyUnity_setVariationForTransaction(const char *variationId, const char *transactionId, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-     setExternalAnalyticsEnabled:enabled
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
-}
-
-void AdaptyUnity_setVariationForTransaction( const char * variationId, const char * transactionId, UnityAction callback) {
-    [[AdaptyUnityPlugin shared]
-     setVariationId:cstringToString(variationId)
-     forTransactionId:cstringToString(transactionId)
-     completion:^(NSString * _Nullable response) {
-             SendCallbackToUnity(callback, response);
-     }];
+          setVariationId:cstringToString(variationId)
+        forTransactionId:cstringToString(transactionId)
+              completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
 }
 
 void AdaptyUnity_presentCodeRedemptionSheet() {

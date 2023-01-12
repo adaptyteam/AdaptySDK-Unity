@@ -50,7 +50,7 @@ import Adapty
         }
     }
 
-    @objc public func getPaywallProducts(_ paywallJson: String, _ fetchPolicy: String, completion: JSONStringCompletion? = nil) {
+    @objc public func getPaywallProducts(_ paywallJson: String, fetchPolicy: String, completion: JSONStringCompletion? = nil) {
         let paywall: AdaptyPaywall
         do {
             paywall = try AdaptyUnityPlugin.decode(AdaptyPaywall.self, from: paywallJson)

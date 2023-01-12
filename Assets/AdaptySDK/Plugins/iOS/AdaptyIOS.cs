@@ -14,7 +14,6 @@ namespace AdaptySDK.iOS
 
         internal static void SetLogLevel(Adapty.LogLevel value) => _SetLogLevel(value.ToJSON());
 
-
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_identify")]
         private static extern void _Identify(string customerUserId, IntPtr callback);
 
