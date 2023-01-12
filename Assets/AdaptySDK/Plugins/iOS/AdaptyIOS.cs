@@ -72,10 +72,10 @@ namespace AdaptySDK.iOS
         }));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPaywallProducts")]
-        private static extern void _GetPaywallProducts(string paywall, IntPtr callback);
+        private static extern void _GetPaywallProducts(string paywall, string fetchPolicy, IntPtr callback);
 
         internal static void GetPaywallProducts(Adapty.Paywall paywall, Adapty.IOSProductsFetchPolicy fetchPolicy, Action<IList<Adapty.PaywallProduct>, Adapty.Error> completionHandler)
-            => _GetPaywallProducts(paywall.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+            => _GetPaywallProducts(paywall.ToJSONNode().ToString(), fetchPolicy.ToJSON(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
             if (completionHandler == null) return;
             var response = JSONNode.Parse(json);
