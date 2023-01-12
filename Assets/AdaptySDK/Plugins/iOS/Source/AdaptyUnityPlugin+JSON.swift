@@ -62,4 +62,13 @@ extension AdaptyUnityPlugin {
     static func decode<T>(_ type: T.Type, from str: String) throws -> T where T: Decodable {
         try decode(type, from: str.data(using: .utf8) ?? Data())
     }
+
+    static func decodeToDictionary(_ value: Data?) throws -> [AnyHashable: Any]? {
+        guard let value = value else { return nil }
+        return try JSONSerialization.jsonObject(with: value, options: []) as? [AnyHashable: Any]
+    }
+
+    static func decodeToDictionary(_ value: String?) throws -> [AnyHashable: Any]? {
+        try decodeToDictionary(value?.data(using: .utf8))
+    }
 }
