@@ -1,12 +1,8 @@
-using System.Collections;
 using AdaptySDK;
 using UnityEngine;
-using UnityEngine.Profiling;
 
-namespace AdaptyExample
-{
-    public class AdaptyRouter : MonoBehaviour
-    {
+namespace AdaptyExample {
+    public class AdaptyRouter : MonoBehaviour {
         public RectTransform LoadingPanel;
 
         [Header("Sections Prefabs")]
@@ -18,22 +14,27 @@ namespace AdaptyExample
 
         public GameObject ExamplePaywallSectionPrefab;
 
-        [HideInInspector]
+        //[HideInInspector]
         public ProfileIdSection ProfileIdSection;
 
-        [HideInInspector]
+        //[HideInInspector]
         public ProfileInfoSection ProfileInfoSection;
 
+        //[HideInInspector]
+        public PaywallSection ExamplePaywallSection;
+
+        private AdaptyListener listener;
         private Adapty.Profile profile;
 
-        void Start()
-        {
+        void Start() {
             // UpdateProfile(this.profile);
+            this.listener = GetComponent<AdaptyListener>();
             this.ConfigureLayout();
+
+            this.ProfileIdSection.ProfileIdText.SetText("profile_id will be here");
         }
 
-        void ConfigureLayout()
-        {
+        void ConfigureLayout() {
             var offset = 20.0f;
 
             var profileIdSectionObj = Instantiate(this.ProfileIdSectionPrefab);
@@ -43,8 +44,7 @@ namespace AdaptyExample
             profileIdSectionRect.anchoredPosition =
                 new Vector3(profileIdSectionRect.position.x, -offset);
 
-            this.ProfileIdSection =
-                profileIdSectionObj.GetComponent<ProfileIdSection>();
+            
 
             offset += profileIdSectionRect.rect.height + 20.0f;
 
@@ -56,8 +56,7 @@ namespace AdaptyExample
             profileInfoSectionRect.anchoredPosition =
                 new Vector3(profileInfoSectionRect.position.x, -offset);
 
-            this.ProfileInfoSection =
-                profileInfoSectionObj.GetComponent<ProfileInfoSection>();
+            
 
             offset += profileInfoSectionRect.rect.height + 20.0f;
 
@@ -68,24 +67,33 @@ namespace AdaptyExample
             examplePaywallSectionRect.SetParent(this.ContentTransform);
             examplePaywallSectionRect.anchoredPosition =
                 new Vector3(examplePaywallSectionRect.position.x, -offset);
+
+            var profileIdSection = profileIdSectionObj.GetComponent<ProfileIdSection>();
+            var profileInfoSection = profileInfoSectionObj.GetComponent<ProfileInfoSection>();
+            var examplePaywallSection = examplePaywallSectionObj.GetComponent<PaywallSection>();
+
+            profileInfoSection.Listener = this.listener;
+            examplePaywallSection.Listener = this.listener;
+
+            this.ProfileIdSection = profileIdSection;
+            this.ProfileInfoSection = profileInfoSection;
+            this.ExamplePaywallSection = examplePaywallSection;
         }
 
-        public void UpdateProfile(Adapty.Profile profile)
-        {
-            if (this.ProfileInfoSection != null && profile != null)
-            {
+        public void UpdateProfile(Adapty.Profile profile) {
+            Debug.Log($"#AdaptyRouter# UpdateProfile");
+
+            if (this.ProfileInfoSection != null && profile != null) {
                 this.ProfileInfoSection.UpdateProfile(profile);
             }
-            if (this.ProfileIdSection != null && profile != null)
-            {
+            if (this.ProfileIdSection != null && profile != null) {
                 this.ProfileIdSection.UpdateProfile(profile);
             }
 
             this.profile = profile;
         }
 
-        public void SetIsLoading(bool isLoading)
-        {
+        public void SetIsLoading(bool isLoading) {
             this.LoadingPanel.gameObject.SetActive(isLoading);
         }
 
