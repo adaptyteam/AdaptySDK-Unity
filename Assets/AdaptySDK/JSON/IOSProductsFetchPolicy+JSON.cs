@@ -14,9 +14,8 @@ namespace AdaptySDK.SimpleJSON
         internal static string ToJSON(this Adapty.IOSProductsFetchPolicy value)
             => value switch
             {
-                Adapty.IOSProductsFetchPolicy.Default => "default",
                 Adapty.IOSProductsFetchPolicy.WaitForReceiptValidation => "wait_for_receipt_validation",
-                _ => throw new Exception($"IOSProductsFetchPolicy unknown value: {value}"),
+                _ => "default",
             };
     }
 }
