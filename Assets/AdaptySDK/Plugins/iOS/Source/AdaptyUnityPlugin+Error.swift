@@ -1,52 +1,33 @@
 //
 //  AdaptyUnityPlugin+Error.swift
-//  UnityFramework
+//  Adapty
 //
-//  Created by Alexey Valiano on 23.04.2022.
+//  Created by Aleksei Valiano on 23.04.2022.
 //
 
 import Foundation
 
 extension AdaptyUnityPlugin {
-    struct AdaptyErrorResult<T>: Encodable where T: Encodable {
-        let error: T
-    }
-    
     struct PluginError: Error, Encodable {
         enum Code: Int {
-            case notFoundProduct = 10001
-            case notFoundPaywall = 10002
-            case notDeferredPurchase = 10003
+            case none = 0
         }
 
-        let code: Code
+        let errorCode: Code
         let message: String
+        let detail: String
 
         enum CodingKeys: String, CodingKey {
-            case code
+            case errorCode = "adapty_code"
             case message
-            case domain
-            case adaptyCode = "adapty_code"
+            case detail
         }
 
-        public func encode(to encoder: Encoder) throws {
+        func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(code.rawValue, forKey: .code)
+            try container.encode(errorCode.rawValue, forKey: .errorCode)
             try container.encode(message, forKey: .message)
-            try container.encode("com.adapty.AdaptySDK.UnityPlugin", forKey: .domain)
-            try container.encode(code.rawValue, forKey: .adaptyCode)
-        }
-
-        static func notFoundProduct(_ productId: String, withVariationId variationId: String?) -> PluginError {
-            PluginError(code: .notFoundProduct, message: "Not found product (id: \(productId), variationId: \(variationId ?? "nil"))")
-        }
-        
-        static func notFoundPaywall(byVariationId variationId: String) -> PluginError {
-            PluginError(code: .notFoundPaywall, message: "Not found paywall (with variationId: \(variationId ))")
-        }
-        
-        static func notFoundDeferredPurchase(_ productId: String) -> PluginError {
-            PluginError(code: .notDeferredPurchase, message: "Not found  deferred purchase for product (id: \(productId))")
+            try container.encode(detail, forKey: .detail)
         }
     }
 }

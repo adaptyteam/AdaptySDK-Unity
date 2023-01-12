@@ -1,46 +1,44 @@
+//
+//  AdaptyUnityPlugin+JSON.swift
+//  Adapty
+//
+//  Created by Aleksei Valiano on 23.12.2022.
+//
+
 import Foundation
 
 extension AdaptyUnityPlugin {
+    private static var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return formatter
+    }()
+
     private static let encoder: JSONEncoder = {
         let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.dateEncodingStrategy = .formatted(dateFormatter)
+        encoder.dataEncodingStrategy = .base64
         return encoder
     }()
+
     private static let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        decoder.dataDecodingStrategy = .base64
         return decoder
     }()
 
-    static func toJSONData<T>(_ value: T?) -> Data? where T: Encodable {
-        guard let value = value else { return nil }
-
-        do {
-            return try AdaptyUnityPlugin.encoder.encode(value)
-        } catch {
-            // TODO
-            return nil
-        }
+    static func encode<T>(_ value: T) throws -> Data where T: Encodable {
+        try encoder.encode(value)
     }
 
-    static func toJSONString<T>(_ value: T?) -> String? where T: Encodable {
-        guard let data = toJSONData(value) else { return nil }
-        return String(decoding: data, as: UTF8.self)
+    static func encode<T>(_ value: T) throws -> String where T: Encodable {
+        String(decoding: try encode(value), as: UTF8.self)
     }
 
-    static func toDictionary(_ value: Data?) -> [String: Any]? {
-        guard let value = value else { return nil }
-        do {
-            return try JSONSerialization.jsonObject(with: value, options: []) as? [String: Any]
-        } catch {
-            // TODO
-            return nil
-        }
-    }
-
-    static func toDictionary(_ value: String?) -> [String: Any]? {
-        toDictionary(value?.data(using: .utf8))
+    static func decode<T>(_ type: T.Type, from data: Data) throws -> T where T: Decodable {
+        try decoder.decode(T.self, from: data)
     }
 }
