@@ -12,7 +12,7 @@ namespace AdaptySDK.iOS
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_setLogLevel")]
         private static extern void _SetLogLevel(string value);
 
-        internal static void SetLogLevel(Adapty.LogLevel value) => _SetLogLevel(value.ToJSON());
+        internal static void SetLogLevel(string value) => _SetLogLevel(value);
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_identify")]
         private static extern void _Identify(string customerUserId, IntPtr callback);
@@ -73,8 +73,8 @@ namespace AdaptySDK.iOS
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPaywallProducts")]
         private static extern void _GetPaywallProducts(string paywall, string fetchPolicy, IntPtr callback);
 
-        internal static void GetPaywallProducts(Adapty.Paywall paywall, Adapty.IOSProductsFetchPolicy fetchPolicy, Action<IList<Adapty.PaywallProduct>, Adapty.Error> completionHandler)
-            => _GetPaywallProducts(paywall.ToJSONNode().ToString(), fetchPolicy.ToJSON(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+        internal static void GetPaywallProducts(string paywall, string fetchPolicy, Action<IList<Adapty.PaywallProduct>, Adapty.Error> completionHandler)
+            => _GetPaywallProducts(paywall, fetchPolicy, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
             if (completionHandler == null) return;
             var response = JSONNode.Parse(json);
@@ -89,7 +89,6 @@ namespace AdaptySDK.iOS
                 throw new Exception("Failed to invoke Action<IList<Adapty.PaywallProduct>,Adapty.Error> completionHandler in AdaptyIOS.GetPaywallProducts(..)", e);
             }
         }));
-
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getProfile")]
         private static extern void _GetProfile(IntPtr callback);
@@ -134,8 +133,8 @@ namespace AdaptySDK.iOS
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_makePurchase")]
         private static extern void _MakePurchase(string product, IntPtr callback);
 
-        internal static void MakePurchase(Adapty.PaywallProduct product, Action<Adapty.Profile, Adapty.Error> completionHandler)
-            => _MakePurchase(product.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+        internal static void MakePurchase(string product, Action<Adapty.Profile, Adapty.Error> completionHandler)
+            => _MakePurchase(product, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
             if (completionHandler == null) return;
             var response = JSONNode.Parse(json);
@@ -156,8 +155,8 @@ namespace AdaptySDK.iOS
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_logShowPaywall")]
         private static extern void _LogShowPaywall(string paywall, IntPtr callback);
 
-        internal static void LogShowPaywall(Adapty.Paywall paywall, Action<Adapty.Error> completionHandler)
-            => _LogShowPaywall(paywall.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+        internal static void LogShowPaywall(string paywall, Action<Adapty.Error> completionHandler)
+            => _LogShowPaywall(paywall, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
             if (completionHandler == null) return;
             var error = JSONNode.Parse(json).GetErrorIfPresent("error");
@@ -174,8 +173,8 @@ namespace AdaptySDK.iOS
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_logShowOnboarding")]
         private static extern void _LogShowOnboarding(string onboardingScreenParameters, IntPtr callback);
 
-        internal static void LogShowOnboarding(Adapty.OnboardingScreenParameters onboardingScreenParameters, Action<Adapty.Error> completionHandler)
-            => _LogShowOnboarding(onboardingScreenParameters.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+        internal static void LogShowOnboarding(string onboardingScreenParameters, Action<Adapty.Error> completionHandler)
+            => _LogShowOnboarding(onboardingScreenParameters, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
             if (completionHandler == null) return;
             var error = JSONNode.Parse(json).GetErrorIfPresent("error");
@@ -211,8 +210,8 @@ namespace AdaptySDK.iOS
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_updateProfile")]
         private static extern void _UpdateProfile(string param, IntPtr callback);
 
-        internal static void UpdateProfile(Adapty.ProfileParameters param, Action<Adapty.Error> completionHandler)
-            => _UpdateProfile(param.ToJSONNode().ToString(), AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+        internal static void UpdateProfile(string param, Action<Adapty.Error> completionHandler)
+            => _UpdateProfile(param, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
             if (completionHandler == null) return;
             var error = JSONNode.Parse(json).GetErrorIfPresent("error");
@@ -229,8 +228,8 @@ namespace AdaptySDK.iOS
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_updateAttribution")]
         private static extern void _UpdateAttribution(string attributions, string source, string networkUserId, IntPtr callback);
 
-        internal static void UpdateAttribution(string jsonstring, Adapty.AttributionSource source, string networkUserId, Action<Adapty.Error> completionHandler)
-            => _UpdateAttribution(jsonstring, source.ToJSON(), networkUserId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
+        internal static void UpdateAttribution(string jsonstring, string source, string networkUserId, Action<Adapty.Error> completionHandler)
+            => _UpdateAttribution(jsonstring, source, networkUserId, AdaptyIOSCallbackAction.ActionToIntPtr((string json) =>
         {
             if (completionHandler == null) return;
             var error = JSONNode.Parse(json).GetErrorIfPresent("error");

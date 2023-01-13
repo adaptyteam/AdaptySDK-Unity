@@ -5,8 +5,6 @@
 //  Created by Aleksei Goncharov on 10.12.2022.
 //
 
-using System;
-
 namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions

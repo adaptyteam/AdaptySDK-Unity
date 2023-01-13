@@ -5,10 +5,6 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using System;
-using AdaptySDK.SimpleJSON;
-using UnityEngine;
-
 namespace AdaptySDK
 {
     public static partial class Adapty
@@ -24,6 +20,13 @@ namespace AdaptySDK
                 return $"{nameof(Code)}: {Code}, " +
                        $"{nameof(Message)}: {Message}, " +
                        $"{nameof(Detail)}: {Detail}";
+            }
+
+            internal Error(ErrorCode Code, string Message, string Detail)
+            {
+                this.Message = Message;
+                this.Detail = Detail;
+                this.Code = Code;
             }
         }
     }

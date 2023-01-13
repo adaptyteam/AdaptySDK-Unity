@@ -11,9 +11,9 @@ namespace AdaptySDK.Android
     {
         private static AndroidJavaClass AdaptyAndroidClass = new AndroidJavaClass("com.adapty.unity.AdaptyAndroidWrapper");
 
-        internal static void SetLogLevel(Adapty.LogLevel value)
+        internal static void SetLogLevel(string value)
         {
-            AdaptyAndroidClass.CallStatic("setLogLevel", value.ToJSON());
+            AdaptyAndroidClass.CallStatic("setLogLevel", value);
         }
 
         internal static void Identify(string customerUserId, Action<Adapty.Error> completionHandler)
@@ -63,8 +63,8 @@ namespace AdaptySDK.Android
             }
         }));
 
-        internal static void GetPaywallProducts(Adapty.Paywall paywall, Adapty.IOSProductsFetchPolicy fetchPolicy, Action<IList<Adapty.PaywallProduct>, Adapty.Error> completionHandler)
-           => AdaptyAndroidClass.CallStatic("getPaywallProducts", paywall.ToJSONNode().ToString(), AdaptyAndroidCallback.Action((string json) =>
+        internal static void GetPaywallProducts(string paywall, string fetchPolicy, Action<IList<Adapty.PaywallProduct>, Adapty.Error> completionHandler)
+           => AdaptyAndroidClass.CallStatic("getPaywallProducts", paywall, AdaptyAndroidCallback.Action((string json) =>
         {
             if (completionHandler == null) return;
             var response = JSONNode.Parse(json);
@@ -114,8 +114,8 @@ namespace AdaptySDK.Android
             }
         }));
 
-        internal static void MakePurchase(Adapty.PaywallProduct product, Adapty.AndroidSubscriptionUpdateParameters subscriptionUpdate, Action<Adapty.Profile, Adapty.Error> completionHandler)
-            => AdaptyAndroidClass.CallStatic("makePurchase", product.ToJSONNode().ToString(), (subscriptionUpdate == null) ? null : subscriptionUpdate.ToJSONNode().ToString(), AdaptyAndroidCallback.Action((string json) =>
+        internal static void MakePurchase(string product, string subscriptionUpdate, Action<Adapty.Profile, Adapty.Error> completionHandler)
+            => AdaptyAndroidClass.CallStatic("makePurchase", product, subscriptionUpdate, AdaptyAndroidCallback.Action((string json) =>
         {
             if (completionHandler == null) return;
             var response = JSONNode.Parse(json);
@@ -131,8 +131,8 @@ namespace AdaptySDK.Android
             }
         }));
 
-        internal static void LogShowPaywall(Adapty.Paywall paywall, Action<Adapty.Error> completionHandler)
-            => AdaptyAndroidClass.CallStatic("logShowPaywall", paywall.ToJSONNode().ToString(), AdaptyAndroidCallback.Action((string json) =>
+        internal static void LogShowPaywall(string paywall, Action<Adapty.Error> completionHandler)
+            => AdaptyAndroidClass.CallStatic("logShowPaywall", paywall, AdaptyAndroidCallback.Action((string json) =>
         {
             if (completionHandler == null) return;
             var error = JSONNode.Parse(json).GetErrorIfPresent("error");
@@ -146,8 +146,8 @@ namespace AdaptySDK.Android
             }
         }));
 
-        internal static void LogShowOnboarding(Adapty.OnboardingScreenParameters onboardingScreenParameters, Action<Adapty.Error> completionHandler)
-             => AdaptyAndroidClass.CallStatic("logShowOnboarding", onboardingScreenParameters.ToJSONNode().ToString(), AdaptyAndroidCallback.Action((string json) =>
+        internal static void LogShowOnboarding(string onboardingScreenParameters, Action<Adapty.Error> completionHandler)
+             => AdaptyAndroidClass.CallStatic("logShowOnboarding", onboardingScreenParameters, AdaptyAndroidCallback.Action((string json) =>
         {
             if (completionHandler == null) return;
             var error = JSONNode.Parse(json).GetErrorIfPresent("error");
@@ -177,8 +177,8 @@ namespace AdaptySDK.Android
         }));
 
 
-        internal static void UpdateProfile(Adapty.ProfileParameters param, Action<Adapty.Error> completionHandler)
-         => AdaptyAndroidClass.CallStatic("updateProfile", param.ToJSONNode().ToString(), AdaptyAndroidCallback.Action((string json) =>
+        internal static void UpdateProfile(string param, Action<Adapty.Error> completionHandler)
+         => AdaptyAndroidClass.CallStatic("updateProfile", param, AdaptyAndroidCallback.Action((string json) =>
          {
              if (completionHandler == null) return;
              var error = JSONNode.Parse(json).GetErrorIfPresent("error");
@@ -192,8 +192,8 @@ namespace AdaptySDK.Android
              }
          }));
 
-        internal static void UpdateAttribution(string jsonstring, Adapty.AttributionSource source, string networkUserId, Action<Adapty.Error> completionHandler)
-            => AdaptyAndroidClass.CallStatic("updateAttribution", jsonstring, source.ToJSON(), networkUserId, AdaptyAndroidCallback.Action((string json) =>
+        internal static void UpdateAttribution(string jsonstring, string source, string networkUserId, Action<Adapty.Error> completionHandler)
+            => AdaptyAndroidClass.CallStatic("updateAttribution", jsonstring, source, networkUserId, AdaptyAndroidCallback.Action((string json) =>
         {
             if (completionHandler == null) return;
             var error = JSONNode.Parse(json).GetErrorIfPresent("error");
