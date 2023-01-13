@@ -23,7 +23,7 @@ namespace AdaptySDK
                 node.Add("ab_test_name", ABTestName);
                 node.Add("variation_id", VariationId);
                 node.Add("revision", Revision);
-                node.Add("custom_payload", RemoteConfigString);
+                if (_PayloadData is not null) node.Add("custom_payload", RemoteConfigString);
                 var products = new JSONArray();
                 foreach (var item in _Products)
                 {
@@ -31,7 +31,8 @@ namespace AdaptySDK
                 }
                 node.Add("products", products);
                 node.Add("paywall_updated_at", _Version);
-                node.Add("payload_data", _PayloadData);
+                if (_PayloadData is not null) node.Add("payload_data", _PayloadData);
+
                 return node;
             }
 
