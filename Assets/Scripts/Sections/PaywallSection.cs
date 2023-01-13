@@ -4,9 +4,9 @@ using AdaptySDK;
 using TMPro;
 using UnityEngine;
 
-public class PaywallSection : MonoBehaviour
-{
+public class PaywallSection : MonoBehaviour {
     public AdaptyListener Listener;
+    public AdaptyRouter Router;
 
     public GameObject ProductButtonPrefab;
 
@@ -19,63 +19,53 @@ public class PaywallSection : MonoBehaviour
     private string m_paywallId = "example_ab_test";
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
-    void Start()
-    {
+    void Start() {
         this.PaywallNameText.SetText(this.m_paywallId);
         this.LoadPaywall();
     }
 
-    public void LoadPaywall()
-    {
-        this.Listener.GetPaywall(this.m_paywallId, (paywall) =>
-        {
-            if (paywall == null)
-            {
+    public void LoadPaywall() {
+        this.Router.SetIsLoading(true);
+
+        this.Listener.GetPaywall(this.m_paywallId, (paywall) => {
+            if (paywall == null) {
                 this.UpdatePaywallFail();
-            }
-            else
-            {
+                this.Router.SetIsLoading(false);
+            } else {
                 this.LoadProducts(paywall);
             }
         });
     }
 
-    void LoadProducts(Adapty.Paywall paywall)
-    {
-        this.Listener.GetPaywallProducts(paywall, (products) =>
-        {
-            if (products != null)
-            {
+    void LoadProducts(Adapty.Paywall paywall) {
+        this.Listener.GetPaywallProducts(paywall, (products) => {
+            if (products != null) {
                 this.UpdatePaywallData(paywall, products);
-            }
-            else
-            {
+            } else {
                 this.UpdatePaywallFail();
             }
+
+            this.Router.SetIsLoading(false);
         });
     }
 
-    private void UpdatePaywallFail()
-    {
+    private void UpdatePaywallFail() {
         this.LoadingStatusText.SetText("FAIL");
         this.VariationIdText.SetText("null");
         this.RevisionText.SetText("null");
     }
 
-    private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products)
-    {
+    private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products) {
         this.LoadingStatusText.SetText("OK");
         this.VariationIdText.SetText(paywall.VariationId);
         this.RevisionText.SetText(paywall.Revision.ToString());
 
-        m_productButtons.ForEach((button) =>
-        {
+        m_productButtons.ForEach((button) => {
             Destroy(button.gameObject);
         });
         m_productButtons.Clear();
 
-        for (var i = 0; i < products.Count; ++i)
-        {
+        for (var i = 0; i < products.Count; ++i) {
             var product = products[i];
             var productButton = this.CreateProductButton(product, i);
             m_productButtons.Add(productButton);
@@ -85,19 +75,17 @@ public class PaywallSection : MonoBehaviour
         rect.sizeDelta = new Vector2(rect.sizeDelta.x, 380.0f + products.Count * 80.0f);
     }
 
-    private ProductButton CreateProductButton(Adapty.PaywallProduct product, float index)
-    {
+    private ProductButton CreateProductButton(Adapty.PaywallProduct product, float index) {
         var productButtonObject = Instantiate(this.ProductButtonPrefab);
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
         productButtonRect.SetParent(this.ContainerTransform);
         productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -230.0f - 80.0f * index);
-        productButtonRect.sizeDelta = new Vector2(120.0f, 70.0f);
+        productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 70.0f);
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
-        productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
-        {
-            this.Listener.MakePurchase(product);
+        productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
+            this.Listener.MakePurchase(product, (error) => { });
         });
         return productButtonObject.GetComponent<ProductButton>();
     }

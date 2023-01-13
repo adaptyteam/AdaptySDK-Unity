@@ -14,24 +14,26 @@ namespace AdaptyExample {
 
         public GameObject ExamplePaywallSectionPrefab;
 
-        //[HideInInspector]
+        public GameObject OtherActionsSectionPrefab;
+
+        [HideInInspector]
         public ProfileIdSection ProfileIdSection;
 
-        //[HideInInspector]
+        [HideInInspector]
         public ProfileInfoSection ProfileInfoSection;
 
-        //[HideInInspector]
+        [HideInInspector]
         public PaywallSection ExamplePaywallSection;
+
+        [HideInInspector]
+        public ActionsSection ActionsSection;
 
         private AdaptyListener listener;
         private Adapty.Profile profile;
 
         void Start() {
-            // UpdateProfile(this.profile);
             this.listener = GetComponent<AdaptyListener>();
             this.ConfigureLayout();
-
-            this.ProfileIdSection.ProfileIdText.SetText("profile_id will be here");
         }
 
         void ConfigureLayout() {
@@ -44,8 +46,6 @@ namespace AdaptyExample {
             profileIdSectionRect.anchoredPosition =
                 new Vector3(profileIdSectionRect.position.x, -offset);
 
-            
-
             offset += profileIdSectionRect.rect.height + 20.0f;
 
             var profileInfoSectionObj =
@@ -55,8 +55,6 @@ namespace AdaptyExample {
             profileInfoSectionRect.SetParent(this.ContentTransform);
             profileInfoSectionRect.anchoredPosition =
                 new Vector3(profileInfoSectionRect.position.x, -offset);
-
-            
 
             offset += profileInfoSectionRect.rect.height + 20.0f;
 
@@ -68,26 +66,36 @@ namespace AdaptyExample {
             examplePaywallSectionRect.anchoredPosition =
                 new Vector3(examplePaywallSectionRect.position.x, -offset);
 
+            offset += examplePaywallSectionRect.rect.height + 20.0f;
+
+            var actionsSectionObj = Instantiate(this.OtherActionsSectionPrefab);
+            var actionsSectionRect = actionsSectionObj.GetComponent<RectTransform>();
+            actionsSectionRect.SetParent(this.ContentTransform);
+            actionsSectionRect.anchoredPosition = new Vector3(actionsSectionRect.position.x, -offset);
+
             var profileIdSection = profileIdSectionObj.GetComponent<ProfileIdSection>();
             var profileInfoSection = profileInfoSectionObj.GetComponent<ProfileInfoSection>();
             var examplePaywallSection = examplePaywallSectionObj.GetComponent<PaywallSection>();
+            var actionsSection = actionsSectionObj.GetComponent<ActionsSection>();
 
             profileInfoSection.Listener = this.listener;
             examplePaywallSection.Listener = this.listener;
+            examplePaywallSection.Router = this;
+            actionsSection.Listener = this.listener;
+            actionsSection.Router = this;
 
             this.ProfileIdSection = profileIdSection;
             this.ProfileInfoSection = profileInfoSection;
             this.ExamplePaywallSection = examplePaywallSection;
+            this.ActionsSection = actionsSection;
         }
 
-        public void UpdateProfile(Adapty.Profile profile) {
-            Debug.Log($"#AdaptyRouter# UpdateProfile");
-
+        public void SetProfile(Adapty.Profile profile) {
             if (this.ProfileInfoSection != null && profile != null) {
-                this.ProfileInfoSection.UpdateProfile(profile);
+                this.ProfileInfoSection.SetProfile(profile);
             }
             if (this.ProfileIdSection != null && profile != null) {
-                this.ProfileIdSection.UpdateProfile(profile);
+                this.ProfileIdSection.SetProfile(profile);
             }
 
             this.profile = profile;
@@ -96,15 +104,5 @@ namespace AdaptyExample {
         public void SetIsLoading(bool isLoading) {
             this.LoadingPanel.gameObject.SetActive(isLoading);
         }
-
-        //public void ShowRootView() {
-        //	RootPanel.gameObject.SetActive(true);
-        //	ProductsPanel.gameObject.SetActive(false);
-        //}
-
-        //public void ShowProductsListView() {
-        //	RootPanel.gameObject.SetActive(false);
-        //	ProductsPanel.gameObject.SetActive(true);
-        //}
     }
 }

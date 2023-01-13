@@ -21,7 +21,7 @@ public class ProfileInfoSection : MonoBehaviour
     public TextMeshProUGUI NonSubscriptionsText;
 
 
-    public void UpdateProfile(Adapty.Profile profile)
+    public void SetProfile(Adapty.Profile profile)
     {
         if (profile.AccessLevels == null || profile.AccessLevels.Count == 0)
         {

@@ -497,8 +497,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
-  m_SizeDelta: {x: 0, y: 2178.0532}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 3000}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &607767608
 GameObject:
@@ -749,8 +749,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadingPanel: {fileID: 478959357}
-  ProfileIdSection: {fileID: 0}
-  ProfileSection: {fileID: 0}
   ContentTransform: {fileID: 607650114}
   ProfileIdSectionPrefab: {fileID: 1452671395123508981, guid: 94c0681869351437fbf3da353d3c8fad,
     type: 3}
@@ -758,6 +756,12 @@ MonoBehaviour:
     type: 3}
   ExamplePaywallSectionPrefab: {fileID: 1929123934848718610, guid: d2bc119b9b62243df8ca7497121d754f,
     type: 3}
+  OtherActionsSectionPrefab: {fileID: 4472995051164199112, guid: 7301306c31f7d44b89bd2a7442263bed,
+    type: 3}
+  ProfileIdSection: {fileID: 0}
+  ProfileInfoSection: {fileID: 0}
+  ExamplePaywallSection: {fileID: 0}
+  ActionsSection: {fileID: 0}
 --- !u!1001 &889108850
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1360,7 +1364,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 720443184}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.74148786
+  m_Size: 0.53833336
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
