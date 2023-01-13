@@ -143,12 +143,16 @@ import Adapty
 
     @objc public func updateAttribution(_ jsonString: String, source sourceString: String, networkUserId: String?, completion: JSONStringCompletion? = nil) {
         let attribution: [AnyHashable: Any]
-        let source: AdaptyAttributionSource
         do {
             attribution = try AdaptyUnityPlugin.decodeToDictionary(jsonString) ?? [:]
-            source = try AdaptyUnityPlugin.decode(AdaptyAttributionSource.self, from: sourceString)
         } catch {
             let error = PluginError.decodingFailed(error)
+            completion?(AdaptyUnityPlugin.encodeToString(result: error))
+            return
+        }
+
+        guard let source = AdaptyAttributionSource(rawValue: sourceString) else {
+            let error = PluginError.decodingFailed("AdaptyAttributionSource unknown value: \(sourceString)")
             completion?(AdaptyUnityPlugin.encodeToString(result: error))
             return
         }
