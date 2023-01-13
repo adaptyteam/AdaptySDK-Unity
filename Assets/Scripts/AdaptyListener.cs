@@ -119,7 +119,7 @@ namespace AdaptyExample
         {
             Debug.Log("#AdaptyListener# OnReceiveUpdatedProfile called");
 
-            this.Router.ProfileInfoSection.UpdateProfile(profile);
+            this.Router.UpdateProfile(profile);
         }
     }
 
