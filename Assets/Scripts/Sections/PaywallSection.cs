@@ -85,7 +85,10 @@ public class PaywallSection : MonoBehaviour {
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
         productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
-            this.Listener.MakePurchase(product, (error) => { });
+            this.Router.SetIsLoading(true);
+            this.Listener.MakePurchase(product, (error) => {
+                this.Router.SetIsLoading(false);
+            });
         });
         return productButtonObject.GetComponent<ProductButton>();
     }

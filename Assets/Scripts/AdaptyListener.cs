@@ -15,6 +15,7 @@ namespace AdaptyExample {
             Adapty.SetLogLevel(Adapty.LogLevel.Verbose);
             Adapty.SetEventListener(this);
             this.SetFallBackPaywalls();
+            this.GetProfile();
         }
 
         private void SetFallBackPaywalls() {
@@ -138,6 +139,8 @@ namespace AdaptyExample {
         private void LogMethodResult(string methodName, Error error) {
             if (error != null) {
                 Debug.Log(string.Format("#AdaptyListener# <-- {0} error {1}", methodName, error));
+
+                this.Router.ShowAlertPanel(error.ToString());
             } else {
                 Debug.Log(string.Format("#AdaptyListener# <-- {0} success", methodName));
             }

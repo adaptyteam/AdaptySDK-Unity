@@ -4,6 +4,7 @@ using UnityEngine;
 namespace AdaptyExample {
     public class AdaptyRouter : MonoBehaviour {
         public RectTransform LoadingPanel;
+        public AlertPanel AlertPanel;
 
         [Header("Sections Prefabs")]
         public RectTransform ContentTransform;
@@ -103,6 +104,15 @@ namespace AdaptyExample {
 
         public void SetIsLoading(bool isLoading) {
             this.LoadingPanel.gameObject.SetActive(isLoading);
+        }
+
+        public void ShowAlertPanel(string text) {
+            this.AlertPanel.Text.SetText(text);
+            this.AlertPanel.gameObject.SetActive(true);
+        }
+
+        public void HideAlertPanel() {
+            this.AlertPanel.gameObject.SetActive(false);
         }
     }
 }
