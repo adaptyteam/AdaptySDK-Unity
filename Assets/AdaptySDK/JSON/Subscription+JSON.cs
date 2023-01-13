@@ -34,7 +34,7 @@ namespace AdaptySDK
                 IsSandbox = jsonNode.GetBoolean("is_sandbox");
                 VendorTransactionId = jsonNode.GetString("vendor_transaction_id");
                 VendorOriginalTransactionId = jsonNode.GetString("vendor_original_transaction_id");
-                CancellationReason = jsonNode.GetString("cancellation_reason");
+                CancellationReason = jsonNode.GetStringIfPresent("cancellation_reason");
                 IsRefund = jsonNode.GetBoolean("is_refund");
             }
         }
