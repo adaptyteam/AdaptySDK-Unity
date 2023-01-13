@@ -20,54 +20,55 @@ namespace AdaptySDK
         public static void SetLogLevel(LogLevel level)
             => _Adapty.SetLogLevel(level.ToJSON());
 
-        public static void Identify(string customerUserId, Action<Error> completionHandler)
-        {
+        public static void Identify(string customerUserId, Action<Error> completionHandler) =>
             _Adapty.Identify(customerUserId, (json) =>
+        {
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
             {
-                if (completionHandler == null) return;
-                var error = JSONNode.Parse(json).GetErrorIfPresent("error");
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.Identify(..)", e);
-                }
-            });
-        }
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.Identify(..)", e);
+            }
+        });
 
         public static void Logout(Action<Error> completionHandler)
             => _Adapty.Logout((json) =>
+        {
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
             {
-                if (completionHandler == null) return;
-                var error = JSONNode.Parse(json).GetErrorIfPresent("error");
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in Adapty.Logout(..)", e);
-                }
-            });
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in Adapty.Logout(..)", e);
+            }
+        });
 
         public static void GetPaywall(string id, Action<Paywall, Error> completionHandler)
             => _Adapty.GetPaywall(id, (json) =>
+        {
+            if (completionHandler == null) return;
+            var response = JSONNode.Parse(json);
+            var error = response.GetErrorIfPresent("error");
+            var result = error != null ? null : response.GetPaywall("success");
+            try
             {
-                if (completionHandler == null) return;
-                var response = JSONNode.Parse(json);
-                var error = response.GetErrorIfPresent("error");
-                var result = error != null ? null : response.GetPaywall("success");
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Paywall,Adapty.Error> completionHandler in Adapty.GetPaywall(..)", e);
-                }
-            });
+                completionHandler(result, error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Paywall,Adapty.Error> completionHandler in Adapty.GetPaywall(..)", e);
+            }
+        });
+
+        public static void GetPaywallProducts(Paywall paywall, Action<IList<PaywallProduct>, Error> completionHandler)
+            => GetPaywallProducts(paywall, IOSProductsFetchPolicy.Default, completionHandler);
 
         public static void GetPaywallProducts(Paywall paywall, IOSProductsFetchPolicy fetchPolicy, Action<IList<PaywallProduct>, Error> completionHandler)
         {
@@ -107,42 +108,42 @@ namespace AdaptySDK
             });
         }
 
-        public static void GetPaywallProducts(Paywall paywall, Action<IList<PaywallProduct>, Error> completionHandler)
-            => GetPaywallProducts(paywall, IOSProductsFetchPolicy.Default, completionHandler);
-
         public static void GetProfile(Action<Profile, Error> completionHandler)
             => _Adapty.GetProfile((json) =>
+        {
+            if (completionHandler == null) return;
+            var response = JSONNode.Parse(json);
+            var error = response.GetErrorIfPresent("error");
+            var result = error != null ? null : response.GetProfile("success");
+            try
             {
-                if (completionHandler == null) return;
-                var response = JSONNode.Parse(json);
-                var error = response.GetErrorIfPresent("error");
-                var result = error != null ? null : response.GetProfile("success");
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler in Adapty.GetProfile(..)", e);
-                }
-            });
+                completionHandler(result, error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler in Adapty.GetProfile(..)", e);
+            }
+        });
 
         public static void RestorePurchases(Action<Profile, Error> completionHandler)
             => _Adapty.RestorePurchases((json) =>
+        {
+            if (completionHandler == null) return;
+            var response = JSONNode.Parse(json);
+            var error = response.GetErrorIfPresent("error");
+            var result = error != null ? null : response.GetProfile("success");
+            try
             {
-                if (completionHandler == null) return;
-                var response = JSONNode.Parse(json);
-                var error = response.GetErrorIfPresent("error");
-                var result = error != null ? null : response.GetProfile("success");
-                try
-                {
-                    completionHandler(result, error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler in Adapty.RestorePurchases(..)", e);
-                }
-            });
+                completionHandler(result, error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler in Adapty.RestorePurchases(..)", e);
+            }
+        });
+
+        public static void MakePurchase(PaywallProduct product, Action<Profile, Error> completionHandler)
+            => MakePurchase(product, null, completionHandler);
 
         public static void MakePurchase(PaywallProduct product, AndroidSubscriptionUpdateParameters subscriptionUpdate, Action<Profile, Error> completionHandler)
         {
@@ -206,8 +207,6 @@ namespace AdaptySDK
             });
 
         }
-        public static void MakePurchase(PaywallProduct product, Action<Profile, Error> completionHandler)
-            => MakePurchase(product, null, completionHandler);
 
         public static void LogShowPaywall(Paywall paywall, Action<Error> completionHandler)
         {
@@ -283,18 +282,18 @@ namespace AdaptySDK
 
         public static void SetFallbackPaywalls(string paywalls, Action<Error> completionHandler)
             => _Adapty.SetFallbackPaywalls(paywalls, (json) =>
+        {
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
             {
-                if (completionHandler == null) return;
-                var error = JSONNode.Parse(json).GetErrorIfPresent("error");
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in Adapty.SetFallbackPaywalls(..)", e);
-                }
-            });
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in Adapty.SetFallbackPaywalls(..)", e);
+            }
+        });
 
         public static void UpdateProfile(ProfileParameters param, Action<Error> completionHandler)
         {
@@ -332,21 +331,6 @@ namespace AdaptySDK
             });
         }
 
-        public static void UpdateAttribution(string jsonstring, AttributionSource source, string networkUserId, Action<Error> completionHandler)
-            => _Adapty.UpdateAttribution(jsonstring, source.ToJSON(), networkUserId, (json) =>
-            {
-                if (completionHandler == null) return;
-                var error = JSONNode.Parse(json).GetErrorIfPresent("error");
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in Adapty.UpdateAttribution(..)", e);
-                }
-            });
-
         public static void UpdateAttribution(string jsonstring, AttributionSource source, Action<Error> completionHandler)
             => UpdateAttribution(jsonstring, source, null, completionHandler);
         public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, string networkUserId, Action<Error> completionHandler)
@@ -354,23 +338,35 @@ namespace AdaptySDK
         public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, Action<Error> completionHandler)
             => UpdateAttribution(attribution.ToJSONObject().ToString(), source, null, completionHandler);
 
-
+        public static void UpdateAttribution(string jsonstring, AttributionSource source, string networkUserId, Action<Error> completionHandler)
+            => _Adapty.UpdateAttribution(jsonstring, source.ToJSON(), networkUserId, (json) =>
+        {
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
+            {
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in Adapty.UpdateAttribution(..)", e);
+            }
+        });
 
         public static void SetVariationForTransaction(string variationId, string transactionId, Action<Error> completionHandler)
             => _Adapty.SetVariationForTransaction(variationId, transactionId, (json) =>
+        {
+            if (completionHandler == null) return;
+            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            try
             {
-                if (completionHandler == null) return;
-                var error = JSONNode.Parse(json).GetErrorIfPresent("error");
-                try
-                {
-                    completionHandler(error);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in Adapty.SetVariationForTransaction(..)", e);
-                }
-            });
-
+                completionHandler(error);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in Adapty.SetVariationForTransaction(..)", e);
+            }
+        });
 
         public static void PresentCodeRedemptionSheet()
             => _Adapty.PresentCodeRedemptionSheet();
