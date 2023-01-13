@@ -28,7 +28,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.Identify(..)", e);
             }
         }));
 
@@ -46,7 +46,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.Logout(..)", e);
             }
         }));
 
@@ -66,7 +66,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Paywall,Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Paywall,Adapty.Error> completionHandler in AdaptyIOS.GetPaywall(..)", e);
             }
         }));
 
@@ -86,7 +86,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<IList<Adapty.PaywallProduct>,Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<IList<Adapty.PaywallProduct>,Adapty.Error> completionHandler in AdaptyIOS.GetPaywallProducts(..)", e);
             }
         }));
 
@@ -107,7 +107,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler in AdaptyIOS.GetProfile(..)", e);
             }
         }));
 
@@ -127,7 +127,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler in AdaptyIOS.RestorePurchases(..)", e);
             }
         }));
 
@@ -147,7 +147,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Profile,Adapty.Error> completionHandler in AdaptyIOS.MakePurchase(..)", e);
             }
         }));
 
@@ -167,7 +167,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.LogShowPaywall(..)", e);
             }
         }));
 
@@ -185,7 +185,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.LogShowOnboarding(..)", e);
             }
         }));
 
@@ -204,7 +204,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.SetFallbackPaywalls(..)", e);
             }
         }));
 
@@ -222,7 +222,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.UpdateProfile(..)", e);
             }
         }));
 
@@ -240,7 +240,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.UpdateAttribution(..)", e);
             }
         }));
 
@@ -259,7 +259,7 @@ namespace AdaptySDK.iOS
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler", e);
+                throw new Exception("Failed to invoke Action<Adapty.Error> completionHandler in AdaptyIOS.SetVariationForTransaction(..)", e);
             }
         }));
 
