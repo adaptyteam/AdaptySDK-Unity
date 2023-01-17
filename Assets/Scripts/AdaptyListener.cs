@@ -49,7 +49,7 @@ namespace AdaptyExample {
         public void GetPaywallProducts(Adapty.Paywall paywall, Action<IList<PaywallProduct>> completionHandler) {
             this.LogMethodRequest("GetPaywallProducts");
 
-            Adapty.GetPaywallProducts(paywall, (products, error) => {
+            Adapty.GetPaywallProducts(paywall, IOSProductsFetchPolicy.WaitForReceiptValidation, (products, error) => {
                 this.LogMethodResult("GetPaywallProducts", error);
                 completionHandler.Invoke(products);
             });
@@ -59,7 +59,7 @@ namespace AdaptyExample {
         public void MakePurchase(Adapty.PaywallProduct product, Action<Error> completionHandler) {
             this.LogMethodRequest("MakePurchase");
 
-            Adapty.MakePurchase(product, null, (profile, error) => {
+            Adapty.MakePurchase(product, (profile, error) => {
                 this.LogMethodResult("MakePurchase", error);
                 completionHandler.Invoke(error);
 
@@ -79,6 +79,15 @@ namespace AdaptyExample {
                 if (profile != null) {
                     this.Router.SetProfile(profile);
                 }
+            });
+        }
+
+        public void Identify(string customerUserId, Action<Error> completionHandler) {
+            this.LogMethodRequest("Identify");
+
+            Adapty.Identify(customerUserId, (error) => {
+                this.LogMethodResult("Identify", error);
+                completionHandler.Invoke(error);
             });
         }
 
@@ -104,6 +113,15 @@ namespace AdaptyExample {
 
             Adapty.UpdateAttribution("{\"test_key\": \"test_value\"}", AttributionSource.Custom, (error) => {
                 this.LogMethodResult("UpdateAttribution", error);
+                completionHandler.Invoke(error);
+            });
+        }
+
+        public void LogShowPaywall(Paywall paywall, Action<Error> completionHandler) {
+            this.LogMethodRequest("LogShowPaywall");
+
+            Adapty.LogShowPaywall(paywall, (error) => {
+                this.LogMethodResult("LogShowPaywall", error);
                 completionHandler.Invoke(error);
             });
         }

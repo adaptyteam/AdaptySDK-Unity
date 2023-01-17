@@ -17,11 +17,22 @@ public class PaywallSection : MonoBehaviour {
     public TextMeshProUGUI RevisionText;
 
     private string m_paywallId = "example_ab_test";
+    private Adapty.Paywall m_paywall;
+
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
     void Start() {
         this.PaywallNameText.SetText(this.m_paywallId);
         this.LoadPaywall();
+    }
+
+    public void LogShowPaywallPressed() {
+        if (m_paywall != null) {
+            this.Router.SetIsLoading(true);
+            this.Listener.LogShowPaywall(m_paywall, (error) => {
+                this.Router.SetIsLoading(false);
+            });
+        }
     }
 
     public void LoadPaywall() {
@@ -32,6 +43,7 @@ public class PaywallSection : MonoBehaviour {
                 this.UpdatePaywallFail();
                 this.Router.SetIsLoading(false);
             } else {
+                this.m_paywall = paywall;
                 this.LoadProducts(paywall);
             }
         });
@@ -72,7 +84,7 @@ public class PaywallSection : MonoBehaviour {
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 380.0f + products.Count * 80.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 470.0f + products.Count * 80.0f);
     }
 
     private ProductButton CreateProductButton(Adapty.PaywallProduct product, float index) {
