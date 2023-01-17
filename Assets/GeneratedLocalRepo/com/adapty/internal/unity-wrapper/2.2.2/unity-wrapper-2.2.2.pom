@@ -5,4 +5,5 @@
   <artifactId>unity-wrapper</artifactId>
   <version>2.2.2</version>
   <packaging>aar</packaging>
+  <dependencies/>
 </project>

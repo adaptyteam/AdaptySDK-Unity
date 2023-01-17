@@ -2,6 +2,8 @@ package com.adapty.unity;
 
 import static com.adapty.unity.Constants.ADAPTY_ERROR_CODE_DECODING_FAILED;
 import static com.adapty.unity.Constants.ADAPTY_ERROR_CODE_KEY;
+import static com.adapty.unity.Constants.ADAPTY_ERROR_DECODING_FAILED_MESSAGE;
+import static com.adapty.unity.Constants.ADAPTY_ERROR_DETAIL_KEY;
 import static com.adapty.unity.Constants.ADAPTY_ERROR_KEY;
 import static com.adapty.unity.Constants.ADAPTY_ERROR_MESSAGE_KEY;
 import static com.adapty.unity.Constants.ADAPTY_ONBOARDING_NAME_KEY;
@@ -264,13 +266,17 @@ public class AdaptyAndroidWrapper {
     }
 
     private static void sendParameterError(String paramKey, String methodName, AdaptyAndroidCallback callback) {
-        String errorMessage = "Error while parsing parameter: " +paramKey + ", method: " + methodName;
         Map<String, Object> message = new HashMap<>();
         Map<String, Object> errorMap = new HashMap<>();
-        errorMap.put(ADAPTY_ERROR_MESSAGE_KEY, errorMessage);
+        errorMap.put(ADAPTY_ERROR_MESSAGE_KEY, ADAPTY_ERROR_DECODING_FAILED_MESSAGE);
         errorMap.put(ADAPTY_ERROR_CODE_KEY, ADAPTY_ERROR_CODE_DECODING_FAILED);
+        errorMap.put(ADAPTY_ERROR_DETAIL_KEY, createErrorDetailsString(paramKey, methodName));
         message.put(ADAPTY_ERROR_KEY, errorMap);
         sendMessageWithResult(helper.toJson(message), callback);
+    }
+
+    private static String createErrorDetailsString(String paramKey, String methodName) {
+        return "AdaptyPluginError.decodingFailed(Error while parsing parameter: " + paramKey + ", method: " + methodName + ")";
     }
 
     private static void sendEmptyResultOrError(AdaptyError error, AdaptyAndroidCallback callback) {
@@ -295,12 +301,14 @@ public class AdaptyAndroidWrapper {
 class Constants {
 
     public static final String ADAPTY_SUCCESS_KEY = "success";
-    public static final String ADAPTY_PROFILE_UPDATE_KEY = "purchaser_info_update";
+    public static final String ADAPTY_PROFILE_UPDATE_KEY = "did_load_latest_profile";
     public static final String ADAPTY_ONBOARDING_NAME_KEY = "onboarding_name";
     public static final String ADAPTY_ONBOARDING_SCREEN_NAME_KEY = "onboarding_screen_name";
     public static final String ADAPTY_ONBOARDING_SCREEN_ORDER_KEY = "onboarding_screen_order";
     public static final String ADAPTY_ERROR_KEY = "error";
     public static final String ADAPTY_ERROR_CODE_KEY = "adapty_code";
     public static final String ADAPTY_ERROR_MESSAGE_KEY = "message";
+    public static final String ADAPTY_ERROR_DETAIL_KEY = "detail";
+    public static final String ADAPTY_ERROR_DECODING_FAILED_MESSAGE = "Decoding failed";
     public static final int ADAPTY_ERROR_CODE_DECODING_FAILED = 2006;
 }

@@ -1,7 +1,5 @@
 <dependencies>
   <packages>
-    <package>com.adapty.internal:crossplatform:2.2.1</package>
-    <package>com.adapty.internal:unity-wrapper:2.2.2</package>
     <package>com.github.adaptyteam:AdaptySDK-Android:2.2.2</package>
   </packages>
   <files>
