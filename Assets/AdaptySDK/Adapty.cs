@@ -24,7 +24,7 @@ namespace AdaptySDK
             _Adapty.Identify(customerUserId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            var error = json.ExtructErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -39,7 +39,7 @@ namespace AdaptySDK
             => _Adapty.Logout((json) =>
         {
             if (completionHandler == null) return;
-            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            var error = json.ExtructErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -54,12 +54,10 @@ namespace AdaptySDK
             => _Adapty.GetPaywall(id, (json) =>
         {
             if (completionHandler == null) return;
-            var response = JSONNode.Parse(json);
-            var error = response.GetErrorIfPresent("error");
-            var result = error != null ? null : response.GetPaywall("success");
+            var response = json.ExtructPaywalleOrError();
             try
             {
-                completionHandler(result, error);
+                completionHandler(response.Value, response.Error);
             }
             catch (Exception e)
             {
@@ -94,12 +92,10 @@ namespace AdaptySDK
             _Adapty.GetPaywallProducts(paywallJson, fetchPolicy.ToJSON(), (json) =>
             {
                 if (completionHandler == null) return;
-                var response = JSONNode.Parse(json);
-                var error = response.GetErrorIfPresent("error");
-                var result = error != null ? null : response.GetPaywallProductList("success");
+                var response = json.ExtructPaywallProductListOrError();
                 try
                 {
-                    completionHandler(result, error);
+                    completionHandler(response.Value, response.Error);
                 }
                 catch (Exception e)
                 {
@@ -112,12 +108,10 @@ namespace AdaptySDK
             => _Adapty.GetProfile((json) =>
         {
             if (completionHandler == null) return;
-            var response = JSONNode.Parse(json);
-            var error = response.GetErrorIfPresent("error");
-            var result = error != null ? null : response.GetProfile("success");
+            var response = json.ExtructProfileOrError();
             try
             {
-                completionHandler(result, error);
+                completionHandler(response.Value, response.Error);
             }
             catch (Exception e)
             {
@@ -129,12 +123,11 @@ namespace AdaptySDK
             => _Adapty.RestorePurchases((json) =>
         {
             if (completionHandler == null) return;
-            var response = JSONNode.Parse(json);
-            var error = response.GetErrorIfPresent("error");
-            var result = error != null ? null : response.GetProfile("success");
+            var response = json.ExtructProfileOrError();
+
             try
             {
-                completionHandler(result, error);
+                completionHandler(response.Value, response.Error);
             }
             catch (Exception e)
             {
@@ -193,12 +186,10 @@ namespace AdaptySDK
             _Adapty.MakePurchase(productJson, androidSubscriptionUpdateJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var response = JSONNode.Parse(json);
-                var error = response.GetErrorIfPresent("error");
-                var result = error != null ? null : response.GetProfile("success");
+                var response = json.ExtructProfileOrError();
                 try
                 {
-                    completionHandler(result, error);
+                    completionHandler(response.Value, response.Error);
                 }
                 catch (Exception e)
                 {
@@ -232,7 +223,7 @@ namespace AdaptySDK
             _Adapty.LogShowPaywall(paywallJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+                var error = json.ExtructErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -268,7 +259,7 @@ namespace AdaptySDK
             _Adapty.LogShowOnboarding(parametersJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+                var error = json.ExtructErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -284,7 +275,7 @@ namespace AdaptySDK
             => _Adapty.SetFallbackPaywalls(paywalls, (json) =>
         {
             if (completionHandler == null) return;
-            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            var error = json.ExtructErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -319,7 +310,7 @@ namespace AdaptySDK
             _Adapty.UpdateProfile(parametersJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+                var error = json.ExtructErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -342,7 +333,7 @@ namespace AdaptySDK
             => _Adapty.UpdateAttribution(jsonstring, source.ToJSON(), networkUserId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            var error = json.ExtructErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -357,7 +348,7 @@ namespace AdaptySDK
             => _Adapty.SetVariationForTransaction(variationId, transactionId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            var error = json.ExtructErrorIfPresent();
             try
             {
                 completionHandler(error);

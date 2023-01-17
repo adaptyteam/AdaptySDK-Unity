@@ -5,6 +5,7 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
+using System;
 using AdaptySDK.SimpleJSON;
 
 namespace AdaptySDK
@@ -35,6 +36,21 @@ namespace AdaptySDK.SimpleJSON
             var obj = GetObjectIfPresent(node, aKey);
             if (obj is null) return null;
             return new Adapty.Error(obj);
+        }
+
+        internal static Adapty.Error ExtructErrorIfPresent(this string json)
+        {
+            Adapty.Error error;
+            try
+            {
+                error = JSONNode.Parse(json).GetErrorIfPresent("error");
+            }
+            catch (Exception ex)
+            {
+                error = new Adapty.Error(Adapty.ErrorCode.DecodingFailed, "Failed decoding Adapty.Error", $"AdaptyUnityError.DecodingFailed({ex})");
+            }
+
+            return error;
         }
     }
 }
