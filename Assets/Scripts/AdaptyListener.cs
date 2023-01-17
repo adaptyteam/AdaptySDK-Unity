@@ -94,9 +94,8 @@ namespace AdaptyExample {
         public void UpdateProfile(Action<Error> completionHandler) {
             this.LogMethodRequest("UpdateProfile");
 
-            var builder = new Adapty.ProfileParameters.Builder();
-
-            builder.SetFirstName("John")
+            var builder = new Adapty.ProfileParameters.Builder()
+                .SetFirstName("John")
                 .SetLastName("Appleseed")
                 .SetBirthday(new DateTime(1990, 5, 14))
                 .SetGender(ProfileGender.Female)
