@@ -888,6 +888,8 @@ MonoBehaviour:
   ContentTransform: {fileID: 607650114}
   ProfileIdSectionPrefab: {fileID: 1452671395123508981, guid: 94c0681869351437fbf3da353d3c8fad,
     type: 3}
+  IdentifySectionPrefab: {fileID: 5910776291940181971, guid: 552352e9c79d7446baec6acd1007bcc9,
+    type: 3}
   ProfileInfoSectionPrefab: {fileID: 3228721744044742240, guid: eb0e98dac45764f14ad6641ad5441676,
     type: 3}
   ExamplePaywallSectionPrefab: {fileID: 1929123934848718610, guid: d2bc119b9b62243df8ca7497121d754f,
@@ -895,6 +897,7 @@ MonoBehaviour:
   OtherActionsSectionPrefab: {fileID: 4472995051164199112, guid: 7301306c31f7d44b89bd2a7442263bed,
     type: 3}
   ProfileIdSection: {fileID: 0}
+  IdentifySection: {fileID: 0}
   ProfileInfoSection: {fileID: 0}
   ExamplePaywallSection: {fileID: 0}
   ActionsSection: {fileID: 0}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using AdaptySDK;
 using UnityEngine;
 using UnityEngine.UI;
@@ -100,6 +101,17 @@ namespace AdaptyExample {
                 .SetBirthday(new DateTime(1990, 5, 14))
                 .SetGender(ProfileGender.Female)
                 .SetEmail("example@adapty.io");
+
+            builder = builder.SetAnalyticsDisabled(true);
+
+            try {
+                builder = builder.SetCustomStringAttribute("string_key", "string_value");
+                builder = builder.SetCustomStringAttribute("key_to_remove", "test");
+                builder = builder.SetCustomDoubleAttribute("double_key", 123.0f);
+                builder = builder.RemoveCustomAttribute("key_to_remove");
+            } catch (Exception e) {
+                Debug.Log(string.Format("#AdaptyListener# UpdateProfile Exception: {0}", e));
+            }
 
             Adapty.UpdateProfile(builder.Build(), (error) => {
                 this.LogMethodResult("UpdateProfile", error);

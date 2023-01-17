@@ -4,8 +4,7 @@ using AdaptySDK;
 using TMPro;
 using UnityEngine;
 
-public class ProfileInfoSection : MonoBehaviour
-{
+public class ProfileInfoSection : MonoBehaviour {
     public AdaptyListener Listener;
 
     public TextMeshProUGUI IsPremiumText;
@@ -21,10 +20,8 @@ public class ProfileInfoSection : MonoBehaviour
     public TextMeshProUGUI NonSubscriptionsText;
 
 
-    public void SetProfile(Adapty.Profile profile)
-    {
-        if (profile.AccessLevels == null || profile.AccessLevels.Count == 0)
-        {
+    public void SetProfile(Adapty.Profile profile) {
+        if (profile.AccessLevels == null || profile.AccessLevels.Count == 0) {
             Debug.Log($"#ProfileSection# UpdateProfile null");
 
             SetBoolValue(IsPremiumText, false);
@@ -59,33 +56,27 @@ public class ProfileInfoSection : MonoBehaviour
         SetIntegerValue(NonSubscriptionsText, profile.NonSubscriptions.Count);
     }
 
-    private void SetNullValue(TextMeshProUGUI text)
-    {
+    private void SetNullValue(TextMeshProUGUI text) {
         text.SetText("null");
     }
 
-    private void SetBoolValue(TextMeshProUGUI text, bool value)
-    {
+    private void SetBoolValue(TextMeshProUGUI text, bool value) {
         text.SetText(value ? "true" : "false");
     }
 
-    private void SetDateValue(TextMeshProUGUI text, DateTime? value)
-    {
+    private void SetDateValue(TextMeshProUGUI text, DateTime? value) {
         text.SetText(value?.ToShortDateString() ?? "null");
     }
 
-    private void SetStringValue(TextMeshProUGUI text, string value)
-    {
+    private void SetStringValue(TextMeshProUGUI text, string value) {
         text.SetText(value);
     }
 
-    private void SetIntegerValue(TextMeshProUGUI text, int value)
-    {
+    private void SetIntegerValue(TextMeshProUGUI text, int value) {
         text.SetText(value.ToString());
     }
 
-    public void GetProfile()
-    {
+    public void GetProfile() {
         this.Listener.GetProfile();
     }
 }
