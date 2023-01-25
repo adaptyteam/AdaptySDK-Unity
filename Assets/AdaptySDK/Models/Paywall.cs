@@ -31,6 +31,9 @@ namespace AdaptySDK
             /// Every change within the paywall creates a new revision.
             public readonly int Revision;
 
+            /// And identifier of a paywall locale.
+            public readonly string Locale;
+
             /// The custom JSON formatted data configured in Adapty Dashboard.
             /// (String representation)
             public readonly string RemoteConfigString;
@@ -70,6 +73,7 @@ namespace AdaptySDK
                        $"{nameof(ABTestName)}: {ABTestName}, " +
                        $"{nameof(VariationId)}: {VariationId}, " +
                        $"{nameof(Revision)}: {Revision}, " +
+                       $"{nameof(Locale)}: {Locale}, " +
                        $"{nameof(_Products)}: {_Products}, " +
                        $"{nameof(_Version)}: {_Version}";
         }

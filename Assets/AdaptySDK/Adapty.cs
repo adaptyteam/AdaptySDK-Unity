@@ -51,7 +51,10 @@ namespace AdaptySDK
         });
 
         public static void GetPaywall(string id, Action<Paywall, Error> completionHandler)
-            => _Adapty.GetPaywall(id, (json) =>
+            => GetPaywall(id, null, completionHandler);
+
+        public static void GetPaywall(string id, string locale, Action<Paywall, Error> completionHandler)
+            => _Adapty.GetPaywall(id, locale, (json) =>
         {
             if (completionHandler == null) return;
             var response = json.ExtructPaywalleOrError();
