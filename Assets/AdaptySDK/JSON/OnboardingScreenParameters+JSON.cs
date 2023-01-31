@@ -5,10 +5,11 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using AdaptySDK.SimpleJSON;
 
 namespace AdaptySDK
 {
+    using AdaptySDK.SimpleJSON;
+
     public static partial class Adapty
     {
         public partial class OnboardingScreenParameters

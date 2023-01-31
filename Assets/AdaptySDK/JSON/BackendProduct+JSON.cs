@@ -5,12 +5,13 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using AdaptySDK.SimpleJSON;
 using System;
 using System.Collections.Generic;
 
 namespace AdaptySDK
 {
+    using AdaptySDK.SimpleJSON;
+
     public static partial class Adapty
     {
         internal partial class BackendProduct
