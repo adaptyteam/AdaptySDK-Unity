@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AdaptySDK.SimpleJSON;
-using static AdaptySDK.Adapty;
 
 #if UNITY_IOS && !UNITY_EDITOR
 using _Adapty = AdaptySDK.iOS.AdaptyIOS;
@@ -13,6 +11,8 @@ using _Adapty = AdaptySDK.Noop.AdaptyNoop;
 
 namespace AdaptySDK
 {
+    using AdaptySDK.SimpleJSON;
+
     public static partial class Adapty
     {
         public static readonly string sdkVersion = "2.2.0";

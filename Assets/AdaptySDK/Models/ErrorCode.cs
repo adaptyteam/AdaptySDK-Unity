@@ -6,8 +6,6 @@
 //
 
 using System;
-using AdaptySDK.SimpleJSON;
-using UnityEngine;
 
 namespace AdaptySDK
 {

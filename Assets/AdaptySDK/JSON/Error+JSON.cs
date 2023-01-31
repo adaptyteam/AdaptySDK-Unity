@@ -6,10 +6,11 @@
 //
 
 using System;
-using AdaptySDK.SimpleJSON;
 
 namespace AdaptySDK
 {
+    using AdaptySDK.SimpleJSON;
+
     public static partial class Adapty
     {
         public partial class Error

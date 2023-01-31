@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AdaptySDK.SimpleJSON;
 
 #if UNITY_IOS && !UNITY_EDITOR
 using _AdaptyCallbackAction = AdaptySDK.iOS.AdaptyIOSCallbackAction;
@@ -11,6 +10,8 @@ using _AdaptyCallbackAction = AdaptySDK.Noop.AdaptyNoopCallbackAction;
 
 namespace AdaptySDK
 {
+    using AdaptySDK.SimpleJSON;
+
     public interface AdaptyEventListener
     {
         void OnLoadLatestProfile(Adapty.Profile profile);
