@@ -65,8 +65,8 @@ namespace AdaptySDK
                 LocalizedPrice = jsonNode.GetStringIfPresent("localized_price");
                 LocalizedSubscriptionPeriod = jsonNode.GetStringIfPresent("localized_subscription_period");
 #if UNITY_ANDROID
-                AndroidFreeTrialPeriod = jsonNode.GetSubscriptionPeriodIfPresent("localized_free_trial_period");
-                AndroidLocalizedFreeTrialPeriod = jsonNode.GetStringIfPresent("free_trial_period");
+                AndroidFreeTrialPeriod = jsonNode.GetSubscriptionPeriodIfPresent("free_trial_period");
+                AndroidLocalizedFreeTrialPeriod = jsonNode.GetStringIfPresent("localized_free_trial_period");
 #else
                 AndroidFreeTrialPeriod = null;
                 AndroidLocalizedFreeTrialPeriod = null;
