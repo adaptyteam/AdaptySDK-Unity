@@ -108,6 +108,12 @@ namespace AdaptySDK
                     return this;
                 }
 
+                public Builder SetAirbridgeDeviceId(string value)
+                {
+                    _Parameters.AirbridgeDeviceId = value;
+                    return this;
+                }
+
                 public Builder SetAppTrackingTransparencyStatus(IOSAppTrackingTransparencyStatus? value)
                 {
                     _Parameters.AppTrackingTransparencyStatus = value;

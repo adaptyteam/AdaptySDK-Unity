@@ -30,6 +30,7 @@ namespace AdaptySDK
             public string OneSignalPlayerId;
             public string PushwooshHWID;
             public string FirebaseAppInstanceId;
+            public string AirbridgeDeviceId;
 
             public IOSAppTrackingTransparencyStatus? AppTrackingTransparencyStatus;
             public bool? AnalyticsDisabled;
@@ -116,6 +117,7 @@ namespace AdaptySDK
                        $"{nameof(OneSignalPlayerId)}: {OneSignalPlayerId}, " +
                        $"{nameof(PushwooshHWID)}: {PushwooshHWID}, " +
                        $"{nameof(FirebaseAppInstanceId)}: {FirebaseAppInstanceId}, " +
+                       $"{nameof(AirbridgeDeviceId)}: {AirbridgeDeviceId}, " +
                        $"{nameof(AppTrackingTransparencyStatus)}: {AppTrackingTransparencyStatus}, " +
                        $"{nameof(AnalyticsDisabled)}: {AnalyticsDisabled}, " +
                        $"{nameof(CustomAttributes)}: {CustomAttributes}";

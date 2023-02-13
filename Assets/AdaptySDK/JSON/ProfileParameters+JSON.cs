@@ -32,8 +32,8 @@ namespace AdaptySDK
                 if (AppmetricaDeviceId != null) node.Add("appmetrica_device_id", AppmetricaDeviceId);
                 if (OneSignalPlayerId != null) node.Add("one_signal_player_id", OneSignalPlayerId);
                 if (PushwooshHWID != null) node.Add("pushwoosh_hwid", PushwooshHWID);
-                if (PushwooshHWID != null) node.Add("pushwoosh_hwid", PushwooshHWID);
                 if (FirebaseAppInstanceId != null) node.Add("firebase_app_instance_id", FirebaseAppInstanceId);
+                if (AirbridgeDeviceId != null) node.Add("airbridge_device_id", AirbridgeDeviceId);
                 if (AppTrackingTransparencyStatus != null) node.Add("att_status", AppTrackingTransparencyStatus.Value.ToJSON());
                 if (AnalyticsDisabled != null) node.Add("analytics_disabled", AnalyticsDisabled.Value);
                 if (CustomAttributes.Count > 0) node.Add("custom_attributes", CustomAttributes.ToJSONObject());
