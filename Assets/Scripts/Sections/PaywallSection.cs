@@ -15,8 +15,11 @@ public class PaywallSection : MonoBehaviour {
     public TextMeshProUGUI LoadingStatusText;
     public TextMeshProUGUI VariationIdText;
     public TextMeshProUGUI RevisionText;
+    public TextMeshProUGUI LocaleText;
 
     private string m_paywallId = "example_ab_test";
+    private string m_localeId = "fr";
+
     private Adapty.Paywall m_paywall;
 
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
@@ -38,7 +41,7 @@ public class PaywallSection : MonoBehaviour {
     public void LoadPaywall() {
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(this.m_paywallId, (paywall) => {
+        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, (paywall) => {
             if (paywall == null) {
                 this.UpdatePaywallFail();
                 this.Router.SetIsLoading(false);
@@ -71,6 +74,7 @@ public class PaywallSection : MonoBehaviour {
         this.LoadingStatusText.SetText("OK");
         this.VariationIdText.SetText(paywall.VariationId);
         this.RevisionText.SetText(paywall.Revision.ToString());
+        this.LocaleText.SetText(paywall.Locale);
 
         m_productButtons.ForEach((button) => {
             Destroy(button.gameObject);
@@ -84,7 +88,7 @@ public class PaywallSection : MonoBehaviour {
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 470.0f + products.Count * 80.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 540.0f + products.Count * 80.0f);
     }
 
     private ProductButton CreateProductButton(Adapty.PaywallProduct product, float index) {
@@ -92,7 +96,7 @@ public class PaywallSection : MonoBehaviour {
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
         productButtonRect.SetParent(this.ContainerTransform);
-        productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -230.0f - 80.0f * index);
+        productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -300.0f - 80.0f * index);
         productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 70.0f);
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
