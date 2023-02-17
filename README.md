@@ -13,7 +13,6 @@
 <a href="https://github.com/adaptyteam/AdaptySDK-Unity/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg"></a>
 </p>
 
-
 <p align="center">
     <a href="https://adapty.io?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity"><b>Website</b></a> •
     <a href="https://discord.com/invite/subscriptions-hub"><b>Discord</b></a> •
@@ -36,7 +35,7 @@ Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/
 <a href="https://adapty.io/schedule-demo?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-iOS_schedule-demo">Talk to Us to Learn More</a>
 </h3>
 
-## Integrate IAPs Within a Few Hours Without Server Coding 
+## Integrate IAPs Within a Few Hours Without Server Coding
 
 **Adapty handles everything, from free trials to refunds, in a simple, developer-friendly SDK.**
 
@@ -54,7 +53,7 @@ Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/
 
 ![Adapty: In-app subscriptions with paywall A/B testing](https://adapty-portal-media-production.s3.amazonaws.com/github/ab-test-new.png)
 
-- Conversions, trials, revenue, cancellations, and more  everything is calculated for you: each paywall and each A/B test.
+- Conversions, trials, revenue, cancellations, and more everything is calculated for you: each paywall and each A/B test.
 - Change images, colors, layouts and literally anything with a custom JSON.
 - Price testing is seamlessly integrated for any platform.
 
@@ -68,8 +67,9 @@ Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/
 - Filter, group, and measure metrics by attribution, platform, custom users' segments, and more in a few clicks.
 
 ## Requirements
-* Unity 2019.4.38f1+ (older versions might work, the plugin was tested with this version)
-* [External Dependency Manager plugin](https://github.com/googlesamples/unity-jar-resolver)
+
+- Unity 2019.4.38f1+ (older versions might work, the plugin was tested with this version)
+- [External Dependency Manager plugin](https://github.com/googlesamples/unity-jar-resolver)
 
 ## Mobile App Monetization's Largest Community
 
@@ -80,28 +80,27 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 ## Getting Started
 
 Please refer to our documentation to install and configure Adapty SDK. Set up purchases in hours instead of weeks :rocket:
-- [Installation](/docs/installation.md)
-- [Configuring Adapty SDK](/docs/configuring.md)
-- [Displaying Products](/docs/displaying_products.md)
-- [Making Purchases](/docs/making_purchases.md)
-- [Subscription Status](/docs/subscription_status.md)
-- [Identifying Users](/docs/identifying_users.md)
-- [Attribution Integration](/docs/attribution_integration.md)
-- [Setting User Attributes](/docs/setting_user_attributes.md)
-- [Analytics Integration](/docs/analytics_integration.md)
-- [Observer Mode](/docs/observer_mode.md)
-- [Observer vs Full Mode](/docs/observer_vs_full_mode.md)
+
+- [Installation](https://docs.adapty.io/docs/unity-installation)
+- [Configuring Adapty SDK](https://docs.adapty.io/docs/unity-configuring)
+- [Displaying Paywalls & Products](https://docs.adapty.io/docs/unity-displaying-products)
+- [Making Purchases](https://docs.adapty.io/docs/unity-making-purchases)
+- [Subscription Status](https://docs.adapty.io/docs/unity-subscription-status)
+- [Identifying Users](https://docs.adapty.io/docs/unity-identifying-users)
+- [Attribution Integration](https://docs.adapty.io/docs/attribution-integration)
+- [Setting User Attributes](https://docs.adapty.io/docs/setting-user-attributes)
+- [Analytics Integration](https://docs.adapty.io/docs/analytics-integration)
+- [Observer Mode](https://docs.adapty.io/docs/unity-observer-mode)
 
 ## Contributing
 
 - Feel free to open an issue, we check all of them or drop us an email at [support@adapty.io](mailto:support@adapty.io) and tell us everything you want.
 - Want to suggest a feature? Just contact us or open an issue in the repo.
 
-## Like Adapty SDK? 
+## Like Adapty SDK?
 
 So do we! Feel free to star the repo ⭐️⭐️⭐️ and make our developers happy!
 
 ## License
 
 Adapty is available under the MIT license. [See LICENSE](https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/LICENSE) for details.
-
