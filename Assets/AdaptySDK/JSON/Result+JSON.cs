@@ -12,7 +12,7 @@ namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static Adapty.Result<Adapty.Profile> ExtructProfileOrError(this string json)
+        internal static Adapty.Result<Adapty.Profile> ExtractProfileOrError(this string json)
         {
             Adapty.Error error = null;
             Adapty.Profile profile = null;
@@ -34,7 +34,7 @@ namespace AdaptySDK.SimpleJSON
             return new Adapty.Result<Adapty.Profile>(profile, error);
         }
 
-        internal static Adapty.Result<Adapty.Paywall> ExtructPaywalleOrError(this string json)
+        internal static Adapty.Result<Adapty.Paywall> ExtractPaywallOrError(this string json)
         {
             Adapty.Error error = null;
             Adapty.Paywall paywall = null;
@@ -55,7 +55,7 @@ namespace AdaptySDK.SimpleJSON
             return new Adapty.Result<Adapty.Paywall>(paywall, error);
         }
 
-        internal static Adapty.Result<IList<Adapty.PaywallProduct>> ExtructPaywallProductListOrError(this string json)
+        internal static Adapty.Result<IList<Adapty.PaywallProduct>> ExtractPaywallProductListOrError(this string json)
         {
             Adapty.Error error = null;
             IList<Adapty.PaywallProduct> list = null;
