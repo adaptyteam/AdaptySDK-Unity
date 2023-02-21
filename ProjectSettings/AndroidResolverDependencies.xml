@@ -2,7 +2,7 @@
   <packages>
     <package>com.adapty.internal:crossplatform:2.3</package>
     <package>com.adapty.internal:unity-wrapper:2.3</package>
-    <package>com.github.adaptyteam:AdaptySDK-Android:2.3.1</package>
+    <package>com.github.adaptyteam:AdaptySDK-Android:2.3.2</package>
   </packages>
   <files>
     <file>Assets/Plugins/Android/androidx.activity.activity-1.1.0.aar</file>
@@ -30,7 +30,7 @@
     <file>Assets/Plugins/Android/com.adapty.internal.unity-wrapper-2.3.aar</file>
     <file>Assets/Plugins/Android/com.android.billingclient.billing-4.0.0.aar</file>
     <file>Assets/Plugins/Android/com.android.billingclient.billing-ktx-4.0.0.aar</file>
-    <file>Assets/Plugins/Android/com.github.adaptyteam.AdaptySDK-Android-2.3.1.aar</file>
+    <file>Assets/Plugins/Android/com.github.adaptyteam.AdaptySDK-Android-2.3.2.aar</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-ads-identifier-18.0.1.aar</file>
     <file>Assets/Plugins/Android/com.google.android.gms.play-services-basement-18.0.0.aar</file>
     <file>Assets/Plugins/Android/com.google.code.gson.gson-2.10.jar</file>
