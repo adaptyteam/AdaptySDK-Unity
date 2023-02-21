@@ -1,11 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using AdaptyExample;
+using TMPro;
 using UnityEngine;
 
 public class ActionsSection : MonoBehaviour {
     public AdaptyListener Listener;
     public AdaptyRouter Router;
+
+    public TextMeshProUGUI SDKVersionText;
+
+    public void Start() {
+        SDKVersionText.SetText("SDK version: " + AdaptySDK.Adapty.sdkVersion);
+    }
 
     public void RestorePurchasesPressed() {
         this.Router.SetIsLoading(true);

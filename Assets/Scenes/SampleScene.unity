@@ -498,7 +498,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 3700}
+  m_SizeDelta: {x: 0, y: 4440}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &607767608
 GameObject:
@@ -892,7 +892,9 @@ MonoBehaviour:
     type: 3}
   ProfileInfoSectionPrefab: {fileID: 3228721744044742240, guid: eb0e98dac45764f14ad6641ad5441676,
     type: 3}
-  ExamplePaywallSectionPrefab: {fileID: 1929123934848718610, guid: d2bc119b9b62243df8ca7497121d754f,
+  ExamplePaywallSectionPrefab: {fileID: 1929123934848718610, guid: c19458705ea6c4d43ae1bc7be5b0bf4b,
+    type: 3}
+  CustomPaywallSectionPrefab: {fileID: 1929123934848718610, guid: d2bc119b9b62243df8ca7497121d754f,
     type: 3}
   OtherActionsSectionPrefab: {fileID: 4472995051164199112, guid: 7301306c31f7d44b89bd2a7442263bed,
     type: 3}
@@ -900,6 +902,7 @@ MonoBehaviour:
   IdentifySection: {fileID: 0}
   ProfileInfoSection: {fileID: 0}
   ExamplePaywallSection: {fileID: 0}
+  CustomPaywallSection: {fileID: 0}
   ActionsSection: {fileID: 0}
 --- !u!1001 &889108850
 PrefabInstance:
@@ -1945,7 +1948,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 720443184}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.61054057
+  m_Size: 0.50878376
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
