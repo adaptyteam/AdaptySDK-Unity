@@ -4,7 +4,7 @@ using AdaptySDK;
 using TMPro;
 using UnityEngine;
 
-public class PaywallSection : MonoBehaviour {
+public class CustomPaywallSection : MonoBehaviour {
     public AdaptyListener Listener;
     public AdaptyRouter Router;
 
@@ -17,31 +17,39 @@ public class PaywallSection : MonoBehaviour {
     public TextMeshProUGUI RevisionText;
     public TextMeshProUGUI LocaleText;
 
-    private string m_paywallId = "example_ab_test";
-    private string m_localeId = "fr";
+    public TMP_InputField PaywallIdTextField;
+    public TMP_InputField LocaleTextField;
 
     private Adapty.Paywall m_paywall;
 
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
     void Start() {
-        this.PaywallNameText.SetText(this.m_paywallId);
-        this.LoadPaywall();
+        
     }
 
     public void LogShowPaywallPressed() {
-        if (m_paywall != null) {
-            this.Router.SetIsLoading(true);
-            this.Listener.LogShowPaywall(m_paywall, (error) => {
-                this.Router.SetIsLoading(false);
-            });
+        if (m_paywall == null) {
+            return;
         }
+
+        this.Router.SetIsLoading(true);
+        this.Listener.LogShowPaywall(m_paywall, (error) => {
+            this.Router.SetIsLoading(false);
+        });
     }
 
     public void LoadPaywall() {
+        var paywallId = this.PaywallIdTextField.text;
+        var locale = this.LocaleTextField.text;
+
+        if (paywallId == null || paywallId.Length == 0) {
+            return;
+        }
+
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, (paywall) => {
+        this.Listener.GetPaywall(paywallId, locale, (paywall) => {
             if (paywall == null) {
                 this.UpdatePaywallFail();
                 this.Router.SetIsLoading(false);
@@ -64,6 +72,14 @@ public class PaywallSection : MonoBehaviour {
         });
     }
 
+
+    private void UpdatePaywallInitial() {
+        this.PaywallNameText.SetText("null");
+        this.LoadingStatusText.SetText("WAIT");
+        this.VariationIdText.SetText("null");
+        this.RevisionText.SetText("null");
+    }
+
     private void UpdatePaywallFail() {
         this.LoadingStatusText.SetText("FAIL");
         this.VariationIdText.SetText("null");
@@ -72,6 +88,7 @@ public class PaywallSection : MonoBehaviour {
 
     private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products) {
         this.LoadingStatusText.SetText("OK");
+        this.PaywallNameText.SetText(paywall.Id);
         this.VariationIdText.SetText(paywall.VariationId);
         this.RevisionText.SetText(paywall.Revision.ToString());
         this.LocaleText.SetText(paywall.Locale);
@@ -88,7 +105,7 @@ public class PaywallSection : MonoBehaviour {
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 540.0f + products.Count * 80.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 780.0f + products.Count * 80.0f);
     }
 
     private ProductButton CreateProductButton(Adapty.PaywallProduct product, float index) {

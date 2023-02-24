@@ -15,7 +15,7 @@ namespace AdaptySDK
 
     public static partial class Adapty
     {
-        public static readonly string sdkVersion = "2.2.0";
+        public static readonly string sdkVersion = "2.3.0";
 
         public static void SetLogLevel(LogLevel level)
             => _Adapty.SetLogLevel(level.ToJSON());
@@ -24,7 +24,7 @@ namespace AdaptySDK
             _Adapty.Identify(customerUserId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtructErrorIfPresent();
+            var error = json.ExtractErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -39,7 +39,7 @@ namespace AdaptySDK
             => _Adapty.Logout((json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtructErrorIfPresent();
+            var error = json.ExtractErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -51,10 +51,13 @@ namespace AdaptySDK
         });
 
         public static void GetPaywall(string id, Action<Paywall, Error> completionHandler)
-            => _Adapty.GetPaywall(id, (json) =>
+            => GetPaywall(id, null, completionHandler);
+
+        public static void GetPaywall(string id, string locale, Action<Paywall, Error> completionHandler)
+            => _Adapty.GetPaywall(id, locale, (json) =>
         {
             if (completionHandler == null) return;
-            var response = json.ExtructPaywalleOrError();
+            var response = json.ExtractPaywallOrError();
             try
             {
                 completionHandler(response.Value, response.Error);
@@ -92,7 +95,7 @@ namespace AdaptySDK
             _Adapty.GetPaywallProducts(paywallJson, fetchPolicy.ToJSON(), (json) =>
             {
                 if (completionHandler == null) return;
-                var response = json.ExtructPaywallProductListOrError();
+                var response = json.ExtractPaywallProductListOrError();
                 try
                 {
                     completionHandler(response.Value, response.Error);
@@ -108,7 +111,7 @@ namespace AdaptySDK
             => _Adapty.GetProfile((json) =>
         {
             if (completionHandler == null) return;
-            var response = json.ExtructProfileOrError();
+            var response = json.ExtractProfileOrError();
             try
             {
                 completionHandler(response.Value, response.Error);
@@ -123,7 +126,7 @@ namespace AdaptySDK
             => _Adapty.RestorePurchases((json) =>
         {
             if (completionHandler == null) return;
-            var response = json.ExtructProfileOrError();
+            var response = json.ExtractProfileOrError();
 
             try
             {
@@ -186,7 +189,7 @@ namespace AdaptySDK
             _Adapty.MakePurchase(productJson, androidSubscriptionUpdateJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var response = json.ExtructProfileOrError();
+                var response = json.ExtractProfileOrError();
                 try
                 {
                     completionHandler(response.Value, response.Error);
@@ -223,7 +226,7 @@ namespace AdaptySDK
             _Adapty.LogShowPaywall(paywallJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = json.ExtructErrorIfPresent();
+                var error = json.ExtractErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -259,7 +262,7 @@ namespace AdaptySDK
             _Adapty.LogShowOnboarding(parametersJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = json.ExtructErrorIfPresent();
+                var error = json.ExtractErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -275,7 +278,7 @@ namespace AdaptySDK
             => _Adapty.SetFallbackPaywalls(paywalls, (json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtructErrorIfPresent();
+            var error = json.ExtractErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -310,7 +313,7 @@ namespace AdaptySDK
             _Adapty.UpdateProfile(parametersJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = json.ExtructErrorIfPresent();
+                var error = json.ExtractErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -322,18 +325,18 @@ namespace AdaptySDK
             });
         }
 
-        public static void UpdateAttribution(string jsonstring, AttributionSource source, Action<Error> completionHandler)
-            => UpdateAttribution(jsonstring, source, null, completionHandler);
+        public static void UpdateAttribution(string jsonString, AttributionSource source, Action<Error> completionHandler)
+            => UpdateAttribution(jsonString, source, null, completionHandler);
         public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, string networkUserId, Action<Error> completionHandler)
             => UpdateAttribution(attribution.ToJSONObject().ToString(), source, networkUserId, completionHandler);
         public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, Action<Error> completionHandler)
             => UpdateAttribution(attribution.ToJSONObject().ToString(), source, null, completionHandler);
 
-        public static void UpdateAttribution(string jsonstring, AttributionSource source, string networkUserId, Action<Error> completionHandler)
-            => _Adapty.UpdateAttribution(jsonstring, source.ToJSON(), networkUserId, (json) =>
+        public static void UpdateAttribution(string jsonString, AttributionSource source, string networkUserId, Action<Error> completionHandler)
+            => _Adapty.UpdateAttribution(jsonString, source.ToJSON(), networkUserId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtructErrorIfPresent();
+            var error = json.ExtractErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -348,7 +351,7 @@ namespace AdaptySDK
             => _Adapty.SetVariationForTransaction(variationId, transactionId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtructErrorIfPresent();
+            var error = json.ExtractErrorIfPresent();
             try
             {
                 completionHandler(error);

@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
 	<androidPackages>
-		<androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:2.2.2">
+  		<androidPackage spec="com.adapty.internal:unity-wrapper:2.3">
+			<repositories>
+				<repository>Assets/AdaptySDK/Plugins/Android/Local</repository>
+			</repositories>
+		</androidPackage>
+		<androidPackage spec="com.adapty.internal:crossplatform:2.3">
+			<repositories>
+				<repository>Assets/AdaptySDK/Plugins/Android/Local</repository>
+			</repositories>
+		</androidPackage>
+		<androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:2.3.2">
 			<repositories>
 				<repository>https://jitpack.io</repository>
 			</repositories>
 		</androidPackage>
 	</androidPackages>
 	<iosPods>
-		<iosPod name="Adapty" version="2.2.2" minTargetSdk="9.0">
+		<iosPod name="Adapty" version="2.3.3" minTargetSdk="9.0">
 		</iosPod>
 	</iosPods>
 </dependencies>

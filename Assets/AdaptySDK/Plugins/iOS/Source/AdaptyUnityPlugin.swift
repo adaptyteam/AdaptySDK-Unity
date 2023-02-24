@@ -44,8 +44,8 @@ import Adapty
         }
     }
 
-    @objc public func getPaywall(_ id: String, completion: JSONStringCompletion? = nil) {
-        Adapty.getPaywall(id) { result in
+    @objc public func getPaywall(_ id: String, locale: String, completion: JSONStringCompletion? = nil) {
+        Adapty.getPaywall(id, locale: locale) { result in
             completion?(AdaptyUnityPlugin.encodeToString(result: result))
         }
     }

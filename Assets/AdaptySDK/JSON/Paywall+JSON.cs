@@ -18,13 +18,17 @@ namespace AdaptySDK
         {
             internal JSONNode ToJSONNode()
             {
+                var remouteConfig = new JSONObject();
+                remouteConfig.Add("lang", Locale);
+                if (RemoteConfigString is not null) remouteConfig.Add("data", RemoteConfigString);
+
                 var node = new JSONObject();
                 node.Add("developer_id", Id);
                 node.Add("paywall_name", Name);
                 node.Add("ab_test_name", ABTestName);
                 node.Add("variation_id", VariationId);
                 node.Add("revision", Revision);
-                if (_PayloadData is not null) node.Add("custom_payload", RemoteConfigString);
+                node.Add("remote_config", remouteConfig);
                 var products = new JSONArray();
                 foreach (var item in _Products)
                 {
@@ -45,7 +49,10 @@ namespace AdaptySDK
                 VariationId = jsonNode.GetString("variation_id");
                 Revision = jsonNode.GetInteger("revision");
 
-                RemoteConfigString = jsonNode.GetStringIfPresent("custom_payload");
+                var remouteConfig = jsonNode.GetObject("remote_config");
+                Locale = remouteConfig.GetString("lang");
+                RemoteConfigString = remouteConfig.GetStringIfPresent("data");
+
                 _Products = jsonNode.GetBackendProductList("products");
                 _Version = jsonNode.GetInteger("paywall_updated_at");
                 _PayloadData = jsonNode.GetStringIfPresent("payload_data");

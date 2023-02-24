@@ -13,6 +13,7 @@ namespace AdaptyExample {
         public GameObject IdentifySectionPrefab;
         public GameObject ProfileInfoSectionPrefab;
         public GameObject ExamplePaywallSectionPrefab;
+        public GameObject CustomPaywallSectionPrefab;
         public GameObject OtherActionsSectionPrefab;
 
         [HideInInspector]
@@ -26,6 +27,9 @@ namespace AdaptyExample {
 
         [HideInInspector]
         public PaywallSection ExamplePaywallSection;
+
+        [HideInInspector]
+        public CustomPaywallSection CustomPaywallSection;
 
         [HideInInspector]
         public ActionsSection ActionsSection;
@@ -79,6 +83,13 @@ namespace AdaptyExample {
 
             offset += examplePaywallSectionRect.rect.height + 20.0f;
 
+            var customPaywallSectionObj = Instantiate(this.CustomPaywallSectionPrefab);
+            var customPaywallSectionRect = customPaywallSectionObj.GetComponent<RectTransform>();
+            customPaywallSectionRect.SetParent(this.ContentTransform);
+            customPaywallSectionRect.anchoredPosition = new Vector3(customPaywallSectionRect.position.x, -offset);
+
+            offset += customPaywallSectionRect.rect.height + 20.0f;
+
             var actionsSectionObj = Instantiate(this.OtherActionsSectionPrefab);
             var actionsSectionRect = actionsSectionObj.GetComponent<RectTransform>();
             actionsSectionRect.SetParent(this.ContentTransform);
@@ -88,6 +99,7 @@ namespace AdaptyExample {
             var identifySection = identifySectionObj.GetComponent<IdentifySection>();
             var profileInfoSection = profileInfoSectionObj.GetComponent<ProfileInfoSection>();
             var examplePaywallSection = examplePaywallSectionObj.GetComponent<PaywallSection>();
+            var customPaywallSection = customPaywallSectionObj.GetComponent<CustomPaywallSection>();
             var actionsSection = actionsSectionObj.GetComponent<ActionsSection>();
 
             identifySection.Listener = this.listener;
@@ -95,6 +107,8 @@ namespace AdaptyExample {
             profileInfoSection.Listener = this.listener;
             examplePaywallSection.Listener = this.listener;
             examplePaywallSection.Router = this;
+            customPaywallSection.Listener = this.listener;
+            customPaywallSection.Router = this;
             actionsSection.Listener = this.listener;
             actionsSection.Router = this;
 
@@ -102,6 +116,7 @@ namespace AdaptyExample {
             this.ProfileIdSection = profileIdSection;
             this.ProfileInfoSection = profileInfoSection;
             this.ExamplePaywallSection = examplePaywallSection;
+            this.CustomPaywallSection = customPaywallSection;
             this.ActionsSection = actionsSection;
         }
 

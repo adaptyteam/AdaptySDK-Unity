@@ -78,14 +78,14 @@ public class AdaptyAndroidWrapper {
         });
     }
 
-    public static void getPaywall(String id, AdaptyAndroidCallback callback) {
+    public static void getPaywall(String id, String locale, AdaptyAndroidCallback callback) {
         if (id == null) {
             String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
             sendParameterError("id", methodName, callback);
             return;
         }
 
-        Adapty.getPaywall(id, result -> {
+        Adapty.getPaywall(id, locale, result -> {
             sendMessageWithResult(helper.toJson(result), callback);
         });
     }

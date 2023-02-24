@@ -38,10 +38,10 @@ namespace AdaptyExample {
             });
         }
 
-        public void GetPaywall(string id, Action<Adapty.Paywall> completionHandler) {
+        public void GetPaywall(string id, string locale, Action<Adapty.Paywall> completionHandler) {
             this.LogMethodRequest("GetPaywall");
 
-            Adapty.GetPaywall(id, (paywall, error) => {
+            Adapty.GetPaywall(id, locale, (paywall, error) => {
                 this.LogMethodResult("GetPaywall", error);
                 completionHandler.Invoke(paywall);
             });

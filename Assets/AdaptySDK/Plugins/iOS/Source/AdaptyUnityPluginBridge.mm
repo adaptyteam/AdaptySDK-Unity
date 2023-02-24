@@ -82,9 +82,10 @@ void AdaptyUnity_logout(UnityAction callback) {
         }];
 }
 
-void AdaptyUnity_getPaywall(const char *paywallId, UnityAction callback) {
+void AdaptyUnity_getPaywall(const char *paywallId, const char *locale, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      getPaywall:cstringToString(paywallId)
+     locale:cstringToString(locale)
      completion:^(NSString *_Nullable response) {
             SendCallbackToUnity(callback, response);
         }];

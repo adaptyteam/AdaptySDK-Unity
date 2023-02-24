@@ -25,10 +25,10 @@ namespace AdaptySDK.iOS
             => _Logout(AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPaywall")]
-        private static extern void _GetPaywall(string id, IntPtr callback);
+        private static extern void _GetPaywall(string id, string locale, IntPtr callback);
 
-        internal static void GetPaywall(string id, Action<string> completionHandler)
-            => _GetPaywall(id, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
+        internal static void GetPaywall(string id, string locale, Action<string> completionHandler)
+            => _GetPaywall(id, locale, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPaywallProducts")]
         private static extern void _GetPaywallProducts(string paywall, string fetchPolicy, IntPtr callback);

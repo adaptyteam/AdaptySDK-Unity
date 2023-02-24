@@ -39,7 +39,7 @@ namespace AdaptySDK.SimpleJSON
             return new Adapty.Error(obj);
         }
 
-        internal static Adapty.Error ExtructErrorIfPresent(this string json)
+        internal static Adapty.Error ExtractErrorIfPresent(this string json)
         {
             Adapty.Error error;
             try
