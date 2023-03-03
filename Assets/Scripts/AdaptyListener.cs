@@ -100,7 +100,8 @@ namespace AdaptyExample {
                 .SetLastName("Appleseed")
                 .SetBirthday(new DateTime(1990, 5, 14))
                 .SetGender(ProfileGender.Female)
-                .SetEmail("example@adapty.io");
+                .SetEmail("example@adapty.io")
+                .SetAirbridgeDeviceId("D7203965-6A2E-4F4C-A6E0-E3944EA9EAD1");
 
             builder = builder.SetAnalyticsDisabled(true);
 
