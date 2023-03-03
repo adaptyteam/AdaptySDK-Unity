@@ -6,12 +6,12 @@
 				<repository>Assets/AdaptySDK/Plugins/Android/Local</repository>
 			</repositories>
 		</androidPackage>
-		<androidPackage spec="com.adapty.internal:crossplatform:2.3">
+		<androidPackage spec="com.adapty.internal:crossplatform:2.4">
 			<repositories>
 				<repository>Assets/AdaptySDK/Plugins/Android/Local</repository>
 			</repositories>
 		</androidPackage>
-		<androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:2.3.2">
+		<androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:2.4.0">
 			<repositories>
 				<repository>https://jitpack.io</repository>
 			</repositories>
