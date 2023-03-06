@@ -41,9 +41,9 @@ namespace AdaptySDK
 
             public void SetCustomStringAttribute(string key, string value)
             {
-                if (string.IsNullOrEmpty(value) || value.Length > 30)
+                if (string.IsNullOrEmpty(value) || value.Length > 50)
                 {
-                    throw new Exception($"The value must not be empty and not more than 30 characters.");
+                    throw new Exception($"The value must not be empty and not more than 50 characters.");
                 }
                 if (!_validateCustomAttributeKey(key, true))
                 {
@@ -92,9 +92,9 @@ namespace AdaptySDK
                     }
                 }
 
-                if (count > 10)
+                if (count > 30)
                 {
-                    throw new Exception("The total number of custom attributes must be no more than 10");
+                    throw new Exception("The total number of custom attributes must be no more than 30");
                 }
 
                 return true;
