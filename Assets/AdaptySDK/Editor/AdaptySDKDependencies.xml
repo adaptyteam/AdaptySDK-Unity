@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
 	<androidPackages>
-		<androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:2.4.0">
+		<androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:2.4.1">
 			<repositories>
 				<repository>https://jitpack.io</repository>
 			</repositories>
