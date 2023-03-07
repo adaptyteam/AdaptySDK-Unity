@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
 	<androidPackages>
-  		<androidPackage spec="com.adapty.internal:unity-wrapper:2.3">
-			<repositories>
-				<repository>Assets/AdaptySDK/Plugins/Android/Local</repository>
-			</repositories>
-		</androidPackage>
-		<androidPackage spec="com.adapty.internal:crossplatform:2.4">
-			<repositories>
-				<repository>Assets/AdaptySDK/Plugins/Android/Local</repository>
-			</repositories>
-		</androidPackage>
 		<androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:2.4.0">
 			<repositories>
 				<repository>https://jitpack.io</repository>

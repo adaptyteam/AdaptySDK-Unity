@@ -1,7 +1,5 @@
 <dependencies>
   <packages>
-    <package>com.adapty.internal:crossplatform:2.4</package>
-    <package>com.adapty.internal:unity-wrapper:2.3</package>
     <package>com.github.adaptyteam:AdaptySDK-Android:2.4.0</package>
   </packages>
   <files>
@@ -26,8 +24,6 @@
     <file>Assets/Plugins/Android/androidx.savedstate.savedstate-1.0.0.aar</file>
     <file>Assets/Plugins/Android/androidx.versionedparcelable.versionedparcelable-1.1.0.aar</file>
     <file>Assets/Plugins/Android/androidx.viewpager.viewpager-1.0.0.aar</file>
-    <file>Assets/Plugins/Android/com.adapty.internal.crossplatform-2.4.aar</file>
-    <file>Assets/Plugins/Android/com.adapty.internal.unity-wrapper-2.3.aar</file>
     <file>Assets/Plugins/Android/com.android.billingclient.billing-4.0.0.aar</file>
     <file>Assets/Plugins/Android/com.android.billingclient.billing-ktx-4.0.0.aar</file>
     <file>Assets/Plugins/Android/com.github.adaptyteam.AdaptySDK-Android-2.4.0.aar</file>
