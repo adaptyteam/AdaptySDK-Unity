@@ -173,7 +173,7 @@ namespace AdaptySDK
                 }
             }
 
-            if (error is not null)
+            if (error != null)
             {
                 try
                 {

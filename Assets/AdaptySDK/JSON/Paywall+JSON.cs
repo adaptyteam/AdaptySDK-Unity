@@ -20,7 +20,7 @@ namespace AdaptySDK
             {
                 var remouteConfig = new JSONObject();
                 remouteConfig.Add("lang", Locale);
-                if (RemoteConfigString is not null) remouteConfig.Add("data", RemoteConfigString);
+                if (RemoteConfigString != null) remouteConfig.Add("data", RemoteConfigString);
 
                 var node = new JSONObject();
                 node.Add("developer_id", Id);
@@ -36,7 +36,7 @@ namespace AdaptySDK
                 }
                 node.Add("products", products);
                 node.Add("paywall_updated_at", _Version);
-                if (_PayloadData is not null) node.Add("payload_data", _PayloadData);
+                if (_PayloadData != null) node.Add("payload_data", _PayloadData);
 
                 return node;
             }

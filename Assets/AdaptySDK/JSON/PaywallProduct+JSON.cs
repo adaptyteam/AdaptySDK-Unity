@@ -24,12 +24,12 @@ namespace AdaptySDK
                 node.Add("introductory_offer_eligibility", IntroductoryOfferEligibility.ToJSON());
                 node.Add("timestamp", _Version);
 #if UNITY_IOS
-                if (PromotionalOfferId is not null) node.Add("promotional_offer_id", PromotionalOfferId);
+                if (PromotionalOfferId != null) node.Add("promotional_offer_id", PromotionalOfferId);
 #endif
                 node.Add("variation_id", VariationId);
                 node.Add("paywall_ab_test_name", PaywallABTestName);
                 node.Add("paywall_name", PaywallName);
-                if (_PayloadData is not null) node.Add("payload_data", _PayloadData);
+                if (_PayloadData != null) node.Add("payload_data", _PayloadData);
                 return node;
             }
 

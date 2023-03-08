@@ -24,7 +24,7 @@ namespace AdaptySDK
                 node.Add("timestamp", _Version);
 #if UNITY_IOS
                 node.Add("promotional_offer_eligibility", PromotionalOfferEligibility);
-                if (PromotionalOfferId is not null) node.Add("promotional_offer_id", PromotionalOfferId);
+                if (PromotionalOfferId != null) node.Add("promotional_offer_id", PromotionalOfferId);
 #endif
                 return node;
             }
