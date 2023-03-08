@@ -8,7 +8,7 @@
 		</androidPackage>
 	</androidPackages>
 	<iosPods>
-		<iosPod name="Adapty" version="2.4.0" minTargetSdk="9.0">
+		<iosPod name="Adapty" version="2.4.1" minTargetSdk="9.0">
 		</iosPod>
 	</iosPods>
 </dependencies>
