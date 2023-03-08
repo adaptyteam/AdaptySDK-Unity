@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace AdaptySDK
 {
@@ -73,7 +74,8 @@ namespace AdaptySDK
 
             bool _validateCustomAttributeKey(String addingKey, bool testCount)
             {
-                if (string.IsNullOrEmpty(addingKey) || addingKey.Length > 30 /*|| !RegExp(r'^[A-Za-z0-9._-]+$').hasMatch(addingKey) */)
+                
+                if (string.IsNullOrEmpty(addingKey) || addingKey.Length > 30 || !Regex.IsMatch(addingKey, "^[A-Za-z0-9._-]+$"))
                 {
                     throw new Exception("The key must be string not more than 30 characters. Only letters, numbers, dashes, points and underscores allowed");
                 }

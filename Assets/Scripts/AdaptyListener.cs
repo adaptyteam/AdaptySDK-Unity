@@ -105,13 +105,57 @@ namespace AdaptyExample {
 
             builder = builder.SetAnalyticsDisabled(true);
 
+            Debug.Log("#AdaptyListener# UpdateProfile Test [0]: no exception");
             try {
                 builder = builder.SetCustomStringAttribute("string_key", "string_value");
                 builder = builder.SetCustomStringAttribute("key_to_remove", "test");
                 builder = builder.SetCustomDoubleAttribute("double_key", 123.0f);
                 builder = builder.RemoveCustomAttribute("key_to_remove");
+                Debug.Log("#AdaptyListener# UpdateProfile Test [0]: DONE");
             } catch (Exception e) {
                 Debug.Log(string.Format("#AdaptyListener# UpdateProfile Exception: {0}", e));
+                Debug.Log("#AdaptyListener# UpdateProfile Test [1]: FAIL");
+            }
+
+            try {
+                Debug.Log("#AdaptyListener# UpdateProfile Test [1]: value.length > 50");
+                builder = builder.SetCustomStringAttribute("string_key", "01234567890123456789012345678901234567890123456789_");
+                Debug.Log("#AdaptyListener# UpdateProfile Test [1]: FAIL");
+            } catch (Exception e) {
+                Debug.Log(string.Format("#AdaptyListener# UpdateProfile Exception: {0}", e));
+                Debug.Log("#AdaptyListener# UpdateProfile Test [1]: DONE");
+            }
+
+            try {
+                Debug.Log("#AdaptyListener# UpdateProfile Test [2]: key.length > 30");
+                builder = builder.SetCustomStringAttribute("012345678901234567890123456789_1", "value");
+                Debug.Log("#AdaptyListener# UpdateProfile Test [2]: FAIL");
+            } catch (Exception e) {
+                Debug.Log(string.Format("#AdaptyListener# UpdateProfile Exception: {0}", e));
+                Debug.Log("#AdaptyListener# UpdateProfile Test [2]: DONE");
+            }
+
+            try {
+                Debug.Log("#AdaptyListener# UpdateProfile Test [3]: key wrong symbols");
+                builder = builder.SetCustomStringAttribute("key{}``", "value");
+                Debug.Log("#AdaptyListener# UpdateProfile Test [3]: FAIL");
+            } catch (Exception e) {
+                Debug.Log(string.Format("#AdaptyListener# UpdateProfile Exception: {0}", e));
+                Debug.Log("#AdaptyListener# UpdateProfile Test [3]: DONE");
+            }
+
+            try {
+                Debug.Log("#AdaptyListener# UpdateProfile Test [4]: attributes.count > 30");
+
+                for (var i = 1; i <= 31; ++i)
+                {
+                    builder = builder.SetCustomStringAttribute(string.Format("key_{0}", i), string.Format("value_{0}", i));
+                }
+                
+                Debug.Log("#AdaptyListener# UpdateProfile Test [4]: FAIL");
+            } catch (Exception e) {
+                Debug.Log(string.Format("#AdaptyListener# UpdateProfile Exception: {0}", e));
+                Debug.Log("#AdaptyListener# UpdateProfile Test [4]: DONE");
             }
 
             Adapty.UpdateProfile(builder.Build(), (error) => {
