@@ -88,10 +88,8 @@ namespace AdaptySDK
                 var count = 1;
                 foreach (var item in _CustomAttributes)
                 {
-                    if (item.Value is not null && item.Key != addingKey)
-                    {
-                        count += 1;
-                    }
+                    if (item.Value is null || item.Key == addingKey) continue;
+                    count += 1;
                 }
 
                 if (count > 30)

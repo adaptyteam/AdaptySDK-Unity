@@ -21,7 +21,7 @@ namespace AdaptySDK
             {
                 get
                 {
-                    return PromotionalOfferId is not null;
+                    return PromotionalOfferId != null;
                 }
             }
 

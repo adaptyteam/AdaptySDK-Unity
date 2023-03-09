@@ -10,10 +10,12 @@ namespace AdaptySDK.SimpleJSON
     internal static partial class JSONNodeExtensions
     {
         internal static string ToJSON(this Adapty.IOSProductsFetchPolicy value)
-            => value switch
+        {
+            switch (value)
             {
-                Adapty.IOSProductsFetchPolicy.WaitForReceiptValidation => "wait_for_receipt_validation",
-                _ => "default",
-            };
+                case Adapty.IOSProductsFetchPolicy.WaitForReceiptValidation: return "wait_for_receipt_validation";
+                default: return "default";
+            }
+        }
     }
 }

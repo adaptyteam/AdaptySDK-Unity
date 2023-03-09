@@ -12,15 +12,17 @@ namespace AdaptySDK.SimpleJSON
     internal static partial class JSONNodeExtensions
     {
         internal static string ToJSON(this Adapty.LogLevel value)
-            => value switch
+        {
+            switch (value)
             {
-                Adapty.LogLevel.Error => "error",
-                Adapty.LogLevel.Warn => "warn",
-                Adapty.LogLevel.Info => "info",
-                Adapty.LogLevel.Verbose => "verbose",
-                Adapty.LogLevel.Debug => "debug",
-                _ => throw new Exception($"LogLevel unknown value: {value}"),
-            };
+                case Adapty.LogLevel.Error: return "error";
+                case Adapty.LogLevel.Warn: return "warn";
+                case Adapty.LogLevel.Info: return "info";
+                case Adapty.LogLevel.Verbose: return "verbose";
+                case Adapty.LogLevel.Debug: return "debug";
+                default: throw new Exception($"LogLevel unknown value: {value}");
+            }
+        }
 
         internal static Adapty.LogLevel GetLogLevel(this JSONNode node, string aKey)
             => GetString(node, aKey).ToLogLevel();
@@ -28,14 +30,16 @@ namespace AdaptySDK.SimpleJSON
             => GetStringIfPresent(node, aKey)?.ToLogLevel();
 
         internal static Adapty.LogLevel ToLogLevel(this string value)
-            => value switch
+        {
+            switch (value)
             {
-                "error" => Adapty.LogLevel.Error,
-                "warn" => Adapty.LogLevel.Warn,
-                "info" => Adapty.LogLevel.Info,
-                "verbose" => Adapty.LogLevel.Verbose,
-                "debug" => Adapty.LogLevel.Debug,
-                _ => throw new Exception($"LogLevel unknown value: {value}"),
-            };
+                case "error": return Adapty.LogLevel.Error;
+                case "warn": return Adapty.LogLevel.Warn;
+                case "info": return Adapty.LogLevel.Info;
+                case "verbose": return Adapty.LogLevel.Verbose;
+                case "debug": return Adapty.LogLevel.Debug;
+                default: throw new Exception($"LogLevel unknown value: {value}");
+            }
+        }
     }
 }

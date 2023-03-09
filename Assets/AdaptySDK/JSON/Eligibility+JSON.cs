@@ -10,13 +10,15 @@ namespace AdaptySDK.SimpleJSON
     internal static partial class JSONNodeExtensions
     {
         internal static string ToJSON(this Adapty.Eligibility value)
-            => value switch
+        {
+            switch (value)
             {
-                Adapty.Eligibility.Ineligible => "ineligible",
-                Adapty.Eligibility.Eligible => "eligible",
-                Adapty.Eligibility.Unknown => "unknown",
-                _ => "unknown",
-            };
+                case Adapty.Eligibility.Ineligible: return "ineligible";
+                case Adapty.Eligibility.Eligible: return "eligible";
+                case Adapty.Eligibility.Unknown: return "unknown";
+                default: return "unknown";
+            }
+        }
 
         internal static Adapty.Eligibility GetEligibility(this JSONNode node, string aKey)
             => GetString(node, aKey).ToEligibility();
@@ -24,12 +26,14 @@ namespace AdaptySDK.SimpleJSON
             => GetStringIfPresent(node, aKey)?.ToEligibility();
 
         internal static Adapty.Eligibility ToEligibility(this string value)
-            => value switch
+        {
+            switch (value)
             {
-                "ineligible" => Adapty.Eligibility.Ineligible,
-                "eligible" => Adapty.Eligibility.Eligible,
-                "unknown" => Adapty.Eligibility.Unknown,
-                _ => Adapty.Eligibility.Unknown,
-            };
+                case "ineligible": return Adapty.Eligibility.Ineligible;
+                case "eligible": return Adapty.Eligibility.Eligible;
+                case "unknown": return Adapty.Eligibility.Unknown;
+                default: return Adapty.Eligibility.Unknown;
+            }
+        }
     }
 }

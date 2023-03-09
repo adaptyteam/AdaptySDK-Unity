@@ -17,8 +17,8 @@ namespace AdaptySDK
             internal JSONNode ToJSONNode()
             {
                 var node = new JSONObject();
-                if (Name is not null) node.Add("onboarding_name", Name);
-                if (ScreenName is not null) node.Add("onboarding_screen_name", ScreenName);
+                if (Name != null) node.Add("onboarding_name", Name);
+                if (ScreenName != null) node.Add("onboarding_screen_name", ScreenName);
                 node.Add("onboarding_screen_order", ScreenOrder);
                 return node;
             }

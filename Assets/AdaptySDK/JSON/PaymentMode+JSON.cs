@@ -15,13 +15,15 @@ namespace AdaptySDK.SimpleJSON
             => GetStringIfPresent(node, aKey)?.ToPaymentMode();
 
         internal static Adapty.PaymentMode ToPaymentMode(this string value)
-            => value switch
+        {
+            switch (value)
             {
-                "pay_as_you_go" => Adapty.PaymentMode.PayAsYouGo,
-                "pay_up_front" => Adapty.PaymentMode.PayUpFront,
-                "free_trial" => Adapty.PaymentMode.FreeTrial,
-                _ => Adapty.PaymentMode.Unknown,
-            };
+                case "pay_as_you_go": return Adapty.PaymentMode.PayAsYouGo;
+                case "pay_up_front": return Adapty.PaymentMode.PayUpFront;
+                case "free_trial": return Adapty.PaymentMode.FreeTrial;
+                default: return Adapty.PaymentMode.Unknown;
+            }
+        }
     }
 }
 
