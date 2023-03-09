@@ -12,15 +12,17 @@ namespace AdaptySDK.SimpleJSON
     internal static partial class JSONNodeExtensions
     {
         internal static string ToJSON(this Adapty.AttributionSource value)
-            => value switch
+        {
+            switch (value)
             {
-                Adapty.AttributionSource.Adjust => "adjust",
-                Adapty.AttributionSource.Appsflyer => "appsflyer",
-                Adapty.AttributionSource.Branch => "branch",
-                Adapty.AttributionSource.AppleSearchAds => "apple_search_ads",
-                Adapty.AttributionSource.Custom => "custom",
-                _ => "custom",
-            };
+                case Adapty.AttributionSource.Adjust: return "adjust";
+                case Adapty.AttributionSource.Appsflyer: return "appsflyer";
+                case Adapty.AttributionSource.Branch: return "branch";
+                case Adapty.AttributionSource.AppleSearchAds: return "apple_search_ads";
+                case Adapty.AttributionSource.Custom: return "custom";
+                default: return "custom";
+            }
+        }
 
         internal static Adapty.AttributionSource GetAttributionSource(this JSONNode node, string aKey)
             => GetString(node, aKey).ToAttributionSource();
@@ -29,13 +31,16 @@ namespace AdaptySDK.SimpleJSON
             => GetStringIfPresent(node, aKey)?.ToAttributionSource();
 
         internal static Adapty.AttributionSource ToAttributionSource(this string value)
-            => value switch
+        {
+            switch (value)
             {
-                "adjust" => Adapty.AttributionSource.Adjust,
-                "appsflyer" => Adapty.AttributionSource.Appsflyer,
-                "branch" => Adapty.AttributionSource.Branch,
-                "apple_search_ads" => Adapty.AttributionSource.AppleSearchAds,
-                _ => Adapty.AttributionSource.Custom,
-            };
+                case "adjust": return Adapty.AttributionSource.Adjust;
+                case "appsflyer": return Adapty.AttributionSource.Appsflyer;
+                case "branch": return Adapty.AttributionSource.Branch;
+                case "apple_search_ads": return Adapty.AttributionSource.AppleSearchAds;
+                default: return Adapty.AttributionSource.Custom;
+            }
+        }
+
     }
 }
