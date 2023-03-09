@@ -12,14 +12,16 @@ namespace AdaptySDK.SimpleJSON
     internal static partial class JSONNodeExtensions
     {
         internal static string ToJSON(this Adapty.IOSAppTrackingTransparencyStatus value)
-            => value switch
+        {
+            switch (value)
             {
-                Adapty.IOSAppTrackingTransparencyStatus.NotDetermined => "not_determined",
-                Adapty.IOSAppTrackingTransparencyStatus.Restricted => "restricted",
-                Adapty.IOSAppTrackingTransparencyStatus.Denied => "denied",
-                Adapty.IOSAppTrackingTransparencyStatus.Authorized => "authorized",
-                _ => throw new Exception($"IOSAppTrackingTransparencyStatus unknown value: {value}"),
-            };
+                case Adapty.IOSAppTrackingTransparencyStatus.NotDetermined: return "not_determined";
+                case Adapty.IOSAppTrackingTransparencyStatus.Restricted: return "restricted";
+                case Adapty.IOSAppTrackingTransparencyStatus.Denied: return "denied";
+                case Adapty.IOSAppTrackingTransparencyStatus.Authorized: return "authorized";
+                default: throw new Exception($"IOSAppTrackingTransparencyStatus unknown value: {value}");
+            }
+        }
 
         internal static Adapty.IOSAppTrackingTransparencyStatus GetIOSAppTrackingTransparencyStatus(this JSONNode node, string aKey)
             => GetString(node, aKey).ToIOSAppTrackingTransparencyStatus();
@@ -27,7 +29,8 @@ namespace AdaptySDK.SimpleJSON
             => GetStringIfPresent(node, aKey)?.ToIOSAppTrackingTransparencyStatus();
 
         internal static Adapty.IOSAppTrackingTransparencyStatus ToIOSAppTrackingTransparencyStatus(this string value)
-            => value switch
+        {
+            return value switch
             {
                 "not_determined" => Adapty.IOSAppTrackingTransparencyStatus.NotDetermined,
                 "restricted" => Adapty.IOSAppTrackingTransparencyStatus.Restricted,
@@ -35,5 +38,6 @@ namespace AdaptySDK.SimpleJSON
                 "authorized" => Adapty.IOSAppTrackingTransparencyStatus.Authorized,
                 _ => throw new Exception($"IOSAppTrackingTransparencyStatus unknown value: {value}"),
             };
+        }
     }
 }
