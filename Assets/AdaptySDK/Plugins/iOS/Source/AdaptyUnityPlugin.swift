@@ -24,6 +24,10 @@ import Adapty
         Adapty.logLevel.rawStringValue
     }
 
+    @objc public func setCrossPlatformSDK(_ name: String, version: String) {
+        Adapty.setCrossPlatformSDK(version: version, name: name) 
+    }
+
     @objc public func setLogLevel(_ value: String) {
         guard let logLevel = AdaptyLogLevel(rawStringValue: value) else {
             let error = PluginError.decodingFailed("Unknown log level value: \(value)")

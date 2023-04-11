@@ -54,6 +54,11 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
     BOOL idfaCollectionDisabled = [infoDictionary[@"AdaptyIDFACollectionDisabled"] boolValue];
 
     [[AdaptyUnityPlugin shared]
+     setCrossPlatformSDK:"Unity"
+     version:"2.4.0"
+    ];
+
+    [[AdaptyUnityPlugin shared]
      setIdfaCollectionDisabled:idfaCollectionDisabled
     ];
 
