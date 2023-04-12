@@ -52,10 +52,11 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
     NSString *apiKey = infoDictionary[@"AdaptyPublicSdkKey"];
     BOOL observerMode = [infoDictionary[@"AdaptyObserverMode"] boolValue];
     BOOL idfaCollectionDisabled = [infoDictionary[@"AdaptyIDFACollectionDisabled"] boolValue];
+    BOOL enableUsageLogs = [infoDictionary[@"AdaptyEnableUsageLogs"] boolValue];
 
     [[AdaptyUnityPlugin shared]
-     setCrossPlatformSDK:"Unity"
-     version:"2.4.0"
+     setCrossPlatformSDK:@"unity"
+                 version:@"2.4.1"
     ];
 
     [[AdaptyUnityPlugin shared]
@@ -63,8 +64,9 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
     ];
 
     [[AdaptyUnityPlugin shared]
-              activate:apiKey
-          observerMode:observerMode
+               activate:apiKey
+           observerMode:observerMode
+        enableUsageLogs:enableUsageLogs
     ];
 
     [[AdaptyUnityPlugin shared]

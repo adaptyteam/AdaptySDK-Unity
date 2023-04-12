@@ -14,10 +14,12 @@ import Adapty
         Adapty.idfaCollectionDisabled = value
     }
 
-    @objc public func activate(_ apikey: String, observerMode: Bool) {
-        Adapty.activate(apikey, observerMode: observerMode) { error in
-            guard let error = error else { return }
-        }
+    @objc public func activate(_ apikey: String,
+                               observerMode: Bool,
+                               enableUsageLogs: Bool) {
+        Adapty.activate(apikey,
+                        observerMode: observerMode,
+                        enableUsageLogs: enableUsageLogs)
     }
 
     @objc public func getLogLevel() -> String {
@@ -25,7 +27,7 @@ import Adapty
     }
 
     @objc public func setCrossPlatformSDK(_ name: String, version: String) {
-        Adapty.setCrossPlatformSDK(version: version, name: name) 
+        Adapty.setCrossPlatformSDK(version: version, name: name)
     }
 
     @objc public func setLogLevel(_ value: String) {
