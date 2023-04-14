@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
 	<androidPackages>
-		<androidPackage spec="com.github.adaptyteam:AdaptySDK-Android:2.4.1">
+		<androidPackage spec="io.adapty:android-sdk:2.4.2">
 			<repositories>
-				<repository>https://jitpack.io</repository>
+				<repository>https://repo.maven.apache.org/maven2/</repository>
 			</repositories>
 		</androidPackage>
 	</androidPackages>

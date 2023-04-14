@@ -11,6 +11,7 @@ import static com.adapty.unity.Constants.ADAPTY_ONBOARDING_SCREEN_NAME_KEY;
 import static com.adapty.unity.Constants.ADAPTY_ONBOARDING_SCREEN_ORDER_KEY;
 import static com.adapty.unity.Constants.ADAPTY_PROFILE_UPDATE_KEY;
 import static com.adapty.unity.Constants.ADAPTY_SUCCESS_KEY;
+import static com.adapty.unity.Constants.ADAPTY_SDK_VERSION;
 
 import android.content.Context;
 import android.os.Handler;
@@ -18,6 +19,8 @@ import android.os.Handler;
 import com.adapty.Adapty;
 import com.adapty.errors.AdaptyError;
 import com.adapty.internal.crossplatform.CrossplatformHelper;
+import com.adapty.internal.crossplatform.CrossplatformName;
+import com.adapty.internal.crossplatform.MetaInfo;
 import com.adapty.models.AdaptyAttributionSource;
 import com.adapty.models.AdaptyPaywall;
 import com.adapty.models.AdaptyPaywallProduct;
@@ -31,7 +34,8 @@ import java.util.Map;
 
 public class AdaptyAndroidWrapper {
 
-    private static final CrossplatformHelper helper = CrossplatformHelper.create();
+    private static final CrossplatformHelper helper =
+            CrossplatformHelper.create(MetaInfo.from(CrossplatformName.UNITY, ADAPTY_SDK_VERSION));
 
     private static Handler unityMainThreadHandler;
     private static AdaptyAndroidMessageHandler messageHandler;
@@ -311,4 +315,5 @@ class Constants {
     public static final String ADAPTY_ERROR_DETAIL_KEY = "detail";
     public static final String ADAPTY_ERROR_DECODING_FAILED_MESSAGE = "Decoding failed";
     public static final int ADAPTY_ERROR_CODE_DECODING_FAILED = 2006;
+    public static final String ADAPTY_SDK_VERSION = "2.4.1";
 }
