@@ -26,6 +26,10 @@ public static class AdaptySDKPostProcess {
 
         var testTargetGuid = proj.TargetGuidByName(PBXProject.GetUnityTestTargetName());
         var mainTargetGuid = proj.GetUnityMainTargetGuid();
+        var frameworkTargetGuid = proj.GetUnityFrameworkTargetGuid();
+
+        UpdateBitcodeProperty(proj, mainTargetGuid);
+        UpdateBitcodeProperty(proj, frameworkTargetGuid);
 
         UpdateBuildProperties(proj, testTargetGuid);
         CopyAdaptyInfoPlist(buildPath, proj, mainTargetGuid);
@@ -35,8 +39,12 @@ public static class AdaptySDKPostProcess {
 	}
 
 #if UNITY_IOS
-    static void UpdateBuildProperties(PBXProject project, string targetGuid) {
+    static void UpdateBitcodeProperty(PBXProject project, string targetGuid)
+    {
         project.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
+    }
+
+    static void UpdateBuildProperties(PBXProject project, string targetGuid) {
         project.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/AdaptySDK/Plugins/iOS/Source/AdaptyUnityPlugin-Bridging-Header.h");
         project.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "AdaptyUnityPlugin-Swift.h");
 
