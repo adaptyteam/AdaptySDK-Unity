@@ -17,6 +17,14 @@ namespace AdaptySDK
     {
         public static readonly string sdkVersion = "2.4.2";
 
+        /**
+        * @brief Sets the log level
+        *
+        * Description
+        *
+        * @return Nothing.
+        * @param level The first value to average.
+        */
         public static void SetLogLevel(LogLevel level)
             => _Adapty.SetLogLevel(level.ToJSON());
 

@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['updateattribution_0',['UpdateAttribution',['../class_adapty_s_d_k_1_1_adapty.html#a945d11bb8ca4f10f130737385a763f5f',1,'AdaptySDK.Adapty.UpdateAttribution(string jsonString, AttributionSource source, Action&lt; Error &gt; completionHandler)'],['../class_adapty_s_d_k_1_1_adapty.html#abff44f4b899252e7567dd7e8f0f4a288',1,'AdaptySDK.Adapty.UpdateAttribution(Dictionary&lt; string, dynamic &gt; attribution, AttributionSource source, string networkUserId, Action&lt; Error &gt; completionHandler)'],['../class_adapty_s_d_k_1_1_adapty.html#a52e00a877b9d2999ca96c0d25366b053',1,'AdaptySDK.Adapty.UpdateAttribution(Dictionary&lt; string, dynamic &gt; attribution, AttributionSource source, Action&lt; Error &gt; completionHandler)'],['../class_adapty_s_d_k_1_1_adapty.html#a28114798a7cab765293a0556fbc165ab',1,'AdaptySDK.Adapty.UpdateAttribution(string jsonString, AttributionSource source, string networkUserId, Action&lt; Error &gt; completionHandler)']]],
+  ['updateprofile_1',['UpdateProfile',['../class_adapty_s_d_k_1_1_adapty.html#a35733a8a28dfd4c0303396f4ebea316c',1,'AdaptySDK::Adapty']]]
+];
