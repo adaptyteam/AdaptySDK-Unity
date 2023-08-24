@@ -34,8 +34,12 @@ import java.util.Map;
 
 public class AdaptyAndroidWrapper {
 
-    private static final CrossplatformHelper helper =
-            CrossplatformHelper.create(MetaInfo.from(CrossplatformName.UNITY, ADAPTY_SDK_VERSION));
+    private static final CrossplatformHelper helper;
+
+    static {
+        CrossplatformHelper.init(MetaInfo.from(CrossplatformName.UNITY, ADAPTY_SDK_VERSION));
+        helper = CrossplatformHelper.Companion.getShared();
+    }
 
     private static Handler unityMainThreadHandler;
     private static AdaptyAndroidMessageHandler messageHandler;
@@ -107,7 +111,7 @@ public class AdaptyAndroidWrapper {
         });
     }
 
-    public static void makePurchase(String productJson, String subscriptionUpdateParamsJson, AdaptyAndroidCallback callback) {
+    public static void makePurchase(String productJson, String subscriptionUpdateParamsJson, boolean isOfferPersonalized, AdaptyAndroidCallback callback) {
         AdaptyPaywallProduct product = parseJsonArgument(productJson, AdaptyPaywallProduct.class);
         if (product == null) {
             String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
@@ -117,7 +121,7 @@ public class AdaptyAndroidWrapper {
 
         AdaptySubscriptionUpdateParameters subscriptionUpdateParams = isNullOrBlank(subscriptionUpdateParamsJson) ? null : parseJsonArgument(subscriptionUpdateParamsJson, AdaptySubscriptionUpdateParameters.class);
 
-        Adapty.makePurchase(UnityPlayer.currentActivity, product, subscriptionUpdateParams, result -> {
+        Adapty.makePurchase(UnityPlayer.currentActivity, product, subscriptionUpdateParams, isOfferPersonalized, result -> {
             sendMessageWithResult(helper.toJson(result), callback);
         });
     }
@@ -315,5 +319,5 @@ class Constants {
     public static final String ADAPTY_ERROR_DETAIL_KEY = "detail";
     public static final String ADAPTY_ERROR_DECODING_FAILED_MESSAGE = "Decoding failed";
     public static final int ADAPTY_ERROR_CODE_DECODING_FAILED = 2006;
-    public static final String ADAPTY_SDK_VERSION = "2.4.2";
+    public static final String ADAPTY_SDK_VERSION = "2.6.0";
 }
