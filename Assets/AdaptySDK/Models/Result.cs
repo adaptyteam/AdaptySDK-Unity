@@ -14,11 +14,8 @@ namespace AdaptySDK
             public readonly Error Error;
             public readonly T Value;
 
-            public override string ToString()
-            {
-                return $"{nameof(Value)}: {Value}, " +
+            public override string ToString() => $"{nameof(Value)}: {Value}, " +
                        $"{nameof(Error)}: {Error}";
-            }
 
             internal Result(T value, Error error)
             {
@@ -28,4 +25,3 @@ namespace AdaptySDK
         }
     }
 }
-

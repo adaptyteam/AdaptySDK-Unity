@@ -39,15 +39,12 @@ namespace AdaptySDK
             /// Can be null if the customer has no purchases.
             public readonly IDictionary<string, IList<NonSubscription>> NonSubscriptions;
 
-            public override string ToString()
-            {
-                return $"{nameof(ProfileId)}: {ProfileId}, " +
+            public override string ToString() => $"{nameof(ProfileId)}: {ProfileId}, " +
                        $"{nameof(CustomerUserId)}: {CustomerUserId}, " +
                        $"{nameof(CustomAttributes)}: {CustomAttributes}, " +
                        $"{nameof(AccessLevels)}: {AccessLevels}, " +
                        $"{nameof(Subscriptions)}: {Subscriptions}, " +
                        $"{nameof(NonSubscriptions)}: {NonSubscriptions}";
-            }
         }
     }
 }

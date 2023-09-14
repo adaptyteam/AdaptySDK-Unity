@@ -39,26 +39,20 @@ namespace AdaptySDK
             public readonly bool IsRefund;
 
             /// Deprecated, use 'isConsumable'
-            public bool IsOneTime
-            {
-                get { return isConsumable; }
-            }
+            public bool IsOneTime => IsConsumable;
 
             /// Whether the product should only be processed once.
             /// If true, the purchase will be returned by Adapty API one time only.
-            public readonly bool isConsumable;
+            public readonly bool IsConsumable;
 
-            public override string ToString()
-            {
-                return $"{nameof(PurchaseId)}: {PurchaseId}, " +
+            public override string ToString() => $"{nameof(PurchaseId)}: {PurchaseId}, " +
                        $"{nameof(VendorProductId)}: {VendorProductId}, " +
                        $"{nameof(Store)}: {Store}, " +
                        $"{nameof(PurchasedAt)}: {PurchasedAt}, " +
-                       $"{nameof(isConsumable)}: {isConsumable}, " +
+                       $"{nameof(IsConsumable)}: {IsConsumable}, " +
                        $"{nameof(IsSandbox)}: {IsSandbox}, " +
                        $"{nameof(VendorTransactionId)}: {VendorTransactionId}, " +
                        $"{nameof(IsRefund)}: {IsRefund}";
-            }
         }
     }
 }

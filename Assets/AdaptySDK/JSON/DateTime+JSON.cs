@@ -1,4 +1,11 @@
-﻿using System;
+﻿//
+//  DateTime+JSON.cs
+//  Adapty
+//
+//  Created by Aleksei Valiano on 20.12.2022.
+//
+
+using System;
 using System.Globalization;
 
 namespace AdaptySDK.SimpleJSON
@@ -6,6 +13,7 @@ namespace AdaptySDK.SimpleJSON
     internal static partial class JSONNodeExtensions
     {
         internal static DateTime GetDateTime(this JSONNode node, string aKey) => node.GetString(aKey).ToDateTime();
+
         internal static DateTime? GetDateTimeIfPresent(this JSONNode node, string aKey)
         {
             var str = node.GetStringIfPresent(aKey);

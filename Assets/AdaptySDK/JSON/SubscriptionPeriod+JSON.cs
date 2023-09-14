@@ -30,7 +30,6 @@ namespace AdaptySDK
     }
 }
 
-
 namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions

@@ -90,8 +90,9 @@ namespace AdaptySDK
             /// [Nullable]
             public readonly string ActivePromotionalOfferType; // nullable
 
-            /// [Nullable]
             public readonly string ActivePromotionalOfferId; // nullable
+
+            public readonly string OfferId; // nullable
 
             /// The reason why the subscription was cancelled.
             /// Possible values are: voluntarily_cancelled, billing_error, refund, price_increase, product_was_not_available, unknown.
@@ -99,9 +100,7 @@ namespace AdaptySDK
             /// [Nullable]
             public readonly string CancellationReason; // nullable
 
-            public override string ToString()
-            {
-                return $"{nameof(IsActive)}: {IsActive}, " +
+            public override string ToString() => $"{nameof(IsActive)}: {IsActive}, " +
                        $"{nameof(VendorProductId)}: {VendorProductId}, " +
                        $"{nameof(Store)}: {Store}, " +
                        $"{nameof(ActivatedAt)}: {ActivatedAt}, " +
@@ -121,7 +120,6 @@ namespace AdaptySDK
                        $"{nameof(VendorOriginalTransactionId)}: {VendorOriginalTransactionId}, " +
                        $"{nameof(CancellationReason)}: {CancellationReason}, " +
                        $"{nameof(IsRefund)}: {IsRefund}";
-            }
         }
     }
 }

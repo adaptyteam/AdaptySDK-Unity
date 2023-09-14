@@ -5,9 +5,6 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using System;
-using System.Collections.Generic;
-
 namespace AdaptySDK
 {
     using AdaptySDK.SimpleJSON;
@@ -53,14 +50,13 @@ namespace AdaptySDK
                 Locale = remouteConfig.GetString("lang");
                 RemoteConfigString = remouteConfig.GetStringIfPresent("data");
 
-                _Products = jsonNode.GetBackendProductList("products");
+                _Products = jsonNode.GetProductReferenceList("products");
                 _Version = jsonNode.GetInteger("paywall_updated_at");
                 _PayloadData = jsonNode.GetStringIfPresent("payload_data");
             }
         }
     }
 }
-
 
 namespace AdaptySDK.SimpleJSON
 {

@@ -5,7 +5,6 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using System;
 using System.Collections.Generic;
 
 namespace AdaptySDK
@@ -24,12 +23,10 @@ namespace AdaptySDK
                 AccessLevels = jsonNode.GetAccessLevelDictionaryIfPresent("paid_access_levels") ?? new Dictionary<string, AccessLevel>();
                 Subscriptions = jsonNode.GetSubscriptionDictionaryIfPresent("subscriptions") ?? new Dictionary<string, Subscription>();
                 NonSubscriptions = jsonNode.GetNonSubscriptionDictionaryIfPresent("non_subscriptions") ?? new Dictionary<string, IList<NonSubscription>>();
-
             }
         }
     }
 }
-
 
 namespace AdaptySDK.SimpleJSON
 {
@@ -40,6 +37,5 @@ namespace AdaptySDK.SimpleJSON
 
         internal static Adapty.Profile GetProfile(this JSONNode node, string aKey)
            => new Adapty.Profile(GetObject(node, aKey));
-
     }
 }

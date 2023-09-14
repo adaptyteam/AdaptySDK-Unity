@@ -28,7 +28,7 @@ namespace AdaptySDK
             public string MixpanelUserId;
             public string AppmetricaProfileId;
             public string AppmetricaDeviceId;
-            public string OneSignalPlayerId;
+            public string OneSignalSubscriptionId;
             public string PushwooshHWID;
             public string FirebaseAppInstanceId;
             public string AirbridgeDeviceId;
@@ -74,7 +74,7 @@ namespace AdaptySDK
 
             bool _validateCustomAttributeKey(String addingKey, bool testCount)
             {
-                
+
                 if (string.IsNullOrEmpty(addingKey) || addingKey.Length > 30 || !Regex.IsMatch(addingKey, "^[A-Za-z0-9._-]+$"))
                 {
                     throw new Exception("The key must be string not more than 30 characters. Only letters, numbers, dashes, points and underscores allowed");
@@ -100,9 +100,7 @@ namespace AdaptySDK
                 return true;
             }
 
-            public override string ToString()
-            {
-                return $"{nameof(FirstName)}: {FirstName}, " +
+            public override string ToString() => $"{nameof(FirstName)}: {FirstName}, " +
                        $"{nameof(LastName)}: {LastName}, " +
                        $"{nameof(Gender)}: {Gender}, " +
                        $"{nameof(Birthday)}: {Birthday}, " +
@@ -114,15 +112,13 @@ namespace AdaptySDK
                        $"{nameof(MixpanelUserId)}: {MixpanelUserId}, " +
                        $"{nameof(AppmetricaProfileId)}: {AppmetricaProfileId}, " +
                        $"{nameof(AppmetricaDeviceId)}: {AppmetricaDeviceId}, " +
-                       $"{nameof(OneSignalPlayerId)}: {OneSignalPlayerId}, " +
+                       $"{nameof(OneSignalSubscriptionId)}: {OneSignalSubscriptionId}, " +
                        $"{nameof(PushwooshHWID)}: {PushwooshHWID}, " +
                        $"{nameof(FirebaseAppInstanceId)}: {FirebaseAppInstanceId}, " +
                        $"{nameof(AirbridgeDeviceId)}: {AirbridgeDeviceId}, " +
                        $"{nameof(AppTrackingTransparencyStatus)}: {AppTrackingTransparencyStatus}, " +
                        $"{nameof(AnalyticsDisabled)}: {AnalyticsDisabled}, " +
                        $"{nameof(CustomAttributes)}: {CustomAttributes}";
-            }
         }
     }
 }
-

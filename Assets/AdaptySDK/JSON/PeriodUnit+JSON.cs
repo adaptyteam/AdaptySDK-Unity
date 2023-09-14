@@ -5,8 +5,6 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using System;
-
 namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
@@ -25,6 +23,7 @@ namespace AdaptySDK.SimpleJSON
 
         internal static Adapty.PeriodUnit GetPeriodUnit(this JSONNode node, string aKey)
             => GetString(node, aKey).ToPeriodUnit();
+
         internal static Adapty.PeriodUnit? GetPeriodUnitIfPresent(this JSONNode node, string aKey)
             => GetStringIfPresent(node, aKey)?.ToPeriodUnit();
 

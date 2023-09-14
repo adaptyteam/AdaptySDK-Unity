@@ -11,8 +11,8 @@ namespace AdaptySDK
     {
         public partial class OnboardingScreenParameters
         {
-            public string Name;
-            public string ScreenName;
+            public string Name; //nullable
+            public string ScreenName; //nullable
             public uint ScreenOrder;
 
             public OnboardingScreenParameters(string name, string screenName, uint screenOrder)
@@ -22,12 +22,9 @@ namespace AdaptySDK
                 ScreenOrder = screenOrder;
             }
 
-            public override string ToString()
-            {
-                return $"{nameof(Name)}: {Name}, " +
+            public override string ToString() => $"{nameof(Name)}: {Name}, " +
                        $"{nameof(ScreenName)}: {ScreenName}, " +
                        $"{nameof(ScreenOrder)}: {ScreenOrder}";
-            }
         }
     }
 }

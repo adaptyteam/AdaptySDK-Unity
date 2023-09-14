@@ -17,7 +17,6 @@ namespace AdaptySDK
             {
                 var node = new JSONObject();
 
-
                 if (FirstName != null) node.Add("first_name", FirstName);
                 if (LastName != null) node.Add("last_name", LastName);
                 if (Gender != null) node.Add("gender", Gender.Value.ToJSON());
@@ -30,11 +29,13 @@ namespace AdaptySDK
                 if (MixpanelUserId != null) node.Add("mixpanel_user_id", MixpanelUserId);
                 if (AppmetricaProfileId != null) node.Add("appmetrica_profile_id", AppmetricaProfileId);
                 if (AppmetricaDeviceId != null) node.Add("appmetrica_device_id", AppmetricaDeviceId);
-                if (OneSignalPlayerId != null) node.Add("one_signal_player_id", OneSignalPlayerId);
+                if (OneSignalSubscriptionId != null) node.Add("one_signal_subscription_id", OneSignalSubscriptionId);
                 if (PushwooshHWID != null) node.Add("pushwoosh_hwid", PushwooshHWID);
                 if (FirebaseAppInstanceId != null) node.Add("firebase_app_instance_id", FirebaseAppInstanceId);
                 if (AirbridgeDeviceId != null) node.Add("airbridge_device_id", AirbridgeDeviceId);
+#if UNITY_IOS
                 if (AppTrackingTransparencyStatus != null) node.Add("att_status", AppTrackingTransparencyStatus.Value.ToJSON());
+#endif
                 if (AnalyticsDisabled != null) node.Add("analytics_disabled", AnalyticsDisabled.Value);
                 if (CustomAttributes.Count > 0) node.Add("custom_attributes", CustomAttributes.ToJSONObject());
 

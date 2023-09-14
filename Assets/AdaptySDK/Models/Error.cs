@@ -13,14 +13,11 @@ namespace AdaptySDK
         {
             public readonly ErrorCode Code;
             public readonly string Message;
-            public readonly string Detail;
+            public readonly string Detail; //nullable
 
-            public override string ToString()
-            {
-                return $"{nameof(Code)}: {Code}, " +
+            public override string ToString() => $"{nameof(Code)}: {Code}, " +
                        $"{nameof(Message)}: {Message}, " +
                        $"{nameof(Detail)}: {Detail}";
-            }
 
             internal Error(ErrorCode Code, string Message, string Detail)
             {
@@ -31,4 +28,3 @@ namespace AdaptySDK
         }
     }
 }
-

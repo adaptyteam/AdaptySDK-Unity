@@ -18,7 +18,11 @@ namespace AdaptySDK
             internal Error(JSONObject jsonNode)
             {
                 Message = jsonNode.GetString("message");
+#if UNITY_IOS
+                Detail = jsonNode.GetString("detail");
+#else
                 Detail = jsonNode.GetStringIfPresent("detail");
+#endif
                 Code = (ErrorCode)jsonNode.GetInteger("adapty_code");
             }
         }
@@ -50,7 +54,6 @@ namespace AdaptySDK.SimpleJSON
             {
                 error = new Adapty.Error(Adapty.ErrorCode.DecodingFailed, "Failed decoding Adapty.Error", $"AdaptyUnityError.DecodingFailed({ex})");
             }
-
             return error;
         }
     }

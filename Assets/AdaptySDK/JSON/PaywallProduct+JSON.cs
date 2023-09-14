@@ -21,12 +21,10 @@ namespace AdaptySDK
             {
                 var node = new JSONObject();
                 node.Add("vendor_product_id", VendorProductId);
-                node.Add("introductory_offer_eligibility", IntroductoryOfferEligibility.ToJSON());
-                node.Add("timestamp", _Version);
 #if UNITY_IOS
-                if (PromotionalOfferId != null) node.Add("promotional_offer_id", PromotionalOfferId);
+                if (SubscriptionDetails?.PromotionalOfferId != null) node.Add("promotional_offer_id", SubscriptionDetails?.PromotionalOfferId);
 #endif
-                node.Add("variation_id", VariationId);
+                node.Add("paywall_variation_id", PaywallVariationId);
                 node.Add("paywall_ab_test_name", PaywallABTestName);
                 node.Add("paywall_name", PaywallName);
                 if (_PayloadData != null) node.Add("payload_data", _PayloadData);
@@ -36,47 +34,20 @@ namespace AdaptySDK
             internal PaywallProduct(JSONObject jsonNode)
             {
                 VendorProductId = jsonNode.GetString("vendor_product_id");
-                IntroductoryOfferEligibility = jsonNode.GetEligibility("introductory_offer_eligibility");
-                _Version = jsonNode.GetInteger("timestamp");
-                _PayloadData = jsonNode.GetStringIfPresent("payload_data");
-#if UNITY_IOS
-                PromotionalOfferId = jsonNode.GetStringIfPresent("promotional_offer_id");
-                RegionCode = jsonNode.GetStringIfPresent("region_code");
-                IsFamilyShareable = jsonNode.GetBoolean("is_family_shareable");
-                SubscriptionGroupIdentifier = jsonNode.GetStringIfPresent("subscription_group_identifier");
-                Discounts = jsonNode.GetProductDiscountListIfPresent("discounts") ?? new List<ProductDiscount>();
-#else
-                PromotionalOfferId = null;
-                RegionCode = null;
-                IsFamilyShareable = false;
-                SubscriptionGroupIdentifier = null;
-                Discounts = new List<ProductDiscount>();
-#endif
-                VariationId = jsonNode.GetString("variation_id");
-                PaywallABTestName = jsonNode.GetString("paywall_ab_test_name");
-                PaywallName = jsonNode.GetString("paywall_name");
-
                 LocalizedDescription = jsonNode.GetString("localized_description");
                 LocalizedTitle = jsonNode.GetString("localized_title");
-                Price = jsonNode.GetDouble("price");
-                CurrencyCode = jsonNode.GetStringIfPresent("currency_code");
-                CurrencySymbol = jsonNode.GetStringIfPresent("currency_symbol");
-                SubscriptionPeriod = jsonNode.GetSubscriptionPeriodIfPresent("subscription_period");
-                IntroductoryDiscount = jsonNode.GetProductDiscountIfPresent("introductory_discount");
-                LocalizedPrice = jsonNode.GetStringIfPresent("localized_price");
-                LocalizedSubscriptionPeriod = jsonNode.GetStringIfPresent("localized_subscription_period");
-#if UNITY_ANDROID
-                AndroidFreeTrialPeriod = jsonNode.GetSubscriptionPeriodIfPresent("free_trial_period");
-                AndroidLocalizedFreeTrialPeriod = jsonNode.GetStringIfPresent("localized_free_trial_period");
-#else
-                AndroidFreeTrialPeriod = null;
-                AndroidLocalizedFreeTrialPeriod = null;
-#endif
+                RegionCode = jsonNode.GetStringIfPresent("region_code");
+                IsFamilyShareable = jsonNode.GetBooleanIfPresent("is_family_shareable") ?? false;
+                PaywallVariationId = jsonNode.GetString("paywall_variation_id");
+                PaywallABTestName = jsonNode.GetString("paywall_ab_test_name");
+                PaywallName = jsonNode.GetString("paywall_name");
+                Price = jsonNode.GetPrice("price");
+                SubscriptionDetails = jsonNode.GetSubscriptionDetailsIfPresent("subscription_details");
+                _PayloadData = jsonNode.GetStringIfPresent("payload_data");
             }
         }
     }
 }
-
 
 namespace AdaptySDK.SimpleJSON
 {

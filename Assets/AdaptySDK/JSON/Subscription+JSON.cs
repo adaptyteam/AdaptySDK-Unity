@@ -27,7 +27,17 @@ namespace AdaptySDK
                 IsLifetime = jsonNode.GetBoolean("is_lifetime");
                 ActiveIntroductoryOfferType = jsonNode.GetStringIfPresent("active_introductory_offer_type");
                 ActivePromotionalOfferType = jsonNode.GetStringIfPresent("active_promotional_offer_type");
+#if UNITY_IOS
                 ActivePromotionalOfferId = jsonNode.GetStringIfPresent("active_promotional_offer_id");
+#else
+                ActivePromotionalOfferId = null;
+#endif
+
+#if UNITY_ANDROID
+                OfferId = jsonNode.GetStringIfPresent("offer_id");
+#else
+                OfferId = null;
+#endif
                 WillRenew = jsonNode.GetBoolean("will_renew");
                 IsInGracePeriod = jsonNode.GetBoolean("is_in_grace_period");
                 UnsubscribedAt = jsonNode.GetDateTimeIfPresent("unsubscribed_at");
@@ -41,7 +51,6 @@ namespace AdaptySDK
         }
     }
 }
-
 
 namespace AdaptySDK.SimpleJSON
 {

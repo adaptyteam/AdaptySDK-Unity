@@ -5,8 +5,6 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using System;
-
 namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
@@ -41,6 +39,5 @@ namespace AdaptySDK.SimpleJSON
                 default: return Adapty.AttributionSource.Custom;
             }
         }
-
     }
 }

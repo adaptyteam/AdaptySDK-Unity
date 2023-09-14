@@ -23,14 +23,13 @@ namespace AdaptySDK
                 VendorProductId = jsonNode.GetString("vendor_product_id");
                 VendorTransactionId = jsonNode.GetStringIfPresent("vendor_transaction_id");
                 PurchasedAt = jsonNode.GetDateTime("purchased_at");
-                isConsumable = jsonNode.GetBoolean("is_consumable");
+                IsConsumable = jsonNode.GetBoolean("is_consumable");
                 IsSandbox = jsonNode.GetBoolean("is_sandbox");
                 IsRefund = jsonNode.GetBoolean("is_refund");
             }
         }
     }
 }
-
 
 namespace AdaptySDK.SimpleJSON
 {

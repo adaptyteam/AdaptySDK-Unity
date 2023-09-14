@@ -15,19 +15,17 @@ namespace AdaptySDK
         {
             /// The product id for current subscription to change.
             public string OldSubVendorProductId;
-            public AndroidSubscriptionUpdateProrationMode ProrationMode;
 
-            public AndroidSubscriptionUpdateParameters(string oldSubVendorProductId, AndroidSubscriptionUpdateProrationMode prorationMode)
+            public AndroidSubscriptionUpdateReplacementMode ReplacementMode;
+
+            public AndroidSubscriptionUpdateParameters(string oldSubVendorProductId, AndroidSubscriptionUpdateReplacementMode replacementMode)
             {
                 OldSubVendorProductId = oldSubVendorProductId ?? throw new ArgumentNullException(nameof(oldSubVendorProductId)); //TODO
-                ProrationMode = prorationMode;
+                ReplacementMode = replacementMode;
             }
 
-            public override string ToString()
-            {
-                return $"{nameof(OldSubVendorProductId)}: {OldSubVendorProductId}, " +
-                       $"{nameof(ProrationMode)}: {ProrationMode}";
-            }
+            public override string ToString() => $"{nameof(OldSubVendorProductId)}: {OldSubVendorProductId}, " +
+                       $"{nameof(ReplacementMode)}: {ReplacementMode}";
         }
     }
 }

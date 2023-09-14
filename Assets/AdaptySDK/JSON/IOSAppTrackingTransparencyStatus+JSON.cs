@@ -25,6 +25,7 @@ namespace AdaptySDK.SimpleJSON
 
         internal static Adapty.IOSAppTrackingTransparencyStatus GetIOSAppTrackingTransparencyStatus(this JSONNode node, string aKey)
             => GetString(node, aKey).ToIOSAppTrackingTransparencyStatus();
+
         internal static Adapty.IOSAppTrackingTransparencyStatus? GetIOSAppTrackingTransparencyStatusIfPresent(this JSONNode node, string aKey)
             => GetStringIfPresent(node, aKey)?.ToIOSAppTrackingTransparencyStatus();
 

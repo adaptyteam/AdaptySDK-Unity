@@ -12,13 +12,11 @@ namespace AdaptySDK
         public partial class SubscriptionPeriod
         {
             public readonly PeriodUnit Unit;
+
             public readonly long NumberOfUnits;
 
-            public override string ToString()
-            {
-                return $"{nameof(Unit)}: {Unit}, " +
+            public override string ToString() => $"{nameof(Unit)}: {Unit}, " +
                        $"{nameof(NumberOfUnits)}: {NumberOfUnits}";
-            }
         }
     }
 }

@@ -4,6 +4,7 @@
 //
 //  Created by Aleksei Valiano on 20.12.2022.
 //
+
 using System;
 
 namespace AdaptySDK
@@ -60,6 +61,7 @@ namespace AdaptySDK
 
             public readonly string ActivePromotionalOfferId; // nullable
 
+            public readonly string OfferId; // nullable
 
             /// Whether the auto-renewable subscription is set to renew.
             public readonly bool WillRenew;
@@ -95,9 +97,7 @@ namespace AdaptySDK
             /// Whether the purchase was refunded.
             public readonly bool IsRefund;
 
-            public override string ToString()
-            {
-                return $"{nameof(Id)}: {Id}, " +
+            public override string ToString() => $"{nameof(Id)}: {Id}, " +
                        $"{nameof(IsActive)}: {IsActive}, " +
                        $"{nameof(VendorProductId)}: {VendorProductId}, " +
                        $"{nameof(Store)}: {Store}, " +
@@ -108,6 +108,7 @@ namespace AdaptySDK
                        $"{nameof(ActiveIntroductoryOfferType)}: {ActiveIntroductoryOfferType}, " +
                        $"{nameof(ActivePromotionalOfferType)}: {ActivePromotionalOfferType}, " +
                        $"{nameof(ActivePromotionalOfferId)}: {ActivePromotionalOfferId}, " +
+                       $"{nameof(OfferId)}: {OfferId}, " +
                        $"{nameof(WillRenew)}: {WillRenew}, " +
                        $"{nameof(IsInGracePeriod)}: {IsInGracePeriod}, " +
                        $"{nameof(UnsubscribedAt)}: {UnsubscribedAt}, " +
@@ -115,7 +116,6 @@ namespace AdaptySDK
                        $"{nameof(StartsAt)}: {StartsAt}, " +
                        $"{nameof(CancellationReason)}: {CancellationReason}, " +
                        $"{nameof(IsRefund)}: {IsRefund}";
-            }
         }
     }
 }

@@ -26,6 +26,7 @@ namespace AdaptySDK.SimpleJSON
 
         internal static Adapty.LogLevel GetLogLevel(this JSONNode node, string aKey)
             => GetString(node, aKey).ToLogLevel();
+
         internal static Adapty.LogLevel? GetLogLevelIfPresent(this JSONNode node, string aKey)
             => GetStringIfPresent(node, aKey)?.ToLogLevel();
 

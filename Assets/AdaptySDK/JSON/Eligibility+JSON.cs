@@ -15,13 +15,14 @@ namespace AdaptySDK.SimpleJSON
             {
                 case Adapty.Eligibility.Ineligible: return "ineligible";
                 case Adapty.Eligibility.Eligible: return "eligible";
-                case Adapty.Eligibility.Unknown: return "unknown";
-                default: return "unknown";
+                case Adapty.Eligibility.NotApplicable: return "not_applicable";
+                default: return "ineligible";
             }
         }
 
         internal static Adapty.Eligibility GetEligibility(this JSONNode node, string aKey)
             => GetString(node, aKey).ToEligibility();
+
         internal static Adapty.Eligibility? GetEligibilityIfPresent(this JSONNode node, string aKey)
             => GetStringIfPresent(node, aKey)?.ToEligibility();
 
@@ -31,8 +32,8 @@ namespace AdaptySDK.SimpleJSON
             {
                 case "ineligible": return Adapty.Eligibility.Ineligible;
                 case "eligible": return Adapty.Eligibility.Eligible;
-                case "unknown": return Adapty.Eligibility.Unknown;
-                default: return Adapty.Eligibility.Unknown;
+                case "not_applicable": return Adapty.Eligibility.NotApplicable;
+                default: return Adapty.Eligibility.Ineligible;
             }
         }
     }

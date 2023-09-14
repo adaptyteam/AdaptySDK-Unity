@@ -5,7 +5,6 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using System;
 using System.Collections.Generic;
 
 namespace AdaptySDK
@@ -32,17 +31,22 @@ namespace AdaptySDK
             /// Every change within the paywall creates a new revision.
             public readonly int Revision;
 
+            /// If `true`, it is possible to use Adapty Paywall Builder.
+            /// Read more here: https://docs.adapty.io/docs/paywall-builder-getting-started
+            public readonly bool HasViewConfiguration;
+
             /// And identifier of a paywall locale.
             public readonly string Locale;
 
             /// The custom JSON formatted data configured in Adapty Dashboard.
             /// (String representation)
-            public readonly string RemoteConfigString;
+            public readonly string RemoteConfigString; //nullable
 
             /// An array of ProductModel objects related to this paywall.
-            private readonly IList<BackendProduct> _Products;
+            private readonly IList<ProductReference> _Products;
 
             private readonly int _Version;
+
             private readonly string _PayloadData;
 
             /// Array of related products ids.
@@ -80,6 +84,3 @@ namespace AdaptySDK
         }
     }
 }
-
-
-

@@ -11,9 +11,9 @@ namespace AdaptySDK
     {
         public enum Eligibility
         {
-            Unknown,
             Ineligible,
-            Eligible
+            Eligible,
+            NotApplicable,
         }
     }
 }

@@ -21,6 +21,7 @@ namespace AdaptySDK.SimpleJSON
 
         internal static Adapty.ProfileGender GetProfileGender(this JSONNode node, string aKey)
             => GetString(node, aKey).ToProfileGender();
+
         internal static Adapty.ProfileGender? GetProfileGenderIfPresent(this JSONNode node, string aKey)
             => GetStringIfPresent(node, aKey)?.ToProfileGender();
 

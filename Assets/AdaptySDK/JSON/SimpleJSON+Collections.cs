@@ -1,4 +1,11 @@
-﻿using System.Collections.Generic;
+﻿//
+//  SimpleJSON+Collections.cs
+//  Adapty
+//
+//  Created by Aleksei Valiano on 20.12.2022.
+//
+
+using System.Collections.Generic;
 using System;
 
 namespace AdaptySDK.SimpleJSON
@@ -45,9 +52,9 @@ namespace AdaptySDK.SimpleJSON
                         break;
                 }
             }
-
             return result;
         }
+
         private static IList<dynamic> ToList(this JSONArray obj)
         {
             if (obj == null) return null;
@@ -78,7 +85,6 @@ namespace AdaptySDK.SimpleJSON
                         break;
                 }
             }
-
             return result;
         }
 
@@ -123,6 +129,7 @@ namespace AdaptySDK.SimpleJSON
 
             return result;
         }
+
         public static JSONArray ToJSONArray(this IList<dynamic> obj)
         {
             var result = new JSONArray();
@@ -161,7 +168,6 @@ namespace AdaptySDK.SimpleJSON
                     result.Add(new JSONNumber(Convert.ToDouble((object)item)));
                 }
             }
-
             return result;
         }
     }

@@ -11,6 +11,7 @@ namespace AdaptySDK.SimpleJSON
     {
         internal static Adapty.PaymentMode GetPaymentMode(this JSONNode node, string aKey)
             => GetString(node, aKey).ToPaymentMode();
+
         internal static Adapty.PaymentMode? GetPaymentModeIfPresent(this JSONNode node, string aKey)
             => GetStringIfPresent(node, aKey)?.ToPaymentMode();
 
@@ -26,4 +27,3 @@ namespace AdaptySDK.SimpleJSON
         }
     }
 }
-
