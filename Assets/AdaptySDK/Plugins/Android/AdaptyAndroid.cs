@@ -22,8 +22,10 @@ namespace AdaptySDK.Android
         internal static void GetPaywall(string id, string locale, Action<string> completionHandler)
             => AdaptyAndroidClass.CallStatic("getPaywall", id, locale, AdaptyAndroidCallback.Action(completionHandler));
 
-        internal static void GetPaywallProducts(string paywall, string fetchPolicy, Action<string> completionHandler)
+        internal static void GetPaywallProducts(string paywall, Action<string> completionHandler)
            => AdaptyAndroidClass.CallStatic("getPaywallProducts", paywall, AdaptyAndroidCallback.Action(completionHandler));
+
+        internal static void GetProductsIntroductoryOfferEligibility(string products, Action<string> completionHandler) { completionHandler(null); }
 
         internal static void GetProfile(Action<string> completionHandler)
             => AdaptyAndroidClass.CallStatic("getProfile", AdaptyAndroidCallback.Action(completionHandler));
@@ -31,7 +33,7 @@ namespace AdaptySDK.Android
         internal static void RestorePurchases(Action<string> completionHandler)
             => AdaptyAndroidClass.CallStatic("restorePurchases", AdaptyAndroidCallback.Action(completionHandler));
 
-        internal static void MakePurchase(string product, string androidSubscriptionUpdate, Action<string> completionHandler)
+        internal static void MakePurchase(string product, string androidSubscriptionUpdate, bool? isOfferPersonalized, Action<string> completionHandler)
             => AdaptyAndroidClass.CallStatic("makePurchase", product, androidSubscriptionUpdate, AdaptyAndroidCallback.Action(completionHandler));
 
         internal static void LogShowPaywall(string paywall, Action<string> completionHandler)

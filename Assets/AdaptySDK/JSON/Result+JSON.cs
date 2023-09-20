@@ -75,5 +75,36 @@ namespace AdaptySDK.SimpleJSON
 
             return new Adapty.Result<IList<Adapty.PaywallProduct>>(list, error);
         }
+
+        internal static Adapty.Result<IDictionary<string, Adapty.Eligibility>> ExtractProductEligibilityDictionaryOrError(this string json)
+        {
+            Adapty.Error error = null;
+            IDictionary<string, Adapty.Eligibility> dic = null;
+            try
+            {
+                var response = JSONNode.Parse(json);
+                error = response.GetErrorIfPresent("error");
+                if (error is null)
+                {
+                    if (!response.IsObject) throw new Exception($"Value is not Object");
+                    var obj = response.AsObject;
+                    if (obj != null)
+                    {
+                        foreach (var item in obj)
+                        {
+                            JSONNode valueNode = item.Value;
+                            if (!valueNode.IsString) throw new Exception($"Value by key: {item.Key} is not String");
+                            dic.Add(item.Key, valueNode.Value.ToEligibility());
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                error = new Adapty.Error(Adapty.ErrorCode.DecodingFailed, "Failed decoding dictionary of Adapty.Eligibility Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
+            }
+
+            return new Adapty.Result<IDictionary<string, Adapty.Eligibility>>(dic, error);
+        }
     }
 }

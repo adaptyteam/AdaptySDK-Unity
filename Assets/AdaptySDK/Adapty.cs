@@ -69,11 +69,9 @@ namespace AdaptySDK
         });
 
         public static void GetPaywallProducts(Paywall paywall, Action<IList<PaywallProduct>, Error> completionHandler)
-            => GetPaywallProducts(paywall, IOSProductsFetchPolicy.Default, completionHandler);
-
-        public static void GetPaywallProducts(Paywall paywall, IOSProductsFetchPolicy fetchPolicy, Action<IList<PaywallProduct>, Error> completionHandler)
         {
             string paywallJson;
+
             try
             {
                 paywallJson = paywall.ToJSONNode().ToString();
@@ -92,7 +90,7 @@ namespace AdaptySDK
                 return;
             }
 
-            _Adapty.GetPaywallProducts(paywallJson, fetchPolicy.ToJSON(), (json) =>
+            _Adapty.GetPaywallProducts(paywallJson, (json) =>
             {
                 if (completionHandler == null) return;
                 var response = json.ExtractPaywallProductListOrError();
@@ -106,6 +104,58 @@ namespace AdaptySDK
                 }
             });
         }
+
+        public static void GetProductsIntroductoryOfferEligibility(IList<PaywallProduct> products, Action<IDictionary<string, Eligibility>, Error> completionHandler)
+        {
+#if UNITY_ANDROID
+            var result = new Dictionary<string, Eligibility>();
+            foreach (var product in products)
+            {
+                result.Add(product.VendorProductId, product.SubscriptionDetails?.AndroidIntroductoryOfferEligibility ?? Eligibility.Ineligible);
+            }
+            completionHandler(result, null);
+            return;
+#endif
+            string productsJson;
+            try
+            {
+                var array = new JSONArray();
+                foreach (var product in products)
+                {
+                    array.Add(product.VendorProductId);
+                }
+
+                productsJson = array.ToString();
+            }
+            catch (Exception ex)
+            {
+                var error = new Error(ErrorCode.EncodingFailed, "Failed encoding Array of VendorProductId", $"AdaptyUnityError.EncodingFailed({ex})");
+                try
+                {
+                    completionHandler(null, error);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Failed to invoke Action<IDictionary<string, Adapty.Eligibility>,Adapty.Error> completionHandler in Adapty.GetProductsIntroductoryOfferEligibility(..)", e);
+                }
+                return;
+            }
+
+            _Adapty.GetProductsIntroductoryOfferEligibility(productsJson, (json) =>
+            {
+                if (completionHandler == null) return;
+                var response = json.ExtractProductEligibilityDictionaryOrError();
+                try
+                {
+                    completionHandler(response.Value, response.Error);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Failed to invoke Action<IDictionary<string, Adapty.PaywallProduct>,Adapty.Error> completionHandler in Adapty.GetProductsIntroductoryOfferEligibility(..)", e);
+                }
+            });
+        }
+
 
         public static void GetProfile(Action<Profile, Error> completionHandler)
             => _Adapty.GetProfile((json) =>
@@ -139,9 +189,12 @@ namespace AdaptySDK
         });
 
         public static void MakePurchase(PaywallProduct product, Action<Profile, Error> completionHandler)
-            => MakePurchase(product, null, completionHandler);
+            => MakePurchase(product, null, null, completionHandler);
 
         public static void MakePurchase(PaywallProduct product, AndroidSubscriptionUpdateParameters subscriptionUpdate, Action<Profile, Error> completionHandler)
+            => MakePurchase(product, subscriptionUpdate, null, completionHandler);
+
+        public static void MakePurchase(PaywallProduct product, AndroidSubscriptionUpdateParameters subscriptionUpdate, bool? isOfferPersonalized, Action<Profile, Error> completionHandler)
         {
             Error error = null;
             string productJson;
@@ -186,7 +239,7 @@ namespace AdaptySDK
                 return;
             }
 
-            _Adapty.MakePurchase(productJson, androidSubscriptionUpdateJson, (json) =>
+            _Adapty.MakePurchase(productJson, androidSubscriptionUpdateJson, isOfferPersonalized, (json) =>
             {
                 if (completionHandler == null) return;
                 var response = json.ExtractProfileOrError();
@@ -327,8 +380,10 @@ namespace AdaptySDK
 
         public static void UpdateAttribution(string jsonString, AttributionSource source, Action<Error> completionHandler)
             => UpdateAttribution(jsonString, source, null, completionHandler);
+
         public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, string networkUserId, Action<Error> completionHandler)
             => UpdateAttribution(attribution.ToJSONObject().ToString(), source, networkUserId, completionHandler);
+
         public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, Action<Error> completionHandler)
             => UpdateAttribution(attribution.ToJSONObject().ToString(), source, null, completionHandler);
 

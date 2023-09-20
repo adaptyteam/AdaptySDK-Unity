@@ -31,10 +31,16 @@ namespace AdaptySDK.iOS
             => _GetPaywall(id, locale, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getPaywallProducts")]
-        private static extern void _GetPaywallProducts(string paywall, string fetchPolicy, IntPtr callback);
+        private static extern void _GetPaywallProducts(string paywall, IntPtr callback);
 
-        internal static void GetPaywallProducts(string paywall, string fetchPolicy, Action<string> completionHandler)
-            => _GetPaywallProducts(paywall, fetchPolicy, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
+        internal static void GetPaywallProducts(string paywall, Action<string> completionHandler)
+            => _GetPaywallProducts(paywall, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
+
+        [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getProductsIntroductoryOfferEligibility")]
+        private static extern void _GetProductsIntroductoryOfferEligibility(string products, IntPtr callback);
+
+        internal static void GetProductsIntroductoryOfferEligibility(string products, Action<string> completionHandler)
+            => _GetProductsIntroductoryOfferEligibility(products, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_getProfile")]
         private static extern void _GetProfile(IntPtr callback);
@@ -51,7 +57,7 @@ namespace AdaptySDK.iOS
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_makePurchase")]
         private static extern void _MakePurchase(string product, IntPtr callback);
 
-        internal static void MakePurchase(string product, string androidSubscriptionUpdate, Action<string> completionHandler)
+        internal static void MakePurchase(string product, string androidSubscriptionUpdate, bool? isOfferPersonalized, Action<string> completionHandler)
             => _MakePurchase(product, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_logShowPaywall")]

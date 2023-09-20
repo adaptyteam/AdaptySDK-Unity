@@ -11,6 +11,6 @@ public class ProductButton : MonoBehaviour
     public void UpdateProduct(Adapty.PaywallProduct product)
     {
         this.ProductIdText.SetText(product.VendorProductId);
-        this.PriceText.SetText(product.LocalizedPrice);
+        this.PriceText.SetText(product.Price.LocalizedString);
     }
 }

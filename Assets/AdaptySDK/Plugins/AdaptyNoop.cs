@@ -13,13 +13,15 @@ namespace AdaptySDK.Noop
 
         internal static void GetPaywall(string id, string locale, Action<string> completionHandler) { completionHandler(null); }
 
-        internal static void GetPaywallProducts(string paywall, string fetchPolicy, Action<string> completionHandler) { completionHandler(null); }
+        internal static void GetPaywallProducts(string paywall, Action<string> completionHandler) { completionHandler(null); }
+
+        internal static void GetProductsIntroductoryOfferEligibility(string products, Action<string> completionHandler) { completionHandler(null); }
 
         internal static void GetProfile(Action<string> completionHandler) { completionHandler(null); }
 
         internal static void RestorePurchases(Action<string> completionHandler) { completionHandler(null); }
 
-        internal static void MakePurchase(string product, string androidSubscriptionUpdate, Action<string> completionHandler) { completionHandler(null); }
+        internal static void MakePurchase(string product, string androidSubscriptionUpdate, bool? isOfferPersonalized, Action<string> completionHandler) { completionHandler(null); }
 
         internal static void LogShowPaywall(string paywall, Action<string> completionHandler) { completionHandler(null); }
 

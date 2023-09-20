@@ -18,7 +18,7 @@ namespace AdaptySDK
             /// [Nullable]
             public readonly string SubscriptionGroupIdentifier;
 
-            readonly Eligibility? AndroidIntroductoryOfferEligibility; //nullable
+            internal readonly Eligibility? AndroidIntroductoryOfferEligibility; //nullable
             public readonly string AndroidBasePlanId; //nullable
             public readonly string AndroidOfferId; //nullable
 
