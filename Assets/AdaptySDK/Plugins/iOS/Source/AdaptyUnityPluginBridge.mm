@@ -164,10 +164,9 @@ void AdaptyUnity_updateAttribution(const char *attributions, const char *source,
         }];
 }
 
-void AdaptyUnity_setVariationForTransaction(const char *variationId, const char *transactionId, UnityAction callback) {
+void AdaptyUnity_setVariationForTransaction(const char *parameters, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
-          setVariationId:cstringToString(variationId)
-        forTransactionId:cstringToString(transactionId)
+     setVariationForTransaction:cstringToString(parameters)
               completion:^(NSString *_Nullable response) {
             SendCallbackToUnity(callback, response);
         }];

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using AdaptySDK.SimpleJSON;
+using UnityEditor.Experimental.GraphView;
 
 namespace AdaptySDK.iOS
 {
@@ -91,10 +93,15 @@ namespace AdaptySDK.iOS
             => _UpdateAttribution(jsonstring, source, networkUserId, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_setVariationForTransaction")]
-        private static extern void _SetVariationForTransaction(string variationId, string transactionId, IntPtr callback);
+        private static extern void _SetVariationForTransaction(string parameters, IntPtr callback);
 
         internal static void SetVariationForTransaction(string variationId, string transactionId, Action<string> completionHandler)
-            => _SetVariationForTransaction(variationId, transactionId, AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
+        {
+            var node = new JSONObject();
+            node.Add("variation_id", variationId);
+            node.Add("transaction_id", transactionId);
+            _SetVariationForTransaction(node.ToString(), AdaptyIOSCallbackAction.ActionToIntPtr(completionHandler));
+        }
 
         [DllImport("__Internal", CharSet = CharSet.Ansi, EntryPoint = "AdaptyUnity_presentCodeRedemptionSheet")]
         internal static extern void PresentCodeRedemptionSheet();

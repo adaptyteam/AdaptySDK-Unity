@@ -66,7 +66,7 @@ import Adapty
             return
         }
 
-        Adapty.getPaywallProducts(paywall: paywall, fetchPolicy: fetchPolicy == "wait_for_receipt_validation" ? .waitForReceiptValidation : .default) { result in
+        Adapty.getPaywallProducts(paywall: paywall) { result in
             completion?(AdaptyUnityPlugin.encodeToString(result: result))
         }
     }
@@ -90,7 +90,7 @@ import Adapty
                 completion?(AdaptyUnityPlugin.encodeToString(result: error))
             case let .success(product):
                 Adapty.makePurchase(product: product) { result in
-                    completion?(AdaptyUnityPlugin.encodeToString(result: result))
+                    completion?(AdaptyUnityPlugin.encodeToString(result: result.map { $0.profile }))
                 }
             }
         }
@@ -168,8 +168,8 @@ import Adapty
         }
     }
 
-    @objc public func setVariationId(_ variationId: String, forTransactionId: String, completion: JSONStringCompletion? = nil) {
-        Adapty.setVariationId(variationId, forTransactionId: forTransactionId) { error in
+    @objc public func setVariationForTransaction(_ parameters: String, completion: JSONStringCompletion? = nil) {
+        Adapty.setVariationId(from: AdaptyUnityPlugin.decoder, data: parameters.data(using: .utf8) ?? Data()) { error in
             completion?(AdaptyUnityPlugin.encodeToString(result: error))
         }
     }
