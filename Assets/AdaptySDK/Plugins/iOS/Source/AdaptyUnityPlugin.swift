@@ -56,7 +56,7 @@ import Adapty
         }
     }
 
-    @objc public func getPaywallProducts(_ paywallJson: String, fetchPolicy: String, completion: JSONStringCompletion? = nil) {
+    @objc public func getPaywallProducts(_ paywallJson: String, completion: JSONStringCompletion? = nil) {
         let paywall: AdaptyPaywall
         do {
             paywall = try AdaptyUnityPlugin.decode(AdaptyPaywall.self, from: paywallJson)
@@ -67,6 +67,21 @@ import Adapty
         }
 
         Adapty.getPaywallProducts(paywall: paywall) { result in
+            completion?(AdaptyUnityPlugin.encodeToString(result: result))
+        }
+    }
+
+    @objc public func getProductsIntroductoryOfferEligibility(_ arrayJson: String, completion: JSONStringCompletion? = nil) {
+        let vendorProductIds: [String]
+        do {
+            vendorProductIds = try AdaptyUnityPlugin.decode([String].self, from: arrayJson)
+        } catch {
+            let error = PluginError.decodingFailed(error)
+            completion?(AdaptyUnityPlugin.encodeToString(result: error))
+            return
+        }
+
+        Adapty.getProductsIntroductoryOfferEligibility(vendorProductIds: vendorProductIds) { result in
             completion?(AdaptyUnityPlugin.encodeToString(result: result))
         }
     }

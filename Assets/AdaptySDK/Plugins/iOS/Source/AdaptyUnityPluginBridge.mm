@@ -85,17 +85,24 @@ void AdaptyUnity_logout(UnityAction callback) {
 void AdaptyUnity_getPaywall(const char *paywallId, const char *locale, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      getPaywall:cstringToString(paywallId)
-     locale:cstringToString(locale)
+         locale:cstringToString(locale)
      completion:^(NSString *_Nullable response) {
             SendCallbackToUnity(callback, response);
         }];
 }
 
-void AdaptyUnity_getPaywallProducts(const char *paywall, const char *fetchPolicy, UnityAction callback) {
+void AdaptyUnity_getPaywallProducts(const char *paywall, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      getPaywallProducts:cstringToString(paywall)
-            fetchPolicy:cstringToString(fetchPolicy)
              completion:^(NSString *_Nullable response) {
+            SendCallbackToUnity(callback, response);
+        }];
+}
+
+void AdaptyUnity_getProductsIntroductoryOfferEligibility(const char *products, UnityAction callback) {
+    [[AdaptyUnityPlugin shared]
+     getProductsIntroductoryOfferEligibility:cstringToString(products)
+                                  completion:^(NSString *_Nullable response) {
             SendCallbackToUnity(callback, response);
         }];
 }
@@ -167,7 +174,7 @@ void AdaptyUnity_updateAttribution(const char *attributions, const char *source,
 void AdaptyUnity_setVariationForTransaction(const char *parameters, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      setVariationForTransaction:cstringToString(parameters)
-              completion:^(NSString *_Nullable response) {
+                     completion:^(NSString *_Nullable response) {
             SendCallbackToUnity(callback, response);
         }];
 }
