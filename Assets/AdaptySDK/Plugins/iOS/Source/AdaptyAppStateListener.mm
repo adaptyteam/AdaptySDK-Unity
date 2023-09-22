@@ -53,6 +53,18 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
     BOOL observerMode = [infoDictionary[@"AdaptyObserverMode"] boolValue];
     BOOL idfaCollectionDisabled = [infoDictionary[@"AdaptyIDFACollectionDisabled"] boolValue];
     BOOL enableUsageLogs = [infoDictionary[@"AdaptyEnableUsageLogs"] boolValue];
+    NSString *storeKit2UsageString = infoDictionary[@"AdaptyStoreKit2Usage"];
+
+    NSString *overrideBaseUrlString = infoDictionary[@"AdaptyOverrideBaseURL"];
+
+    if (overrideBaseUrlString) {
+        NSURL *backendEnvironmentURL = [NSURL URLWithString:overrideBaseUrlString];
+
+        if (backendEnvironmentURL) {
+            [[AdaptyUnityPlugin shared]
+             setBackendEnvironment:backendEnvironmentURL];
+        }
+    }
 
     [[AdaptyUnityPlugin shared]
      setCrossPlatformSDK:@"unity"
@@ -64,9 +76,10 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
     ];
 
     [[AdaptyUnityPlugin shared]
-               activate:apiKey
-           observerMode:observerMode
-        enableUsageLogs:enableUsageLogs
+                    activate:apiKey
+                observerMode:observerMode
+             enableUsageLogs:enableUsageLogs
+        storeKit2UsageString:storeKit2UsageString
     ];
 
     [[AdaptyUnityPlugin shared]
