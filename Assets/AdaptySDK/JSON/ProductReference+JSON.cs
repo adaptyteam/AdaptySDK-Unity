@@ -21,8 +21,8 @@ namespace AdaptySDK
                 var node = new JSONObject();
                 node.Add("vendor_product_id", VendorId);
 #if UNITY_ANDROID
-                node.Add("base_plan_id", AndroidBasePlanId);
-                node.Add("offer_id", AndroidOfferId);
+                if (AndroidBasePlanId != null) node.Add("base_plan_id", AndroidBasePlanId);
+                if (AndroidOfferId != null) node.Add("offer_id", AndroidOfferId);
 #endif
 
 #if UNITY_IOS
