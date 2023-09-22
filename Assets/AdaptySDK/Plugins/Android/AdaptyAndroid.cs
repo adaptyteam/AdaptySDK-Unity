@@ -34,7 +34,7 @@ namespace AdaptySDK.Android
             => AdaptyAndroidClass.CallStatic("restorePurchases", AdaptyAndroidCallback.Action(completionHandler));
 
         internal static void MakePurchase(string product, string androidSubscriptionUpdate, bool? isOfferPersonalized, Action<string> completionHandler)
-            => AdaptyAndroidClass.CallStatic("makePurchase", product, androidSubscriptionUpdate, AdaptyAndroidCallback.Action(completionHandler));
+            => AdaptyAndroidClass.CallStatic("makePurchase", product, androidSubscriptionUpdate, isOfferPersonalized ?? false, AdaptyAndroidCallback.Action(completionHandler));
 
         internal static void LogShowPaywall(string paywall, Action<string> completionHandler)
             => AdaptyAndroidClass.CallStatic("logShowPaywall", paywall, AdaptyAndroidCallback.Action(completionHandler));
