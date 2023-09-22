@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AdaptySDK.SimpleJSON;
-using UnityEditor.Experimental.GraphView;
 
 namespace AdaptySDK.iOS
 {
