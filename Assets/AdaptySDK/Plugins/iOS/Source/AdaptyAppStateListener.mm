@@ -55,6 +55,17 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
     BOOL enableUsageLogs = [infoDictionary[@"AdaptyEnableUsageLogs"] boolValue];
     NSString *storeKit2UsageString = infoDictionary[@"AdaptyStoreKit2Usage"];
 
+    NSString *overrideBaseUrlString = infoDictionary[@"AdaptyOverrideBaseURL"];
+
+    if (overrideBaseUrlString) {
+        NSURL *backendEnvironmentURL = [NSURL URLWithString:overrideBaseUrlString];
+
+        if (backendEnvironmentURL) {
+            [[AdaptyUnityPlugin shared]
+             setBackendEnvironment:backendEnvironmentURL];
+        }
+    }
+
     [[AdaptyUnityPlugin shared]
      setCrossPlatformSDK:@"unity"
                  version:@"2.4.2"

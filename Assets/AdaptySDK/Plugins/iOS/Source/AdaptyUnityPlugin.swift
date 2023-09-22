@@ -13,6 +13,10 @@ import Adapty
     @objc public func setIdfaCollectionDisabled(_ value: Bool) {
         Adapty.idfaCollectionDisabled = value
     }
+    
+    @objc public func setBackendEnvironment(_ url: URL) {
+        Adapty.setBackendEnvironment(baseUrl: url)
+    }
 
     @objc public func activate(_ apikey: String,
                                observerMode: Bool,
