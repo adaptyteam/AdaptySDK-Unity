@@ -86,8 +86,7 @@ namespace AdaptySDK.SimpleJSON
                 error = response.GetErrorIfPresent("error");
                 if (error is null)
                 {
-                    if (!response.IsObject) throw new Exception($"Value is not Object");
-                    var obj = response.AsObject;
+                    var obj = response.GetObject("success");
                     if (obj != null)
                     {
                         foreach (var item in obj)
