@@ -1,6 +1,6 @@
 <dependencies>
   <packages>
-    <package>io.adapty:android-sdk:2.6.2</package>
+    <package>io.adapty:android-sdk:2.7.0</package>
   </packages>
   <files>
     <file>Assets/Plugins/Android/androidx.activity.activity-1.1.0.aar</file>
@@ -35,7 +35,7 @@
     <file>Assets/Plugins/Android/com.google.firebase.firebase-encoders-17.0.0.jar</file>
     <file>Assets/Plugins/Android/com.google.firebase.firebase-encoders-json-18.0.0.aar</file>
     <file>Assets/Plugins/Android/com.google.firebase.firebase-encoders-proto-16.0.0.jar</file>
-    <file>Assets/Plugins/Android/io.adapty.android-sdk-2.6.2.aar</file>
+    <file>Assets/Plugins/Android/io.adapty.android-sdk-2.7.0.aar</file>
     <file>Assets/Plugins/Android/javax.inject.javax.inject-1.jar</file>
     <file>Assets/Plugins/Android/org.jetbrains.annotations-13.0.jar</file>
     <file>Assets/Plugins/Android/org.jetbrains.kotlin.kotlin-stdlib-1.7.0.jar</file>
