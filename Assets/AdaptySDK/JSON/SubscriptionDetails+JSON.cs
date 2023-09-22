@@ -17,8 +17,8 @@ namespace AdaptySDK
             internal SubscriptionDetails(JSONObject jsonNode)
             {
                 SubscriptionGroupIdentifier = jsonNode.GetStringIfPresent("subscription_group_identifier");
-                AndroidIntroductoryOfferEligibility = jsonNode.GetEligibility("introductory_offer_eligibility");
 #if UNITY_ANDROID
+                AndroidIntroductoryOfferEligibility = jsonNode.GetEligibility("introductory_offer_eligibility");
                 AndroidBasePlanId = jsonNode.GetStringIfPresent("android_base_plan_id");
                 AndroidOfferId = jsonNode.GetStringIfPresent("android_offer_id");
                 AndroidOfferTags = jsonNode.GetStringListIfPresent("android_offer_tags") ?? new List<string>();
