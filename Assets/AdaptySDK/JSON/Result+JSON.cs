@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
 
 namespace AdaptySDK.SimpleJSON
 {
@@ -79,21 +81,19 @@ namespace AdaptySDK.SimpleJSON
         internal static Adapty.Result<IDictionary<string, Adapty.Eligibility>> ExtractProductEligibilityDictionaryOrError(this string json)
         {
             Adapty.Error error = null;
-            IDictionary<string, Adapty.Eligibility> dic = null;
+            var dic = new Dictionary<string, Adapty.Eligibility>();
             try
             {
                 var response = JSONNode.Parse(json);
                 error = response.GetErrorIfPresent("error");
-                if (error is null)
-                {
+
+                if (error is null) {
                     var obj = response.GetObject("success");
-                    if (obj != null)
-                    {
-                        foreach (var item in obj)
-                        {
-                            JSONNode valueNode = item.Value;
-                            if (!valueNode.IsString) throw new Exception($"Value by key: {item.Key} is not String");
-                            dic.Add(item.Key, valueNode.Value.ToEligibility());
+                    if (obj != null) {
+                        foreach (var item in obj) {
+                            var key = item.Key;
+                            var eligibility = obj.GetEligibility(key);
+                            dic.Add(key, eligibility);
                         }
                     }
                 }
