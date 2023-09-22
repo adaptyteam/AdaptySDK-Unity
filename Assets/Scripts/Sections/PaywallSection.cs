@@ -106,7 +106,7 @@ public class PaywallSection : MonoBehaviour {
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 540.0f + products.Count * 80.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 540.0f + products.Count * 150.0f);
     }
 
     private ProductButton CreateProductButton(Adapty.PaywallProduct product, Eligibility eligibility, float index) {
@@ -114,8 +114,8 @@ public class PaywallSection : MonoBehaviour {
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
         productButtonRect.SetParent(this.ContainerTransform);
-        productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -300.0f - 80.0f * index);
-        productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 70.0f);
+        productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -300.0f - 150.0f * index);
+        productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 140.0f);
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product, eligibility);
         productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
