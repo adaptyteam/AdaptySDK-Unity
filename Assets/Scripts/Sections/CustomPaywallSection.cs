@@ -3,6 +3,7 @@ using AdaptyExample;
 using AdaptySDK;
 using TMPro;
 using UnityEngine;
+using static AdaptySDK.Adapty;
 
 public class CustomPaywallSection : MonoBehaviour {
     public AdaptyListener Listener;
@@ -63,7 +64,13 @@ public class CustomPaywallSection : MonoBehaviour {
     void LoadProducts(Adapty.Paywall paywall) {
         this.Listener.GetPaywallProducts(paywall, (products) => {
             if (products != null) {
-                this.UpdatePaywallData(paywall, products);
+                this.UpdatePaywallData(paywall, products, null);
+
+                this.Listener.GetProductsIntroductoryOfferEligibility(products, (eligibilities) => {
+                    if (eligibilities != null) {
+                        this.UpdatePaywallData(paywall, products, eligibilities);
+                    }
+                });
             } else {
                 this.UpdatePaywallFail();
             }
@@ -86,7 +93,7 @@ public class CustomPaywallSection : MonoBehaviour {
         this.RevisionText.SetText("null");
     }
 
-    private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products) {
+    private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products, IDictionary<string, Eligibility> eligibilities) {
         this.LoadingStatusText.SetText("OK");
         this.PaywallNameText.SetText(paywall.Id);
         this.VariationIdText.SetText(paywall.VariationId);
@@ -100,7 +107,14 @@ public class CustomPaywallSection : MonoBehaviour {
 
         for (var i = 0; i < products.Count; ++i) {
             var product = products[i];
-            var productButton = this.CreateProductButton(product, i);
+
+            Eligibility eligibility = Eligibility.Ineligible;
+
+            if (eligibilities != null) {
+                eligibilities.TryGetValue(product.VendorProductId, out eligibility);
+            }
+
+            var productButton = this.CreateProductButton(product, eligibility, i);
             m_productButtons.Add(productButton);
         }
 
@@ -108,7 +122,7 @@ public class CustomPaywallSection : MonoBehaviour {
         rect.sizeDelta = new Vector2(rect.sizeDelta.x, 780.0f + products.Count * 80.0f);
     }
 
-    private ProductButton CreateProductButton(Adapty.PaywallProduct product, float index) {
+    private ProductButton CreateProductButton(Adapty.PaywallProduct product, Adapty.Eligibility eligibility, float index) {
         var productButtonObject = Instantiate(this.ProductButtonPrefab);
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
@@ -116,7 +130,7 @@ public class CustomPaywallSection : MonoBehaviour {
         productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -300.0f - 80.0f * index);
         productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 70.0f);
 
-        productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
+        productButtonObject.GetComponent<ProductButton>().UpdateProduct(product, eligibility);
         productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
             this.Router.SetIsLoading(true);
             this.Listener.MakePurchase(product, (error) => {

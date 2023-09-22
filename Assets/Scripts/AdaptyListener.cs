@@ -69,6 +69,17 @@ namespace AdaptyExample
 
         }
 
+        public void GetProductsIntroductoryOfferEligibility(IList<PaywallProduct> products, Action<IDictionary<string, Eligibility>> completionHandler)
+        {
+            this.LogMethodRequest("GetProductsIntroductoryOfferEligibility");
+            
+            Adapty.GetProductsIntroductoryOfferEligibility(products, (eligibilities, error) =>
+            {
+                this.LogMethodResult("GetProductsIntroductoryOfferEligibility", error);
+                completionHandler.Invoke(eligibilities);
+            });
+        }
+
         public void MakePurchase(Adapty.PaywallProduct product, Action<Error> completionHandler)
         {
             this.LogMethodRequest("MakePurchase");
