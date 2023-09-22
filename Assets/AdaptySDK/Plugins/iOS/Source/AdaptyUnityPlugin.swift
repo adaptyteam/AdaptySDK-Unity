@@ -16,10 +16,25 @@ import Adapty
 
     @objc public func activate(_ apikey: String,
                                observerMode: Bool,
-                               enableUsageLogs: Bool) {
+                               enableUsageLogs: Bool,
+                               storeKit2UsageString: String?) {
+        let storeKit2Usage: StoreKit2Usage
+        
+        if let storeKit2UsageString = storeKit2UsageString {
+            switch storeKit2UsageString {
+            case "intro_eligibility_check":
+                storeKit2Usage = .forIntroEligibilityCheck
+            default:
+                storeKit2Usage = .disabled
+            }
+        } else {
+            storeKit2Usage = .disabled
+        }
+        
         Adapty.activate(apikey,
                         observerMode: observerMode,
-                        enableUsageLogs: enableUsageLogs)
+                        enableUsageLogs: enableUsageLogs,
+                        storeKit2Usage: storeKit2Usage)
     }
 
     @objc public func getLogLevel() -> String {
@@ -82,7 +97,8 @@ import Adapty
         }
 
         Adapty.getProductsIntroductoryOfferEligibility(vendorProductIds: vendorProductIds) { result in
-            completion?(AdaptyUnityPlugin.encodeToString(result: result))
+            let resultString = AdaptyUnityPlugin.encodeToString(result: result)
+            completion?(resultString)
         }
     }
 
