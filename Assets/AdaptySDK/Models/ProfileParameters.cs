@@ -28,6 +28,7 @@ namespace AdaptySDK
             public string MixpanelUserId;
             public string AppmetricaProfileId;
             public string AppmetricaDeviceId;
+            public string OneSignalPlayerId;
             public string OneSignalSubscriptionId;
             public string PushwooshHWID;
             public string FirebaseAppInstanceId;
@@ -112,6 +113,7 @@ namespace AdaptySDK
                        $"{nameof(MixpanelUserId)}: {MixpanelUserId}, " +
                        $"{nameof(AppmetricaProfileId)}: {AppmetricaProfileId}, " +
                        $"{nameof(AppmetricaDeviceId)}: {AppmetricaDeviceId}, " +
+                       $"{nameof(OneSignalPlayerId)}: {OneSignalPlayerId}, " +
                        $"{nameof(OneSignalSubscriptionId)}: {OneSignalSubscriptionId}, " +
                        $"{nameof(PushwooshHWID)}: {PushwooshHWID}, " +
                        $"{nameof(FirebaseAppInstanceId)}: {FirebaseAppInstanceId}, " +

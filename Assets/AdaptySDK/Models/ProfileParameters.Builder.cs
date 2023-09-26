@@ -90,6 +90,12 @@ namespace AdaptySDK
                     return this;
                 }
 
+                public Builder SetOneSignalPlayerId(string value)
+                {
+                    _Parameters.OneSignalPlayerId = value;
+                    return this;
+                }
+
                 public Builder SetOneSignalSubscriptionId(string value)
                 {
                     _Parameters.OneSignalSubscriptionId = value;

@@ -29,6 +29,7 @@ namespace AdaptySDK
                 if (MixpanelUserId != null) node.Add("mixpanel_user_id", MixpanelUserId);
                 if (AppmetricaProfileId != null) node.Add("appmetrica_profile_id", AppmetricaProfileId);
                 if (AppmetricaDeviceId != null) node.Add("appmetrica_device_id", AppmetricaDeviceId);
+                if (OneSignalPlayerId != null) node.Add("one_signal_player_id", OneSignalPlayerId);
                 if (OneSignalSubscriptionId != null) node.Add("one_signal_subscription_id", OneSignalSubscriptionId);
                 if (PushwooshHWID != null) node.Add("pushwoosh_hwid", PushwooshHWID);
                 if (FirebaseAppInstanceId != null) node.Add("firebase_app_instance_id", FirebaseAppInstanceId);
