@@ -29,7 +29,6 @@ namespace AdaptySDK
             public string AppmetricaProfileId;
             public string AppmetricaDeviceId;
             public string OneSignalPlayerId;
-            public string OneSignalSubscriptionId;
             public string PushwooshHWID;
             public string FirebaseAppInstanceId;
             public string AirbridgeDeviceId;
@@ -114,7 +113,6 @@ namespace AdaptySDK
                        $"{nameof(AppmetricaProfileId)}: {AppmetricaProfileId}, " +
                        $"{nameof(AppmetricaDeviceId)}: {AppmetricaDeviceId}, " +
                        $"{nameof(OneSignalPlayerId)}: {OneSignalPlayerId}, " +
-                       $"{nameof(OneSignalSubscriptionId)}: {OneSignalSubscriptionId}, " +
                        $"{nameof(PushwooshHWID)}: {PushwooshHWID}, " +
                        $"{nameof(FirebaseAppInstanceId)}: {FirebaseAppInstanceId}, " +
                        $"{nameof(AirbridgeDeviceId)}: {AirbridgeDeviceId}, " +

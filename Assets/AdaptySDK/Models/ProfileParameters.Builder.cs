@@ -96,12 +96,6 @@ namespace AdaptySDK
                     return this;
                 }
 
-                public Builder SetOneSignalSubscriptionId(string value)
-                {
-                    _Parameters.OneSignalSubscriptionId = value;
-                    return this;
-                }
-
                 public Builder SetPushwooshHWID(string value)
                 {
                     _Parameters.PushwooshHWID = value;
