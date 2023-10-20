@@ -15,9 +15,9 @@ namespace AdaptySDK
         {
             internal JSONNode ToJSONNode()
             {
-                var remouteConfig = new JSONObject();
-                remouteConfig.Add("lang", Locale);
-                if (RemoteConfigString != null) remouteConfig.Add("data", RemoteConfigString);
+                var remoteConfig = new JSONObject();
+                remoteConfig.Add("lang", Locale);
+                if (RemoteConfigString != null) remoteConfig.Add("data", RemoteConfigString);
 
                 var node = new JSONObject();
                 node.Add("developer_id", Id);
@@ -25,7 +25,8 @@ namespace AdaptySDK
                 node.Add("ab_test_name", ABTestName);
                 node.Add("variation_id", VariationId);
                 node.Add("revision", Revision);
-                node.Add("remote_config", remouteConfig);
+                node.Add("use_paywall_builder", HasViewConfiguration);
+                node.Add("remote_config", remoteConfig);
                 var products = new JSONArray();
                 foreach (var item in _Products)
                 {
@@ -45,10 +46,11 @@ namespace AdaptySDK
                 ABTestName = jsonNode.GetString("ab_test_name");
                 VariationId = jsonNode.GetString("variation_id");
                 Revision = jsonNode.GetInteger("revision");
+                HasViewConfiguration = jsonNode.GetBooleanIfPresent("use_paywall_builder") ?? false;
 
-                var remouteConfig = jsonNode.GetObject("remote_config");
-                Locale = remouteConfig.GetString("lang");
-                RemoteConfigString = remouteConfig.GetStringIfPresent("data");
+                var remoteConfig = jsonNode.GetObject("remote_config");
+                Locale = remoteConfig.GetString("lang");
+                RemoteConfigString = remoteConfig.GetStringIfPresent("data");
 
                 _Products = jsonNode.GetProductReferenceList("products");
                 _Version = jsonNode.GetInteger("paywall_updated_at");
