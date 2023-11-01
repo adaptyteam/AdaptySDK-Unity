@@ -22,8 +22,6 @@ static char * makeStringCopy(const char *string) {
 
 typedef void (*MessageDelegate)(const char *type, const char *data);
 
-typedef void (*CallbackDelegate)(UnityAction action, const char *data);
-
 static CallbackDelegate _callbackDelegate = NULL;
 static MessageDelegate _messageDelegate = NULL;
 

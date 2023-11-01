@@ -10,16 +10,16 @@ import Adapty
 extension AdaptyUnityPlugin {
     static let delegate = AdaptyDelegateWrapper()
     public typealias MessageDelegate = (String, String) -> Void
-    private static var _messageDelegate: MessageDelegate?
+    static var messageDelegate: MessageDelegate?
 
     @objc public func registerMessageDelegate(_ delegate: MessageDelegate? = nil) {
-        AdaptyUnityPlugin._messageDelegate = delegate
+        AdaptyUnityPlugin.messageDelegate = delegate
     }
 
     class AdaptyDelegateWrapper: AdaptyDelegate {
         public func didLoadLatestProfile(_ profile: AdaptyProfile) {
             guard let jsonString = try? AdaptyUnityPlugin.encodeToString(profile) else { return }
-            AdaptyUnityPlugin._messageDelegate?("did_load_latest_profile", jsonString)
+            AdaptyUnityPlugin.messageDelegate?("did_load_latest_profile", jsonString)
         }
     }
 }

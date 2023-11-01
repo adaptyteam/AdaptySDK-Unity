@@ -17,14 +17,26 @@ namespace AdaptySDK
         void OnLoadLatestProfile(Adapty.Profile profile);
     }
 
+    public interface AdaptyUnknownEventListener
+    {
+        void OnUnknownMessage(string type, JSONNode json);
+    }
+
     public static partial class Adapty
     {
         private static AdaptyEventListener m_Listener;
+        private static AdaptyUnknownEventListener m_UnknownListener;
 
         public static void SetEventListener(AdaptyEventListener listener)
         {
             _AdaptyCallbackAction.InitializeOnce();
             m_Listener = listener;
+        }
+
+        public static void SetUnknownEventListener(AdaptyUnknownEventListener listener)
+        {
+            _AdaptyCallbackAction.InitializeOnce();
+            m_UnknownListener = listener;
         }
 
         internal static void OnMessage(string type, string json)
@@ -37,6 +49,10 @@ namespace AdaptySDK
                 case "did_load_latest_profile":
                     if (!response.IsObject) return;
                     m_Listener.OnLoadLatestProfile(response.AsObject.GetProfile());
+                    return;
+                default:
+                    if (m_UnknownListener == null) return;
+                    m_UnknownListener.OnUnknownMessage(type, response);
                     return;
             }
         }
