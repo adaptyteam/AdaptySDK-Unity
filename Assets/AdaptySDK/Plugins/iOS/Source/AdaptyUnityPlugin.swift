@@ -14,8 +14,12 @@ import Adapty
         Adapty.idfaCollectionDisabled = value
     }
     
-    @objc public func setBackendEnvironment(_ url: URL) {
+    @objc public func setBackendEnvironmentBaseUrl(_ url: URL) {
         Adapty.setBackendEnvironment(baseUrl: url)
+    }
+
+    @objc public func setBackendEnvironmentFallbackBaseUrl(_ url: URL) {
+        Adapty.setBackendEnvironment(fallbackBaseUrl: url)
     }
 
     @objc public func activate(_ apikey: String,
