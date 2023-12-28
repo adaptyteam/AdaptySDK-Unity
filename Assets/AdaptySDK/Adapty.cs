@@ -12,6 +12,7 @@ using _Adapty = AdaptySDK.Noop.AdaptyNoop;
 namespace AdaptySDK
 {
     using AdaptySDK.SimpleJSON;
+    using static AdaptySDK.Adapty;
 
     public static partial class Adapty
     {
@@ -53,17 +54,35 @@ namespace AdaptySDK
         public static void GetPaywall(string placementId, Action<Paywall, Error> completionHandler)
             => GetPaywall(placementId, null, null, null, completionHandler);
 
-        public static void GetPaywall(string placementId, TimeSpan? loadTimeout, Action<Paywall, Error> completionHandler)
-            => GetPaywall(placementId, null, null, loadTimeout, completionHandler);
+        public static void GetPaywall(string placementId, PaywallFetchPolicy fetchPolicy, TimeSpan? loadTimeout, Action<Paywall, Error> completionHandler)
+          => GetPaywall(placementId, null, fetchPolicy, loadTimeout, completionHandler);
 
         public static void GetPaywall(string placementId, string locale, Action<Paywall, Error> completionHandler)
             => GetPaywall(placementId, locale, null, null, completionHandler);
 
-        public static void GetPaywall(string placementId, string locale, string fetchPolicy, TimeSpan? loadTimeout, Action<Paywall, Error> completionHandler)
+        public static void GetPaywall(string placementId, string locale, PaywallFetchPolicy fetchPolicy, TimeSpan? loadTimeout, Action<Paywall, Error> completionHandler)
         {
-            Int64? timeoutInMiliseconds = loadTimeout.HasValue ? (Int64)(loadTimeout.Value.TotalMilliseconds) : null;
+            string fetchPolicyJson;
+            try
+            {
+                fetchPolicyJson = fetchPolicy?.ToJSONNode().ToString();
+            }
+            catch (Exception ex)
+            {
+                var error = new Error(ErrorCode.EncodingFailed, "Failed encoding Adapty.PaywallFetchPolicy", $"AdaptyUnityError.EncodingFailed({ex})");
+                try
+                {
+                    completionHandler(null, error);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Failed to invoke Action<Adapty.Paywall,Adapty.Error> completionHandler in Adapty.GetPaywall(..)", e);
+                }
+                return;
+            }
 
-            _Adapty.GetPaywall(placementId, locale, fetchPolicy, timeoutInMiliseconds, (json) =>
+            Int64? timeoutInMilliseconds = loadTimeout.HasValue ? (Int64)loadTimeout.Value.TotalMilliseconds : null;
+            _Adapty.GetPaywall(placementId, locale, fetchPolicyJson, timeoutInMilliseconds, (json) =>
                 {
                     if (completionHandler == null) return;
                     var response = json.ExtractPaywallOrError();

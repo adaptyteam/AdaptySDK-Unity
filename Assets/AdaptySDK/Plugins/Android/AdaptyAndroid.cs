@@ -19,7 +19,7 @@ namespace AdaptySDK.Android
         internal static void Logout(Action<string> completionHandler)
             => AdaptyAndroidClass.CallStatic("logout", AdaptyAndroidCallback.Action(completionHandler));
 
-        internal static void GetPaywall(string placementId, string locale, string fetchPolicy, Int64? timeoutInMilisecond, Action<string> completionHandler)
+        internal static void GetPaywall(string placementId, string locale, string fetchPolicy, Int64? timeoutInMillisecond, Action<string> completionHandler)
             => AdaptyAndroidClass.CallStatic("getPaywall", placementId, locale, fetchPolicy, timeoutInMilisecond, AdaptyAndroidCallback.Action(completionHandler));
 
         internal static void GetPaywallProducts(string paywall, Action<string> completionHandler)
