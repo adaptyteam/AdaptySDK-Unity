@@ -77,7 +77,7 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
 
     [[AdaptyUnityPlugin shared]
      setCrossPlatformSDK:@"unity"
-                 version:@"2.7.0"
+                 version:@"2.9.0"
     ];
 
     [[AdaptyUnityPlugin shared]
