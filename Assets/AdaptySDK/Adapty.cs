@@ -50,23 +50,33 @@ namespace AdaptySDK
             }
         });
 
-        public static void GetPaywall(string id, Action<Paywall, Error> completionHandler)
-            => GetPaywall(id, null, completionHandler);
+        public static void GetPaywall(string placementId, Action<Paywall, Error> completionHandler)
+            => GetPaywall(placementId, null, null, null, completionHandler);
 
-        public static void GetPaywall(string id, string locale, Action<Paywall, Error> completionHandler)
-            => _Adapty.GetPaywall(id, locale, (json) =>
+        public static void GetPaywall(string placementId, TimeSpan? loadTimeout, Action<Paywall, Error> completionHandler)
+            => GetPaywall(placementId, null, null, loadTimeout, completionHandler);
+
+        public static void GetPaywall(string placementId, string locale, Action<Paywall, Error> completionHandler)
+            => GetPaywall(placementId, locale, null, null, completionHandler);
+
+        public static void GetPaywall(string placementId, string locale, string fetchPolicy, TimeSpan? loadTimeout, Action<Paywall, Error> completionHandler)
         {
-            if (completionHandler == null) return;
-            var response = json.ExtractPaywallOrError();
-            try
-            {
-                completionHandler(response.Value, response.Error);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to invoke Action<Adapty.Paywall,Adapty.Error> completionHandler in Adapty.GetPaywall(..)", e);
-            }
-        });
+            Int64? timeoutInMiliseconds = loadTimeout.HasValue ? (Int64)(loadTimeout.Value.TotalMilliseconds) : null;
+
+            _Adapty.GetPaywall(placementId, locale, fetchPolicy, timeoutInMiliseconds, (json) =>
+                {
+                    if (completionHandler == null) return;
+                    var response = json.ExtractPaywallOrError();
+                    try
+                    {
+                        completionHandler(response.Value, response.Error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<Adapty.Paywall,Adapty.Error> completionHandler in Adapty.GetPaywall(..)", e);
+                    }
+                });
+        }
 
         public static void GetPaywallProducts(Paywall paywall, Action<IList<PaywallProduct>, Error> completionHandler)
         {

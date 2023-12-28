@@ -52,17 +52,26 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
     NSString *apiKey = infoDictionary[@"AdaptyPublicSdkKey"];
     BOOL observerMode = [infoDictionary[@"AdaptyObserverMode"] boolValue];
     BOOL idfaCollectionDisabled = [infoDictionary[@"AdaptyIDFACollectionDisabled"] boolValue];
-    BOOL enableUsageLogs = [infoDictionary[@"AdaptyEnableUsageLogs"] boolValue];
     NSString *storeKit2UsageString = infoDictionary[@"AdaptyStoreKit2Usage"];
 
     NSString *overrideBaseUrlString = infoDictionary[@"AdaptyOverrideBaseURL"];
+    NSString *overrideFallbackBaseUrlString = infoDictionary[@"AdaptyOverrideFallbackBaseURL"];
 
     if (overrideBaseUrlString) {
         NSURL *backendEnvironmentURL = [NSURL URLWithString:overrideBaseUrlString];
 
         if (backendEnvironmentURL) {
             [[AdaptyUnityPlugin shared]
-             setBackendEnvironment:backendEnvironmentURL];
+             setBackendEnvironmentBaseUrl:backendEnvironmentURL];
+        }
+    }
+
+    if (overrideFallbackBaseUrlString) {
+        NSURL *fallbackEnvironmentURL = [NSURL URLWithString:overrideFallbackBaseUrlString];
+
+        if (fallbackEnvironmentURL) {
+            [[AdaptyUnityPlugin shared]
+             setBackendEnvironmentFallbackBaseUrl:fallbackEnvironmentURL];
         }
     }
 
@@ -78,7 +87,6 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
     [[AdaptyUnityPlugin shared]
                     activate:apiKey
                 observerMode:observerMode
-             enableUsageLogs:enableUsageLogs
         storeKit2UsageString:storeKit2UsageString
     ];
 

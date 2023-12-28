@@ -71,7 +71,8 @@ namespace AdaptySDK
 
             /// The user profile was changed during the operation.
             ProfileWasChanged = 3006,
-            PersistingDataError = 3100,
+            UnsupportedData = 3007,
+            FetchTimeoutError = 3101,
             OperationInterrupted = 9000,
 
             /// Plugin errors

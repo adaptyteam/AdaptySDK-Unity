@@ -16,7 +16,9 @@ namespace AdaptySDK
         public partial class Paywall
         {
             /// The identifier of the paywall, configured in Adapty Dashboard.
-            public readonly string Id;
+            public readonly string PlacementId;
+
+            private readonly string _InstanceIdentity;
 
             /// Paywall name
             public readonly string Name;
@@ -73,7 +75,8 @@ namespace AdaptySDK
                 }
             }
 
-            public override string ToString() => $"{nameof(Id)}: {Id}, " +
+            public override string ToString() => $"{nameof(PlacementId)}: {PlacementId}, " +
+                       $"{nameof(_InstanceIdentity)}: {_InstanceIdentity}, " +
                        $"{nameof(Name)}: {Name}, " +
                        $"{nameof(ABTestName)}: {ABTestName}, " +
                        $"{nameof(VariationId)}: {VariationId}, " +

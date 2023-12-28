@@ -5,7 +5,8 @@ using TMPro;
 using UnityEngine;
 using static AdaptySDK.Adapty;
 
-public class CustomPaywallSection : MonoBehaviour {
+public class CustomPaywallSection : MonoBehaviour
+{
     public AdaptyListener Listener;
     public AdaptyRouter Router;
 
@@ -25,53 +26,70 @@ public class CustomPaywallSection : MonoBehaviour {
 
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
-    void Start() {
-        
+    void Start()
+    {
+
     }
 
-    public void LogShowPaywallPressed() {
-        if (m_paywall == null) {
+    public void LogShowPaywallPressed()
+    {
+        if (m_paywall == null)
+        {
             return;
         }
 
         this.Router.SetIsLoading(true);
-        this.Listener.LogShowPaywall(m_paywall, (error) => {
+        this.Listener.LogShowPaywall(m_paywall, (error) =>
+        {
             this.Router.SetIsLoading(false);
         });
     }
 
-    public void LoadPaywall() {
+    public void LoadPaywall()
+    {
         var paywallId = this.PaywallIdTextField.text;
         var locale = this.LocaleTextField.text;
 
-        if (paywallId == null || paywallId.Length == 0) {
+        if (paywallId == null || paywallId.Length == 0)
+        {
             return;
         }
 
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(paywallId, locale, (paywall) => {
-            if (paywall == null) {
+        this.Listener.GetPaywall(paywallId, locale, (paywall) =>
+        {
+            if (paywall == null)
+            {
                 this.UpdatePaywallFail();
                 this.Router.SetIsLoading(false);
-            } else {
+            }
+            else
+            {
                 this.m_paywall = paywall;
                 this.LoadProducts(paywall);
             }
         });
     }
 
-    void LoadProducts(Adapty.Paywall paywall) {
-        this.Listener.GetPaywallProducts(paywall, (products) => {
-            if (products != null) {
+    void LoadProducts(Adapty.Paywall paywall)
+    {
+        this.Listener.GetPaywallProducts(paywall, (products) =>
+        {
+            if (products != null)
+            {
                 this.UpdatePaywallData(paywall, products, null);
 
-                this.Listener.GetProductsIntroductoryOfferEligibility(products, (eligibilities) => {
-                    if (eligibilities != null) {
+                this.Listener.GetProductsIntroductoryOfferEligibility(products, (eligibilities) =>
+                {
+                    if (eligibilities != null)
+                    {
                         this.UpdatePaywallData(paywall, products, eligibilities);
                     }
                 });
-            } else {
+            }
+            else
+            {
                 this.UpdatePaywallFail();
             }
 
@@ -80,37 +98,43 @@ public class CustomPaywallSection : MonoBehaviour {
     }
 
 
-    private void UpdatePaywallInitial() {
+    private void UpdatePaywallInitial()
+    {
         this.PaywallNameText.SetText("null");
         this.LoadingStatusText.SetText("WAIT");
         this.VariationIdText.SetText("null");
         this.RevisionText.SetText("null");
     }
 
-    private void UpdatePaywallFail() {
+    private void UpdatePaywallFail()
+    {
         this.LoadingStatusText.SetText("FAIL");
         this.VariationIdText.SetText("null");
         this.RevisionText.SetText("null");
     }
 
-    private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products, IDictionary<string, Eligibility> eligibilities) {
+    private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products, IDictionary<string, Eligibility> eligibilities)
+    {
         this.LoadingStatusText.SetText("OK");
-        this.PaywallNameText.SetText(paywall.Id);
+        this.PaywallNameText.SetText(paywall.PlacementId);
         this.VariationIdText.SetText(paywall.VariationId);
         this.RevisionText.SetText(paywall.Revision.ToString());
         this.LocaleText.SetText(paywall.Locale);
 
-        m_productButtons.ForEach((button) => {
+        m_productButtons.ForEach((button) =>
+        {
             Destroy(button.gameObject);
         });
         m_productButtons.Clear();
 
-        for (var i = 0; i < products.Count; ++i) {
+        for (var i = 0; i < products.Count; ++i)
+        {
             var product = products[i];
 
             Eligibility eligibility = Eligibility.Ineligible;
 
-            if (eligibilities != null) {
+            if (eligibilities != null)
+            {
                 eligibilities.TryGetValue(product.VendorProductId, out eligibility);
             }
 
@@ -122,7 +146,8 @@ public class CustomPaywallSection : MonoBehaviour {
         rect.sizeDelta = new Vector2(rect.sizeDelta.x, 780.0f + products.Count * 150.0f);
     }
 
-    private ProductButton CreateProductButton(Adapty.PaywallProduct product, Adapty.Eligibility eligibility, float index) {
+    private ProductButton CreateProductButton(Adapty.PaywallProduct product, Adapty.Eligibility eligibility, float index)
+    {
         var productButtonObject = Instantiate(this.ProductButtonPrefab);
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
@@ -131,9 +156,11 @@ public class CustomPaywallSection : MonoBehaviour {
         productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 140.0f);
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product, eligibility);
-        productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
+        productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        {
             this.Router.SetIsLoading(true);
-            this.Listener.MakePurchase(product, (error) => {
+            this.Listener.MakePurchase(product, (error) =>
+            {
                 this.Router.SetIsLoading(false);
             });
         });

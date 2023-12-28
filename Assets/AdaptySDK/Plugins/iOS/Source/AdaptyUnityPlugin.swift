@@ -20,24 +20,20 @@ import Adapty
 
     @objc public func activate(_ apikey: String,
                                observerMode: Bool,
-                               enableUsageLogs: Bool,
                                storeKit2UsageString: String?) {
         let storeKit2Usage: StoreKit2Usage
-        
-        if let storeKit2UsageString = storeKit2UsageString {
-            switch storeKit2UsageString {
+
+        switch storeKit2UsageString {
+            case "disabled":
+                storeKit2Usage = .disabled
             case "intro_eligibility_check":
                 storeKit2Usage = .forIntroEligibilityCheck
             default:
-                storeKit2Usage = .disabled
-            }
-        } else {
-            storeKit2Usage = .disabled
+                storeKit2Usage = .default
         }
         
         Adapty.activate(apikey,
                         observerMode: observerMode,
-                        enableUsageLogs: enableUsageLogs,
                         storeKit2Usage: storeKit2Usage)
     }
 
@@ -69,8 +65,8 @@ import Adapty
         }
     }
 
-    @objc public func getPaywall(_ id: String, locale: String, completion: JSONStringCompletion? = nil) {
-        Adapty.getPaywall(id, locale: locale) { result in
+    @objc public func getPaywall(_ placementId: String, locale: String, fetchPolicy: String , timeout: UInt64 ,completion: JSONStringCompletion? = nil) {
+        Adapty.getPaywall(placementId, locale: locale, fetchPolicy: fetchPolicy, timeout) { result in
             completion?(AdaptyUnityPlugin.encodeToString(result: result))
         }
     }

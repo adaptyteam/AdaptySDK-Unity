@@ -16,6 +16,8 @@ namespace AdaptySDK
             /// An identifier of the user in Adapty
             public readonly string ProfileId;
 
+            //private readonly string _SegmentId;
+
             /// An identifier of the user in your system.
             ///
             /// [Nullable]
@@ -40,6 +42,7 @@ namespace AdaptySDK
             public readonly IDictionary<string, IList<NonSubscription>> NonSubscriptions;
 
             public override string ToString() => $"{nameof(ProfileId)}: {ProfileId}, " +
+                       //$"{nameof(_SegmentId)}: {_SegmentId}, " +
                        $"{nameof(CustomerUserId)}: {CustomerUserId}, " +
                        $"{nameof(CustomAttributes)}: {CustomAttributes}, " +
                        $"{nameof(AccessLevels)}: {AccessLevels}, " +

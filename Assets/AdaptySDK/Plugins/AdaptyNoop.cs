@@ -11,7 +11,7 @@ namespace AdaptySDK.Noop
 
         internal static void Logout(Action<string> completionHandler) { completionHandler(null); }
 
-        internal static void GetPaywall(string id, string locale, Action<string> completionHandler) { completionHandler(null); }
+        internal static void GetPaywall(string placementId, string locale, string fetchPolicy, Int64? timeoutInMilisecond, Action<string> completionHandler) { completionHandler(null); }
 
         internal static void GetPaywallProducts(string paywall, Action<string> completionHandler) { completionHandler(null); }
 

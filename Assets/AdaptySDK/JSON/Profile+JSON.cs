@@ -18,6 +18,7 @@ namespace AdaptySDK
             internal Profile(JSONObject jsonNode)
             {
                 ProfileId = jsonNode.GetString("profile_id");
+                //_SegmentId = jsonNode.GetString("segment_hash");
                 CustomerUserId = jsonNode.GetStringIfPresent("customer_user_id");
                 CustomAttributes = jsonNode.GetDictionaryIfPresent("custom_attributes") ?? new Dictionary<string, dynamic>();
                 AccessLevels = jsonNode.GetAccessLevelDictionaryIfPresent("paid_access_levels") ?? new Dictionary<string, AccessLevel>();

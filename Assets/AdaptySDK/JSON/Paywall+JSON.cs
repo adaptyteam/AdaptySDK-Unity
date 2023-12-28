@@ -20,7 +20,8 @@ namespace AdaptySDK
                 if (RemoteConfigString != null) remoteConfig.Add("data", RemoteConfigString);
 
                 var node = new JSONObject();
-                node.Add("developer_id", Id);
+                node.Add("developer_id", PlacementId);
+                node.Add("paywall_id", _InstanceIdentity);
                 node.Add("paywall_name", Name);
                 node.Add("ab_test_name", ABTestName);
                 node.Add("variation_id", VariationId);
@@ -41,7 +42,8 @@ namespace AdaptySDK
 
             internal Paywall(JSONObject jsonNode)
             {
-                Id = jsonNode.GetString("developer_id");
+                PlacementId = jsonNode.GetString("developer_id");
+                _InstanceIdentity = jsonNode.GetString("paywall_id");
                 Name = jsonNode.GetString("paywall_name");
                 ABTestName = jsonNode.GetString("ab_test_name");
                 VariationId = jsonNode.GetString("variation_id");
