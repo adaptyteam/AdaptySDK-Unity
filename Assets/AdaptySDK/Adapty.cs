@@ -16,7 +16,7 @@ namespace AdaptySDK
 
     public static partial class Adapty
     {
-        public static readonly string sdkVersion = "2.7.1";
+        public static readonly string sdkVersion = "2.9.0";
 
         public static void SetLogLevel(LogLevel level)
             => _Adapty.SetLogLevel(level.ToJSON());
