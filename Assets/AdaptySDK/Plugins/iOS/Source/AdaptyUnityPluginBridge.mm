@@ -80,10 +80,12 @@ void AdaptyUnity_logout(UnityAction callback) {
         }];
 }
 
-void AdaptyUnity_getPaywall(const char *paywallId, const char *locale, UnityAction callback) {
+void AdaptyUnity_getPaywall(const char *paywallId, const char *locale, const char *fetchPolicy, int64_t loadTimeout, UnityAction callback) {
     [[AdaptyUnityPlugin shared]
      getPaywall:cstringToString(paywallId)
          locale:cstringToString(locale)
+     fetchPolicyJson:cstringToString(fetchPolicy)
+     loadTimeoutMilliseconds:loadTimeout
      completion:^(NSString *_Nullable response) {
             SendCallbackToUnity(callback, response);
         }];

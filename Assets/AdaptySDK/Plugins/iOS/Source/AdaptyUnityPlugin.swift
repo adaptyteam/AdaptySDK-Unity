@@ -65,8 +65,13 @@ import Adapty
         }
     }
 
-    @objc public func getPaywall(_ placementId: String, locale: String, fetchPolicy: String , timeout: UInt64 ,completion: JSONStringCompletion? = nil) {
-        Adapty.getPaywall(placementId, locale: locale, fetchPolicy: fetchPolicy, timeout) { result in
+    @objc public func getPaywall(_ placementId: String, locale: String, fetchPolicyJson: String? , loadTimeoutMilliseconds: Int64 ,completion: JSONStringCompletion? = nil) {
+
+        let fetchPolicy = fetchPolicyJson?.data(using: .utf8)
+                    .flatMap { try? AdaptyUnityPlugin.decoder.decode(AdaptyPaywall.FetchPolicy.self, from: $0) }
+        let loadTimeout : TimeInterval = loadTimeoutMilliseconds < 0 ? .defaultLoadPaywallTimeout : (Double(loadTimeoutMilliseconds) / 1000.0)
+
+        Adapty.getPaywall(placementId: placementId, locale: locale, fetchPolicy: fetchPolicy ?? .default, loadTimeout: loadTimeout) { result in
             completion?(AdaptyUnityPlugin.encodeToString(result: result))
         }
     }
