@@ -18,11 +18,11 @@ namespace AdaptySDK
             internal JSONNode ToJSONNode()
             {
 
-                Int64? maxAgeInMilliseconds = _MaxAge.HasValue ? (Int64)_MaxAge.Value.TotalMilliseconds : null;
+                double? maxAgeInSeconds = _MaxAge.HasValue ? _MaxAge.Value.TotalSeconds : null;
 
                 var node = new JSONObject();
                 node.Add("type", _Type);
-                if (maxAgeInMilliseconds != null) node.Add("max_age", maxAgeInMilliseconds);
+                if (maxAgeInSeconds != null) node.Add("max_age", maxAgeInSeconds);
                 return node;
             }
         }
