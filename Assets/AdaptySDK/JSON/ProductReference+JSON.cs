@@ -23,6 +23,7 @@ namespace AdaptySDK
 #if UNITY_ANDROID
                 if (AndroidBasePlanId != null) node.Add("base_plan_id", AndroidBasePlanId);
                 if (AndroidOfferId != null) node.Add("offer_id", AndroidOfferId);
+                if (AndroidIsConsumable != null) node.Add("is_consumable", AndroidIsConsumable);
 #endif
 
 #if UNITY_IOS
@@ -37,9 +38,11 @@ namespace AdaptySDK
 #if UNITY_ANDROID
                 AndroidBasePlanId = jsonNode.GetStringIfPresent("base_plan_id");
                 AndroidOfferId = jsonNode.GetStringIfPresent("offer_id");
+                AndroidIsConsumable = jsonNode.GetBooleanIfPresent("is_consumable");
 #else
                 AndroidBasePlanId = null;
                 AndroidOfferId = null;
+                AndroidIsConsumable = null;
 #endif
 
 #if UNITY_IOS
