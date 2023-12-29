@@ -14,11 +14,13 @@ namespace AdaptySDK
             internal readonly string VendorId;
             internal readonly string AndroidBasePlanId; //nullable
             internal readonly string AndroidOfferId; //nullable
+            internal readonly bool? AndroidIsConsumable; //nullable
             internal readonly string IOSDiscountId; //nullable
 
             public override string ToString() => $"{nameof(VendorId)}: {VendorId}, " +
                        $"{nameof(AndroidBasePlanId)}: {AndroidBasePlanId}, " +
                        $"{nameof(AndroidOfferId)}: {AndroidOfferId}, " +
+                       $"{nameof(AndroidIsConsumable)}: {AndroidIsConsumable}, " +
                        $"{nameof(IOSDiscountId)}: {IOSDiscountId}";
         }
     }

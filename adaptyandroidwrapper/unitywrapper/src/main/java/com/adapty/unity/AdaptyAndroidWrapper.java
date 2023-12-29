@@ -1,5 +1,6 @@
 package com.adapty.unity;
 
+import static com.adapty.internal.utils.UtilsKt.DEFAULT_PAYWALL_TIMEOUT_MILLIS;
 import static com.adapty.unity.Constants.ADAPTY_ERROR_CODE_DECODING_FAILED;
 import static com.adapty.unity.Constants.ADAPTY_ERROR_CODE_KEY;
 import static com.adapty.unity.Constants.ADAPTY_ERROR_DECODING_FAILED_MESSAGE;
@@ -90,14 +91,20 @@ public class AdaptyAndroidWrapper {
         });
     }
 
-    public static void getPaywall(String id, String locale, AdaptyAndroidCallback callback) {
+    public static void getPaywall(String id, String locale, String fetchPolicyJson, Long loadTimeoutMillis, AdaptyAndroidCallback callback) {
         if (id == null) {
             String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
             sendParameterError("id", methodName, callback);
             return;
         }
 
-        Adapty.getPaywall(id, locale, result -> {
+        AdaptyPaywall.FetchPolicy fetchPolicy = parseJsonArgument(fetchPolicyJson, AdaptyPaywall.FetchPolicy.class);
+        if (fetchPolicy == null)
+            fetchPolicy = AdaptyPaywall.FetchPolicy.Default;
+
+        int timeout = handleLoadTimeoutParam(loadTimeoutMillis);
+
+        Adapty.getPaywall(id, locale, fetchPolicy, timeout, result -> {
             sendMessageWithResult(helper.toJson(result), callback);
         });
     }
@@ -258,6 +265,11 @@ public class AdaptyAndroidWrapper {
         });
     }
 
+    private static int handleLoadTimeoutParam(Long loadTimeoutMillis) {
+        if (loadTimeoutMillis == null) return DEFAULT_PAYWALL_TIMEOUT_MILLIS;
+        return (loadTimeoutMillis > Integer.MAX_VALUE) ? Integer.MAX_VALUE : loadTimeoutMillis.intValue();
+    }
+
     private static <T> T parseJsonArgument(String json, Class<T> clazz) {
         if (isNullOrBlank(json)) return null;
 
@@ -323,5 +335,5 @@ class Constants {
     public static final String ADAPTY_ERROR_DETAIL_KEY = "detail";
     public static final String ADAPTY_ERROR_DECODING_FAILED_MESSAGE = "Decoding failed";
     public static final int ADAPTY_ERROR_CODE_DECODING_FAILED = 2006;
-    public static final String ADAPTY_SDK_VERSION = "2.7.1";
+    public static final String ADAPTY_SDK_VERSION = "2.9.0";
 }
