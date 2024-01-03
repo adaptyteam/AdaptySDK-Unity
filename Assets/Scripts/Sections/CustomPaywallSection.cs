@@ -19,6 +19,7 @@ public class CustomPaywallSection : MonoBehaviour
     public TextMeshProUGUI RevisionText;
     public TextMeshProUGUI LocaleText;
 
+    public TMP_Dropdown FetchPolicyDropdown;
     public TMP_InputField PaywallIdTextField;
     public TMP_InputField LocaleTextField;
 
@@ -45,8 +46,24 @@ public class CustomPaywallSection : MonoBehaviour
         });
     }
 
+    Adapty.PaywallFetchPolicy CurrentFetchPolicy()
+    {
+        Debug.Log(string.Format("#CustomPaywallSection# value {0}", this.FetchPolicyDropdown.value));
+
+        switch (this.FetchPolicyDropdown.value)
+        {
+            case 0: return PaywallFetchPolicy.ReloadRevalidatingCacheData;
+            case 1: return PaywallFetchPolicy.ReturnCacheDataElseLoad;
+            case 2: return PaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 10));
+            case 3: return PaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 30));
+            case 4: return PaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 120));
+            default: return PaywallFetchPolicy.ReloadRevalidatingCacheData;
+        }
+    }
+
     public void LoadPaywall()
     {
+        var fetchPolicy = this.CurrentFetchPolicy();
         var paywallId = this.PaywallIdTextField.text;
         var locale = this.LocaleTextField.text;
 
@@ -57,7 +74,7 @@ public class CustomPaywallSection : MonoBehaviour
 
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(paywallId, locale, (paywall) =>
+        this.Listener.GetPaywall(paywallId, locale, fetchPolicy, (paywall) =>
         {
             if (paywall == null)
             {
@@ -96,7 +113,6 @@ public class CustomPaywallSection : MonoBehaviour
             this.Router.SetIsLoading(false);
         });
     }
-
 
     private void UpdatePaywallInitial()
     {
@@ -143,7 +159,7 @@ public class CustomPaywallSection : MonoBehaviour
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 780.0f + products.Count * 150.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 780.0f + products.Count * 150.0f + 80.0f);
     }
 
     private ProductButton CreateProductButton(Adapty.PaywallProduct product, Adapty.Eligibility eligibility, float index)

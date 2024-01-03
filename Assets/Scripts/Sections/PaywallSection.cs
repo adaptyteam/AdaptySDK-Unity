@@ -43,7 +43,7 @@ public class PaywallSection : MonoBehaviour {
     public void LoadPaywall() {
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, (paywall) => {
+        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, Adapty.PaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) => {
             if (paywall == null) {
                 this.UpdatePaywallFail();
                 this.Router.SetIsLoading(false);
