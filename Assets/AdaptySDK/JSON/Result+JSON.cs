@@ -14,36 +14,36 @@ namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static Adapty.Result<Adapty.Profile> ExtractProfileOrError(this string json)
+        internal static Adapty.Result<AdaptyProfile> ExtractProfileOrError(this string json)
         {
-            Adapty.Error error = null;
-            Adapty.Profile profile = null;
+            AdaptyError error = null;
+            AdaptyProfile profile = null;
             try
             {
                 var response = JSONNode.Parse(json);
-                error = response.GetErrorIfPresent("error");
+                error = response.GetAdaptyErrorIfPresent("error");
                 if (error is null)
                 {
-                    profile = response.GetProfile("success");
+                    profile = response.GetAdaptyProfile("success");
                 }
 
             }
             catch (Exception ex)
             {
-                error = new Adapty.Error(Adapty.ErrorCode.DecodingFailed, "Failed decoding Adapty.Profile Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
+                error = new AdaptyError(AdaptyErrorCode.DecodingFailed, "Failed decoding Adapty.Profile Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
             }
 
-            return new Adapty.Result<Adapty.Profile>(profile, error);
+            return new Adapty.Result<AdaptyProfile>(profile, error);
         }
 
-        internal static Adapty.Result<Adapty.Paywall> ExtractPaywallOrError(this string json)
+        internal static Adapty.Result<AdaptyPaywall> ExtractPaywallOrError(this string json)
         {
-            Adapty.Error error = null;
-            Adapty.Paywall paywall = null;
+            AdaptyError error = null;
+            AdaptyPaywall paywall = null;
             try
             {
                 var response = JSONNode.Parse(json);
-                error = response.GetErrorIfPresent("error");
+                error = response.GetAdaptyErrorIfPresent("error");
                 if (error is null)
                 {
                     paywall = response.GetPaywall("success");
@@ -51,41 +51,41 @@ namespace AdaptySDK.SimpleJSON
             }
             catch (Exception ex)
             {
-                error = new Adapty.Error(Adapty.ErrorCode.DecodingFailed, "Failed decoding Adapty.Paywall Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
+                error = new AdaptyError(AdaptyErrorCode.DecodingFailed, "Failed decoding Adapty.Paywall Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
             }
 
-            return new Adapty.Result<Adapty.Paywall>(paywall, error);
+            return new Adapty.Result<AdaptyPaywall>(paywall, error);
         }
 
-        internal static Adapty.Result<IList<Adapty.PaywallProduct>> ExtractPaywallProductListOrError(this string json)
+        internal static Adapty.Result<IList<AdaptyPaywallProduct>> ExtractPaywallProductListOrError(this string json)
         {
-            Adapty.Error error = null;
-            IList<Adapty.PaywallProduct> list = null;
+            AdaptyError error = null;
+            IList<AdaptyPaywallProduct> list = null;
             try
             {
                 var response = JSONNode.Parse(json);
-                error = response.GetErrorIfPresent("error");
+                error = response.GetAdaptyErrorIfPresent("error");
                 if (error is null)
                 {
-                    list = response.GetPaywallProductList("success");
+                    list = response.GetAdaptyPaywallProductList("success");
                 }
             }
             catch (Exception ex)
             {
-                error = new Adapty.Error(Adapty.ErrorCode.DecodingFailed, "Failed decoding list of Adapty.PaywallProduct Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
+                error = new AdaptyError(AdaptyErrorCode.DecodingFailed, "Failed decoding list of AdaptyPaywallProduct Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
             }
 
-            return new Adapty.Result<IList<Adapty.PaywallProduct>>(list, error);
+            return new Adapty.Result<IList<AdaptyPaywallProduct>>(list, error);
         }
 
         internal static Adapty.Result<IDictionary<string, Adapty.Eligibility>> ExtractProductEligibilityDictionaryOrError(this string json)
         {
-            Adapty.Error error = null;
+            AdaptyError error = null;
             var dic = new Dictionary<string, Adapty.Eligibility>();
             try
             {
                 var response = JSONNode.Parse(json);
-                error = response.GetErrorIfPresent("error");
+                error = response.GetAdaptyErrorIfPresent("error");
 
                 if (error is null) {
                     var obj = response.GetObject("success");
@@ -100,7 +100,7 @@ namespace AdaptySDK.SimpleJSON
             }
             catch (Exception ex)
             {
-                error = new Adapty.Error(Adapty.ErrorCode.DecodingFailed, "Failed decoding dictionary of Adapty.Eligibility Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
+                error = new AdaptyError(AdaptyErrorCode.DecodingFailed, "Failed decoding dictionary of Adapty.Eligibility Or Adapty.Error ", $"AdaptyUnityError.DecodingFailed({ex})");
             }
 
             return new Adapty.Result<IDictionary<string, Adapty.Eligibility>>(dic, error);

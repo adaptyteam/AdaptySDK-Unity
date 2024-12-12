@@ -16,7 +16,7 @@ namespace AdaptyExample
         {
             this.Router = this.GetComponent<AdaptyRouter>();
 
-            Adapty.SetLogLevel(Adapty.LogLevel.Verbose);
+            Adapty.SetLogLevel(AdaptyLogLevel.Verbose);
             Adapty.SetEventListener(this);
             this.SetFallBackPaywalls();
             this.GetProfile();
@@ -46,7 +46,7 @@ namespace AdaptyExample
             });
         }
 
-        public void GetPaywall(string id, string locale, Adapty.PaywallFetchPolicy fetchPolicy, Action<Adapty.Paywall> completionHandler)
+        public void GetPaywall(string id, string locale, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall> completionHandler)
         {
             this.LogMethodRequest("GetPaywall");
 
@@ -57,7 +57,7 @@ namespace AdaptyExample
             });
         }
 
-        public void GetPaywallProducts(Adapty.Paywall paywall, Action<IList<PaywallProduct>> completionHandler)
+        public void GetPaywallProducts(AdaptyPaywall paywall, Action<IList<AdaptyPaywallProduct>> completionHandler)
         {
             this.LogMethodRequest("GetPaywallProducts");
 
@@ -69,7 +69,7 @@ namespace AdaptyExample
 
         }
 
-        public void GetProductsIntroductoryOfferEligibility(IList<PaywallProduct> products, Action<IDictionary<string, Eligibility>> completionHandler)
+        public void GetProductsIntroductoryOfferEligibility(IList<AdaptyPaywallProduct> products, Action<IDictionary<string, Eligibility>> completionHandler)
         {
             this.LogMethodRequest("GetProductsIntroductoryOfferEligibility");
             
@@ -80,7 +80,7 @@ namespace AdaptyExample
             });
         }
 
-        public void MakePurchase(Adapty.PaywallProduct product, Action<Error> completionHandler)
+        public void MakePurchase(AdaptyPaywallProduct product, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("MakePurchase");
 
@@ -96,7 +96,7 @@ namespace AdaptyExample
             });
         }
 
-        public void RestorePurchases(Action<Error> completionHandler)
+        public void RestorePurchases(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("RestorePurchases");
 
@@ -112,7 +112,7 @@ namespace AdaptyExample
             });
         }
 
-        public void Identify(string customerUserId, Action<Error> completionHandler)
+        public void Identify(string customerUserId, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("Identify");
 
@@ -123,7 +123,7 @@ namespace AdaptyExample
             });
         }
 
-        public void UpdateProfile(Action<Error> completionHandler)
+        public void UpdateProfile(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("UpdateProfile");
 
@@ -131,7 +131,7 @@ namespace AdaptyExample
                 .SetFirstName("John")
                 .SetLastName("Appleseed")
                 .SetBirthday(new DateTime(1990, 5, 14))
-                .SetGender(ProfileGender.Female)
+                .SetGender(AdaptyProfileGender.Female)
                 .SetEmail("example@adapty.io")
                 .SetAirbridgeDeviceId("D7203965-6A2E-4F4C-A6E0-E3944EA9EAD1");
 
@@ -212,7 +212,7 @@ namespace AdaptyExample
             });
         }
 
-        public void UpdateAttribution(Action<Error> completionHandler)
+        public void UpdateAttribution(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("UpdateAttribution");
 
@@ -223,7 +223,7 @@ namespace AdaptyExample
             });
         }
 
-        public void LogShowPaywall(Paywall paywall, Action<Error> completionHandler)
+        public void LogShowPaywall(AdaptyPaywall paywall, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("LogShowPaywall");
 
@@ -234,7 +234,7 @@ namespace AdaptyExample
             });
         }
 
-        public void LogShowOnboarding(int value, Action<Error> completionHandler)
+        public void LogShowOnboarding(int value, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("LogShowOnboarding");
 
@@ -250,7 +250,7 @@ namespace AdaptyExample
             Adapty.PresentCodeRedemptionSheet();
         }
 
-        public void Logout(Action<Error> completionHandler)
+        public void Logout(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("Logout");
 
@@ -268,7 +268,7 @@ namespace AdaptyExample
             Debug.Log(string.Format("#AdaptyListener# --> {0}", methodName));
         }
 
-        private void LogMethodResult(string methodName, Error error)
+        private void LogMethodResult(string methodName, AdaptyError error)
         {
             if (error != null)
             {
@@ -284,7 +284,7 @@ namespace AdaptyExample
 
         // – AdaptyEventListener
 
-        public void OnLoadLatestProfile(Adapty.Profile profile)
+        public void OnLoadLatestProfile(AdaptyProfile profile)
         {
             Debug.Log("#AdaptyListener# OnReceiveUpdatedProfile called");
 

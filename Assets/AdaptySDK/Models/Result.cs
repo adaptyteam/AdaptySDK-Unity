@@ -11,13 +11,13 @@ namespace AdaptySDK
     {
         internal class Result<T>
         {
-            public readonly Error Error;
+            public readonly AdaptyError Error;
             public readonly T Value;
 
             public override string ToString() => $"{nameof(Value)}: {Value}, " +
                        $"{nameof(Error)}: {Error}";
 
-            internal Result(T value, Error error)
+            internal Result(T value, AdaptyError error)
             {
                 Error = error;
                 Value = value;

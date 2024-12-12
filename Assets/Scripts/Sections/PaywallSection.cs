@@ -22,7 +22,7 @@ public class PaywallSection : MonoBehaviour {
     private string m_paywallId = "example_ab_test";
     private string m_localeId = "fr";
 
-    private Adapty.Paywall m_paywall;
+    private AdaptyPaywall m_paywall;
 
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
@@ -43,7 +43,7 @@ public class PaywallSection : MonoBehaviour {
     public void LoadPaywall() {
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, Adapty.PaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) => {
+        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) => {
             if (paywall == null) {
                 this.UpdatePaywallFail();
                 this.Router.SetIsLoading(false);
@@ -54,7 +54,7 @@ public class PaywallSection : MonoBehaviour {
         });
     }
 
-    void LoadProducts(Adapty.Paywall paywall) {
+    void LoadProducts(AdaptyPaywall paywall) {
         this.Listener.GetPaywallProducts(paywall, (products) => {
             if (products != null) {
                 this.UpdatePaywallData(paywall, products, null);
@@ -81,7 +81,7 @@ public class PaywallSection : MonoBehaviour {
         this.RevisionText.SetText("null");
     }
 
-    private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products, IDictionary<string, Eligibility> eligibilities) {
+    private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products, IDictionary<string, Eligibility> eligibilities) {
         this.LoadingStatusText.SetText("OK");
         this.VariationIdText.SetText(paywall.VariationId);
         this.RevisionText.SetText(paywall.Revision.ToString());
@@ -109,7 +109,7 @@ public class PaywallSection : MonoBehaviour {
         rect.sizeDelta = new Vector2(rect.sizeDelta.x, 540.0f + products.Count * 150.0f);
     }
 
-    private ProductButton CreateProductButton(Adapty.PaywallProduct product, Eligibility eligibility, float index) {
+    private ProductButton CreateProductButton(AdaptyPaywallProduct product, Eligibility eligibility, float index) {
         var productButtonObject = Instantiate(this.ProductButtonPrefab);
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 

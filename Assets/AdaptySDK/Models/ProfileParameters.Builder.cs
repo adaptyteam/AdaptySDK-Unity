@@ -30,7 +30,7 @@ namespace AdaptySDK
                     return this;
                 }
 
-                public Builder SetGender(ProfileGender? value)
+                public Builder SetGender(AdaptyProfileGender? value)
                 {
                     _Parameters.Gender = value;
                     return this;

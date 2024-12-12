@@ -35,7 +35,7 @@ namespace AdaptyExample {
         public ActionsSection ActionsSection;
 
         private AdaptyListener listener;
-        private Adapty.Profile profile;
+        private AdaptyProfile profile;
 
         void Start() {
             this.listener = GetComponent<AdaptyListener>();
@@ -120,7 +120,7 @@ namespace AdaptyExample {
             this.ActionsSection = actionsSection;
         }
 
-        public void SetProfile(Adapty.Profile profile) {
+        public void SetProfile(AdaptyProfile profile) {
             if (this.ProfileInfoSection != null && profile != null) {
                 this.ProfileInfoSection.SetProfile(profile);
             }

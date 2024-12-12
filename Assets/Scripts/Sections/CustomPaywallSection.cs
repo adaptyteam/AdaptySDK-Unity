@@ -23,7 +23,7 @@ public class CustomPaywallSection : MonoBehaviour
     public TMP_InputField PaywallIdTextField;
     public TMP_InputField LocaleTextField;
 
-    private Adapty.Paywall m_paywall;
+    private AdaptyPaywall m_paywall;
 
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
@@ -46,18 +46,18 @@ public class CustomPaywallSection : MonoBehaviour
         });
     }
 
-    Adapty.PaywallFetchPolicy CurrentFetchPolicy()
+    AdaptyPaywallFetchPolicy CurrentFetchPolicy()
     {
         Debug.Log(string.Format("#CustomPaywallSection# value {0}", this.FetchPolicyDropdown.value));
 
         switch (this.FetchPolicyDropdown.value)
         {
-            case 0: return PaywallFetchPolicy.ReloadRevalidatingCacheData;
-            case 1: return PaywallFetchPolicy.ReturnCacheDataElseLoad;
-            case 2: return PaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 10));
-            case 3: return PaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 30));
-            case 4: return PaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 120));
-            default: return PaywallFetchPolicy.ReloadRevalidatingCacheData;
+            case 0: return AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData;
+            case 1: return AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad;
+            case 2: return AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 10));
+            case 3: return AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 30));
+            case 4: return AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 120));
+            default: return AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData;
         }
     }
 
@@ -89,7 +89,7 @@ public class CustomPaywallSection : MonoBehaviour
         });
     }
 
-    void LoadProducts(Adapty.Paywall paywall)
+    void LoadProducts(AdaptyPaywall paywall)
     {
         this.Listener.GetPaywallProducts(paywall, (products) =>
         {
@@ -129,7 +129,7 @@ public class CustomPaywallSection : MonoBehaviour
         this.RevisionText.SetText("null");
     }
 
-    private void UpdatePaywallData(Adapty.Paywall paywall, IList<Adapty.PaywallProduct> products, IDictionary<string, Eligibility> eligibilities)
+    private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products, IDictionary<string, Eligibility> eligibilities)
     {
         this.LoadingStatusText.SetText("OK");
         this.PaywallNameText.SetText(paywall.PlacementId);
@@ -162,7 +162,7 @@ public class CustomPaywallSection : MonoBehaviour
         rect.sizeDelta = new Vector2(rect.sizeDelta.x, 780.0f + products.Count * 150.0f + 80.0f);
     }
 
-    private ProductButton CreateProductButton(Adapty.PaywallProduct product, Adapty.Eligibility eligibility, float index)
+    private ProductButton CreateProductButton(AdaptyPaywallProduct product, Adapty.Eligibility eligibility, float index)
     {
         var productButtonObject = Instantiate(this.ProductButtonPrefab);
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();

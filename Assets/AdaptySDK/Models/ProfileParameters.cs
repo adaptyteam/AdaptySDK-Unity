@@ -17,7 +17,7 @@ namespace AdaptySDK
         {
             public string FirstName;
             public string LastName;
-            public ProfileGender? Gender;
+            public AdaptyProfileGender? Gender;
             public DateTime? Birthday;
             public string Email;
             public string PhoneNumber;

@@ -28,7 +28,7 @@ extension AdaptyUnityPlugin {
         }
 
         static func encodingFailed(_ error: String) -> PluginError {
-            PluginError(errorCode: AdaptyError.ErrorCode.encodingFailed.rawValue,
+            PluginError(errorCode: AdaptyErrorCode.encodingFailed.rawValue,
                         message: "Encoding failed",
                         detail: "AdaptyPluginError.encodingFailed(\(error))")
         }
@@ -38,7 +38,7 @@ extension AdaptyUnityPlugin {
         }
 
         static func decodingFailed(_ error: String) -> PluginError {
-            PluginError(errorCode: AdaptyError.ErrorCode.decodingFailed.rawValue,
+            PluginError(errorCode: AdaptyErrorCode.decodingFailed.rawValue,
                         message: "Decoding failed",
                         detail: "AdaptyPluginError.decodingFailed(\(error))")
         }

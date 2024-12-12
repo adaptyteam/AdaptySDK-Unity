@@ -9,7 +9,7 @@ public class ProductButton : MonoBehaviour
     public TextMeshProUGUI PriceText;
     public TextMeshProUGUI EligibilityText;
 
-    public void UpdateProduct(Adapty.PaywallProduct product, Eligibility eligibility)
+    public void UpdateProduct(AdaptyPaywallProduct product, Eligibility eligibility)
     {
         this.ProductIdText.SetText(product.VendorProductId);
         this.PriceText.SetText(product.Price.LocalizedString);

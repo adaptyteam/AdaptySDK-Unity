@@ -12,7 +12,7 @@ public class IdentifySection : MonoBehaviour {
     public TMP_InputField TextField;
 
 
-    public void SetProfile(Adapty.Profile profile) {
+    public void SetProfile(AdaptyProfile profile) {
         Debug.Log(string.Format("#IdentifySection# UpdateProfile {0}", profile.CustomerUserId));
 
         if (profile.CustomerUserId != null) {

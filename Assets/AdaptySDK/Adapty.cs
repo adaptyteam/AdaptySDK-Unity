@@ -18,14 +18,14 @@ namespace AdaptySDK
     {
         public static readonly string sdkVersion = "2.9.0";
 
-        public static void SetLogLevel(LogLevel level)
+        public static void SetLogLevel(AdaptyLogLevel level)
             => _Adapty.SetLogLevel(level.ToJSON());
 
-        public static void Identify(string customerUserId, Action<Error> completionHandler) =>
+        public static void Identify(string customerUserId, Action<AdaptyError> completionHandler) =>
             _Adapty.Identify(customerUserId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtractErrorIfPresent();
+            var error = json.ExtractAdaptyErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -36,11 +36,11 @@ namespace AdaptySDK
             }
         });
 
-        public static void Logout(Action<Error> completionHandler)
+        public static void Logout(Action<AdaptyError> completionHandler)
             => _Adapty.Logout((json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtractErrorIfPresent();
+            var error = json.ExtractAdaptyErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -51,16 +51,16 @@ namespace AdaptySDK
             }
         });
 
-        public static void GetPaywall(string placementId, Action<Paywall, Error> completionHandler)
+        public static void GetPaywall(string placementId, Action<AdaptyPaywall, AdaptyError> completionHandler)
             => GetPaywall(placementId, null, null, null, completionHandler);
 
-        public static void GetPaywall(string placementId, PaywallFetchPolicy fetchPolicy, TimeSpan? loadTimeout, Action<Paywall, Error> completionHandler)
+        public static void GetPaywall(string placementId, AdaptyPaywallFetchPolicy fetchPolicy, TimeSpan? loadTimeout, Action<AdaptyPaywall, AdaptyError> completionHandler)
           => GetPaywall(placementId, null, fetchPolicy, loadTimeout, completionHandler);
 
-        public static void GetPaywall(string placementId, string locale, Action<Paywall, Error> completionHandler)
+        public static void GetPaywall(string placementId, string locale, Action<AdaptyPaywall, AdaptyError> completionHandler)
             => GetPaywall(placementId, locale, null, null, completionHandler);
 
-        public static void GetPaywall(string placementId, string locale, PaywallFetchPolicy fetchPolicy, TimeSpan? loadTimeout, Action<Paywall, Error> completionHandler)
+        public static void GetPaywall(string placementId, string locale, AdaptyPaywallFetchPolicy fetchPolicy, TimeSpan? loadTimeout, Action<AdaptyPaywall, AdaptyError> completionHandler)
         {
             string fetchPolicyJson;
             try
@@ -69,7 +69,7 @@ namespace AdaptySDK
             }
             catch (Exception ex)
             {
-                var error = new Error(ErrorCode.EncodingFailed, "Failed encoding Adapty.PaywallFetchPolicy", $"AdaptyUnityError.EncodingFailed({ex})");
+                var error = new AdaptyError(AdaptyErrorCode.EncodingFailed, "Failed encoding Adapty.PaywallFetchPolicy", $"AdaptyUnityError.EncodingFailed({ex})");
                 try
                 {
                     completionHandler(null, error);
@@ -97,7 +97,7 @@ namespace AdaptySDK
                 });
         }
 
-        public static void GetPaywallProducts(Paywall paywall, Action<IList<PaywallProduct>, Error> completionHandler)
+        public static void GetPaywallProducts(AdaptyPaywall paywall, Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler)
         {
             string paywallJson;
 
@@ -107,14 +107,14 @@ namespace AdaptySDK
             }
             catch (Exception ex)
             {
-                var error = new Error(ErrorCode.EncodingFailed, "Failed encoding Adapty.Paywall", $"AdaptyUnityError.EncodingFailed({ex})");
+                var error = new AdaptyError(AdaptyErrorCode.EncodingFailed, "Failed encoding Adapty.Paywall", $"AdaptyUnityError.EncodingFailed({ex})");
                 try
                 {
                     completionHandler(null, error);
                 }
                 catch (Exception e)
                 {
-                    throw new Exception("Failed to invoke Action<IList<Adapty.PaywallProduct>,Adapty.Error> completionHandler in Adapty.GetPaywallProducts(..)", e);
+                    throw new Exception("Failed to invoke Action<IList<AdaptyPaywallProduct>,Adapty.Error> completionHandler in Adapty.GetPaywallProducts(..)", e);
                 }
                 return;
             }
@@ -129,12 +129,12 @@ namespace AdaptySDK
                 }
                 catch (Exception e)
                 {
-                    throw new Exception("Failed to invoke Action<IList<Adapty.PaywallProduct>,Adapty.Error> completionHandler in Adapty.GetPaywallProducts(..)", e);
+                    throw new Exception("Failed to invoke Action<IList<AdaptyPaywallProduct>,Adapty.Error> completionHandler in Adapty.GetPaywallProducts(..)", e);
                 }
             });
         }
 
-        public static void GetProductsIntroductoryOfferEligibility(IList<PaywallProduct> products, Action<IDictionary<string, Eligibility>, Error> completionHandler)
+        public static void GetProductsIntroductoryOfferEligibility(IList<AdaptyPaywallProduct> products, Action<IDictionary<string, Eligibility>, AdaptyError> completionHandler)
         {
 #if UNITY_ANDROID
             var result = new Dictionary<string, Eligibility>();
@@ -158,7 +158,7 @@ namespace AdaptySDK
             }
             catch (Exception ex)
             {
-                var error = new Error(ErrorCode.EncodingFailed, "Failed encoding Array of VendorProductId", $"AdaptyUnityError.EncodingFailed({ex})");
+                var error = new AdaptyError(AdaptyErrorCode.EncodingFailed, "Failed encoding Array of VendorProductId", $"AdaptyUnityError.EncodingFailed({ex})");
                 try
                 {
                     completionHandler(null, error);
@@ -180,13 +180,13 @@ namespace AdaptySDK
                 }
                 catch (Exception e)
                 {
-                    throw new Exception("Failed to invoke Action<IDictionary<string, Adapty.PaywallProduct>,Adapty.Error> completionHandler in Adapty.GetProductsIntroductoryOfferEligibility(..)", e);
+                    throw new Exception("Failed to invoke Action<IDictionary<string, AdaptyPaywallProduct>,Adapty.Error> completionHandler in Adapty.GetProductsIntroductoryOfferEligibility(..)", e);
                 }
             });
         }
 
 
-        public static void GetProfile(Action<Profile, Error> completionHandler)
+        public static void GetProfile(Action<AdaptyProfile, AdaptyError> completionHandler)
             => _Adapty.GetProfile((json) =>
         {
             if (completionHandler == null) return;
@@ -201,7 +201,7 @@ namespace AdaptySDK
             }
         });
 
-        public static void RestorePurchases(Action<Profile, Error> completionHandler)
+        public static void RestorePurchases(Action<AdaptyProfile, AdaptyError> completionHandler)
             => _Adapty.RestorePurchases((json) =>
         {
             if (completionHandler == null) return;
@@ -217,15 +217,15 @@ namespace AdaptySDK
             }
         });
 
-        public static void MakePurchase(PaywallProduct product, Action<Profile, Error> completionHandler)
+        public static void MakePurchase(AdaptyPaywallProduct product, Action<AdaptyProfile, AdaptyError> completionHandler)
             => MakePurchase(product, null, null, completionHandler);
 
-        public static void MakePurchase(PaywallProduct product, AndroidSubscriptionUpdateParameters subscriptionUpdate, Action<Profile, Error> completionHandler)
+        public static void MakePurchase(AdaptyPaywallProduct product, AndroidSubscriptionUpdateParameters subscriptionUpdate, Action<AdaptyProfile, AdaptyError> completionHandler)
             => MakePurchase(product, subscriptionUpdate, null, completionHandler);
 
-        public static void MakePurchase(PaywallProduct product, AndroidSubscriptionUpdateParameters subscriptionUpdate, bool? isOfferPersonalized, Action<Profile, Error> completionHandler)
+        public static void MakePurchase(AdaptyPaywallProduct product, AndroidSubscriptionUpdateParameters subscriptionUpdate, bool? isOfferPersonalized, Action<AdaptyProfile, AdaptyError> completionHandler)
         {
-            Error error = null;
+            AdaptyError error = null;
             string productJson;
             try
             {
@@ -234,7 +234,7 @@ namespace AdaptySDK
             catch (Exception ex)
             {
                 productJson = null;
-                error = new Error(ErrorCode.EncodingFailed, "Failed encoding Adapty.PaywallProduct", $"AdaptyUnityError.EncodingFailed({ex})");
+                error = new AdaptyError(AdaptyErrorCode.EncodingFailed, "Failed encoding AdaptyPaywallProduct", $"AdaptyUnityError.EncodingFailed({ex})");
             }
 
             string androidSubscriptionUpdateJson;
@@ -251,7 +251,7 @@ namespace AdaptySDK
                 catch (Exception ex)
                 {
                     androidSubscriptionUpdateJson = null;
-                    error = new Error(ErrorCode.EncodingFailed, "Failed encoding Adapty.AndroidSubscriptionUpdateParameters", $"AdaptyUnityError.EncodingFailed({ex})");
+                    error = new AdaptyError(AdaptyErrorCode.EncodingFailed, "Failed encoding Adapty.AndroidSubscriptionUpdateParameters", $"AdaptyUnityError.EncodingFailed({ex})");
                 }
             }
 
@@ -284,7 +284,7 @@ namespace AdaptySDK
 
         }
 
-        public static void LogShowPaywall(Paywall paywall, Action<Error> completionHandler)
+        public static void LogShowPaywall(AdaptyPaywall paywall, Action<AdaptyError> completionHandler)
         {
             string paywallJson;
             try
@@ -293,7 +293,7 @@ namespace AdaptySDK
             }
             catch (Exception ex)
             {
-                var error = new Error(ErrorCode.EncodingFailed, "Failed encoding Adapty.Paywall", $"AdaptyUnityError.EncodingFailed({ex})");
+                var error = new AdaptyError(AdaptyErrorCode.EncodingFailed, "Failed encoding Adapty.Paywall", $"AdaptyUnityError.EncodingFailed({ex})");
                 try
                 {
                     completionHandler(error);
@@ -308,7 +308,7 @@ namespace AdaptySDK
             _Adapty.LogShowPaywall(paywallJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = json.ExtractErrorIfPresent();
+                var error = json.ExtractAdaptyErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -320,16 +320,16 @@ namespace AdaptySDK
             });
         }
 
-        public static void LogShowOnboarding(string name, string screenName, uint screenOrder, Action<Error> completionHandler)
+        public static void LogShowOnboarding(string name, string screenName, uint screenOrder, Action<AdaptyError> completionHandler)
         {
             string parametersJson;
             try
             {
-                parametersJson = new OnboardingScreenParameters(name, screenName, screenOrder).ToJSONNode().ToString();
+                parametersJson = new AdaptyOnboardingScreenParameters(name, screenName, screenOrder).ToJSONNode().ToString();
             }
             catch (Exception ex)
             {
-                var error = new Error(ErrorCode.EncodingFailed, "Failed encoding Adapty.OnboardingScreenParameters", $"AdaptyUnityError.EncodingFailed({ex})");
+                var error = new AdaptyError(AdaptyErrorCode.EncodingFailed, "Failed encoding Adapty.OnboardingScreenParameters", $"AdaptyUnityError.EncodingFailed({ex})");
                 try
                 {
                     completionHandler(error);
@@ -344,7 +344,7 @@ namespace AdaptySDK
             _Adapty.LogShowOnboarding(parametersJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = json.ExtractErrorIfPresent();
+                var error = json.ExtractAdaptyErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -356,11 +356,11 @@ namespace AdaptySDK
             });
         }
 
-        public static void SetFallbackPaywalls(string paywalls, Action<Error> completionHandler)
+        public static void SetFallbackPaywalls(string paywalls, Action<AdaptyError> completionHandler)
             => _Adapty.SetFallbackPaywalls(paywalls, (json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtractErrorIfPresent();
+            var error = json.ExtractAdaptyErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -371,7 +371,7 @@ namespace AdaptySDK
             }
         });
 
-        public static void UpdateProfile(ProfileParameters param, Action<Error> completionHandler)
+        public static void UpdateProfile(ProfileParameters param, Action<AdaptyError> completionHandler)
         {
             string parametersJson;
             try
@@ -380,7 +380,7 @@ namespace AdaptySDK
             }
             catch (Exception ex)
             {
-                var error = new Error(ErrorCode.EncodingFailed, "Failed encoding Adapty.ProfileParameters", $"AdaptyUnityError.EncodingFailed({ex})");
+                var error = new AdaptyError(AdaptyErrorCode.EncodingFailed, "Failed encoding Adapty.ProfileParameters", $"AdaptyUnityError.EncodingFailed({ex})");
                 try
                 {
                     completionHandler(error);
@@ -395,7 +395,7 @@ namespace AdaptySDK
             _Adapty.UpdateProfile(parametersJson, (json) =>
             {
                 if (completionHandler == null) return;
-                var error = json.ExtractErrorIfPresent();
+                var error = json.ExtractAdaptyErrorIfPresent();
                 try
                 {
                     completionHandler(error);
@@ -407,20 +407,20 @@ namespace AdaptySDK
             });
         }
 
-        public static void UpdateAttribution(string jsonString, AttributionSource source, Action<Error> completionHandler)
+        public static void UpdateAttribution(string jsonString, AttributionSource source, Action<AdaptyError> completionHandler)
             => UpdateAttribution(jsonString, source, null, completionHandler);
 
-        public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, string networkUserId, Action<Error> completionHandler)
+        public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, string networkUserId, Action<AdaptyError> completionHandler)
             => UpdateAttribution(attribution.ToJSONObject().ToString(), source, networkUserId, completionHandler);
 
-        public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, Action<Error> completionHandler)
+        public static void UpdateAttribution(Dictionary<string, dynamic> attribution, AttributionSource source, Action<AdaptyError> completionHandler)
             => UpdateAttribution(attribution.ToJSONObject().ToString(), source, null, completionHandler);
 
-        public static void UpdateAttribution(string jsonString, AttributionSource source, string networkUserId, Action<Error> completionHandler)
+        public static void UpdateAttribution(string jsonString, AttributionSource source, string networkUserId, Action<AdaptyError> completionHandler)
             => _Adapty.UpdateAttribution(jsonString, source.ToJSON(), networkUserId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtractErrorIfPresent();
+            var error = json.ExtractAdaptyErrorIfPresent();
             try
             {
                 completionHandler(error);
@@ -431,11 +431,11 @@ namespace AdaptySDK
             }
         });
 
-        public static void SetVariationForTransaction(string variationId, string transactionId, Action<Error> completionHandler)
+        public static void SetVariationForTransaction(string variationId, string transactionId, Action<AdaptyError> completionHandler)
             => _Adapty.SetVariationForTransaction(variationId, transactionId, (json) =>
         {
             if (completionHandler == null) return;
-            var error = json.ExtractErrorIfPresent();
+            var error = json.ExtractAdaptyErrorIfPresent();
             try
             {
                 completionHandler(error);

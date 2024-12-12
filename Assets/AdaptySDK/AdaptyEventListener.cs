@@ -14,7 +14,7 @@ namespace AdaptySDK
 
     public interface AdaptyEventListener
     {
-        void OnLoadLatestProfile(Adapty.Profile profile);
+        void OnLoadLatestProfile(AdaptyProfile profile);
     }
 
     public interface AdaptyUnknownEventListener
@@ -48,7 +48,7 @@ namespace AdaptySDK
             {
                 case "did_load_latest_profile":
                     if (!response.IsObject) return;
-                    m_Listener.OnLoadLatestProfile(response.AsObject.GetProfile());
+                    m_Listener.OnLoadLatestProfile(response.AsObject.GetAdaptyProfile());
                     return;
                 default:
                     if (m_UnknownListener == null) return;
