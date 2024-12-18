@@ -18,8 +18,8 @@ extension AdaptyUnityPlugin {
 
     class AdaptyDelegateWrapper: AdaptyDelegate {
         public func didLoadLatestProfile(_ profile: AdaptyProfile) {
-            guard let jsonString = try? AdaptyUnityPlugin.encodeToString(profile) else { return }
-            AdaptyUnityPlugin.messageDelegate?("did_load_latest_profile", jsonString)
+//            guard let jsonString = try? AdaptyUnityPlugin.encodeToString(profile) else { return }
+//            AdaptyUnityPlugin.messageDelegate?("did_load_latest_profile", jsonString)
         }
     }
 }
