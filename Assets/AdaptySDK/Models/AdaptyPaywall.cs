@@ -33,7 +33,15 @@ namespace AdaptySDK
 
         /// If `true`, it is possible to use Adapty Paywall Builder.
         /// Read more here: https://docs.adapty.io/docs/paywall-builder-getting-started
-        public readonly bool HasViewConfiguration;
+        public bool HasViewConfiguration
+        {
+             get
+            {
+                return _ViewConfiguration != null;
+            }
+        }
+
+        private readonly ViewConfiguration _ViewConfiguration;
 
         /// And identifier of a paywall locale.
         public readonly string Locale;
@@ -43,7 +51,7 @@ namespace AdaptySDK
         public readonly string RemoteConfigString; //nullable
 
         /// An array of ProductModel objects related to this paywall.
-        private readonly IList<Adapty.ProductReference> _Products;
+        private readonly IList<ProductReference> _Products;
 
         private readonly int _Version;
 
@@ -57,7 +65,7 @@ namespace AdaptySDK
                 var list = new List<string>();
                 foreach (var item in _Products)
                 {
-                    list.Add(item.VendorId);
+                    list.Add(item.VendorProductId);
                 }
                 return list;
             }

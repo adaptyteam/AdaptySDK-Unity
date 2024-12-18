@@ -14,10 +14,6 @@ namespace AdaptySDK
     {
         internal JSONNode ToJSONNode()
         {
-            var remoteConfig = new JSONObject();
-            remoteConfig.Add("lang", Locale);
-            if (RemoteConfigString != null) remoteConfig.Add("data", RemoteConfigString);
-
             var node = new JSONObject();
             node.Add("developer_id", PlacementId);
             node.Add("paywall_id", _InstanceIdentity);
@@ -25,15 +21,25 @@ namespace AdaptySDK
             node.Add("ab_test_name", ABTestName);
             node.Add("variation_id", VariationId);
             node.Add("revision", Revision);
-            node.Add("use_paywall_builder", HasViewConfiguration);
-            node.Add("remote_config", remoteConfig);
+            node.Add("response_created_at", _Version);
+
+            if (RemoteConfigString != null)
+            {
+                var remoteConfig = new JSONObject();
+                remoteConfig.Add("lang", Locale);
+                remoteConfig.Add("data", RemoteConfigString);
+                node.Add("remote_config", remoteConfig);
+            }
+
+            node.Add("paywall_builder", _ViewConfiguration.ToJSONNode());
+
             var products = new JSONArray();
             foreach (var item in _Products)
             {
                 products.Add(item.ToJSONNode());
             }
             node.Add("products", products);
-            node.Add("paywall_updated_at", _Version);
+
             if (_PayloadData != null) node.Add("payload_data", _PayloadData);
 
             return node;
@@ -44,17 +50,24 @@ namespace AdaptySDK
             PlacementId = jsonNode.GetString("developer_id");
             _InstanceIdentity = jsonNode.GetString("paywall_id");
             Name = jsonNode.GetString("paywall_name");
-            ABTestName = jsonNode.GetString("ab_test_name");
-            VariationId = jsonNode.GetString("variation_id");
+            _Version = jsonNode.GetInteger("response_created_at");
             Revision = jsonNode.GetInteger("revision");
-            HasViewConfiguration = jsonNode.GetBooleanIfPresent("use_paywall_builder") ?? false;
+            VariationId = jsonNode.GetString("variation_id");
+            ABTestName = jsonNode.GetString("ab_test_name");
+            var remoteConfig = jsonNode.GetObjectIfPresent("remote_config");
+            if (remoteConfig != null)
+            {
+                Locale = remoteConfig.GetString("lang");
+                RemoteConfigString = remoteConfig.GetStringIfPresent("data");
+            }
+            else
+            {
+                Locale = null;
+                RemoteConfigString = null;
+            }
 
-            var remoteConfig = jsonNode.GetObject("remote_config");
-            Locale = remoteConfig.GetString("lang");
-            RemoteConfigString = remoteConfig.GetStringIfPresent("data");
-
-            _Products = jsonNode.GetProductReferenceList("products");
-            _Version = jsonNode.GetInteger("paywall_updated_at");
+            _ViewConfiguration = jsonNode.GetAdaptyPaywallViewConfigurationIfPresent("paywall_builder");
+            _Products = jsonNode.GetAdaptyPaywallProductReferenceList("products");
             _PayloadData = jsonNode.GetStringIfPresent("payload_data");
         }
     }
@@ -65,6 +78,8 @@ namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
+        internal static AdaptyPaywall GetPaywall(this JSONNode node)
+            => new AdaptyPaywall(GetObject(node));
         internal static AdaptyPaywall GetPaywall(this JSONNode node, string aKey)
              => new AdaptyPaywall(GetObject(node, aKey));
 
