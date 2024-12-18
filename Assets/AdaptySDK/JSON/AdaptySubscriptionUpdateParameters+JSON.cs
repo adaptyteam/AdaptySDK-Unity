@@ -15,7 +15,7 @@ namespace AdaptySDK
         {
             var node = new JSONObject();
             node.Add("old_sub_vendor_product_id", OldSubVendorProductId);
-            node.Add("replacement_mode", ReplacementMode.ToJSON());
+            node.Add("replacement_mode", ReplacementMode.ToJSONNode());
             return node;
         }
     }
