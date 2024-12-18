@@ -15,39 +15,7 @@ namespace AdaptySDK
 
     public static partial class Adapty
     {
-        public static readonly string SDKVersion = "3.2.0";
-
-        // public static void Activate(string apiKey, Action<AdaptyError> completionHandler) =>
-        //     Activate(
-        //         new AdaptyConfiguration.Builder(apiKey)
-        //         .Build(),
-        //         completionHandler
-        //     );
-
-        // public static void Activate(string apiKey, bool observerMode, Action<AdaptyError> completionHandler) =>
-        //     Activate(
-        //         new AdaptyConfiguration.Builder(apiKey)
-        //         .SetObserverMode(observerMode)
-        //         .Build(),
-        //         completionHandler
-        //     );
-
-        // public static void Activate(string apiKey, string customerUserId, Action<AdaptyError> completionHandler) =>
-        //            Activate(
-        //                new AdaptyConfiguration.Builder(apiKey)
-        //                .SetCustomerUserId(customerUserId)
-        //                .Build(),
-        //                completionHandler
-        //            );
-
-        // public static void Activate(string apiKey, bool observerMode, string customerUserId, Action<AdaptyError> completionHandler) =>
-        //    Activate(
-        //        new AdaptyConfiguration.Builder(apiKey)
-        //        .SetObserverMode(observerMode)
-        //        .SetCustomerUserId(customerUserId)
-        //        .Build(),
-        //        completionHandler
-        //    );
+        public static readonly string SDKVersion = "3.3.0";
 
         public static void Activate(AdaptyConfiguration.Builder configurationBuilder, Action<AdaptyError> completionHandler) =>
             Activate(configurationBuilder.Build(), completionHandler);
@@ -150,25 +118,25 @@ namespace AdaptySDK
             );
         }
 
-        // public static void IsActivated(Action<bool, AdaptyError> completionHandler)
-        // {
-        //     Request.Send(
-        //         "is_activated",
-        //         null,
-        //         JSONNodeExtensions.GetBoolean,
-        //         (value, error) => completionHandler?.Invoke(value, error)
-        //     );
-        // }
+        public static void IsActivated(Action<bool, AdaptyError> completionHandler)
+        {
+            Request.Send(
+                "is_activated",
+                null,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) => completionHandler?.Invoke(value, error)
+            );
+        }
 
-        // public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
-        // {
-        //     Request.Send(
-        //         "get_log_level",
-        //         null,
-        //         JSONNodeExtensions.GetAdaptyLogLevel,
-        //         (value, error) => completionHandler?.Invoke(value, error)
-        //     );
-        // }
+        public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
+        {
+            Request.Send(
+                "get_log_level",
+                null,
+                JSONNodeExtensions.GetAdaptyLogLevel,
+                (value, error) => completionHandler?.Invoke(value, error)
+            );
+        }
 
         public static void SetLogLevel(AdaptyLogLevel level, Action<AdaptyError> completionHandler)
         {
@@ -280,15 +248,15 @@ namespace AdaptySDK
             );
         }
 
-        // public static void GetSDKVersion(Action<string, AdaptyError> completionHandler)
-        // {
-        //     Invoke(
-        //         "get_sdk_version",
-        //         null,
-        //         JSONNodeExtensions.GetString,
-        //         (value, error) => completionHandler?.Invoke(value, error)
-        //     );
-        // }
+        public static void GetNativeSDKVersion(Action<string, AdaptyError> completionHandler)
+        {
+            Request.Send(
+                "get_sdk_version",
+                null,
+                JSONNodeExtensions.GetString,
+                (value, error) => completionHandler?.Invoke(value, error)
+            );
+        }
 
         public static void SetFallbackPaywalls(string assetId, Action<AdaptyError> completionHandler)
         {
