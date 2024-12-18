@@ -95,15 +95,7 @@ public class CustomPaywallSection : MonoBehaviour
         {
             if (products != null)
             {
-                this.UpdatePaywallData(paywall, products, null);
-
-                this.Listener.GetProductsIntroductoryOfferEligibility(products, (eligibilities) =>
-                {
-                    if (eligibilities != null)
-                    {
-                        this.UpdatePaywallData(paywall, products, eligibilities);
-                    }
-                });
+                this.UpdatePaywallData(paywall, products);
             }
             else
             {
@@ -129,7 +121,7 @@ public class CustomPaywallSection : MonoBehaviour
         this.RevisionText.SetText("null");
     }
 
-    private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products, IDictionary<string, Eligibility> eligibilities)
+    private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products)
     {
         this.LoadingStatusText.SetText("OK");
         this.PaywallNameText.SetText(paywall.PlacementId);
@@ -146,15 +138,7 @@ public class CustomPaywallSection : MonoBehaviour
         for (var i = 0; i < products.Count; ++i)
         {
             var product = products[i];
-
-            Eligibility eligibility = Eligibility.Ineligible;
-
-            if (eligibilities != null)
-            {
-                eligibilities.TryGetValue(product.VendorProductId, out eligibility);
-            }
-
-            var productButton = this.CreateProductButton(product, eligibility, i);
+            var productButton = this.CreateProductButton(product, i);
             m_productButtons.Add(productButton);
         }
 
@@ -162,7 +146,7 @@ public class CustomPaywallSection : MonoBehaviour
         rect.sizeDelta = new Vector2(rect.sizeDelta.x, 780.0f + products.Count * 150.0f + 80.0f);
     }
 
-    private ProductButton CreateProductButton(AdaptyPaywallProduct product, Adapty.Eligibility eligibility, float index)
+    private ProductButton CreateProductButton(AdaptyPaywallProduct product, float index)
     {
         var productButtonObject = Instantiate(this.ProductButtonPrefab);
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
@@ -171,7 +155,7 @@ public class CustomPaywallSection : MonoBehaviour
         productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -300.0f - 150.0f * index);
         productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 140.0f);
 
-        productButtonObject.GetComponent<ProductButton>().UpdateProduct(product, eligibility);
+        productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
         productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
         {
             this.Router.SetIsLoading(true);

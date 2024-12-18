@@ -16,7 +16,8 @@ namespace AdaptyExample
         {
             this.Router = this.GetComponent<AdaptyRouter>();
 
-            Adapty.SetLogLevel(AdaptyLogLevel.Verbose);
+            // TODO: 
+            // Adapty.SetLogLevel(AdaptyLogLevel.Verbose);
             Adapty.SetEventListener(this);
             this.SetFallBackPaywalls();
             this.GetProfile();
@@ -69,30 +70,20 @@ namespace AdaptyExample
 
         }
 
-        public void GetProductsIntroductoryOfferEligibility(IList<AdaptyPaywallProduct> products, Action<IDictionary<string, Eligibility>> completionHandler)
-        {
-            this.LogMethodRequest("GetProductsIntroductoryOfferEligibility");
-            
-            Adapty.GetProductsIntroductoryOfferEligibility(products, (eligibilities, error) =>
-            {
-                this.LogMethodResult("GetProductsIntroductoryOfferEligibility", error);
-                completionHandler.Invoke(eligibilities);
-            });
-        }
-
         public void MakePurchase(AdaptyPaywallProduct product, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("MakePurchase");
 
-            Adapty.MakePurchase(product, (profile, error) =>
+            Adapty.MakePurchase(product, (purchaseResult, error) =>
             {
                 this.LogMethodResult("MakePurchase", error);
                 completionHandler.Invoke(error);
 
-                if (profile != null)
-                {
-                    this.Router.SetProfile(profile);
-                }
+                // TODO: 
+                // if (profile != null)
+                // {
+                //     this.Router.SetProfile(profile);
+                // }
             });
         }
 
@@ -127,13 +118,12 @@ namespace AdaptyExample
         {
             this.LogMethodRequest("UpdateProfile");
 
-            var builder = new Adapty.ProfileParameters.Builder()
+            var builder = new AdaptyProfileParameters.Builder()
                 .SetFirstName("John")
                 .SetLastName("Appleseed")
                 .SetBirthday(new DateTime(1990, 5, 14))
                 .SetGender(AdaptyProfileGender.Female)
-                .SetEmail("example@adapty.io")
-                .SetAirbridgeDeviceId("D7203965-6A2E-4F4C-A6E0-E3944EA9EAD1");
+                .SetEmail("example@adapty.io");
 
             builder = builder.SetAnalyticsDisabled(true);
 
@@ -216,7 +206,7 @@ namespace AdaptyExample
         {
             this.LogMethodRequest("UpdateAttribution");
 
-            Adapty.UpdateAttribution("{\"test_key\": \"test_value\"}", AttributionSource.Custom, (error) =>
+            Adapty.UpdateAttribution("{\"test_key\": \"test_value\"}", "custom", (error) =>
             {
                 this.LogMethodResult("UpdateAttribution", error);
                 completionHandler.Invoke(error);
@@ -247,7 +237,12 @@ namespace AdaptyExample
 
         public void PresentCodeRedemptionSheet()
         {
-            Adapty.PresentCodeRedemptionSheet();
+            this.LogMethodRequest("PresentCodeRedemptionSheet");
+            
+            Adapty.PresentCodeRedemptionSheet((error) =>
+            {
+                this.LogMethodResult("PresentCodeRedemptionSheet", error);
+            });
         }
 
         public void Logout(Action<AdaptyError> completionHandler)

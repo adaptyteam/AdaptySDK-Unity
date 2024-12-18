@@ -11,7 +11,8 @@ public class ActionsSection : MonoBehaviour {
     public TextMeshProUGUI SDKVersionText;
 
     public void Start() {
-        SDKVersionText.SetText("SDK version: " + AdaptySDK.Adapty.sdkVersion);
+        // TODO: 
+        SDKVersionText.SetText("SDK version: " + AdaptySDK.Adapty.SDKVersion);
     }
 
     public void RestorePurchasesPressed() {
