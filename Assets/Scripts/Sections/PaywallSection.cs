@@ -6,7 +6,8 @@ using TMPro;
 using UnityEngine;
 using static AdaptySDK.Adapty;
 
-public class PaywallSection : MonoBehaviour {
+public class PaywallSection : MonoBehaviour
+{
     public AdaptyListener Listener;
     public AdaptyRouter Router;
 
@@ -26,39 +27,53 @@ public class PaywallSection : MonoBehaviour {
 
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
-    void Start() {
+    void Start()
+    {
         this.PaywallNameText.SetText(this.m_paywallId);
         this.LoadPaywall();
     }
 
-    public void LogShowPaywallPressed() {
-        if (m_paywall != null) {
+    public void LogShowPaywallPressed()
+    {
+        if (m_paywall != null)
+        {
             this.Router.SetIsLoading(true);
-            this.Listener.LogShowPaywall(m_paywall, (error) => {
+            this.Listener.LogShowPaywall(m_paywall, (error) =>
+            {
                 this.Router.SetIsLoading(false);
             });
         }
     }
 
-    public void LoadPaywall() {
+    public void LoadPaywall()
+    {
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) => {
-            if (paywall == null) {
+        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) =>
+        {
+            if (paywall == null)
+            {
                 this.UpdatePaywallFail();
                 this.Router.SetIsLoading(false);
-            } else {
+            }
+            else
+            {
                 this.m_paywall = paywall;
                 this.LoadProducts(paywall);
             }
         });
     }
 
-    void LoadProducts(AdaptyPaywall paywall) {
-        this.Listener.GetPaywallProducts(paywall, (products) => {
-            if (products != null) {
+    void LoadProducts(AdaptyPaywall paywall)
+    {
+        this.Listener.GetPaywallProducts(paywall, (products) =>
+        {
+            if (products != null)
+            {
                 this.UpdatePaywallData(paywall, products);
-            } else {
+            }
+            else
+            {
                 this.UpdatePaywallFail();
             }
 
@@ -66,34 +81,57 @@ public class PaywallSection : MonoBehaviour {
         });
     }
 
-    private void UpdatePaywallFail() {
+    public void PresentPaywall()
+    {
+        if (m_paywall == null) return;
+
+        this.Listener.CreatePaywallView(this.m_paywall, preloadProducts: false, (view) =>
+        {
+            if (view == null)
+            {
+
+                //this.UpdateViewFail(paywall);
+            }
+            else
+            {
+                view.Present((error) => { });
+            }
+        });
+    }
+
+    private void UpdatePaywallFail()
+    {
         this.LoadingStatusText.SetText("FAIL");
         this.VariationIdText.SetText("null");
         this.RevisionText.SetText("null");
     }
 
-private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products) {
+    private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products)
+    {
         this.LoadingStatusText.SetText("OK");
         this.VariationIdText.SetText(paywall.VariationId);
         this.RevisionText.SetText(paywall.Revision.ToString());
         this.LocaleText.SetText(paywall.Locale);
 
-        m_productButtons.ForEach((button) => {
+        m_productButtons.ForEach((button) =>
+        {
             Destroy(button.gameObject);
         });
         m_productButtons.Clear();
 
-        for (var i = 0; i < products.Count; ++i) {
+        for (var i = 0; i < products.Count; ++i)
+        {
             var product = products[i];
             var productButton = this.CreateProductButton(product, i);
             m_productButtons.Add(productButton);
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 540.0f + products.Count * 150.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 610.0f + products.Count * 150.0f);
     }
 
-    private ProductButton CreateProductButton(AdaptyPaywallProduct product, float index) {
+    private ProductButton CreateProductButton(AdaptyPaywallProduct product, float index)
+    {
         var productButtonObject = Instantiate(this.ProductButtonPrefab);
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
@@ -102,9 +140,11 @@ private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct
         productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 140.0f);
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
-        productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
+        productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        {
             this.Router.SetIsLoading(true);
-            this.Listener.MakePurchase(product, (error) => {
+            this.Listener.MakePurchase(product, (error) =>
+            {
                 this.Router.SetIsLoading(false);
             });
         });

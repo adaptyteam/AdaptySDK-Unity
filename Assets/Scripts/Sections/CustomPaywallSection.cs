@@ -114,6 +114,24 @@ public class CustomPaywallSection : MonoBehaviour
         this.RevisionText.SetText("null");
     }
 
+    public void PresentPaywall()
+    {
+        if (m_paywall == null) return;
+
+        this.Listener.CreatePaywallView(this.m_paywall, preloadProducts: false, (view) =>
+        {
+            if (view == null)
+            {
+
+                //this.UpdateViewFail(paywall);
+            }
+            else
+            {
+                view.Present((error) => { });
+            }
+        });
+    }
+
     private void UpdatePaywallFail()
     {
         this.LoadingStatusText.SetText("FAIL");
@@ -143,7 +161,7 @@ public class CustomPaywallSection : MonoBehaviour
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 780.0f + products.Count * 150.0f + 80.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 870.0f + products.Count * 150.0f + 80.0f);
     }
 
     private ProductButton CreateProductButton(AdaptyPaywallProduct product, float index)

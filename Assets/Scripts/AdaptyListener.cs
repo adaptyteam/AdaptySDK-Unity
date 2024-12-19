@@ -44,6 +44,14 @@ namespace AdaptyExample
                 this.LogMethodResult("Activate", error);
                 this.GetProfile();
             });
+            
+            var adaptyUIConfig = new AdaptyUIConfiguration();
+
+            AdaptyUI.Activate(adaptyUIConfig, (error) =>
+            {
+                this.LogMethodResult("Activate", error);
+                this.GetProfile();
+            });
         }
 
         private void SetFallBackPaywalls()
@@ -308,6 +316,11 @@ namespace AdaptyExample
             }
         }
 
+        private void LogIncomingCall_AdaptyUI(string methodName, AdaptyUIView view, string meta)
+        {
+            Debug.Log(string.Format("#AdaptyListener# <-- {0}, viewId = {1}, meta = {2}", methodName, view.Id, meta));
+        }
+
         // – AdaptyEventListener
 
         public void OnLoadLatestProfile(AdaptyProfile profile)
@@ -315,6 +328,135 @@ namespace AdaptyExample
             Debug.Log("#AdaptyListener# OnReceiveUpdatedProfile called");
 
             this.Router.SetProfile(profile);
+        }
+
+        // AdaptyUI
+
+        public void CreatePaywallView(AdaptyPaywall paywall, bool preloadProducts, Action<AdaptyUIView> completionHandler)
+        {
+            this.LogMethodRequest("CreatePaywallView");
+
+            var parameters = new AdaptyUICreateViewOptional()
+                .SetPreloadProducts(preloadProducts)
+                .SetLoadTimeout(new TimeSpan(0, 0, 3));
+
+            AdaptyUI.CreateView(paywall, parameters, (view, error) =>
+            {
+                this.LogMethodResult("CreatePaywallView", error);
+                completionHandler.Invoke(view);
+            });
+        }
+
+        public void PresentPaywallView(AdaptyUIView view, Action<AdaptyError> completionHandler)
+        {
+            this.LogMethodRequest("PresentPaywallView");
+
+            AdaptyUI.PresentView(view, (error) =>
+            {
+                this.LogMethodResult("PresentPaywallView", error);
+
+                if (completionHandler != null)
+                {
+                    completionHandler.Invoke(error);
+                }
+            });
+        }
+
+        public void DismissPaywallView(AdaptyUIView view, Action<AdaptyError> completionHandler)
+        {
+            this.LogMethodRequest("DismissPaywallView");
+
+            AdaptyUI.DismissView(view, (error) =>
+            {
+                this.LogMethodResult("DismissPaywallView", error);
+
+                if (completionHandler != null)
+                {
+                    completionHandler.Invoke(error);
+                }
+            });
+        }
+
+        // - AdaptyUIEventListener
+
+        public void PaywallViewDidPerformAction(AdaptyUIView view, AdaptyUIUserAction action)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidPerformAction", view, action.Type.ToString());
+
+            switch (action.Type)
+            {
+                case AdaptyUIUserActionType.Close:
+                    this.DismissPaywallView(view, null);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void PaywallViewDidSelectProduct(AdaptyUIView view, string productId)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidSelectProduct", view, productId);
+        }
+
+        public void PaywallViewDidStartPurchase(AdaptyUIView view, AdaptyPaywallProduct product)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidStartPurchase", view, product.VendorProductId);
+        }
+
+        public void PaywallViewDidFinishPurchase(AdaptyUIView view, AdaptyPaywallProduct product, AdaptyPurchaseResult purchasedResult)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidFinishPurchase", view, product.VendorProductId);
+
+            switch (purchasedResult.Type)
+            {
+
+                case AdaptyPurchaseResultType.UserCancelled:
+                    // handle user canceled
+                    break;
+                case AdaptyPurchaseResultType.Pending:
+                    // handle pending purchase
+                    break;
+                case AdaptyPurchaseResultType.Success:
+                    var profile = purchasedResult.Profile;
+                    var accessLevel = profile.AccessLevels["premium"];
+                    if (accessLevel != null && accessLevel.IsActive)
+                    {
+                        this.DismissPaywallView(view, null);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void PaywallViewDidFailPurchase(AdaptyUIView view, AdaptyPaywallProduct product, AdaptyError error)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidFailPurchase", view, string.Format("id: {0}, error: {1}", product.VendorProductId, error.ToString()));
+        }
+
+        public void PaywallViewDidStartRestore(AdaptyUIView view)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidStartRestore", view, null);
+        }
+
+        public void PaywallViewDidFinishRestore(AdaptyUIView view, AdaptyProfile profile)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidFinishRestore", view, profile.ProfileId);
+        }
+
+        public void PaywallViewDidFailRestore(AdaptyUIView view, AdaptyError error)
+        {
+            LogIncomingCall_AdaptyUI("aywallViewDidFailRestore", view, error.ToString());
+        }
+
+        public void PaywallViewDidFailRendering(AdaptyUIView view, AdaptyError error)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidFailRendering", view, error.ToString());
+        }
+
+        public void PaywallViewDidFailLoadingProducts(AdaptyUIView view, AdaptyError error)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidFailLoadingProducts", view, error.ToString());
         }
     }
 

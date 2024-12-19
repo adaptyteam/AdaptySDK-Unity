@@ -17,5 +17,11 @@ namespace AdaptySDK
             $"{nameof(Id)}: {Id}, " +
             $"{nameof(PlacementId)}: {PlacementId}, " +
             $"{nameof(PaywallVariationId)}: {PaywallVariationId}";
+
+        public void Present(System.Action<AdaptyError> completionHandler)
+                => AdaptyUI.PresentView(this, completionHandler);
+
+        public void Dismiss(System.Action<AdaptyError> completionHandler)
+            => AdaptyUI.DismissView(this, completionHandler);
     }
 }

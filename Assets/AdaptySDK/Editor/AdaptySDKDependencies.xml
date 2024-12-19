@@ -12,7 +12,7 @@
 		</iosPod>
 		<iosPod name="AdaptyUI" version="3.3.0" minTargetSdk="13.0">
 		</iosPod>
-		<iosPod name="AdaptyPlugin" version="3.3.0" minTargetSdk="13.0">
+		<iosPod name="AdaptyPlugin" path = "../ios-sdk/" minTargetSdk="13.0">
 		</iosPod>
 	</iosPods>
 </dependencies>
