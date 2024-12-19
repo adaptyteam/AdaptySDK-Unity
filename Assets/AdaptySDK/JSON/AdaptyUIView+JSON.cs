@@ -25,7 +25,10 @@ namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static AdaptyUIView GetAdaptyUIView(this JSONNode node)
-             => new AdaptyUIView(GetObject(node));
+        internal static AdaptyUIView GetAdaptyUIView(this JSONNode node) => 
+            new AdaptyUIView(GetObject(node));
+
+        internal static AdaptyUIView GetAdaptyUIView(this JSONNode node, string aKey) => 
+            new AdaptyUIView(GetObject(node, aKey));
     }
 }

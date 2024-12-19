@@ -10,9 +10,9 @@ namespace AdaptySDK.Android
         {
             internal MessageHandler() : base("com.adapty.unity.AdaptyAndroidMessageHandler") { }
 
-            public void onMessage(string type, string json)
+            public void onMessage(string id, string json)
             {
-                Adapty.OnMessage(type, json);
+                Adapty.OnMessage(id, json);
             }
         }
 
