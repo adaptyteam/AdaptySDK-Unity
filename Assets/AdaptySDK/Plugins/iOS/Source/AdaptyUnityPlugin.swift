@@ -10,6 +10,16 @@ import AdaptyPlugin
         super.init()
         
         Adapty.delegate = AdaptyUnityPlugin.delegate
+        
+        Task { @MainActor in
+            AdaptyPlugin.reqister(setFallbackPaywallsRequests: { @MainActor assetId in
+                if #available(iOS 16.0, *) {
+                    return URL(filePath: assetId)
+                } else {
+                    return URL(fileURLWithPath: assetId)
+                }
+            })
+        }
     }
     
     

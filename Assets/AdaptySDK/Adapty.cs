@@ -258,10 +258,11 @@ namespace AdaptySDK
             );
         }
 
-        public static void SetFallbackPaywalls(string assetId, Action<AdaptyError> completionHandler)
+        public static void SetFallbackPaywalls(string fileName, Action<AdaptyError> completionHandler)
         {
+            var assetPath = UnityEngine.Application.dataPath + "/Raw/" + fileName;
             var parameters = new JSONObject();
-            parameters.Add("asset_id", assetId);
+            parameters.Add("asset_id", assetPath);
 
             Request.Send(
                 "set_fallback_paywalls",

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using AdaptySDK;
 using UnityEngine;
-using UnityEngine.UI;
-using static AdaptySDK.Adapty;
 
 namespace AdaptyExample
 {
@@ -16,17 +13,51 @@ namespace AdaptyExample
         {
             this.Router = this.GetComponent<AdaptyRouter>();
 
-            // TODO: 
-            // Adapty.SetLogLevel(AdaptyLogLevel.Verbose);
-            Adapty.SetEventListener(this);
+            this.InitializeAdapty();
+
             this.SetFallBackPaywalls();
-            this.GetProfile();
+        }
+
+        private void InitializeAdapty()
+        {
+            Adapty.SetEventListener(this);
+
+            this.LogMethodRequest("SetLogLevel");
+
+            Adapty.SetLogLevel(AdaptyLogLevel.Verbose, (error) =>
+            {
+                this.LogMethodResult("SetLogLevel", error);
+            });
+
+
+            var builder = new AdaptyConfiguration.Builder("public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6")
+                    .SetCustomerUserId(null)
+                    .SetObserverMode(false)
+                    .SetServerCluster(AdaptyServerCluster.Default)
+                    .SetIPAddressCollectionDisabled(false)
+                    .SetIDFACollectionDisabled(false);
+
+            this.LogMethodRequest("Activate");
+
+            Adapty.Activate(builder.Build(), (error) =>
+            {
+                this.LogMethodResult("Activate", error);
+                this.GetProfile();
+            });
         }
 
         private void SetFallBackPaywalls()
         {
+#if UNITY_IOS
+            var assetId = "adapty_fallback_ios.json";
+#elif UNITY_ANDROID
+            var assetId = "adapty_fallback_android.json";
+#else
+            var assetId = "";
+#endif
+
             this.LogMethodRequest("SetFallBackPaywalls");
-            Adapty.SetFallbackPaywalls(AdaptyFallbackPaywalls.Value, (error) =>
+            Adapty.SetFallbackPaywalls(assetId, (error) =>
             {
                 this.LogMethodResult("SetFallBackPaywalls", error);
             });
@@ -238,7 +269,7 @@ namespace AdaptyExample
         public void PresentCodeRedemptionSheet()
         {
             this.LogMethodRequest("PresentCodeRedemptionSheet");
-            
+
             Adapty.PresentCodeRedemptionSheet((error) =>
             {
                 this.LogMethodResult("PresentCodeRedemptionSheet", error);

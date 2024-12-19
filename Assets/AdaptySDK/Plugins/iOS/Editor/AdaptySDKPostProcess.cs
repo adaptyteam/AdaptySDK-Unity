@@ -32,7 +32,6 @@ public static class AdaptySDKPostProcess {
         UpdateBitcodeProperty(proj, frameworkTargetGuid);
 
         UpdateBuildProperties(proj, testTargetGuid);
-        CopyAdaptyInfoPlist(buildPath, proj, mainTargetGuid);
 
         proj.WriteToFile(projPath);
 #endif
@@ -57,19 +56,8 @@ public static class AdaptySDKPostProcess {
         project.AddBuildProperty(targetGuid, "LD_DYLIB_INSTALL_NAME",
             "@executable_path/../Frameworks/$(EXECUTABLE_PATH)");
         project.AddBuildProperty(targetGuid, "DEFINES_MODULE", "YES");
-        project.AddBuildProperty(targetGuid, "SWIFT_VERSION", "4.0");
+        project.AddBuildProperty(targetGuid, "SWIFT_VERSION", "5.9");
         project.AddBuildProperty(targetGuid, "COREML_CODEGEN_LANGUAGE", "Swift");
-    }
-
-    static void CopyAdaptyInfoPlist(string buildPath, PBXProject project, string targetGuid) {
-        var fileName = "Adapty-Info.plist";
-        var plistPath = Path.Combine(Application.dataPath, fileName);
-        var destinationPath = Path.Combine(buildPath, fileName);
-
-        File.Copy(plistPath, destinationPath, true);
-
-        var fileGuid = project.AddFile(fileName, fileName);
-        project.AddFileToBuild(targetGuid, fileGuid);
     }
 #endif
 }
