@@ -21,8 +21,8 @@ namespace AdaptySDK.iOS
 
       
         [AOT.MonoPInvokeCallback(typeof(MessageDelegate))]
-        private static void OnMessage(string type, string json) {
-            Adapty.OnMessage(type, json);
+        private static void OnMessage(string id, string json) {
+            Adapty.OnMessage(id, json);
         }
 
         [AOT.MonoPInvokeCallback(typeof(CallbackDelegate))]
