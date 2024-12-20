@@ -318,10 +318,9 @@ namespace AdaptySDK
         }
     }
 
-
     public static partial class AdaptyUI
     {
-        
+
         public static void Activate(AdaptyUIConfiguration configuration, Action<AdaptyError> completionHandler)
         {
             var parameters = new JSONObject();
@@ -415,7 +414,7 @@ namespace AdaptySDK
             );
         }
 
-         public static void ShowDialog(AdaptyUIView view, AdaptyUIDialogConfiguration configuration, Action<AdaptyError> completionHandler)
+        public static void ShowDialog(AdaptyUIView view, AdaptyUIDialogConfiguration configuration, Action<AdaptyUIDialogActionType, AdaptyError> completionHandler)
         {
             var parameters = new JSONObject();
             parameters.Add("id", view.Id);
@@ -424,8 +423,8 @@ namespace AdaptySDK
             Request.Send(
                 "adapty_ui_show_dialog",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
+                JSONNodeExtensions.GetAdaptyUIDialogActionType,
+                (value, error) => completionHandler?.Invoke(value, error)
             );
         }
     }

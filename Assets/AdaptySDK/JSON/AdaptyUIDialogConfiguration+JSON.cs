@@ -16,17 +16,8 @@ namespace AdaptySDK
             var node = new JSONObject();
             if (Title != null) node.Add("title", Title);
             if (Content != null) node.Add("content", Content);
-
-            var defaultAction = new JSONObject();
-            defaultAction.Add("title", DefaultActionTitle);
-            node.Add("default_action", defaultAction);
-
-            if (SecondaryActionTitle != null)
-            {
-                var action = new JSONObject();
-                action.Add("title", SecondaryActionTitle);
-                node.Add("secondary_action", action);
-            }
+            node.Add("default_action_title", DefaultActionTitle);
+            if (SecondaryActionTitle != null) node.Add("secondary_action_title", SecondaryActionTitle);
             return node;
         }
     }
