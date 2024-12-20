@@ -30,8 +30,7 @@ static ApplicationStateListener *_applicationStateListenerInstance = [[Applicati
 }
 
 - (void)applicationWillFinishLaunchingWithOptions:(NSNotification *)notification {
-    [[AdaptyUnityPlugin shared]
-     registerMessageDelegate:^(NSString *_Nonnull type, NSString *_Nonnull data) {
+    [AdaptyUnityPlugin setup:^(NSString *_Nonnull type, NSString *_Nonnull data) {
         SendMessageToUnity(type, data);
     }];
 }

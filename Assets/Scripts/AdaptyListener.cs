@@ -47,9 +47,11 @@ namespace AdaptyExample
             
             var adaptyUIConfig = new AdaptyUIConfiguration();
 
+            this.LogMethodRequest("Activate UI");
+
             AdaptyUI.Activate(adaptyUIConfig, (error) =>
             {
-                this.LogMethodResult("Activate", error);
+                this.LogMethodResult("Activate UI", error);
                 this.GetProfile();
             });
         }
