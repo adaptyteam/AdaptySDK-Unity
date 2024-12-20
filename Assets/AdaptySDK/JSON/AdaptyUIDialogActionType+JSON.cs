@@ -19,8 +19,9 @@ namespace AdaptySDK.SimpleJSON
         private static AdaptyUIDialogActionType ToAdaptyUIDialogActionType(this string value) =>
             value switch
             {
+                "primary" => AdaptyUIDialogActionType.Primary,
                 "secondary" => AdaptyUIDialogActionType.Secondary,
-                _ => AdaptyUIDialogActionType.Default
+                _ => throw new Exception($"AdaptyUIDialogActionType unknown value: {value}"),
             };
     }
 }

@@ -8,7 +8,7 @@
 namespace AdaptySDK
 {
     public enum AdaptyUIDialogActionType {
-        Default,
+        Primary,
         Secondary
     }
 }
