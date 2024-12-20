@@ -8,9 +8,9 @@
 		</androidPackage>
 	</androidPackages>
 	<iosPods>
-		<iosPod name="Adapty" version="3.3.0" minTargetSdk="13.0">
+		<iosPod name="Adapty" path = "../ios-sdk/" minTargetSdk="13.0">
 		</iosPod>
-		<iosPod name="AdaptyUI" version="3.3.0" minTargetSdk="13.0">
+		<iosPod name="AdaptyUI" path = "../ios-sdk/" minTargetSdk="13.0">
 		</iosPod>
 		<iosPod name="AdaptyPlugin" path = "../ios-sdk/" minTargetSdk="13.0">
 		</iosPod>

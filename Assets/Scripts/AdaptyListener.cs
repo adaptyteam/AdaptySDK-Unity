@@ -14,7 +14,6 @@ namespace AdaptyExample
             this.Router = this.GetComponent<AdaptyRouter>();
 
             this.InitializeAdapty();
-
             this.SetFallBackPaywalls();
         }
 
@@ -444,6 +443,16 @@ namespace AdaptyExample
         public void PaywallViewDidFinishRestore(AdaptyUIView view, AdaptyProfile profile)
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidFinishRestore", view, profile.ProfileId);
+
+            var dialog = new AdaptyUIDialogConfiguration()
+                .SetContent("Success!")
+                .SetContent("Purchases were successfully restored.")
+                .SetDefaultActionTitle("OK");
+
+
+            AdaptyUI.ShowDialog(view, dialog, (action, error) => {
+
+            });
         }
 
         public void PaywallViewDidFailRestore(AdaptyUIView view, AdaptyError error)
