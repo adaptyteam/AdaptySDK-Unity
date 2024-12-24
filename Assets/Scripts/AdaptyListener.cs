@@ -43,8 +43,11 @@ namespace AdaptyExample
                 this.LogMethodResult("Activate", error);
                 this.GetProfile();
             });
-            
-            var adaptyUIConfig = new AdaptyUIConfiguration();
+
+            var adaptyUIConfig = new AdaptyUIConfiguration()
+                .SetMemoryStorageTotalCostLimit(100 * 1024 * 1024) // 100MB
+                .SetMemoryStorageCountLimit(int.MaxValue)
+                .SetDiskStorageSizeLimit(100 * 1024 * 1024); // 100MB
 
             this.LogMethodRequest("Activate UI");
 
@@ -114,16 +117,27 @@ namespace AdaptyExample
         {
             this.LogMethodRequest("MakePurchase");
 
-            Adapty.MakePurchase(product, (purchaseResult, error) =>
+            Adapty.MakePurchase(product, (result, error) =>
             {
                 this.LogMethodResult("MakePurchase", error);
                 completionHandler.Invoke(error);
 
-                // TODO: 
-                // if (profile != null)
-                // {
-                //     this.Router.SetProfile(profile);
-                // }
+                switch (result.Type)
+                {
+
+                    case AdaptyPurchaseResultType.Pending:
+                        // handle pending
+                        break;
+                    case AdaptyPurchaseResultType.UserCancelled:
+                        // handle cancelation
+                        break;
+                    case AdaptyPurchaseResultType.Success:
+                        var profile = result.Profile;
+                        this.Router.SetProfile(profile);
+                        break;
+                    default:
+                        break;
+                }
             });
         }
 
@@ -238,6 +252,28 @@ namespace AdaptyExample
             Adapty.UpdateProfile(builder.Build(), (error) =>
             {
                 this.LogMethodResult("UpdateProfile", error);
+                completionHandler.Invoke(error);
+            });
+        }
+
+        public void SetIntegrationIdentifier(Action<AdaptyError> completionHandler)
+        {
+            this.LogMethodRequest("SetIntegrationIdentifier");
+
+            Adapty.SetIntegrationIdentifier("test_integration", "test_id", (error) =>
+            {
+                this.LogMethodResult("SetIntegrationIdentifier", error);
+                completionHandler.Invoke(error);
+            });
+        }
+
+        public void ReportTransaction(Action<AdaptyError> completionHandler)
+        {
+            this.LogMethodRequest("ReportTransaction");
+
+            Adapty.ReportTransaction("transaction_id", "variation_id", (error) =>
+            {
+                this.LogMethodResult("ReportTransaction", error);
                 completionHandler.Invoke(error);
             });
         }
@@ -450,7 +486,8 @@ namespace AdaptyExample
                 .SetDefaultActionTitle("OK");
 
 
-            AdaptyUI.ShowDialog(view, dialog, (action, error) => {
+            AdaptyUI.ShowDialog(view, dialog, (action, error) =>
+            {
 
             });
         }
