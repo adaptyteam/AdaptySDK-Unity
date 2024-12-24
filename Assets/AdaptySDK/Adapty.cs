@@ -138,6 +138,12 @@ namespace AdaptySDK
             );
         }
 
+        /**
+        * @brief Set to the most appropriate level of logging.
+        *
+        * @param level  AdaptyLogLevel value
+        * @param completionHandler  Action whith the result
+        */
         public static void SetLogLevel(AdaptyLogLevel level, Action<AdaptyError> completionHandler)
         {
             var parameters = new JSONObject();

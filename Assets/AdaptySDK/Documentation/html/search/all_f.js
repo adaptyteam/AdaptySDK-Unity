@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['object_0',['Object',['../namespace_adapty_s_d_k_1_1_simple_j_s_o_n.html#a94296ba8021b9aad1223ee5cd4dbb199a497031794414a552435f90151ac3b54b',1,'AdaptySDK::SimpleJSON']]],
+  ['observermode_1',['ObserverMode',['../class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a2786545bf33a56e552a06bab5e9a05c7',1,'AdaptySDK::AdaptyConfiguration::Builder']]],
+  ['offer_2',['Offer',['../class_adapty_s_d_k_1_1_adapty_subscription.html#ac843bc33110d16e3e4b2c747860ebd91',1,'AdaptySDK::AdaptySubscription']]],
+  ['offerid_3',['OfferId',['../class_adapty_s_d_k_1_1_adapty_profile_1_1_access_level.html#a5edff1becb5715890af8eef0d46dc07c',1,'AdaptySDK.AdaptyProfile.AccessLevel.OfferId'],['../class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a32827a8d097e5a54e9be81189a2b77c3',1,'AdaptySDK.AdaptyProfile.Subscription.OfferId']]],
+  ['offertags_4',['OfferTags',['../class_adapty_s_d_k_1_1_adapty_subscription_offer.html#a3b81f06f03f6d1a586f81de262ef702c',1,'AdaptySDK::AdaptySubscriptionOffer']]],
+  ['oldsubvendorproductid_5',['OldSubVendorProductId',['../class_adapty_s_d_k_1_1_adapty_subscription_update_parameters.html#afce42920d47e73e6012707e0075302ba',1,'AdaptySDK::AdaptySubscriptionUpdateParameters']]],
+  ['onloadlatestprofile_6',['OnLoadLatestProfile',['../interface_adapty_s_d_k_1_1_adapty_event_listener.html#ac52c5db88b8fca5dbe65699d2b3ee215',1,'AdaptySDK::AdaptyEventListener']]],
+  ['openurl_7',['OpenUrl',['../namespace_adapty_s_d_k.html#a8eb117ed7942af5c5793d48eb0181d8aa5321e548618cdaa32b6a464ca1f9e9e2',1,'AdaptySDK']]],
+  ['operationinterrupted_8',['OperationInterrupted',['../namespace_adapty_s_d_k.html#a6b030f6530f734b1908f4fdff970c6aaa69edb95d5bc4ff88deaff852c14521e9',1,'AdaptySDK']]],
+  ['operator_20bool_9',['operator bool',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a009a9526a5ece15b97ac54b2f1d7e2f0',1,'AdaptySDK::SimpleJSON::JSONNode']]],
+  ['operator_20double_10',['operator double',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a8416ea4cd26f7437f2b3c06123e55a63',1,'AdaptySDK::SimpleJSON::JSONNode']]],
+  ['operator_20float_11',['operator float',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#aa31c1d49b49f406c5763868f8206e5dd',1,'AdaptySDK::SimpleJSON::JSONNode']]],
+  ['operator_20int_12',['operator int',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a52902c20a1efc0925b08b1d634208911',1,'AdaptySDK::SimpleJSON::JSONNode']]],
+  ['operator_20jsonnode_13',['operator JSONNode',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#aa5fe47860293a3ac4b0809c7ddbf67af',1,'AdaptySDK.SimpleJSON.JSONNode.operator JSONNode(string s)'],['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#af955cd7361981c0fae9012a891ac4fd1',1,'AdaptySDK.SimpleJSON.JSONNode.operator JSONNode(double n)'],['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a82fce99b3e956a0c4f1778f35a7edcbb',1,'AdaptySDK.SimpleJSON.JSONNode.operator JSONNode(float n)'],['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a7e5a174086ec48d3ba472ce4dc1614d5',1,'AdaptySDK.SimpleJSON.JSONNode.operator JSONNode(int n)'],['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a12741958d602ca909ceaa13e52de303c',1,'AdaptySDK.SimpleJSON.JSONNode.operator JSONNode(long n)'],['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a82c88dc25e5a1e2ad02fc311d83422d6',1,'AdaptySDK.SimpleJSON.JSONNode.operator JSONNode(bool b)'],['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a2e904292c8a2440f641d4c38b5ac856d',1,'AdaptySDK.SimpleJSON.JSONNode.operator JSONNode(KeyValuePair&lt; string, JSONNode &gt; aKeyValue)']]],
+  ['operator_20long_14',['operator long',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#a94cbb39a0b2e2be1bbc75e222c0bd268',1,'AdaptySDK::SimpleJSON::JSONNode']]],
+  ['operator_20string_15',['operator string',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#acfdb13fb66ebea07fe25bb098d15d72b',1,'AdaptySDK::SimpleJSON::JSONNode']]],
+  ['operator_21_3d_16',['operator!=',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#ae232e1329a4bbce771d7e877c97bb354',1,'AdaptySDK::SimpleJSON::JSONNode']]],
+  ['operator_3d_3d_17',['operator==',['../class_adapty_s_d_k_1_1_simple_j_s_o_n_1_1_j_s_o_n_node.html#abd033d0477f43c0a153eb9ebbdd63a35',1,'AdaptySDK::SimpleJSON::JSONNode']]],
+  ['other_18',['Other',['../namespace_adapty_s_d_k.html#a85a77e74e5b9267b4c3cb67ef8a9bc64a6311ae17c1ee52b36e68aaf4ad066387',1,'AdaptySDK']]]
+];

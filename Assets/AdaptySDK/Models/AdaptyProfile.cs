@@ -15,11 +15,7 @@ namespace AdaptySDK
         /// An identifier of the user in Adapty
         public readonly string ProfileId;
 
-        //private readonly string _SegmentId;
-
         /// An identifier of the user in your system.
-        ///
-        /// [Nullable]
         public readonly string CustomerUserId;
 
         internal readonly string SegmentId;
@@ -28,18 +24,24 @@ namespace AdaptySDK
         public readonly IDictionary<string, dynamic> CustomAttributes;
 
         /// The keys are access level identifiers configured by you in Adapty Dashboard.
-        /// The values are [AdaptyAccessLevelInfo] objects.
-        /// Can be null if the customer has no access levels.
+        /** 
+        * The values are [AdaptyAccessLevelInfo] objects.
+        * Can be null if the customer has no access levels. 
+        */
         public readonly IDictionary<string, AccessLevel> AccessLevels;
 
-        /// The keys are product ids from App Store Connect.
-        /// The values are [AdaptySubscription] objects.
-        /// Can be null if the customer has no subscriptions.
+        /** 
+        * The keys are product ids from App Store Connect.
+        * The values are [AdaptySubscription] objects.
+        * Can be null if the customer has no subscriptions.
+        */
         public readonly IDictionary<string, Subscription> Subscriptions;
 
-        /// The keys are product ids from App Store Connect.
-        /// The values are array[] of [AdaptyNonSubscription] objects.
-        /// Can be null if the customer has no purchases.
+        /** 
+        * The keys are product ids from App Store Connect.
+        * The values are array[] of [AdaptyNonSubscription] objects.
+        * Can be null if the customer has no purchases.
+        */
         public readonly IDictionary<string, IList<NonSubscription>> NonSubscriptions;
 
         internal readonly Int64 Version;
