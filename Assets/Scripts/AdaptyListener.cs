@@ -7,6 +7,7 @@ namespace AdaptyExample
 {
     public class AdaptyListener : MonoBehaviour, AdaptyEventListener
     {
+        public event Action OnInitializeFinished;
         AdaptyRouter Router;
 
         void Start()
@@ -47,9 +48,9 @@ namespace AdaptyExample
             Adapty.Activate(builder.Build(), (error) =>
             {
                 this.LogMethodResult("Activate", error);
+                this.OnInitializeFinished?.Invoke();
                 this.GetProfile();
             });
-
         }
 
         private void SetFallBackPaywalls()
@@ -367,7 +368,7 @@ namespace AdaptyExample
         {
             this.LogMethodRequest("CreatePaywallView");
 
-            var parameters = new AdaptyUICreateViewOptional()
+            var parameters = new AdaptyUICreateViewParameters()
                 .SetPreloadProducts(preloadProducts)
                 .SetLoadTimeout(new TimeSpan(0, 0, 3));
 

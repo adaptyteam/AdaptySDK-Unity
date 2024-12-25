@@ -30,7 +30,18 @@ public class PaywallSection : MonoBehaviour
     void Start()
     {
         this.PaywallNameText.SetText(this.m_paywallId);
+        this.Listener.OnInitializeFinished += OnAdaptyInitialized;
+    }
+
+    private void OnAdaptyInitialized()
+    {
+        this.Listener.OnInitializeFinished -= OnAdaptyInitialized;
         this.LoadPaywall();
+    }
+
+    private void OnDestroy()
+    {
+        this.Listener.OnInitializeFinished -= OnAdaptyInitialized;
     }
 
     public void LogShowPaywallPressed()
