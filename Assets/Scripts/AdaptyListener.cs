@@ -370,6 +370,25 @@ namespace AdaptyExample
 
             var parameters = new AdaptyUICreateViewParameters()
                 .SetPreloadProducts(preloadProducts)
+                .SetCustomTags(
+                    new Dictionary<string, string> {
+                        { "CUSTOM_TAG_NAME", "Walter White" },
+                        { "CUSTOM_TAG_PHONE", "+1 234 567890" },
+                        { "CUSTOM_TAG_CITY", "Albuquerque" },
+                        { "CUSTOM_TAG_EMAIL", "walter@white.com" }
+                    }
+                )
+                .SetCustomTimers(
+                    new Dictionary<string, DateTime> { 
+                        { "CUSTOM_TIMER_24H", DateTime.Now.AddSeconds(86400) }, 
+                        { "CUSTOM_TIMER_10H", DateTime.Now.AddSeconds(36000) }, 
+                        { "CUSTOM_TIMER_1H", DateTime.Now.AddSeconds(3600) }, 
+                        { "CUSTOM_TIMER_10M", DateTime.Now.AddSeconds(600) }, 
+                        { "CUSTOM_TIMER_1M", DateTime.Now.AddSeconds(60) }, 
+                        { "CUSTOM_TIMER_10S", DateTime.Now.AddSeconds(10) }, 
+                        { "CUSTOM_TIMER_5S", DateTime.Now.AddSeconds(5) } 
+                    }
+                )
                 .SetLoadTimeout(new TimeSpan(0, 0, 3));
 
             AdaptyUI.CreateView(paywall, parameters, (view, error) =>
@@ -418,7 +437,9 @@ namespace AdaptyExample
             switch (action.Type)
             {
                 case AdaptyUIUserActionType.Close:
-                    this.DismissPaywallView(view, null);
+                    view.Dismiss(null);
+                    break;
+                case AdaptyUIUserActionType.OpenUrl:
                     break;
                 default:
                     break;
