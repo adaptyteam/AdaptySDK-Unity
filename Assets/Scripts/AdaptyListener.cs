@@ -85,6 +85,17 @@ namespace AdaptyExample
             });
         }
 
+        public void GetPaywallForDefaultAudience(string id, string locale, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall> completionHandler)
+        {
+            this.LogMethodRequest("GetPaywall");
+
+            Adapty.GetPaywallForDefaultAudience(id, locale, fetchPolicy, (paywall, error) =>
+            {
+                this.LogMethodResult("GetPaywall", error);
+                completionHandler.Invoke(paywall);
+            });
+        }
+
         public void GetPaywall(string id, string locale, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall> completionHandler)
         {
             this.LogMethodRequest("GetPaywall");

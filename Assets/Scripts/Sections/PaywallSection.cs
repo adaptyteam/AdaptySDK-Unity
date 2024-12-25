@@ -36,6 +36,8 @@ public class PaywallSection : MonoBehaviour
     private void OnAdaptyInitialized()
     {
         this.Listener.OnInitializeFinished -= OnAdaptyInitialized;
+        
+        this.LoadPaywallForDefaultAudience();
         this.LoadPaywall();
     }
 
@@ -54,6 +56,25 @@ public class PaywallSection : MonoBehaviour
                 this.Router.SetIsLoading(false);
             });
         }
+    }
+
+    public void LoadPaywallForDefaultAudience()
+    {
+        this.Router.SetIsLoading(true);
+
+        this.Listener.GetPaywallForDefaultAudience(this.m_paywallId, this.m_localeId, AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) =>
+        {
+            if (paywall == null)
+            {
+                this.UpdatePaywallFail();
+                this.Router.SetIsLoading(false);
+            }
+            else
+            {
+                this.m_paywall = paywall;
+                this.LoadProducts(paywall);
+            }
+        });
     }
 
     public void LoadPaywall()
