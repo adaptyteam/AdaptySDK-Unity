@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 #if UNITY_IOS && !UNITY_EDITOR
@@ -29,8 +29,17 @@ namespace AdaptySDK
                 "activate",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.Activate(..)", e);
+                    }
+                });
         }
 
         public static void GetPaywall(string placementId, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
@@ -54,8 +63,17 @@ namespace AdaptySDK
                 "get_paywall",
                 parameters,
                 JSONNodeExtensions.GetPaywall,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywall(..)", e);
+                    }
+                });
         }
 
         public static void GetPaywallForDefaultAudience(string placementId, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
@@ -78,8 +96,17 @@ namespace AdaptySDK
                 "get_paywall_for_default_audience",
                 parameters,
                 JSONNodeExtensions.GetPaywall,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywallForDefaultAudience(..)", e);
+                    }
+                });
         }
 
         public static void GetPaywallProducts(AdaptyPaywall paywall, Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler)
@@ -91,8 +118,17 @@ namespace AdaptySDK
                 "get_paywall_products",
                 parameters,
                 JSONNodeExtensions.GetAdaptyPaywallProductList,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<IList<AdaptyPaywallProduct>,AdaptyError> completionHandler in Adapty.GetPaywallProducts(..)", e);
+                    }
+                });
         }
 
         public static void GetProfile(Action<AdaptyProfile, AdaptyError> completionHandler)
@@ -101,8 +137,17 @@ namespace AdaptySDK
                 "get_profile",
                 null,
                 JSONNodeExtensions.GetAdaptyProfile,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyProfile,AdaptyError> completionHandler in Adapty.GetProfile(..)", e);
+                    }
+                });
         }
 
         public static void Identify(string customerUserId, Action<AdaptyError> completionHandler)
@@ -114,8 +159,17 @@ namespace AdaptySDK
                 "identify",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.Identify(..)", e);
+                    }
+                });
         }
 
         public static void IsActivated(Action<bool, AdaptyError> completionHandler)
@@ -124,8 +178,17 @@ namespace AdaptySDK
                 "is_activated",
                 null,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<bool,AdaptyError> completionHandler in Adapty.IsActivated(..)", e);
+                    }
+                });
         }
 
         public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
@@ -134,8 +197,17 @@ namespace AdaptySDK
                 "get_log_level",
                 null,
                 JSONNodeExtensions.GetAdaptyLogLevel,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyLogLevel,AdaptyError> completionHandler in Adapty.GetLoglevel(..)", e);
+                    }
+                });
         }
 
         /**
@@ -153,8 +225,17 @@ namespace AdaptySDK
                 "set_log_level",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetLogLevel(..)", e);
+                    }
+                });
         }
 
         public static void Logout(Action<AdaptyError> completionHandler)
@@ -163,8 +244,17 @@ namespace AdaptySDK
                 "logout",
                 null,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.Logout(..)", e);
+                    }
+                });
         }
 
         public static void LogShowOnboarding(string name, string screenName, uint screenOrder, Action<AdaptyError> completionHandler) =>
@@ -179,8 +269,17 @@ namespace AdaptySDK
                 "log_show_onboarding",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowOnboarding(..)", e);
+                    }
+                });
         }
 
         public static void LogShowPaywall(AdaptyPaywall paywall, Action<AdaptyError> completionHandler)
@@ -192,8 +291,17 @@ namespace AdaptySDK
                 "log_show_paywall",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowPaywall(..)", e);
+                    }
+                });
         }
 
 
@@ -214,8 +322,17 @@ namespace AdaptySDK
                 "make_purchase",
                 parameters,
                 JSONNodeExtensions.GetAdaptyPurchaseResult,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyPurchaseResult, AdaptyError> completionHandler in Adapty.MakePurchase(..)", e);
+                    }
+                });
         }
 
         public static void PresentCodeRedemptionSheet(Action<AdaptyError> completionHandler)
@@ -224,8 +341,17 @@ namespace AdaptySDK
                 "present_code_redemption_sheet",
                 null,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)", e);
+                    }
+                });
         }
 
         public static void ReportTransaction(string transactionId, Action<AdaptyError> completionHandler) =>
@@ -240,8 +366,17 @@ namespace AdaptySDK
                 "report_transaction",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.ReportTransaction(..)", e);
+                    }
+                });
         }
 
         public static void RestorePurchases(Action<AdaptyProfile, AdaptyError> completionHandler)
@@ -250,8 +385,17 @@ namespace AdaptySDK
                 "restore_purchases",
                 null,
                 JSONNodeExtensions.GetAdaptyProfile,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.RestorePurchases(..)", e);
+                    }
+                });
         }
 
         public static void GetNativeSDKVersion(Action<string, AdaptyError> completionHandler)
@@ -260,8 +404,17 @@ namespace AdaptySDK
                 "get_sdk_version",
                 null,
                 JSONNodeExtensions.GetString,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<string, AdaptyError> completionHandler in Adapty.GetNativeSDKVersion(..)", e);
+                    }
+                });
         }
 
         public static void SetFallbackPaywalls(string fileName, Action<AdaptyError> completionHandler)
@@ -273,8 +426,17 @@ namespace AdaptySDK
                 "set_fallback_paywalls",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetFallbackPaywalls(..)", e);
+                    }
+                });
         }
 
         public static void SetIntegrationIdentifier(string key, string value, Action<AdaptyError> completionHandler)
@@ -288,8 +450,17 @@ namespace AdaptySDK
                 "set_integration_identifiers",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetIntegrationIdentifier(..)", e);
+                    }
+                });
         }
 
 
@@ -306,8 +477,17 @@ namespace AdaptySDK
                 "update_attribution_data",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAttribution(..)", e);
+                    }
+                });
         }
 
         public static void UpdateProfile(AdaptyProfileParameters param, Action<AdaptyError> completionHandler)
@@ -319,8 +499,17 @@ namespace AdaptySDK
                 "update_profile",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateProfile(..)", e);
+                    }
+                });
         }
     }
 
@@ -373,8 +562,17 @@ namespace AdaptySDK
                 "adapty_ui_create_view",
                 parameters,
                 JSONNodeExtensions.GetAdaptyUIView,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyUIView, AdaptyError> completionHandler in Adapty.CreateView(..)", e);
+                    }
+                });
         }
 
         public static void DismissView(AdaptyUIView view, Action<AdaptyError> completionHandler) =>
@@ -390,8 +588,17 @@ namespace AdaptySDK
                 "adapty_ui_dismiss_view",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissView(..)", e);
+                    }
+                });
         }
 
         public static void PresentView(AdaptyUIView view, Action<AdaptyError> completionHandler)
@@ -403,8 +610,17 @@ namespace AdaptySDK
                 "adapty_ui_present_view",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentView(..)", e);
+                    }
+                });
         }
 
         public static void ShowDialog(AdaptyUIView view, AdaptyUIDialogConfiguration configuration, Action<AdaptyUIDialogActionType, AdaptyError> completionHandler)
@@ -417,8 +633,17 @@ namespace AdaptySDK
                 "adapty_ui_show_dialog",
                 parameters,
                 JSONNodeExtensions.GetAdaptyUIDialogActionType,
-                (value, error) => completionHandler?.Invoke(value, error)
-            );
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyUIDialogActionType, AdaptyError> completionHandler in Adapty.ShowDialog(..)", e);
+                    }
+                });
         }
     }
 

@@ -14,10 +14,9 @@ namespace AdaptySDK
         internal JSONNode ToJSONNode()
         {
             var node = new JSONObject();
-            if (MemoryStorageTotalCostLimit.HasValue) node.Add("title", MemoryStorageTotalCostLimit.Value);
-            if (MemoryStorageCountLimit.HasValue) node.Add("content", MemoryStorageCountLimit.Value);
-            if (DiskStorageSizeLimit.HasValue) node.Add("content", DiskStorageSizeLimit.Value);
-
+            if (MemoryStorageTotalCostLimit.HasValue) node.Add("memory_storage_total_cost_limit", MemoryStorageTotalCostLimit.Value);
+            if (MemoryStorageCountLimit.HasValue) node.Add("memory_storage_count_limit", MemoryStorageCountLimit.Value);
+            if (DiskStorageSizeLimit.HasValue) node.Add("disk_storage_size_limit", DiskStorageSizeLimit.Value);
             return node;
         }
     }
