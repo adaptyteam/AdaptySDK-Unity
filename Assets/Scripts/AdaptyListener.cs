@@ -7,6 +7,7 @@ namespace AdaptyExample
 {
     public class AdaptyListener : MonoBehaviour, AdaptyEventListener
     {
+        public event Action OnInitializeFinished;
         AdaptyRouter Router;
 
         void Start()
@@ -47,6 +48,7 @@ namespace AdaptyExample
             Adapty.Activate(builder.Build(), (error) =>
             {
                 this.LogMethodResult("Activate", error);
+                this.OnInitializeFinished?.Invoke();
                 this.GetProfile();
             });
         }
