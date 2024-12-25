@@ -1,5 +1,5 @@
 //
-//  AdaptyUIConfiguration+JSON.cs
+//  AdaptyUIMediaCacheConfiguration+JSON.cs
 //  AdaptySDK
 //
 //  Created by Aleksei Valiano on 07.09.2023.
@@ -9,7 +9,7 @@ namespace AdaptySDK
 {
     using AdaptySDK.SimpleJSON;
 
-    public partial class AdaptyUIConfiguration
+    public partial class AdaptyUIMediaCacheConfiguration
     {
         internal JSONNode ToJSONNode()
         {

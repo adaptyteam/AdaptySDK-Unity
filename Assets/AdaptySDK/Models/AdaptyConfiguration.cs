@@ -21,7 +21,10 @@ namespace AdaptySDK
         private readonly string BackendProxyHost; //nullable
         private readonly int? BackendProxyPort; //nullable
         private readonly AdaptyLogLevel? LogLevel;
-            
+        private readonly bool? ActivateUI;  
+        private AdaptyUIMediaCacheConfiguration AdaptyUIMediaCache;
+
+
         public override string ToString() =>
             $"{nameof(ApiKey)}: {ApiKey}, " +
             $"{nameof(CustomerUserId)}: {CustomerUserId}, " +
@@ -33,7 +36,8 @@ namespace AdaptySDK
             $"{nameof(BackendFallbackBaseUrl)}: {BackendFallbackBaseUrl}, " +
             $"{nameof(BackendProxyHost)}: {BackendProxyHost}, " +
             $"{nameof(BackendProxyPort)}: {BackendProxyPort}, " +
+            $"{nameof(ActivateUI)}: {ActivateUI}, " +
+            $"{nameof(AdaptyUIMediaCache)}: {AdaptyUIMediaCache}, " +
             $"{nameof(LogLevel)}: {LogLevel}";
-
     }
 }

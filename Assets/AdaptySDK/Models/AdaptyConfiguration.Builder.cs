@@ -22,6 +22,8 @@ namespace AdaptySDK
             BackendProxyHost = builder.BackendProxyHost;
             BackendProxyPort = builder.BackendProxyPort;
             LogLevel = builder.LogLevel;
+            ActivateUI = builder.ActivateUI;
+            AdaptyUIMediaCache = builder.AdaptyUIMediaCache;
         }
 
         public class Builder
@@ -36,9 +38,10 @@ namespace AdaptySDK
             public string BackendFallbackBaseUrl; //nullable
             public string BackendConfigsBaseUrl; //nullable
             public string BackendProxyHost; //nullable
-            public int? BackendProxyPort; //nullable
+            public int? BackendProxyPort;
             public AdaptyLogLevel? LogLevel;
-
+            public bool? ActivateUI;
+            public AdaptyUIMediaCacheConfiguration AdaptyUIMediaCache; //nullable
 
             public Builder(string apiKey) =>
                 ApiKey = apiKey;
@@ -58,6 +61,8 @@ namespace AdaptySDK
                 $"{nameof(BackendFallbackBaseUrl)}: {BackendFallbackBaseUrl}, " +
                 $"{nameof(BackendProxyHost)}: {BackendProxyHost}, " +
                 $"{nameof(BackendProxyPort)}: {BackendProxyPort}, " +
+                $"{nameof(ActivateUI)}: {ActivateUI}, " +
+                $"{nameof(AdaptyUIMediaCache)}: {AdaptyUIMediaCache}, " +
                 $"{nameof(LogLevel)}: {LogLevel}";
 
             public Builder SetAPIKey(string apiKey)
@@ -118,6 +123,22 @@ namespace AdaptySDK
             {
                 BackendProxyHost = host;
                 BackendProxyPort = port;
+                return this;
+            }
+
+            public Builder SetActivateUI(bool activate)
+            {
+                ActivateUI = activate;
+                return this;
+            }
+
+            public Builder SetAdaptyUIMediaCache(int? memoryStorageTotalCostLimit, int? memoryStorageCountLimit, int? diskStorageSizeLimit)
+            {
+                AdaptyUIMediaCache = new AdaptyUIMediaCacheConfiguration(
+                    memoryStorageTotalCostLimit,
+                    memoryStorageCountLimit,
+                    diskStorageSizeLimit
+                );
                 return this;
             }
         }

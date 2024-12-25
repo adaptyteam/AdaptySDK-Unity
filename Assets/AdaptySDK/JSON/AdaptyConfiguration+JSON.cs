@@ -25,6 +25,8 @@ namespace AdaptySDK
             if (BackendConfigsBaseUrl != null) node.Add("backend_configs_base_url", BackendConfigsBaseUrl);
             if (BackendProxyHost != null) node.Add("backend_proxy_host", BackendProxyHost);
             if (BackendProxyPort != null) node.Add("backend_proxy_port", BackendProxyPort);
+            if (ActivateUI != null) node.Add("activate_ui", ActivateUI);
+            if (AdaptyUIMediaCache != null) node.Add("media_cache", AdaptyUIMediaCache.ToJSONNode());
 
             node.Add("cross_platform_sdk_name", "unity");
             node.Add("cross_platform_sdk_version", Adapty.SDKVersion);

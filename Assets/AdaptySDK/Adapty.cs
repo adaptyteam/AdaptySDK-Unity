@@ -321,19 +321,6 @@ namespace AdaptySDK
     public static partial class AdaptyUI
     {
 
-        public static void Activate(AdaptyUIConfiguration configuration, Action<AdaptyError> completionHandler)
-        {
-            var parameters = new JSONObject();
-            parameters.Add("configuration", configuration.ToJSONNode());
-
-            Request.Send(
-                "adapty_ui_activate",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) => completionHandler?.Invoke(error)
-            );
-        }
-
 
         public static void CreateView(AdaptyPaywall paywall, Action<AdaptyUIView, AdaptyError> completionHandler) =>
             CreateView(paywall, null, completionHandler);

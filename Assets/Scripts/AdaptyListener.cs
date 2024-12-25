@@ -34,23 +34,14 @@ namespace AdaptyExample
                     .SetObserverMode(false)
                     .SetServerCluster(AdaptyServerCluster.Default)
                     .SetIPAddressCollectionDisabled(false)
-                    .SetIDFACollectionDisabled(false);
+                    .SetIDFACollectionDisabled(false)
+                    .SetActivateUI(true);
 
             this.LogMethodRequest("Activate");
 
             Adapty.Activate(builder.Build(), (error) =>
             {
                 this.LogMethodResult("Activate", error);
-                this.GetProfile();
-            });
-            
-            var adaptyUIConfig = new AdaptyUIConfiguration();
-
-            this.LogMethodRequest("Activate UI");
-
-            AdaptyUI.Activate(adaptyUIConfig, (error) =>
-            {
-                this.LogMethodResult("Activate UI", error);
                 this.GetProfile();
             });
         }
