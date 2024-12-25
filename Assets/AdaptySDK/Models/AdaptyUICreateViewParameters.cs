@@ -1,5 +1,5 @@
 //
-//  AdaptyUICreateViewOptional.cs
+//  AdaptyUICreateViewParameters.cs
 //  AdaptySDK
 //
 //  Created by Aleksei Valiano on 18.12.2024.
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace AdaptySDK
 {
-    public partial class AdaptyUICreateViewOptional
+    public partial class AdaptyUICreateViewParameters
     {
         public TimeSpan? LoadTimeout;
         public bool? PreloadProducts;
@@ -26,31 +26,31 @@ namespace AdaptySDK
             $"{nameof(CustomTimers)}: {CustomTimers}, " +
             $"{nameof(AndroidPersonalizedOffers)}: {AndroidPersonalizedOffers}";
 
-        public AdaptyUICreateViewOptional SetLoadTimeout(TimeSpan? loadTimeout)
+        public AdaptyUICreateViewParameters SetLoadTimeout(TimeSpan? loadTimeout)
         {
             LoadTimeout = loadTimeout;
             return this;
         }
 
-        public AdaptyUICreateViewOptional SetPreloadProducts(bool? preloadProducts)
+        public AdaptyUICreateViewParameters SetPreloadProducts(bool? preloadProducts)
         {
             PreloadProducts = preloadProducts;
             return this;
         }
 
-        public AdaptyUICreateViewOptional SetCustomTags(Dictionary<string, string> customTags)
+        public AdaptyUICreateViewParameters SetCustomTags(Dictionary<string, string> customTags)
         {
             CustomTags = customTags;
             return this;
         }
 
-        public AdaptyUICreateViewOptional SetCustomTimers(Dictionary<string, DateTime> customTimers)
+        public AdaptyUICreateViewParameters SetCustomTimers(Dictionary<string, DateTime> customTimers)
         {
             CustomTimers = customTimers;
             return this;
         }
 
-        public AdaptyUICreateViewOptional SetAndroidPersonalizedOffers(Dictionary<string, bool> androidPersonalizedOffers)
+        public AdaptyUICreateViewParameters SetAndroidPersonalizedOffers(Dictionary<string, bool> androidPersonalizedOffers)
         {
             AndroidPersonalizedOffers = androidPersonalizedOffers;
             return this;

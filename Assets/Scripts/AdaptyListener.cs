@@ -49,7 +49,6 @@ namespace AdaptyExample
                 this.LogMethodResult("Activate", error);
                 this.GetProfile();
             });
-
         }
 
         private void SetFallBackPaywalls()
@@ -367,7 +366,7 @@ namespace AdaptyExample
         {
             this.LogMethodRequest("CreatePaywallView");
 
-            var parameters = new AdaptyUICreateViewOptional()
+            var parameters = new AdaptyUICreateViewParameters()
                 .SetPreloadProducts(preloadProducts)
                 .SetLoadTimeout(new TimeSpan(0, 0, 3));
 
