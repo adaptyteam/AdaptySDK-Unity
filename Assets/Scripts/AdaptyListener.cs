@@ -87,11 +87,11 @@ namespace AdaptyExample
 
         public void GetPaywallForDefaultAudience(string id, string locale, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall> completionHandler)
         {
-            this.LogMethodRequest("GetPaywall");
+            this.LogMethodRequest("GetPaywallForDefaultAudience");
 
             Adapty.GetPaywallForDefaultAudience(id, locale, fetchPolicy, (paywall, error) =>
             {
-                this.LogMethodResult("GetPaywall", error);
+                this.LogMethodResult("GetPaywallForDefaultAudience", error);
                 completionHandler.Invoke(paywall);
             });
         }
