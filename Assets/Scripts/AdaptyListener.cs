@@ -35,7 +35,12 @@ namespace AdaptyExample
                     .SetServerCluster(AdaptyServerCluster.Default)
                     .SetIPAddressCollectionDisabled(false)
                     .SetIDFACollectionDisabled(false)
-                    .SetActivateUI(true);
+                    .SetActivateUI(true)
+                    .SetAdaptyUIMediaCache(
+                        100 * 1024 * 1024, // 100MB
+                        null,
+                        100 * 1024 * 1024 // 100MB
+                    );
 
             this.LogMethodRequest("Activate");
 
@@ -44,11 +49,6 @@ namespace AdaptyExample
                 this.LogMethodResult("Activate", error);
                 this.GetProfile();
             });
-
-            // var adaptyUIConfig = new AdaptyUIConfiguration()
-            //     .SetMemoryStorageTotalCostLimit(100 * 1024 * 1024) // 100MB
-            //     .SetMemoryStorageCountLimit(int.MaxValue)
-            //     .SetDiskStorageSizeLimit(100 * 1024 * 1024); // 100MB
 
         }
 
