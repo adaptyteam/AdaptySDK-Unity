@@ -17,7 +17,6 @@ namespace AdaptySDK
             if (MemoryStorageTotalCostLimit.HasValue) node.Add("memory_storage_total_cost_limit", MemoryStorageTotalCostLimit.Value);
             if (MemoryStorageCountLimit.HasValue) node.Add("memory_storage_count_limit", MemoryStorageCountLimit.Value);
             if (DiskStorageSizeLimit.HasValue) node.Add("disk_storage_size_limit", DiskStorageSizeLimit.Value);
-
             return node;
         }
     }
