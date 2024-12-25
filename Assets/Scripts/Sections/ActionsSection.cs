@@ -29,6 +29,13 @@ public class ActionsSection : MonoBehaviour {
         });
     }
 
+    public void SetIntegrationIdentifierPressed() {
+        this.Router.SetIsLoading(true);
+        this.Listener.SetIntegrationIdentifier((error) => {
+            this.Router.SetIsLoading(false);
+        });
+    }
+
     public void UpdateAttributionPressed() {
         this.Router.SetIsLoading(true);
         this.Listener.UpdateAttribution((error) => {

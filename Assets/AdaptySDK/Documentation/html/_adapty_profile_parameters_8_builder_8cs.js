@@ -1,0 +1,5 @@
+var _adapty_profile_parameters_8_builder_8cs =
+[
+    [ "AdaptySDK.AdaptyProfileParameters", "class_adapty_s_d_k_1_1_adapty_profile_parameters.html", "class_adapty_s_d_k_1_1_adapty_profile_parameters" ],
+    [ "AdaptySDK.AdaptyProfileParameters.Builder", "class_adapty_s_d_k_1_1_adapty_profile_parameters_1_1_builder.html", "class_adapty_s_d_k_1_1_adapty_profile_parameters_1_1_builder" ]
+];

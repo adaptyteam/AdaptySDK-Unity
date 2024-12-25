@@ -1,0 +1,28 @@
+var class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder =
+[
+    [ "Builder", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#abf6595d33a2f86a6dcf87d6ec252e49d", null ],
+    [ "Build", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a95f86acc3df7a0b616a4b392df4d0c98", null ],
+    [ "SetAPIKey", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#aca8cd47d97bc9243f28c8a703fffaed1", null ],
+    [ "SetBackendBaseUrl", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a4de67f357e36bdd32e7f7ced09d55e15", null ],
+    [ "SetBackendConfigsBaseUrl", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a860dc22111b78572c9df00d6411193b2", null ],
+    [ "SetBackendFallbackBaseUrl", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a17b96951603683fcd728b87b70634060", null ],
+    [ "SetBackendProxy", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#ada9754f0a01d4565008c5a0e4b4fdb01", null ],
+    [ "SetCustomerUserId", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a1316a332e41fc8d8b9336f4836e7352e", null ],
+    [ "SetIDFACollectionDisabled", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a3510adea563b290f54b8203787724a4a", null ],
+    [ "SetIPAddressCollectionDisabled", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a124694a38661b394df0f4ed6d8d39f63", null ],
+    [ "SetObserverMode", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#af7f7e1f367269d0f60f02c819a2c77c5", null ],
+    [ "SetServerCluster", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#aba53c3fbce4689eaeccfb89b36a7fde9", null ],
+    [ "ToString", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#ab7f550aa0c16f6206a357f7716c5de7f", null ],
+    [ "ApiKey", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#aca7208a049524bb80b7e2401903bc200", null ],
+    [ "BackendBaseUrl", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a3c7ece90a916a9774be6ce18fa45f9d0", null ],
+    [ "BackendConfigsBaseUrl", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a4d4045903ce48beebaf8f1ae4be285b2", null ],
+    [ "BackendFallbackBaseUrl", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a29bbef56d1c71fdacd39d9a2fa9d8e2d", null ],
+    [ "BackendProxyHost", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a7253746b98c9814ab944402b1cd7adbb", null ],
+    [ "BackendProxyPort", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a4797019fa4d98e88e898c3299dfebed0", null ],
+    [ "CustomerUserId", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a89233c131427c79befb5676079bee6fa", null ],
+    [ "IdfaCollectionDisabled", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#ab4d61443963f4b3492338ecfe9a3ad72", null ],
+    [ "IpAddressCollectionDisabled", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#adb99de4eb37192a63254c1dd4abafd68", null ],
+    [ "LogLevel", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a414ad3732af70922a36e43fb2c620103", null ],
+    [ "ObserverMode", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a2786545bf33a56e552a06bab5e9a05c7", null ],
+    [ "ServerCluster", "class_adapty_s_d_k_1_1_adapty_configuration_1_1_builder.html#a572e90e07a2d78f0170753091926821f", null ]
+];

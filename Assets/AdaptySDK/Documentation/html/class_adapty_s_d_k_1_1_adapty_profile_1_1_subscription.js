@@ -1,0 +1,25 @@
+var class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription =
+[
+    [ "ToString", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#ab9cce7abb5d09799fe0575d56b7aaee8", null ],
+    [ "ActivatedAt", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a0e337d3374e0a80f969b4d632e3bcd97", null ],
+    [ "ActiveIntroductoryOfferType", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a62f0b6fa3efeefc8cb21e0b0237bd8bb", null ],
+    [ "ActivePromotionalOfferId", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#ad0c57f903dcd426df84aabcdc92d13c8", null ],
+    [ "ActivePromotionalOfferType", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#ad6da49f89a45b569756ec314bfa5ce23", null ],
+    [ "BillingIssueDetectedAt", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a49d3f2506226f24282fe5ea4f5a564ad", null ],
+    [ "CancellationReason", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a98cef8cc7b7a9dd5d91e8efc9190b422", null ],
+    [ "ExpiresAt", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a6d523016bc5421bf2fce506f8b57fa77", null ],
+    [ "IsActive", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a44e9fc7747e1f0a62c9a3a200117b796", null ],
+    [ "IsInGracePeriod", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a03a8f930c67f7251705f49b74daf64a6", null ],
+    [ "IsLifetime", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a4e22f16d189d8219038e04a3aa63795c", null ],
+    [ "IsRefund", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#ac13c4f679420b72b3e05ad5093249766", null ],
+    [ "IsSandbox", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#ad831282792a3085a3e14dc0f1099a749", null ],
+    [ "OfferId", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a32827a8d097e5a54e9be81189a2b77c3", null ],
+    [ "RenewedAt", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a2b224ffd5fcf2a7861bbb76298327776", null ],
+    [ "StartsAt", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a96dd364771df9a82cc3c93f62add2fb1", null ],
+    [ "Store", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a2208822c04455b7c4501868ea2c152d7", null ],
+    [ "UnsubscribedAt", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a4a8c11d4a479e7cd8030fa41531b4f24", null ],
+    [ "VendorOriginalTransactionId", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a7adb464f3d77e7f4c5e8d1a32053f4f0", null ],
+    [ "VendorProductId", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a3fc6e27cbcaca46e13cdfd9a1391aa28", null ],
+    [ "VendorTransactionId", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a6be497646fa2844dca447eee53298529", null ],
+    [ "WillRenew", "class_adapty_s_d_k_1_1_adapty_profile_1_1_subscription.html#a992ccb1dd48e6814d5312261334de5bb", null ]
+];
