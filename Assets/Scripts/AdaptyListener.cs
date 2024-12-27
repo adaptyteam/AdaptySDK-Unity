@@ -451,6 +451,23 @@ namespace AdaptyExample
                     view.Dismiss(null);
                     break;
                 case AdaptyUIUserActionType.OpenUrl:
+                    var urlString = action.Value;
+                    var dialog = new AdaptyUIDialogConfiguration()
+                        .SetTitle("Open URL?")
+                        .SetContent(urlString)
+                        .SetDefaultActionTitle("Cancel")
+                        .SetSecondaryActionTitle("OK");
+
+                    AdaptyUI.ShowDialog(view, dialog, (action, error) => {
+                        switch (action) {
+                            case AdaptyUIDialogActionType.Primary:
+                                break;
+                            case AdaptyUIDialogActionType.Secondary:
+                                Application.OpenURL(urlString);
+                                break;
+                        }
+                    });
+
                     break;
                 default:
                     break;

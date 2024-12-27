@@ -67,6 +67,11 @@ public class CustomPaywallSection : MonoBehaviour
         var paywallId = this.PaywallIdTextField.text;
         var locale = this.LocaleTextField.text;
 
+        if (locale != null && locale.Length == 0)
+        {
+            locale = null;
+        }
+
         if (paywallId == null || paywallId.Length == 0)
         {
             return;

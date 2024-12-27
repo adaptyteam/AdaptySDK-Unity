@@ -36,7 +36,7 @@ public class PaywallSection : MonoBehaviour
     private void OnAdaptyInitialized()
     {
         this.Listener.OnInitializeFinished -= OnAdaptyInitialized;
-        
+
         this.LoadPaywallForDefaultAudience();
         this.LoadPaywall();
     }
@@ -60,6 +60,8 @@ public class PaywallSection : MonoBehaviour
 
     public void LoadPaywallForDefaultAudience()
     {
+        if (this.m_paywallId == null) return;
+
         this.Router.SetIsLoading(true);
 
         this.Listener.GetPaywallForDefaultAudience(this.m_paywallId, this.m_localeId, AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) =>
@@ -79,9 +81,23 @@ public class PaywallSection : MonoBehaviour
 
     public void LoadPaywall()
     {
+        var fetchPolicy = AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData;
+        var paywallId = this.m_paywallId;
+        var locale = this.m_localeId;
+
+        if (locale != null && locale.Length == 0)
+        {
+            locale = null;
+        }
+
+        if (paywallId == null || paywallId.Length == 0)
+        {
+            return;
+        }
+
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(this.m_paywallId, this.m_localeId, AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) =>
+        this.Listener.GetPaywall(paywallId, locale, fetchPolicy, (paywall) =>
         {
             if (paywall == null)
             {
