@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
 	<androidPackages>
-		<androidPackage spec="io.adapty:android-sdk:2.9.1">
+		<androidPackage spec="io.adapty:android-sdk:3.3.0-SNAPSHOT">
 			<repositories>
-				<repository>https://repo.maven.apache.org/maven2/</repository>
+				<repository>file:///${PROJECT_DIR}/Assets/AdaptySDK/Plugins/Android/Local</repository>
 			</repositories>
+			<dependencies>
+				<dependency>true</dependency>
+			</dependencies>
+		</androidPackage>
+		<androidPackage spec="io.adapty:android-ui:3.3.0-SNAPSHOT">
+			<repositories>
+				<repository>file:///${PROJECT_DIR}/Assets/AdaptySDK/Plugins/Android/Local</repository>
+				<!-- <repository>file:/$HOME/.m2/repository/</repository> -->
+				<!-- <repository>https://repo.maven.apache.org/maven2/</repository> -->
+			</repositories>
+			<dependencies>
+				<dependency>true</dependency>
+			</dependencies>
+		</androidPackage>
+		<androidPackage spec="io.adapty.internal:crossplatform:3.3.0">
+			<repositories>
+				<repository>file:///${PROJECT_DIR}/Assets/AdaptySDK/Plugins/Android/Local</repository>
+			</repositories>
+			<dependencies>
+				<dependency>true</dependency>
+			</dependencies>
 		</androidPackage>
 	</androidPackages>
 	<iosPods>
