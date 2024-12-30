@@ -146,7 +146,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void GetPaywallForDefaultAudience(string placementId, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
            GetPaywallForDefaultAudience(placementId, null, null, completionHandler);
-        
+
         /// <summary>
         /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
         /// </summary>
@@ -158,7 +158,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void GetPaywallForDefaultAudience(string placementId, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
             GetPaywallForDefaultAudience(placementId, null, fetchPolicy, completionHandler);
-        
+
         /// <summary>
         /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
         /// </summary>
@@ -526,6 +526,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void PresentCodeRedemptionSheet(Action<AdaptyError> completionHandler)
         {
+#if UNITY_IOS && !UNITY_EDITOR
             Request.Send(
                 "present_code_redemption_sheet",
                 null,
@@ -541,6 +542,16 @@ namespace AdaptySDK
                         throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)", e);
                     }
                 });
+#else
+            try
+            {
+                completionHandler?.Invoke(null);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)", e);
+            }
+#endif
         }
 
         /// <summary>
@@ -646,7 +657,12 @@ namespace AdaptySDK
         public static void SetFallbackPaywalls(string fileName, Action<AdaptyError> completionHandler)
         {
             var parameters = new JSONObject();
+
+#if UNITY_IOS && !UNITY_EDITOR
             parameters.Add("path", UnityEngine.Application.dataPath + "/Raw/" + fileName);
+#elif UNITY_ANDROID && !UNITY_EDITOR
+            parameters.Add("path", "jar:file://" + Application.dataPath + "!/assets");
+#endif
 
             Request.Send(
                 "set_fallback_paywalls",
