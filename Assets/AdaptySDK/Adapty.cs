@@ -661,7 +661,7 @@ namespace AdaptySDK
 #if UNITY_IOS && !UNITY_EDITOR
             parameters.Add("path", UnityEngine.Application.dataPath + "/Raw/" + fileName);
 #elif UNITY_ANDROID && !UNITY_EDITOR
-            parameters.Add("path", "jar:file://" + Application.dataPath + "!/assets");
+            parameters.Add("path", "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + fileName);
 #endif
 
             Request.Send(

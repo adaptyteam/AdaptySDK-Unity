@@ -50,7 +50,7 @@ namespace AdaptySDK
 #if UNITY_IOS
             IsFamilyShareable = jsonNode.GetBoolean("is_family_shareable");
 #else
-            IsFamilyShareable = false
+            IsFamilyShareable = false;
 #endif
             RegionCode = jsonNode.GetStringIfPresent("region_code");
             Price = jsonNode.GetAdaptyPrice("price");

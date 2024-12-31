@@ -26,7 +26,7 @@ namespace AdaptySDK
             BasePlanId = jsonNode.GetStringIfPresent("base_plan_id");
 
 #if UNITY_ANDROID
-            RenewalType = jsonNode.GetAdaptySubscriptionRenewal("renewal_type");
+            RenewalType = jsonNode.GetAdaptySubscriptionRenewalType("renewal_type");
             BasePlanId = jsonNode.GetString("base_plan_id");
 #else
             RenewalType = AdaptySubscriptionRenewalType.Autorenewable;
