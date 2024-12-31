@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using AdaptyExample;
 using AdaptySDK;
 using TMPro;
@@ -100,7 +101,7 @@ public class CustomPaywallSection : MonoBehaviour
         {
             if (products != null)
             {
-                this.UpdatePaywallData(paywall, products);
+                StartCoroutine(DelayedUpdate(paywall, products));
             }
             else
             {
@@ -109,6 +110,12 @@ public class CustomPaywallSection : MonoBehaviour
 
             this.Router.SetIsLoading(false);
         });
+    }
+    
+    private IEnumerator DelayedUpdate(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products)
+    {
+        yield return new WaitForEndOfFrame();
+        this.UpdatePaywallData(paywall, products);
     }
 
     private void UpdatePaywallInitial()

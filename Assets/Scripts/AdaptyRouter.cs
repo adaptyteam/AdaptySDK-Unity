@@ -1,5 +1,6 @@
 using AdaptySDK;
 using UnityEngine;
+using System.Collections;
 
 namespace AdaptyExample
 {
@@ -151,12 +152,24 @@ namespace AdaptyExample
 
         public void ShowAlertPanel(string text)
         {
+            StartCoroutine(DelayedShowAlertPanel(text));
+        }
+        
+        private IEnumerator DelayedShowAlertPanel(string text)
+        {
+            yield return new WaitForEndOfFrame();
             this.AlertPanel.Text.SetText(text);
             this.AlertPanel.gameObject.SetActive(true);
         }
 
         public void HideAlertPanel()
         {
+            StartCoroutine(DelayedHideAlertPanel());
+        }
+        
+        private IEnumerator DelayedHideAlertPanel()
+        {
+            yield return new WaitForEndOfFrame();
             this.AlertPanel.gameObject.SetActive(false);
         }
     }
