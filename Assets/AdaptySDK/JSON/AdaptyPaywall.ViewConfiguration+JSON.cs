@@ -9,6 +9,7 @@ using System;
 
 namespace AdaptySDK
 {
+    using System.Runtime.Serialization.Json;
     using AdaptySDK.SimpleJSON;
 
     public partial class AdaptyPaywall
@@ -20,6 +21,7 @@ namespace AdaptySDK
                 var node = new JSONObject();
                 node.Add("paywall_builder_id", PaywallBuilderId);
                 node.Add("lang", Lang);
+                if (Json != null) node.Add("json", Json);
                 return node;
             }
 
@@ -27,6 +29,7 @@ namespace AdaptySDK
             {
                 PaywallBuilderId = jsonNode.GetString("paywall_builder_id");
                 Lang = jsonNode.GetString("lang");
+                Json = jsonNode.GetStringIfPresent("json");
             }
         }
     }

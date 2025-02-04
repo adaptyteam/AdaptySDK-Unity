@@ -14,6 +14,8 @@ namespace AdaptySDK
             internal readonly string PaywallBuilderId;
             internal readonly string Lang;
 
+            internal readonly string Json;
+
             public override string ToString() => 
                 $"{nameof(PaywallBuilderId)}: {PaywallBuilderId}, " +
                 $"{nameof(Lang)}: {Lang}";

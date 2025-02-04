@@ -5,6 +5,8 @@
 //  Created by Aleksei Valiano on 10.12.2024.
 //
 
+using System;
+
 namespace AdaptySDK
 {
     public partial class AdaptyConfiguration
@@ -14,7 +16,8 @@ namespace AdaptySDK
             ApiKey = builder.ApiKey;
             CustomerUserId = builder.CustomerUserId;
             ObserverMode = builder.ObserverMode;
-            IdfaCollectionDisabled = builder.IdfaCollectionDisabled;
+            AppleIdfaCollectionDisabled = builder.AppleIdfaCollectionDisabled;
+            GoogleAdvertisingIdCollectionDisabled = builder.GoogleAdvertisingIdCollectionDisabled;
             IpAddressCollectionDisabled = builder.IpAddressCollectionDisabled;
             BackendBaseUrl = builder.BackendBaseUrl;
             BackendFallbackBaseUrl = builder.BackendFallbackBaseUrl;
@@ -31,7 +34,15 @@ namespace AdaptySDK
             public string ApiKey;
             public string CustomerUserId; //nullable
             public bool? ObserverMode;
-            public bool? IdfaCollectionDisabled;
+
+            [Obsolete("IdfaCollectionDisabled is deprecated, please use AppleIdfaCollectionDisabled instead.")]
+            public bool? IdfaCollectionDisabled
+            {
+                get { return AppleIdfaCollectionDisabled; }
+                set { AppleIdfaCollectionDisabled = value; }
+            }
+            public bool? AppleIdfaCollectionDisabled;
+            public bool? GoogleAdvertisingIdCollectionDisabled;
             public bool? IpAddressCollectionDisabled;
             public AdaptyServerCluster? ServerCluster;
             public string BackendBaseUrl; //nullable
@@ -54,7 +65,8 @@ namespace AdaptySDK
                 $"{nameof(ApiKey)}: {ApiKey}, " +
                 $"{nameof(CustomerUserId)}: {CustomerUserId}, " +
                 $"{nameof(ObserverMode)}: {ObserverMode}, " +
-                $"{nameof(IdfaCollectionDisabled)}: {IdfaCollectionDisabled}, " +
+                $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, " +
+                $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, " +
                 $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, " +
                 $"{nameof(ServerCluster)}: {ServerCluster}, " +
                 $"{nameof(BackendBaseUrl)}: {BackendBaseUrl}, " +
@@ -83,9 +95,21 @@ namespace AdaptySDK
                 return this;
             }
 
-            public Builder SetIDFACollectionDisabled(bool idfaCollectionDisabled)
+            [Obsolete("SetIDFACollectionDisabled is deprecated, please use SetAppleIDFACollectionDisabled instead.")]
+            public Builder SetIDFACollectionDisabled(bool appleIdfaCollectionDisabled)
             {
-                IdfaCollectionDisabled = idfaCollectionDisabled;
+                return SetAppleIDFACollectionDisabled(appleIdfaCollectionDisabled);
+            }
+
+            public Builder SetAppleIDFACollectionDisabled(bool appleIdfaCollectionDisabled)
+            {
+                AppleIdfaCollectionDisabled = appleIdfaCollectionDisabled;
+                return this;
+            }
+
+            public Builder SetGoogleAdvertisingIdCollectionDisabled(bool googleAdvertisingIdCollectionDisabled)
+            {
+                GoogleAdvertisingIdCollectionDisabled = googleAdvertisingIdCollectionDisabled;
                 return this;
             }
 

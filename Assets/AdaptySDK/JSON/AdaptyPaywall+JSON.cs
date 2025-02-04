@@ -18,6 +18,7 @@ namespace AdaptySDK
             node.Add("developer_id", PlacementId);
             node.Add("paywall_id", _InstanceIdentity);
             node.Add("paywall_name", Name);
+            node.Add("audience_name", AudienceName);
             node.Add("ab_test_name", ABTestName);
             node.Add("variation_id", VariationId);
             node.Add("revision", Revision);
@@ -50,6 +51,7 @@ namespace AdaptySDK
             PlacementId = jsonNode.GetString("developer_id");
             _InstanceIdentity = jsonNode.GetString("paywall_id");
             Name = jsonNode.GetString("paywall_name");
+            AudienceName = jsonNode.GetString("audience_name");
             _Version = jsonNode.GetInteger("response_created_at");
             Revision = jsonNode.GetInteger("revision");
             VariationId = jsonNode.GetString("variation_id");

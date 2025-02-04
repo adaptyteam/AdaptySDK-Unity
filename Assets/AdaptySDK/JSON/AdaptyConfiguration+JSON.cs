@@ -16,7 +16,8 @@ namespace AdaptySDK
             node.Add("api_key", ApiKey);
             if (CustomerUserId != null) node.Add("customer_user_id", CustomerUserId);
             if (ObserverMode != null) node.Add("observer_mode", ObserverMode);
-            if (IdfaCollectionDisabled != null) node.Add("idfa_collection_disabled", IdfaCollectionDisabled);
+            if (AppleIdfaCollectionDisabled != null) node.Add("apple_idfa_collection_disabled", AppleIdfaCollectionDisabled);
+            if (GoogleAdvertisingIdCollectionDisabled != null) node.Add("google_adid_collection_disabled", GoogleAdvertisingIdCollectionDisabled);
             if (IpAddressCollectionDisabled != null) node.Add("ip_address_collection_disabled", IpAddressCollectionDisabled);
             if (LogLevel != null) node.Add("log_level", LogLevel.Value.ToJSONNode());
             if (ServerCluster != null) node.Add("server_cluster", ServerCluster.Value.ToJSONNode());

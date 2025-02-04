@@ -35,7 +35,8 @@ namespace AdaptyExample
                     .SetObserverMode(false)
                     .SetServerCluster(AdaptyServerCluster.Default)
                     .SetIPAddressCollectionDisabled(false)
-                    .SetIDFACollectionDisabled(false)
+                    .SetAppleIDFACollectionDisabled(false)
+                    .SetGoogleAdvertisingIdCollectionDisabled(false)
                     .SetActivateUI(true)
                     .SetAdaptyUIMediaCache(
                         100 * 1024 * 1024, // 100MB

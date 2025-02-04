@@ -12,7 +12,8 @@ namespace AdaptySDK
         private readonly string ApiKey;
         private readonly string CustomerUserId; //nullable
         private readonly bool? ObserverMode;
-        private readonly bool? IdfaCollectionDisabled;
+        private readonly bool? AppleIdfaCollectionDisabled;
+        private readonly bool? GoogleAdvertisingIdCollectionDisabled;
         private readonly bool? IpAddressCollectionDisabled;
         private readonly AdaptyServerCluster? ServerCluster;
         private readonly string BackendBaseUrl; //nullable
@@ -29,7 +30,8 @@ namespace AdaptySDK
             $"{nameof(ApiKey)}: {ApiKey}, " +
             $"{nameof(CustomerUserId)}: {CustomerUserId}, " +
             $"{nameof(ObserverMode)}: {ObserverMode}, " +
-            $"{nameof(IdfaCollectionDisabled)}: {IdfaCollectionDisabled}, " +
+            $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, " +
+            $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, " +
             $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, " +            
             $"{nameof(ServerCluster)}: {ServerCluster}, " +
             $"{nameof(BackendBaseUrl)}: {BackendBaseUrl}, " +
