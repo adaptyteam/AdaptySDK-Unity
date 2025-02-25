@@ -21,6 +21,8 @@ namespace AdaptySDK
         /// Paywall name
         public readonly string Name;
 
+        public readonly string AudienceName;
+
         /// Paywall A/B test name
         public readonly string ABTestName;
 
