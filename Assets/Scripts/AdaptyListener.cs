@@ -278,10 +278,15 @@ namespace AdaptyExample
         {
             this.LogMethodRequest("ReportTransaction");
 
-            Adapty.ReportTransaction("transaction_id", "variation_id", (error) =>
+            Adapty.ReportTransaction("transaction_id", "variation_id", (profile, error) =>
             {
                 this.LogMethodResult("ReportTransaction", error);
                 completionHandler.Invoke(error);
+
+                if (profile != null)
+                {
+                    this.Router.SetProfile(profile);
+                }
             });
         }
 
