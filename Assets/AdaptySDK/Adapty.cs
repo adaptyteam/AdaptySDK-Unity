@@ -561,7 +561,7 @@ namespace AdaptySDK
         /// </summary>
         /// <param name="transactionId">A string identifier of your purchased transaction <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> for iOS or string identifier (`purchase.getOrderId()`) of the purchase, where the purchase is an instance of the billing library Purchase class for Android.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void ReportTransaction(string transactionId, Action<AdaptyError> completionHandler) =>
+        public static void ReportTransaction(string transactionId, Action<AdaptyProfile, AdaptyError> completionHandler) =>
             ReportTransaction(transactionId, null, completionHandler);
 
         /// <summary>
@@ -572,7 +572,7 @@ namespace AdaptySDK
         /// <param name="transactionId">A string identifier of your purchased transaction <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> for iOS or string identifier (`purchase.getOrderId()`) of the purchase, where the purchase is an instance of the billing library Purchase class for Android.</param>
         /// <param name="variationId">A string identifier of variation. You can get it using variationId property of AdaptyPaywall.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void ReportTransaction(string transactionId, string variationId, Action<AdaptyError> completionHandler)
+        public static void ReportTransaction(string transactionId, string variationId, Action<AdaptyProfile, AdaptyError> completionHandler)
         {
             var parameters = new JSONObject();
             parameters.Add("transaction_id", transactionId);
@@ -581,16 +581,16 @@ namespace AdaptySDK
             Request.Send(
                 "report_transaction",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
+                JSONNodeExtensions.GetAdaptyProfile,
                 (value, error) =>
                 {
                     try
                     {
-                        completionHandler?.Invoke(error);
+                        completionHandler?.Invoke(value, error);
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.ReportTransaction(..)", e);
+                        throw new Exception("Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.ReportTransaction(..)", e);
                     }
                 });
         }
