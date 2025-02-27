@@ -581,7 +581,7 @@ namespace AdaptySDK
             Request.Send(
                 "report_transaction",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
+                JSONNodeExtensions.GetAdaptyProfile,
                 (value, error) =>
                 {
                     try
