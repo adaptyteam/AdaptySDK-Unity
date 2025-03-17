@@ -32,7 +32,7 @@ namespace AdaptySDK
                 node.Add("remote_config", remoteConfig);
             }
 
-            node.Add("paywall_builder", _ViewConfiguration.ToJSONNode());
+            if (_ViewConfiguration != null) node.Add("paywall_builder", _ViewConfiguration.ToJSONNode());
 
             var products = new JSONArray();
             foreach (var item in _Products)
