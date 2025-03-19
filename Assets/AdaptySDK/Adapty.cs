@@ -463,6 +463,50 @@ namespace AdaptySDK
                 });
         }
 
+        public static void UpdateAppStoreCollectingRefundDataConsent(Boolean consent, Action<AdaptyError> completionHandler)
+        {
+            var parameters = new JSONObject();
+            parameters.Add("consent", consent);
+
+            Request.Send(
+                "update_collecting_refund_data_consent",
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)", e);
+                    }
+                });
+        }
+
+          public static void UpdateAppStoreRefundPreference(AdaptyRefundPreference refundPreference, Action<AdaptyError> completionHandler)
+        {
+            var parameters = new JSONObject();
+            parameters.Add("refund_preference", refundPreference.ToJSONNode());
+
+            Request.Send(
+                "update_refund_preference",
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)", e);
+                    }
+                });
+        }
+
         /// <summary>
         /// To make the purchase, you have to call this method.
         /// </summary>
