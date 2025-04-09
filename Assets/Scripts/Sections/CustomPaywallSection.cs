@@ -19,6 +19,7 @@ public class CustomPaywallSection : MonoBehaviour
     public TextMeshProUGUI VariationIdText;
     public TextMeshProUGUI RevisionText;
     public TextMeshProUGUI LocaleText;
+    public TextMeshProUGUI AudienceNameText;
 
     public TMP_Dropdown FetchPolicyDropdown;
     public TMP_InputField PaywallIdTextField;
@@ -149,6 +150,7 @@ public class CustomPaywallSection : MonoBehaviour
         this.LoadingStatusText.SetText("FAIL");
         this.VariationIdText.SetText("null");
         this.RevisionText.SetText("null");
+        this.AudienceNameText.SetText("null");
     }
 
     private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products)
@@ -158,6 +160,7 @@ public class CustomPaywallSection : MonoBehaviour
         this.VariationIdText.SetText(paywall.VariationId);
         this.RevisionText.SetText(paywall.Revision.ToString());
         this.LocaleText.SetText(paywall.Locale);
+        this.AudienceNameText.SetText(paywall.AudienceName);
 
         m_productButtons.ForEach((button) =>
         {
@@ -173,7 +176,7 @@ public class CustomPaywallSection : MonoBehaviour
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 870.0f + products.Count * 150.0f + 80.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 940.0f + products.Count * 150.0f + 80.0f);
     }
 
     private ProductButton CreateProductButton(AdaptyPaywallProduct product, float index)

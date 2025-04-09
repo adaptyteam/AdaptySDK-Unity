@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using AdaptyExample;
@@ -18,6 +19,20 @@ public class ActionsSection : MonoBehaviour {
     public void RestorePurchasesPressed() {
         this.Router.SetIsLoading(true);
         this.Listener.RestorePurchases((error) => {
+            this.Router.SetIsLoading(false);
+        });
+    }
+
+    public void UpdateAppStoreCollectingRefundDataConsent(Boolean value) {
+        this.Router.SetIsLoading(true);
+        this.Listener.UpdateAppStoreCollectingRefundDataConsent(value, (error) => {
+            this.Router.SetIsLoading(false);
+        });
+    }
+
+    public void UpdateAppStoreRefundPreference(int value) {
+        this.Router.SetIsLoading(true);
+        this.Listener.UpdateAppStoreRefundPreference(value, (error) => {
             this.Router.SetIsLoading(false);
         });
     }

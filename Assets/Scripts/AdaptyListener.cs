@@ -323,6 +323,45 @@ namespace AdaptyExample
             });
         }
 
+        public void UpdateAppStoreCollectingRefundDataConsent(Boolean value, Action<AdaptyError> completionHandler)
+        {
+            this.LogMethodRequest("UpdateAppStoreCollectingRefundDataConsent");
+
+            Adapty.UpdateAppStoreCollectingRefundDataConsent(value, (error) =>
+            {
+                this.LogMethodResult("UpdateAppStoreCollectingRefundDataConsent", error);
+                completionHandler.Invoke(error);
+            });
+        }
+
+        public void UpdateAppStoreRefundPreference(int value, Action<AdaptyError> completionHandler)
+        {
+            this.LogMethodRequest("UpdateAppStoreRefundPreference");
+
+
+            AdaptyRefundPreference preferenceValue = AdaptyRefundPreference.NoPreference;
+
+            switch (value)
+            {
+                case 1:
+                    preferenceValue = AdaptyRefundPreference.Decline;
+                    break;
+                case 2:
+                    preferenceValue = AdaptyRefundPreference.Grant;
+                    break;
+
+                default:
+                    preferenceValue = AdaptyRefundPreference.NoPreference;
+                    break;
+            }
+
+            Adapty.UpdateAppStoreRefundPreference(preferenceValue, (error) =>
+            {
+                this.LogMethodResult("UpdateAppStoreRefundPreference", error);
+                completionHandler.Invoke(error);
+            });
+        }
+
         public void PresentCodeRedemptionSheet()
         {
             this.LogMethodRequest("PresentCodeRedemptionSheet");
@@ -396,14 +435,14 @@ namespace AdaptyExample
                     }
                 )
                 .SetCustomTimers(
-                    new Dictionary<string, DateTime> { 
-                        { "CUSTOM_TIMER_24H", DateTime.Now.AddSeconds(86400) }, 
-                        { "CUSTOM_TIMER_10H", DateTime.Now.AddSeconds(36000) }, 
-                        { "CUSTOM_TIMER_1H", DateTime.Now.AddSeconds(3600) }, 
-                        { "CUSTOM_TIMER_10M", DateTime.Now.AddSeconds(600) }, 
-                        { "CUSTOM_TIMER_1M", DateTime.Now.AddSeconds(60) }, 
-                        { "CUSTOM_TIMER_10S", DateTime.Now.AddSeconds(10) }, 
-                        { "CUSTOM_TIMER_5S", DateTime.Now.AddSeconds(5) } 
+                    new Dictionary<string, DateTime> {
+                        { "CUSTOM_TIMER_24H", DateTime.Now.AddSeconds(86400) },
+                        { "CUSTOM_TIMER_10H", DateTime.Now.AddSeconds(36000) },
+                        { "CUSTOM_TIMER_1H", DateTime.Now.AddSeconds(3600) },
+                        { "CUSTOM_TIMER_10M", DateTime.Now.AddSeconds(600) },
+                        { "CUSTOM_TIMER_1M", DateTime.Now.AddSeconds(60) },
+                        { "CUSTOM_TIMER_10S", DateTime.Now.AddSeconds(10) },
+                        { "CUSTOM_TIMER_5S", DateTime.Now.AddSeconds(5) }
                     }
                 )
                 .SetLoadTimeout(new TimeSpan(0, 0, 3));
@@ -464,8 +503,10 @@ namespace AdaptyExample
                         .SetDefaultActionTitle("Cancel")
                         .SetSecondaryActionTitle("OK");
 
-                    AdaptyUI.ShowDialog(view, dialog, (action, error) => {
-                        switch (action) {
+                    AdaptyUI.ShowDialog(view, dialog, (action, error) =>
+                    {
+                        switch (action)
+                        {
                             case AdaptyUIDialogActionType.Primary:
                                 break;
                             case AdaptyUIDialogActionType.Secondary:

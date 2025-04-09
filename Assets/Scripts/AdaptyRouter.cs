@@ -154,7 +154,7 @@ namespace AdaptyExample
         {
             StartCoroutine(DelayedShowAlertPanel(text));
         }
-        
+
         private IEnumerator DelayedShowAlertPanel(string text)
         {
             yield return new WaitForEndOfFrame();
@@ -166,7 +166,7 @@ namespace AdaptyExample
         {
             StartCoroutine(DelayedHideAlertPanel());
         }
-        
+
         private IEnumerator DelayedHideAlertPanel()
         {
             yield return new WaitForEndOfFrame();

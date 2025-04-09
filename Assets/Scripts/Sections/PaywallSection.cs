@@ -6,6 +6,7 @@ using AdaptySDK;
 using TMPro;
 using UnityEngine;
 using static AdaptySDK.Adapty;
+using Unity.VisualScripting;
 
 public class PaywallSection : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class PaywallSection : MonoBehaviour
     public TextMeshProUGUI VariationIdText;
     public TextMeshProUGUI RevisionText;
     public TextMeshProUGUI LocaleText;
+    public TextMeshProUGUI AudienceNameText;
 
     private string m_paywallId = "example_ab_test";
     private string m_localeId = "fr";
@@ -159,6 +161,7 @@ public class PaywallSection : MonoBehaviour
         this.LoadingStatusText.SetText("FAIL");
         this.VariationIdText.SetText("null");
         this.RevisionText.SetText("null");
+        this.AudienceNameText.SetText("null");
     }
 
     private void UpdatePaywallData(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products)
@@ -167,6 +170,7 @@ public class PaywallSection : MonoBehaviour
         this.VariationIdText.SetText(paywall.VariationId);
         this.RevisionText.SetText(paywall.Revision.ToString());
         this.LocaleText.SetText(paywall.Locale);
+        this.AudienceNameText.SetText(paywall.AudienceName);
 
         m_productButtons.ForEach((button) =>
         {
@@ -182,7 +186,7 @@ public class PaywallSection : MonoBehaviour
         }
 
         var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 610.0f + products.Count * 150.0f);
+        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 680.0f + 10 * 150.0f);
     }
 
     private ProductButton CreateProductButton(AdaptyPaywallProduct product, float index)
@@ -191,7 +195,7 @@ public class PaywallSection : MonoBehaviour
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
         productButtonRect.SetParent(this.ContainerTransform);
-        productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -300.0f - 150.0f * index);
+        productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -370.0f - 150.0f * index);
         productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 140.0f);
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
