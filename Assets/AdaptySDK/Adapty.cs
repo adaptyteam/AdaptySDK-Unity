@@ -463,8 +463,17 @@ namespace AdaptySDK
                 });
         }
 
+        /// <summary>
+        /// Call this method to update the current user's refund data consent.
+        /// </summary>
+        /// <remarks>
+        /// Read more on the <see href="https://adapty.io/docs/refund-saver#obtain-user-consent">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="consent">a Boolean value wehter user gave the consent or not.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateAppStoreCollectingRefundDataConsent(Boolean consent, Action<AdaptyError> completionHandler)
         {
+#if UNITY_IOS && !UNITY_EDITOR
             var parameters = new JSONObject();
             parameters.Add("consent", consent);
 
@@ -483,10 +492,29 @@ namespace AdaptySDK
                         throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)", e);
                     }
                 });
+#else
+            try
+            {
+                completionHandler?.Invoke(null);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)", e);
+            }
+#endif
         }
 
-          public static void UpdateAppStoreRefundPreference(AdaptyRefundPreference refundPreference, Action<AdaptyError> completionHandler)
+        /// <summary>
+        /// Call this method to set the refund preference individually for current user.
+        /// </summary>
+        /// <remarks>
+        /// Read more on the <see href="https://adapty.io/docs/refund-saver#set-refund-behavior-for-a-specific-user-in-the-dashboard">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="refundPreference"> the [AdaptyRefundPreference] value.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void UpdateAppStoreRefundPreference(AdaptyRefundPreference refundPreference, Action<AdaptyError> completionHandler)
         {
+#if UNITY_IOS && !UNITY_EDITOR
             var parameters = new JSONObject();
             parameters.Add("refund_preference", refundPreference.ToJSONNode());
 
@@ -505,6 +533,16 @@ namespace AdaptySDK
                         throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)", e);
                     }
                 });
+#else
+            try
+            {
+                completionHandler?.Invoke(null);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)", e);
+            }
+#endif
         }
 
         /// <summary>
