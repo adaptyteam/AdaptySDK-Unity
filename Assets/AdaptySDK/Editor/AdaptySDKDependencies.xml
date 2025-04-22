@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
 	<androidPackages>
-		<androidPackage spec="io.adapty:android-sdk:3.3.0">
+		<androidPackage spec="io.adapty:android-sdk:3.4.0">
 			<repositories>
 				<repository>https://repo.maven.apache.org/maven2/</repository>
 			</repositories>
 		</androidPackage>
-		<androidPackage spec="io.adapty:android-ui:3.3.0">
+		<androidPackage spec="io.adapty:android-ui:3.4.0">
 			<repositories>
 				<repository>https://repo.maven.apache.org/maven2/</repository> 
 			</repositories>
 		</androidPackage>
-		<androidPackage spec="io.adapty.internal:crossplatform:3.3.0">
+		<androidPackage spec="io.adapty.internal:crossplatform:3.4.0">
 			<repositories>
 				<repository>https://repo.maven.apache.org/maven2/</repository>
 			</repositories>
