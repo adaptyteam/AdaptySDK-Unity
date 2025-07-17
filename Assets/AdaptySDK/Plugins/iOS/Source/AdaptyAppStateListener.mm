@@ -3,13 +3,13 @@
 #import "AppDelegateListener.h"
 #include "UnityFramework/UnityFramework-Swift.h"
 
-@interface ApplicationStateListener : NSObject <AppDelegateListener>
+@interface AdaptyApplicationStateListener : NSObject <AppDelegateListener>
 + (instancetype)sharedInstance;
 @end
 
-@implementation ApplicationStateListener
+@implementation AdaptyApplicationStateListener
 
-static ApplicationStateListener *_applicationStateListenerInstance = [[ApplicationStateListener alloc] init];
+static AdaptyApplicationStateListener *_applicationStateListenerInstance = [[AdaptyApplicationStateListener alloc] init];
 
 + (instancetype)sharedInstance {
     return _applicationStateListenerInstance;
