@@ -21,7 +21,7 @@ namespace AdaptySDK
         /// <summary>
         /// The version of the Adapty SDK.
         /// </summary>
-        public static readonly string SDKVersion = "3.4.0";
+        public static readonly string SDKVersion = "3.4.1";
 
 
         /// <summary>
