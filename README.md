@@ -81,16 +81,15 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 
 Please refer to our documentation to install and configure Adapty SDK. Set up purchases in hours instead of weeks :rocket:
 
-- [Installation](https://docs.adapty.io/docs/unity-installation)
-- [Configuring Adapty SDK](https://docs.adapty.io/docs/unity-configuring)
-- [Displaying Paywalls & Products](https://docs.adapty.io/docs/unity-displaying-products)
-- [Making Purchases](https://docs.adapty.io/docs/unity-making-purchases)
-- [Subscription Status](https://docs.adapty.io/docs/unity-subscription-status)
-- [Identifying Users](https://docs.adapty.io/docs/unity-identifying-users)
-- [Attribution Integration](https://docs.adapty.io/docs/attribution-integration)
-- [Setting User Attributes](https://docs.adapty.io/docs/setting-user-attributes)
-- [Analytics Integration](https://docs.adapty.io/docs/analytics-integration)
-- [Observer Mode](https://docs.adapty.io/docs/unity-observer-mode)
+- [Install & configure](https://adapty.io/docs/sdk-installation-unity)
+- [Displaying Paywalls & Products](https://adapty.io/docs/unity-present-paywalls)
+- [Making Purchases](https://adapty.io/docs/unity-making-purchases)
+- [Subscription Status](https://adapty.io/docs/unity-check-subscription-status)
+- [Identifying Users](https://adapty.io/docs/unity-identifying-users)
+- [Attribution Integration](https://adapty.io/docs/attribution-integration)
+- [Setting User Attributes](https://adapty.io/docs/unity-setting-user-attributes)
+- [Analytics Integration](https://adapty.io/docs/analytics-integration)
+- [Observer Mode](https://adapty.io/docs/implement-observer-mode-unity)
 
 ## Contributing
 
