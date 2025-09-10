@@ -1,5 +1,5 @@
 //
-//  AdaptyUICreateViewParameters.cs
+//  AdaptyUICreatePaywallViewParameters.cs
 //  AdaptySDK
 //
 //  Created by Aleksei Valiano on 18.12.2024.
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace AdaptySDK
 {
-    public partial class AdaptyUICreateViewParameters
+    public partial class AdaptyUICreatePaywallViewParameters
     {
         public TimeSpan? LoadTimeout;
         public bool? PreloadProducts;
@@ -26,31 +26,31 @@ namespace AdaptySDK
             $"{nameof(CustomTimers)}: {CustomTimers}, " +
             $"{nameof(AndroidPersonalizedOffers)}: {AndroidPersonalizedOffers}";
 
-        public AdaptyUICreateViewParameters SetLoadTimeout(TimeSpan? loadTimeout)
+        public AdaptyUICreatePaywallViewParameters SetLoadTimeout(TimeSpan? loadTimeout)
         {
             LoadTimeout = loadTimeout;
             return this;
         }
 
-        public AdaptyUICreateViewParameters SetPreloadProducts(bool? preloadProducts)
+        public AdaptyUICreatePaywallViewParameters SetPreloadProducts(bool? preloadProducts)
         {
             PreloadProducts = preloadProducts;
             return this;
         }
 
-        public AdaptyUICreateViewParameters SetCustomTags(Dictionary<string, string> customTags)
+        public AdaptyUICreatePaywallViewParameters SetCustomTags(Dictionary<string, string> customTags)
         {
             CustomTags = customTags;
             return this;
         }
 
-        public AdaptyUICreateViewParameters SetCustomTimers(Dictionary<string, DateTime> customTimers)
+        public AdaptyUICreatePaywallViewParameters SetCustomTimers(Dictionary<string, DateTime> customTimers)
         {
             CustomTimers = customTimers;
             return this;
         }
 
-        public AdaptyUICreateViewParameters SetAndroidPersonalizedOffers(Dictionary<string, bool> androidPersonalizedOffers)
+        public AdaptyUICreatePaywallViewParameters SetAndroidPersonalizedOffers(Dictionary<string, bool> androidPersonalizedOffers)
         {
             AndroidPersonalizedOffers = androidPersonalizedOffers;
             return this;

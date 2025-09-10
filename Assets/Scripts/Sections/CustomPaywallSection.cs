@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using AdaptyExample;
 using AdaptySDK;
 using TMPro;
@@ -29,10 +29,7 @@ public class CustomPaywallSection : MonoBehaviour
 
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
-    void Start()
-    {
-
-    }
+    void Start() { }
 
     public void LogShowPaywallPressed()
     {
@@ -42,24 +39,41 @@ public class CustomPaywallSection : MonoBehaviour
         }
 
         this.Router.SetIsLoading(true);
-        this.Listener.LogShowPaywall(m_paywall, (error) =>
-        {
-            this.Router.SetIsLoading(false);
-        });
+        this.Listener.LogShowPaywall(
+            m_paywall,
+            (error) =>
+            {
+                this.Router.SetIsLoading(false);
+            }
+        );
     }
 
-    AdaptyPaywallFetchPolicy CurrentFetchPolicy()
+    AdaptyPlacementFetchPolicy CurrentFetchPolicy()
     {
-        Debug.Log(string.Format("#CustomPaywallSection# value {0}", this.FetchPolicyDropdown.value));
+        Debug.Log(
+            string.Format("#CustomPaywallSection# value {0}", this.FetchPolicyDropdown.value)
+        );
 
         switch (this.FetchPolicyDropdown.value)
         {
-            case 0: return AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData;
-            case 1: return AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad;
-            case 2: return AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 10));
-            case 3: return AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 30));
-            case 4: return AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(new System.TimeSpan(0, 0, 120));
-            default: return AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData;
+            case 0:
+                return AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData;
+            case 1:
+                return AdaptyPlacementFetchPolicy.ReturnCacheDataElseLoad;
+            case 2:
+                return AdaptyPlacementFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(
+                    new System.TimeSpan(0, 0, 10)
+                );
+            case 3:
+                return AdaptyPlacementFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(
+                    new System.TimeSpan(0, 0, 30)
+                );
+            case 4:
+                return AdaptyPlacementFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(
+                    new System.TimeSpan(0, 0, 120)
+                );
+            default:
+                return AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData;
         }
     }
 
@@ -81,38 +95,46 @@ public class CustomPaywallSection : MonoBehaviour
 
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(paywallId, locale, fetchPolicy, (paywall) =>
-        {
-            if (paywall == null)
+        this.Listener.GetPaywall(
+            paywallId,
+            locale,
+            fetchPolicy,
+            (paywall) =>
             {
-                this.UpdatePaywallFail();
-                this.Router.SetIsLoading(false);
+                if (paywall == null)
+                {
+                    this.UpdatePaywallFail();
+                    this.Router.SetIsLoading(false);
+                }
+                else
+                {
+                    this.m_paywall = paywall;
+                    this.LoadProducts(paywall);
+                }
             }
-            else
-            {
-                this.m_paywall = paywall;
-                this.LoadProducts(paywall);
-            }
-        });
+        );
     }
 
     void LoadProducts(AdaptyPaywall paywall)
     {
-        this.Listener.GetPaywallProducts(paywall, (products) =>
-        {
-            if (products != null)
+        this.Listener.GetPaywallProducts(
+            paywall,
+            (products) =>
             {
-                StartCoroutine(DelayedUpdate(paywall, products));
-            }
-            else
-            {
-                this.UpdatePaywallFail();
-            }
+                if (products != null)
+                {
+                    StartCoroutine(DelayedUpdate(paywall, products));
+                }
+                else
+                {
+                    this.UpdatePaywallFail();
+                }
 
-            this.Router.SetIsLoading(false);
-        });
+                this.Router.SetIsLoading(false);
+            }
+        );
     }
-    
+
     private IEnumerator DelayedUpdate(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products)
     {
         yield return new WaitForEndOfFrame();
@@ -129,20 +151,24 @@ public class CustomPaywallSection : MonoBehaviour
 
     public void PresentPaywall()
     {
-        if (m_paywall == null) return;
+        if (m_paywall == null)
+            return;
 
-        this.Listener.CreatePaywallView(this.m_paywall, preloadProducts: false, (view) =>
-        {
-            if (view == null)
+        this.Listener.CreatePaywallView(
+            this.m_paywall,
+            preloadProducts: false,
+            (view) =>
             {
-
-                //this.UpdateViewFail(paywall);
+                if (view == null)
+                {
+                    //this.UpdateViewFail(paywall);
+                }
+                else
+                {
+                    view.Present((error) => { });
+                }
             }
-            else
-            {
-                view.Present((error) => { });
-            }
-        });
+        );
     }
 
     private void UpdatePaywallFail()
@@ -162,10 +188,12 @@ public class CustomPaywallSection : MonoBehaviour
         this.LocaleText.SetText(paywall.Locale);
         this.AudienceNameText.SetText(paywall.AudienceName);
 
-        m_productButtons.ForEach((button) =>
-        {
-            Destroy(button.gameObject);
-        });
+        m_productButtons.ForEach(
+            (button) =>
+            {
+                Destroy(button.gameObject);
+            }
+        );
         m_productButtons.Clear();
 
         for (var i = 0; i < products.Count; ++i)
@@ -185,18 +213,29 @@ public class CustomPaywallSection : MonoBehaviour
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
         productButtonRect.SetParent(this.ContainerTransform);
-        productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -300.0f - 150.0f * index);
-        productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 140.0f);
+        productButtonRect.anchoredPosition = new Vector3(
+            productButtonRect.position.x,
+            -300.0f - 150.0f * index
+        );
+        productButtonRect.sizeDelta = new Vector2(
+            this.ContainerTransform.sizeDelta.x - 40.0f,
+            140.0f
+        );
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
-        productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
-        {
-            this.Router.SetIsLoading(true);
-            this.Listener.MakePurchase(product, (error) =>
+        productButtonObject
+            .GetComponent<UnityEngine.UI.Button>()
+            .onClick.AddListener(() =>
             {
-                this.Router.SetIsLoading(false);
+                this.Router.SetIsLoading(true);
+                this.Listener.MakePurchase(
+                    product,
+                    (error) =>
+                    {
+                        this.Router.SetIsLoading(false);
+                    }
+                );
             });
-        });
         return productButtonObject.GetComponent<ProductButton>();
     }
 }

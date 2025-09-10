@@ -16,14 +16,19 @@ namespace AdaptySDK
 
         public AdaptySubscriptionUpdateReplacementMode ReplacementMode;
 
-        public AdaptySubscriptionUpdateParameters(string oldSubVendorProductId, AdaptySubscriptionUpdateReplacementMode replacementMode)
+        public AdaptySubscriptionUpdateParameters(
+            string oldSubVendorProductId,
+            AdaptySubscriptionUpdateReplacementMode replacementMode
+        )
         {
-            OldSubVendorProductId = oldSubVendorProductId ?? throw new ArgumentNullException(nameof(oldSubVendorProductId)); //TODO
+            OldSubVendorProductId =
+                oldSubVendorProductId
+                ?? throw new ArgumentNullException(nameof(oldSubVendorProductId)); //TODO
             ReplacementMode = replacementMode;
         }
 
-        public override string ToString() => 
-            $"{nameof(OldSubVendorProductId)}: {OldSubVendorProductId}, " +
-            $"{nameof(ReplacementMode)}: {ReplacementMode}";
+        public override string ToString() =>
+            $"{nameof(OldSubVendorProductId)}: {OldSubVendorProductId}, "
+            + $"{nameof(ReplacementMode)}: {ReplacementMode}";
     }
 }

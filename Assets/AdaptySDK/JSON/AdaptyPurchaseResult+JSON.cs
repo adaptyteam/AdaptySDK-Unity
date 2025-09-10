@@ -15,6 +15,7 @@ namespace AdaptySDK
         {
             Type = jsonNode.GetAdaptyPurchaseResultType("type");
             Profile = jsonNode.GetAdaptyProfileIfPresent("profile");
+            JWSTransaction = jsonNode.GetStringIfPresent("jws_transaction");
         }
     }
 }
@@ -24,15 +25,24 @@ namespace AdaptySDK.SimpleJSON
     internal static partial class JSONNodeExtensions
     {
         internal static AdaptyPurchaseResult GetAdaptyPurchaseResult(this JSONNode node) =>
-           new AdaptyPurchaseResult(GetObject(node));
+            new AdaptyPurchaseResult(GetObject(node));
 
-        internal static AdaptyPurchaseResult GetAdaptyPurchaseResult(this JSONNode node, string aKey) =>
-            new AdaptyPurchaseResult(GetObject(node, aKey));
+        internal static AdaptyPurchaseResult GetAdaptyPurchaseResult(
+            this JSONNode node,
+            string aKey
+        ) => new AdaptyPurchaseResult(GetObject(node, aKey));
 
-        internal static AdaptyPurchaseResult GetAdaptyPrGetAdaptyPurchaseResultIfPresent(this JSONNode node, string aKey)
+        internal static AdaptyPurchaseResult GetAdaptyPrGetAdaptyPurchaseResultIfPresent(
+            this JSONNode node,
+            string aKey
+        )
         {
             var obj = GetObjectIfPresent(node, aKey);
-            if (obj is null) return null;
+            if (obj is null)
+            {
+                return null;
+            }
+
             return new AdaptyPurchaseResult(obj);
         }
     }

@@ -10,6 +10,7 @@ namespace AdaptySDK
     public enum AdaptyServerCluster
     {
         Default,
-        EU
+        EU,
+        CN,
     }
 }

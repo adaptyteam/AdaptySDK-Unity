@@ -13,7 +13,8 @@ namespace AdaptySDK.SimpleJSON
             value switch
             {
                 AdaptyServerCluster.EU => "eu",
-                _ => null
+                AdaptyServerCluster.CN => "cn",
+                _ => null,
             };
     }
 }

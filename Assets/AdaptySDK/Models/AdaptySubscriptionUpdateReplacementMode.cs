@@ -13,6 +13,6 @@ namespace AdaptySDK
         ChargeProratedPrice,
         WithoutProration,
         Deferred,
-        ChargeFullPrice
+        ChargeFullPrice,
     }
 }

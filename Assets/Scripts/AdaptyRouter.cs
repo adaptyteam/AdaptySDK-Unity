@@ -2,10 +2,8 @@ using AdaptySDK;
 using UnityEngine;
 using System.Collections;
 
-namespace AdaptyExample
-{
-    public class AdaptyRouter : MonoBehaviour
-    {
+namespace AdaptyExample {
+    public class AdaptyRouter : MonoBehaviour {
         public RectTransform LoadingPanel;
         public AlertPanel AlertPanel;
 
@@ -41,14 +39,12 @@ namespace AdaptyExample
         private AdaptyListener listener;
         private AdaptyProfile profile;
 
-        void Start()
-        {
+        void Start() {
             this.listener = GetComponent<AdaptyListener>();
             this.ConfigureLayout();
         }
 
-        void ConfigureLayout()
-        {
+        void ConfigureLayout() {
             var offset = 20.0f;
 
             var profileIdSectionObj = Instantiate(this.ProfileIdSectionPrefab);
@@ -126,49 +122,41 @@ namespace AdaptyExample
             this.ActionsSection = actionsSection;
         }
 
-        public void SetProfile(AdaptyProfile profile)
-        {
-            if (this.ProfileInfoSection != null && profile != null)
-            {
+        public void SetProfile(AdaptyProfile profile) {
+            if (this.ProfileInfoSection != null && profile != null) {
                 this.ProfileInfoSection.SetProfile(profile);
             }
-            if (this.ProfileIdSection != null && profile != null)
-            {
+
+            if (this.ProfileIdSection != null && profile != null) {
                 this.ProfileIdSection.SetProfile(profile);
             }
 
-            if (this.IdentifySection != null && profile != null)
-            {
+            if (this.IdentifySection != null && profile != null) {
                 this.IdentifySection.SetProfile(profile);
             }
 
             this.profile = profile;
         }
 
-        public void SetIsLoading(bool isLoading)
-        {
+        public void SetIsLoading(bool isLoading) {
             this.LoadingPanel.gameObject.SetActive(isLoading);
         }
 
-        public void ShowAlertPanel(string text)
-        {
+        public void ShowAlertPanel(string text) {
             StartCoroutine(DelayedShowAlertPanel(text));
         }
 
-        private IEnumerator DelayedShowAlertPanel(string text)
-        {
+        private IEnumerator DelayedShowAlertPanel(string text) {
             yield return new WaitForEndOfFrame();
             this.AlertPanel.Text.SetText(text);
             this.AlertPanel.gameObject.SetActive(true);
         }
 
-        public void HideAlertPanel()
-        {
+        public void HideAlertPanel() {
             StartCoroutine(DelayedHideAlertPanel());
         }
 
-        private IEnumerator DelayedHideAlertPanel()
-        {
+        private IEnumerator DelayedHideAlertPanel() {
             yield return new WaitForEndOfFrame();
             this.AlertPanel.gameObject.SetActive(false);
         }

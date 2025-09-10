@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using AdaptyExample;
 using AdaptySDK;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using static AdaptySDK.Adapty;
-using Unity.VisualScripting;
 
 public class PaywallSection : MonoBehaviour
 {
@@ -54,37 +54,46 @@ public class PaywallSection : MonoBehaviour
         if (m_paywall != null)
         {
             this.Router.SetIsLoading(true);
-            this.Listener.LogShowPaywall(m_paywall, (error) =>
-            {
-                this.Router.SetIsLoading(false);
-            });
+            this.Listener.LogShowPaywall(
+                m_paywall,
+                (error) =>
+                {
+                    this.Router.SetIsLoading(false);
+                }
+            );
         }
     }
 
     public void LoadPaywallForDefaultAudience()
     {
-        if (this.m_paywallId == null) return;
+        if (this.m_paywallId == null)
+            return;
 
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywallForDefaultAudience(this.m_paywallId, this.m_localeId, AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData, (paywall) =>
-        {
-            if (paywall == null)
+        this.Listener.GetPaywallForDefaultAudience(
+            this.m_paywallId,
+            this.m_localeId,
+            AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData,
+            (paywall) =>
             {
-                this.UpdatePaywallFail();
-                this.Router.SetIsLoading(false);
+                if (paywall == null)
+                {
+                    this.UpdatePaywallFail();
+                    this.Router.SetIsLoading(false);
+                }
+                else
+                {
+                    this.m_paywall = paywall;
+                    this.LoadProducts(paywall);
+                }
             }
-            else
-            {
-                this.m_paywall = paywall;
-                this.LoadProducts(paywall);
-            }
-        });
+        );
     }
 
     public void LoadPaywall()
     {
-        var fetchPolicy = AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData;
+        var fetchPolicy = AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData;
         var paywallId = this.m_paywallId;
         var locale = this.m_localeId;
 
@@ -100,38 +109,46 @@ public class PaywallSection : MonoBehaviour
 
         this.Router.SetIsLoading(true);
 
-        this.Listener.GetPaywall(paywallId, locale, fetchPolicy, (paywall) =>
-        {
-            if (paywall == null)
+        this.Listener.GetPaywall(
+            paywallId,
+            locale,
+            fetchPolicy,
+            (paywall) =>
             {
-                this.UpdatePaywallFail();
-                this.Router.SetIsLoading(false);
+                if (paywall == null)
+                {
+                    this.UpdatePaywallFail();
+                    this.Router.SetIsLoading(false);
+                }
+                else
+                {
+                    this.m_paywall = paywall;
+                    this.LoadProducts(paywall);
+                }
             }
-            else
-            {
-                this.m_paywall = paywall;
-                this.LoadProducts(paywall);
-            }
-        });
+        );
     }
 
     void LoadProducts(AdaptyPaywall paywall)
     {
-        this.Listener.GetPaywallProducts(paywall, (products) =>
-        {
-            if (products != null)
+        this.Listener.GetPaywallProducts(
+            paywall,
+            (products) =>
             {
-                StartCoroutine(DelayedUpdate(paywall, products));
-            }
-            else
-            {
-                this.UpdatePaywallFail();
-            }
+                if (products != null)
+                {
+                    StartCoroutine(DelayedUpdate(paywall, products));
+                }
+                else
+                {
+                    this.UpdatePaywallFail();
+                }
 
-            this.Router.SetIsLoading(false);
-        });
+                this.Router.SetIsLoading(false);
+            }
+        );
     }
-    
+
     private IEnumerator DelayedUpdate(AdaptyPaywall paywall, IList<AdaptyPaywallProduct> products)
     {
         yield return new WaitForEndOfFrame();
@@ -140,20 +157,24 @@ public class PaywallSection : MonoBehaviour
 
     public void PresentPaywall()
     {
-        if (m_paywall == null) return;
+        if (m_paywall == null)
+            return;
 
-        this.Listener.CreatePaywallView(this.m_paywall, preloadProducts: false, (view) =>
-        {
-            if (view == null)
+        this.Listener.CreatePaywallView(
+            this.m_paywall,
+            preloadProducts: false,
+            (view) =>
             {
-
-                //this.UpdateViewFail(paywall);
+                if (view == null)
+                {
+                    //this.UpdateViewFail(paywall);
+                }
+                else
+                {
+                    view.Present((error) => { });
+                }
             }
-            else
-            {
-                view.Present((error) => { });
-            }
-        });
+        );
     }
 
     private void UpdatePaywallFail()
@@ -172,10 +193,12 @@ public class PaywallSection : MonoBehaviour
         this.LocaleText.SetText(paywall.Locale);
         this.AudienceNameText.SetText(paywall.AudienceName);
 
-        m_productButtons.ForEach((button) =>
-        {
-            Destroy(button.gameObject);
-        });
+        m_productButtons.ForEach(
+            (button) =>
+            {
+                Destroy(button.gameObject);
+            }
+        );
         m_productButtons.Clear();
 
         for (var i = 0; i < products.Count; ++i)
@@ -195,18 +218,29 @@ public class PaywallSection : MonoBehaviour
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
         productButtonRect.SetParent(this.ContainerTransform);
-        productButtonRect.anchoredPosition = new Vector3(productButtonRect.position.x, -370.0f - 150.0f * index);
-        productButtonRect.sizeDelta = new Vector2(this.ContainerTransform.sizeDelta.x - 40.0f, 140.0f);
+        productButtonRect.anchoredPosition = new Vector3(
+            productButtonRect.position.x,
+            -370.0f - 150.0f * index
+        );
+        productButtonRect.sizeDelta = new Vector2(
+            this.ContainerTransform.sizeDelta.x - 40.0f,
+            140.0f
+        );
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
-        productButtonObject.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
-        {
-            this.Router.SetIsLoading(true);
-            this.Listener.MakePurchase(product, (error) =>
+        productButtonObject
+            .GetComponent<UnityEngine.UI.Button>()
+            .onClick.AddListener(() =>
             {
-                this.Router.SetIsLoading(false);
+                this.Router.SetIsLoading(true);
+                this.Listener.MakePurchase(
+                    product,
+                    (error) =>
+                    {
+                        this.Router.SetIsLoading(false);
+                    }
+                );
             });
-        });
         return productButtonObject.GetComponent<ProductButton>();
     }
 }

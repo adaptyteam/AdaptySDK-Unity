@@ -9,86 +9,84 @@ namespace AdaptySDK
 {
     using AdaptySDK.SimpleJSON;
 
-
     public partial class AdaptyPaywall
     {
         internal JSONNode ToJSONNode()
         {
             var node = new JSONObject();
-            node.Add("developer_id", PlacementId);
-            node.Add("paywall_id", _InstanceIdentity);
-            node.Add("paywall_name", Name);
-            node.Add("audience_name", AudienceName);
-            node.Add("ab_test_name", ABTestName);
-            node.Add("variation_id", VariationId);
-            node.Add("revision", Revision);
-            node.Add("response_created_at", _Version);
 
-            if (RemoteConfigString != null)
+            node.Add("placement", Placement.ToJSONNode());
+            node.Add("paywall_id", InstanceIdentity);
+            node.Add("paywall_name", Name);
+            node.Add("variation_id", VariationId);
+            node.Add("response_created_at", _ResponseCreatedAt);
+            node.Add("request_locale", _RequestLocale);
+
+            if (RemoteConfig != null)
             {
-                var remoteConfig = new JSONObject();
-                remoteConfig.Add("lang", Locale);
-                remoteConfig.Add("data", RemoteConfigString);
-                node.Add("remote_config", remoteConfig);
+                node.Add("remote_config", RemoteConfig.ToJSONNode());
             }
 
-            if (_ViewConfiguration != null) node.Add("paywall_builder", _ViewConfiguration.ToJSONNode());
+            if (_WebPurchaseUrl != null)
+            {
+                node.Add("web_purchase_url", _WebPurchaseUrl);
+            }
+
+            if (_ViewConfiguration != null)
+            {
+                node.Add("paywall_builder", _ViewConfiguration.ToJSONNode());
+            }
 
             var products = new JSONArray();
             foreach (var item in _Products)
             {
                 products.Add(item.ToJSONNode());
             }
+
             node.Add("products", products);
 
-            if (_PayloadData != null) node.Add("payload_data", _PayloadData);
+            if (_PayloadData != null)
+            {
+                node.Add("payload_data", _PayloadData);
+            }
 
             return node;
         }
 
         internal AdaptyPaywall(JSONObject jsonNode)
         {
-            PlacementId = jsonNode.GetString("developer_id");
-            _InstanceIdentity = jsonNode.GetString("paywall_id");
+            Placement = jsonNode.GetPlacement("placement");
+            InstanceIdentity = jsonNode.GetString("paywall_id");
             Name = jsonNode.GetString("paywall_name");
-            AudienceName = jsonNode.GetString("audience_name");
-            _Version = jsonNode.GetInteger("response_created_at");
-            Revision = jsonNode.GetInteger("revision");
+            _ResponseCreatedAt = jsonNode.GetInteger("response_created_at");
             VariationId = jsonNode.GetString("variation_id");
-            ABTestName = jsonNode.GetString("ab_test_name");
-            var remoteConfig = jsonNode.GetObjectIfPresent("remote_config");
-            if (remoteConfig != null)
-            {
-                Locale = remoteConfig.GetString("lang");
-                RemoteConfigString = remoteConfig.GetStringIfPresent("data");
-            }
-            else
-            {
-                Locale = null;
-                RemoteConfigString = null;
-            }
-
-            _ViewConfiguration = jsonNode.GetAdaptyPaywallViewConfigurationIfPresent("paywall_builder");
+            RemoteConfig = jsonNode.GetRemoteConfigIfPresent("remote_config");
+            _ViewConfiguration = jsonNode.GetAdaptyPaywallViewConfigurationIfPresent(
+                "paywall_builder"
+            );
             _Products = jsonNode.GetAdaptyPaywallProductReferenceList("products");
             _PayloadData = jsonNode.GetStringIfPresent("payload_data");
+            _WebPurchaseUrl = jsonNode.GetStringIfPresent("web_purchase_url");
+            _RequestLocale = jsonNode.GetStringIfPresent("request_locale");
         }
     }
-
 }
 
 namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static AdaptyPaywall GetPaywall(this JSONNode node)
-            => new AdaptyPaywall(GetObject(node));
-        internal static AdaptyPaywall GetPaywall(this JSONNode node, string aKey)
-             => new AdaptyPaywall(GetObject(node, aKey));
+        internal static AdaptyPaywall GetPaywall(this JSONNode node) =>
+            new AdaptyPaywall(GetObject(node));
+
+        internal static AdaptyPaywall GetPaywall(this JSONNode node, string aKey) =>
+            new AdaptyPaywall(GetObject(node, aKey));
 
         internal static AdaptyPaywall GetPaywallIfPresent(this JSONNode node, string aKey)
         {
             var obj = GetObjectIfPresent(node, aKey);
-            if (obj is null) return null;
+            if (obj is null)
+                return null;
             return new AdaptyPaywall(obj);
         }
     }

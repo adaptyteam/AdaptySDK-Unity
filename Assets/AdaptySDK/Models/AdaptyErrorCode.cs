@@ -5,10 +5,8 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-namespace AdaptySDK
-{
-    public enum AdaptyErrorCode
-    {
+namespace AdaptySDK {
+    public enum AdaptyErrorCode {
         // system storekit codes
         Unknown = 0,
         ClientInvalid = 1, // client is not allowed to issue the request, etc.

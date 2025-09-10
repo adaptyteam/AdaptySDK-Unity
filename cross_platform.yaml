@@ -1,5 +1,5 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://adapty.io/crossPlatform/3.3.3/schema"
+$id: "https://adapty.io/crossPlatform/3.11.0/schema"
 title: "Cross Platform Format"
 
 $requests:
@@ -28,7 +28,7 @@ $requests:
       - method
       - paywall
     properties:
-      method: { const: "adapty_ui_create_view" }
+      method: { const: "adapty_ui_create_paywall_view" }
       paywall: { $ref: "#/$defs/AdaptyPaywall" }
       load_timeout: { type: number, description: "seconds" }
       preload_products: { type: boolean, default: false }
@@ -37,7 +37,7 @@ $requests:
       android_personalized_offers:
         { $ref: "#/$defs/AdaptyUI.AndroidPersonalizedOffers" }
 
-  AdaptyUICreateView.Response: #response
+  AdaptyUICreatePaywallView.Response: #response
     type: object
     oneOf:
       - required: [error]
@@ -45,18 +45,28 @@ $requests:
           error: { $ref: "#/$defs/AdaptyError" }
       - required: [success]
         properties:
-          success: { $ref: "#/$defs/AdaptyUI.View" }
+          success: { $ref: "#/$defs/AdaptyUI.PaywallView" }
 
   ### adaptyUIDismissView ###
   AdaptyUIDismissView.Request: #request
+  ### dismissPaywallView ###
+  AdaptyUIDismissPaywallView.Request: #request
     type: object
     required: [method, id]
     properties:
-      method: { const: "adapty_ui_dismiss_view" }
+      method: { const: "adapty_ui_dismiss_paywall_view" }
       id: { type: string, description: "View Id" }
       destroy: { type: boolean, default: false }
 
-  AdaptyUIDismissView.Response: #response
+  AdaptyUIDismissPaywallView.Response: #response
+    type: object
+    oneOf:
+      - required: [error]
+        properties:
+          error: { $ref: "#/$defs/AdaptyError" }
+      - required: [success]
+        properties:
+          success: { const: true }
     type: object
     oneOf:
       - required: [error]
@@ -66,15 +76,15 @@ $requests:
         properties:
           success: { const: true }
 
-  ### adaptyUIPresentView ###
-  AdaptyUIPresentView.Request: #request
+  ### presentPaywallView ###
+  AdaptyUIPresentPaywallView.Request: #request
     type: object
     required: [method, id]
     properties:
-      method: { const: "adapty_ui_present_view" }
+      method: { const: "adapty_ui_present_paywall_view" }
       id: { type: string, description: "View Id" }
 
-  AdaptyUIPresentView.Response: #response
+  AdaptyUIPresentPaywallView.Response: #response
     type: object
     oneOf:
       - required: [error]
@@ -111,7 +121,7 @@ $requests:
       method: { const: "get_paywall" }
       placement_id: { type: string }
       locale: { $ref: "#/$defs/AdaptyLocale" }
-      fetch_policy: { $ref: "#/$defs/AdaptyPaywall.FetchPolicy" }
+      fetch_policy: { $ref: "#/$defs/AdaptyPlacementFetchPolicy" }
       load_timeout: { type: number, description: "seconds" }
 
   GetPaywall.Response: #response
@@ -124,7 +134,7 @@ $requests:
         properties:
           success: { $ref: "#/$defs/AdaptyPaywall" }
 
-    ### getPaywall ###
+    ### getPaywallForDefaultAudience ###
   GetPaywallForDefaultAudience.Request: #request
     type: object
     required: [method, placement_id]
@@ -132,7 +142,7 @@ $requests:
       method: { const: "get_paywall_for_default_audience" }
       placement_id: { type: string }
       locale: { $ref: "#/$defs/AdaptyLocale" }
-      fetch_policy: { $ref: "#/$defs/AdaptyPaywall.FetchPolicy" }
+      fetch_policy: { $ref: "#/$defs/AdaptyPlacementFetchPolicy" }
 
   GetPaywallForDefaultAudience.Response: #response
     type: object
@@ -190,6 +200,7 @@ $requests:
     properties:
       method: { const: "identify" }
       customer_user_id: { type: string }
+      app_account_token: { $ref: "#/$defs/UUID" }
 
   Identify.Response: #response
     type: object
@@ -301,12 +312,7 @@ $requests:
     properties:
       method: { const: "make_purchase" }
       product: { $ref: "#/$defs/AdaptyPaywallProduct.Request" }
-      subscription_update_params:
-        {
-          $ref: "#/$defs/AdaptySubscriptionUpdateParameters",
-          description: "Android Only",
-        }
-      is_offer_personalized: { type: boolean, description: "Android Only" }
+      parameters:  { $ref: "#/$defs/AdaptyPurchaseParameters" }
 
   MakePurchase.Response: #response
     type: object
@@ -317,6 +323,69 @@ $requests:
       - required: [success]
         properties:
           success: { $ref: "#/$defs/AdaptyPurchaseResult" }
+
+  OpenWebPaywall.Request: #request
+    type: object
+    required: [method]
+    properties:
+      method: { const: "open_web_paywall" }
+    oneOf:
+      - required: [product]
+        properties:
+          product: { $ref: "#/$defs/AdaptyPaywallProduct.Request" }
+      - required: [paywall]
+        properties:
+          paywall: { $ref: "#/$defs/AdaptyPaywall" }
+
+  OpenWebPaywall.Response: #response
+    type: object
+    oneOf:
+      - required: [error]
+        properties:
+          error: { $ref: "#/$defs/AdaptyError" }
+      - required: [success]
+        properties:
+          success: { const: true }
+
+  CreateWebPaywallUrl.Request: #request
+    type: object
+    required: [method]
+    properties:
+      method: { const: "create_web_paywall_url" }
+    oneOf:
+      - required: [product]
+        properties:
+          product: { $ref: "#/$defs/AdaptyPaywallProduct.Request" }
+      - required: [paywall]
+        properties:
+          paywall: { $ref: "#/$defs/AdaptyPaywall" }
+
+  CreateWebPurchaseUrl.Response: #response
+    type: object
+    oneOf:
+      - required: [error]
+        properties:
+          error: { $ref: "#/$defs/AdaptyError" }
+      - required: [success]
+        properties:
+          success: { type: string }
+
+  ### getCurrentInstallationStatus ###
+  GetCurrentInstallationStatus.Request: #request
+    type: object
+    required: [method]
+    properties:
+      method: { const: "get_current_installation_status" }
+
+  GetCurrentInstallationStatus.Response: #response
+    type: object
+    oneOf:
+      - required: [error]
+        properties:
+          error: { $ref: "#/$defs/AdaptyError" }
+      - required: [success]
+        properties:
+          success: { $ref: "#/$defs/AdaptyInstallationStatus" }
 
   ### presentCodeRedemptionSheet ###
   PresentCodeRedemptionSheet.Request: #request
@@ -380,12 +449,12 @@ $requests:
     properties:
       success: { type: string }
 
-  ### setFallbackPaywalls ###
-  SetFallbackPaywalls.Request: #request
+  ### setFallback ###
+  SetFallback.Request: #request
     type: object
     required: [method]
     properties:
-      method: { const: "set_fallback_paywalls" }
+      method: { const: "set_fallback" }
     oneOf:
       - required: [asset_id]
         properties:
@@ -394,7 +463,7 @@ $requests:
         properties:
           path: { type: string }
 
-  SetFallbackPaywalls.Response: #response
+  SetFallback.Response: #response
     type: object
     oneOf:
       - required: [error]
@@ -445,6 +514,24 @@ $requests:
         properties:
           success: { const: true }
 
+  ### updateCollectingRefundDataConsent ###
+  UpdateCollectingRefundDataConsent.Request: #request
+    type: object
+    required: [method, consent]
+    properties:
+      method: { const: "update_collecting_refund_data_consent" }
+      consent: { type: boolean }
+
+  UpdateCollectingRefundDataConsent.Response: #response
+    type: object
+    oneOf:
+      - required: [error]
+        properties:
+          error: { $ref: "#/$defs/AdaptyError" }
+      - required: [success]
+        properties:
+          success: { const: true }
+
   ### updateProfile ###
   UpdateProfile.Request: #request
     type: object
@@ -463,6 +550,24 @@ $requests:
         properties:
           success: { const: true }
 
+  ### updateRefundPreference ###
+  UpdateRefundPreference.Request: #request
+    type: object
+    required: [method, refund_preference]
+    properties:
+      method: { const: "update_refund_preference" }
+      refund_preference: { $ref: "#/$defs/AdaptyRefundPreference" }
+
+  UpdateRefundPreference.Response: #response
+    type: object
+    oneOf:
+      - required: [error]
+        properties:
+          error: { $ref: "#/$defs/AdaptyError" }
+      - required: [success]
+        properties:
+          success: { const: true }
+
 $events:
   Event.DidLoadLatestProfile:
     type: object
@@ -471,12 +576,39 @@ $events:
       id: { const: "did_load_latest_profile" }
       profile: { $ref: "#/$defs/AdaptyProfile" }
 
+  Event.OnInstallationDetailsSuccess:
+    type: object
+    required: [id, details]
+    properties:
+      id: { const: "on_installation_details_success" }
+      details: { $ref: "#/$defs/AdaptyInstallationDetails" }
+
+  Event.OnInstallationDetailsFail:
+    type: object
+    required: [id, error]
+    properties:
+      id: { const: "on_installation_details_fail" }
+      error: { $ref: "#/$defs/AdaptyError" }
+
+  PaywallViewEvent.DidAppear:
+    type: object
+    required: [id, view]
+    properties:
+      id: { const: "paywall_view_did_appear" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
+
+  PaywallViewEvent.DidDisappear:
+    type: object
+    required: [id, view]
+    properties:
+      id: { const: "paywall_view_did_disappear" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
   PaywallViewEvent.DidUserAction:
     type: object
     required: [id, view, action]
     properties:
       id: { const: "paywall_view_did_perform_action" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       action: { $ref: "#/$defs/AdaptyUI.UserAction" }
 
   PaywallViewEvent.DidSelectProduct:
@@ -484,7 +616,7 @@ $events:
     required: [id, view, product_id]
     properties:
       id: { const: "paywall_view_did_select_product" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       product_id: { type: string }
 
   PaywallViewEvent.WillPurchase:
@@ -492,7 +624,7 @@ $events:
     required: [id, view, product]
     properties:
       id: { const: "paywall_view_did_start_purchase" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       product: { $ref: "#/$defs/AdaptyPaywallProduct.Response" }
 
   PaywallViewEvent.DidPurchase:
@@ -500,7 +632,7 @@ $events:
     required: [id, view, product, purchased_result]
     properties:
       id: { const: "paywall_view_did_finish_purchase" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       product: { $ref: "#/$defs/AdaptyPaywallProduct.Response" }
       purchased_result: { $ref: "#/$defs/AdaptyPurchaseResult" }
 
@@ -509,7 +641,7 @@ $events:
     required: [id, view, product, error]
     properties:
       id: { const: "paywall_view_did_fail_purchase" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       product: { $ref: "#/$defs/AdaptyPaywallProduct.Response" }
       error: { $ref: "#/$defs/AdaptyError" }
 
@@ -518,14 +650,14 @@ $events:
     required: [id, view]
     properties:
       id: { const: "paywall_view_did_start_restore" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
 
   PaywallViewEvent.DidRestorePurchase:
     type: object
     required: [id, view, profile]
     properties:
       id: { const: "paywall_view_did_finish_restore" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       profile: { $ref: "#/$defs/AdaptyProfile" }
 
   PaywallViewEvent.DidFailRestorePurchase:
@@ -533,7 +665,7 @@ $events:
     required: [id, view, error]
     properties:
       id: { const: "paywall_view_did_fail_restore" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       error: { $ref: "#/$defs/AdaptyError" }
 
   PaywallViewEvent.DidFailRendering:
@@ -541,7 +673,7 @@ $events:
     required: [id, view, error]
     properties:
       id: { const: "paywall_view_did_fail_rendering" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       error: { $ref: "#/$defs/AdaptyError" }
 
   PaywallViewEvent.DidFailLoadingProducts:
@@ -549,9 +681,17 @@ $events:
     required: [id, view, error]
     properties:
       id: { const: "paywall_view_did_fail_loading_products" }
-      view: { $ref: "#/$defs/AdaptyUI.View" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
       error: { $ref: "#/$defs/AdaptyError" }
 
+  PaywallViewEvent.DidFinishWebPaymentNavigation:
+    type: object
+    required: [id, view]
+    properties:
+      id: { const: "paywall_view_did_finish_web_payment_navigation" }
+      view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
+      product: { $ref: "#/$defs/AdaptyPaywallProduct.Response" }
+      error: { $ref: "#/$defs/AdaptyError" }
 $defs:
   ### Entities ###
 
@@ -576,6 +716,13 @@ $defs:
     type: string
     example: "en"
 
+  UUID:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    description: "UUID в формате RFC 4122"
+    example: "123e4567-e89b-12d3-a456-426614174000"
+
   Date: #response #request
     type: string
     format: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
@@ -586,14 +733,16 @@ $defs:
     properties:
       api_key: { type: string }
       customer_user_id: { type: string }
+      app_account_token: { $ref: "#/$defs/UUID" , description: "used only if customer_user_id is not null"}
       observer_mode: { type: boolean, default: false }
       apple_idfa_collection_disabled: { type: boolean, default: false }
       google_adid_collection_disabled: { type: boolean, default: false }
       ip_address_collection_disabled: { type: boolean, default: false }
-      server_cluster: { type: string, enum: ["default", "eu"] }
+      server_cluster: { type: string, enum: ["default", "eu", "cn"] }
       backend_base_url: { type: string }
       backend_fallback_base_url: { type: string }
       backend_configs_base_url: { type: string }
+      backend_ua_base_url: { type: string }
       backend_proxy_host: { type: string }
       backend_proxy_port: { type: integer }
       log_level: { $ref: "#/$defs/AdaptyLog.Level" }
@@ -613,10 +762,10 @@ $defs:
     required:
       - vendor_product_id
       - adapty_product_id
+      - paywall_product_index
       - paywall_variation_id
       - paywall_ab_test_name
       - paywall_name
-      - audience_name
       - localized_description
       - localized_title
       - is_family_shareable # iOS Only
@@ -624,10 +773,11 @@ $defs:
     properties:
       vendor_product_id: { type: string }
       adapty_product_id: { type: string }
+      paywall_product_index: { type: integer }
       paywall_variation_id: { type: string }
       paywall_ab_test_name: { type: string }
       paywall_name: { type: string }
-      audience_name: { type: string }
+      web_purchase_url: { type: string }
       localized_description: { type: string }
       localized_title: { type: string }
       is_family_shareable:
@@ -672,17 +822,20 @@ $defs:
     required:
       - vendor_product_id
       - adapty_product_id
+      - paywall_product_index
       - paywall_variation_id
       - paywall_ab_test_name
       - paywall_name
     properties:
       vendor_product_id: { type: string }
       adapty_product_id: { type: string }
+      paywall_product_index: { type: integer }
       subscription_offer_identifier:
         { $ref: "#/$defs/AdaptySubscriptionOffer.Identifier" }
       paywall_variation_id: { type: string }
       paywall_ab_test_name: { type: string }
       paywall_name: { type: string }
+      web_purchase_url: { type: string }
       payload_data: { type: string }
 
   AdaptySubscriptionOffer: #response
@@ -723,33 +876,75 @@ $defs:
       onboarding_screen_name: { type: string }
       onboarding_screen_order: { type: integer, minimum: 1 }
 
+  AdaptyOnboarding: #request #response
+    type: object
+    required:
+      - placement
+      - onboarding_id
+      - onboarding_name
+      - variation_id
+      - onboarding_builder
+      - response_created_at
+      - request_locale
+    properties:
+      placement: { $ref: "#/$defs/AdaptyPlacement" }
+      onboarding_id: { type: string }
+      onboarding_name: { type: string }
+      variation_id: { type: string }
+      remote_config: { $ref: "#/$defs/AdaptyRemoteConfig" }
+      onboarding_builder:
+        type: object
+        required: [config_url]
+        properties:
+          config_url: { type: string }
+      payload_data: { type: string }
+      response_created_at: { type: integer }
+      request_locale: { $ref: "#/$defs/AdaptyLocale" }
+
+
   AdaptyPaywall: #request #response
     type: object
     required:
-      - developer_id
+      - placement
       - paywall_id
       - paywall_name
-      - ab_test_name
       - variation_id
-      - revision
       - products
       - response_created_at
+      - request_locale
     properties:
-      developer_id: { type: string }
+      placement: { $ref: "#/$defs/AdaptyPlacement" }
       paywall_id: { type: string }
       paywall_name: { type: string }
-      response_created_at: { type: integer }
-      revision: { type: integer }
       variation_id: { type: string }
-      ab_test_name: { type: string }
-      remote_config: { $ref: "#/$defs/AdaptyPaywall.RemoteConfig" }
+      remote_config: { $ref: "#/$defs/AdaptyRemoteConfig" }
       paywall_builder: { $ref: "#/$defs/AdaptyPaywall.ViewConfiguration" }
       products:
         type: array
         items: { $ref: "#/$defs/AdaptyPaywall.ProductReference" }
+      web_purchase_url: { type: string }
       payload_data: { type: string }
+      response_created_at: { type: integer }
+      request_locale: { $ref: "#/$defs/AdaptyLocale" }
 
-  AdaptyPaywall.FetchPolicy: #request
+
+  AdaptyPlacement: #request #response
+    type: object
+    required:
+      - developer_id
+      - audience_name
+      - revision
+      - ab_test_name
+      - placement_audience_version_id
+    properties:
+      developer_id: { type: string }
+      audience_name: { type: string }
+      revision: { type: integer }
+      ab_test_name: { type: string }
+      is_tracking_purchases: { type: bool, default: false }
+      placement_audience_version_id: { type: string }
+
+  AdaptyPlacementFetchPolicy: #request
     type: object
     oneOf:
       - required: [type]
@@ -768,7 +963,7 @@ $defs:
             type: number
             description: "seconds"
 
-  AdaptyPaywall.RemoteConfig: #request #response
+  AdaptyRemoteConfig: #request #response
     type: object
     required: [lang, data]
     properties:
@@ -997,6 +1192,27 @@ $defs:
         properties:
           type: { type: string, const: "success" }
           profile: { $ref: "#/$defs/AdaptyProfile" }
+          jws_transaction: { type: string }
+
+  AdaptyInstallationStatus: #response #event
+    type: object
+    oneOf:
+      - required: [status]
+        properties:
+          status: { type: string, enum: ["not_available", "not_determined"] }
+      - required: [status, details]
+        properties:
+          status: { type: string, const: "determined" }
+          details: { $ref: "#/$defs/AdaptyInstallationDetails" }
+
+  AdaptyInstallationDetails: #response #event
+    type: object
+    required: [ install_time, app_launch_count]
+    properties:
+      install_id:  { type: string }
+      install_time: { $ref: "#/$defs/Date", nullable: false }
+      app_launch_count: { type: integer, nullable: false }
+      payload:  { type: string }
 
   AdaptyUI.View: #response #event
     type: object
@@ -1062,3 +1278,9 @@ $defs:
           - without_proration
           - charge_prorated_price
           - with_time_proration
+  AdaptyRefundPreference:
+    type: string
+    enum:
+      - no_preference
+      - grant
+      - decline

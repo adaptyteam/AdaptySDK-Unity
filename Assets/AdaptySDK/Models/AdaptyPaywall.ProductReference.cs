@@ -18,7 +18,7 @@ namespace AdaptySDK
             internal readonly string AndroidBasePlanId; //nullable
             internal readonly string AndroidOfferId; //nullable
 
-            public override string ToString() => 
+            public override string ToString() =>
                 $"{nameof(VendorProductId)}: {VendorProductId}, " +
                 $"{nameof(AdaptyProductId)}: {AdaptyProductId}, " +
                 $"{nameof(PromotionalOfferId)}: {PromotionalOfferId}, " +

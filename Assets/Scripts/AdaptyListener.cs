@@ -24,34 +24,41 @@ namespace AdaptyExample
 
             this.LogMethodRequest("SetLogLevel");
 
-            Adapty.SetLogLevel(AdaptyLogLevel.Verbose, (error) =>
-            {
-                this.LogMethodResult("SetLogLevel", error);
-            });
+            Adapty.SetLogLevel(
+                AdaptyLogLevel.Verbose,
+                (error) =>
+                {
+                    this.LogMethodResult("SetLogLevel", error);
+                }
+            );
 
-
-            var builder = new AdaptyConfiguration.Builder("public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6")
-                    .SetCustomerUserId(null)
-                    .SetObserverMode(false)
-                    .SetServerCluster(AdaptyServerCluster.Default)
-                    .SetIPAddressCollectionDisabled(false)
-                    .SetAppleIDFACollectionDisabled(false)
-                    .SetGoogleAdvertisingIdCollectionDisabled(false)
-                    .SetActivateUI(true)
-                    .SetAdaptyUIMediaCache(
-                        100 * 1024 * 1024, // 100MB
-                        null,
-                        100 * 1024 * 1024 // 100MB
-                    );
+            var builder = new AdaptyConfiguration.Builder(
+                "public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6"
+            )
+                .SetCustomerUserId(null)
+                .SetObserverMode(false)
+                .SetServerCluster(AdaptyServerCluster.Default)
+                .SetIPAddressCollectionDisabled(false)
+                .SetAppleIDFACollectionDisabled(false)
+                .SetGoogleAdvertisingIdCollectionDisabled(false)
+                .SetActivateUI(true)
+                .SetAdaptyUIMediaCache(
+                    100 * 1024 * 1024, // 100MB
+                    null,
+                    100 * 1024 * 1024 // 100MB
+                );
 
             this.LogMethodRequest("Activate");
 
-            Adapty.Activate(builder.Build(), (error) =>
-            {
-                this.LogMethodResult("Activate", error);
-                this.OnInitializeFinished?.Invoke();
-                this.GetProfile();
-            });
+            Adapty.Activate(
+                builder.Build(),
+                (error) =>
+                {
+                    this.LogMethodResult("Activate", error);
+                    this.OnInitializeFinished?.Invoke();
+                    this.GetProfile();
+                }
+            );
         }
 
         private void SetFallBackPaywalls()
@@ -65,114 +72,155 @@ namespace AdaptyExample
 #endif
 
             this.LogMethodRequest("SetFallBackPaywalls");
-            Adapty.SetFallbackPaywalls(assetId, (error) =>
-            {
-                this.LogMethodResult("SetFallBackPaywalls", error);
-            });
+            Adapty.SetFallbackPaywalls(
+                assetId,
+                (error) =>
+                {
+                    this.LogMethodResult("SetFallBackPaywalls", error);
+                }
+            );
         }
 
         public void GetProfile()
         {
             this.LogMethodRequest("GetProfile");
 
-            Adapty.GetProfile((profile, error) =>
-            {
-                this.LogMethodResult("GetProfile", error);
-
-                if (profile != null)
+            Adapty.GetProfile(
+                (profile, error) =>
                 {
-                    this.Router.SetProfile(profile);
+                    this.LogMethodResult("GetProfile", error);
+
+                    if (profile != null)
+                    {
+                        this.Router.SetProfile(profile);
+                    }
                 }
-            });
+            );
         }
 
-        public void GetPaywallForDefaultAudience(string id, string locale, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall> completionHandler)
+        public void GetPaywallForDefaultAudience(
+            string id,
+            string locale,
+            AdaptyPlacementFetchPolicy fetchPolicy,
+            Action<AdaptyPaywall> completionHandler
+        )
         {
             this.LogMethodRequest("GetPaywallForDefaultAudience");
 
-            Adapty.GetPaywallForDefaultAudience(id, locale, fetchPolicy, (paywall, error) =>
-            {
-                this.LogMethodResult("GetPaywallForDefaultAudience", error);
-                completionHandler.Invoke(paywall);
-            });
+            Adapty.GetPaywallForDefaultAudience(
+                id,
+                locale,
+                fetchPolicy,
+                (paywall, error) =>
+                {
+                    this.LogMethodResult("GetPaywallForDefaultAudience", error);
+                    completionHandler.Invoke(paywall);
+                }
+            );
         }
 
-        public void GetPaywall(string id, string locale, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall> completionHandler)
+        public void GetPaywall(
+            string id,
+            string locale,
+            AdaptyPlacementFetchPolicy fetchPolicy,
+            Action<AdaptyPaywall> completionHandler
+        )
         {
             this.LogMethodRequest("GetPaywall");
 
-            Adapty.GetPaywall(id, locale, fetchPolicy, new TimeSpan(0, 0, 4), (paywall, error) =>
-            {
-                this.LogMethodResult("GetPaywall", error);
-                completionHandler.Invoke(paywall);
-            });
+            Adapty.GetPaywall(
+                id,
+                locale,
+                fetchPolicy,
+                new TimeSpan(0, 0, 4),
+                (paywall, error) =>
+                {
+                    this.LogMethodResult("GetPaywall", error);
+                    completionHandler.Invoke(paywall);
+                }
+            );
         }
 
-        public void GetPaywallProducts(AdaptyPaywall paywall, Action<IList<AdaptyPaywallProduct>> completionHandler)
+        public void GetPaywallProducts(
+            AdaptyPaywall paywall,
+            Action<IList<AdaptyPaywallProduct>> completionHandler
+        )
         {
             this.LogMethodRequest("GetPaywallProducts");
 
-            Adapty.GetPaywallProducts(paywall, (products, error) =>
-            {
-                this.LogMethodResult("GetPaywallProducts", error);
-                completionHandler.Invoke(products);
-            });
-
+            Adapty.GetPaywallProducts(
+                paywall,
+                (products, error) =>
+                {
+                    this.LogMethodResult("GetPaywallProducts", error);
+                    completionHandler.Invoke(products);
+                }
+            );
         }
 
-        public void MakePurchase(AdaptyPaywallProduct product, Action<AdaptyError> completionHandler)
+        public void MakePurchase(
+            AdaptyPaywallProduct product,
+            Action<AdaptyError> completionHandler
+        )
         {
             this.LogMethodRequest("MakePurchase");
 
-            Adapty.MakePurchase(product, (result, error) =>
-            {
-                this.LogMethodResult("MakePurchase", error);
-                completionHandler.Invoke(error);
-
-                switch (result.Type)
+            Adapty.MakePurchase(
+                product,
+                (result, error) =>
                 {
+                    this.LogMethodResult("MakePurchase", error);
+                    completionHandler.Invoke(error);
 
-                    case AdaptyPurchaseResultType.Pending:
-                        // handle pending
-                        break;
-                    case AdaptyPurchaseResultType.UserCancelled:
-                        // handle cancelation
-                        break;
-                    case AdaptyPurchaseResultType.Success:
-                        var profile = result.Profile;
-                        this.Router.SetProfile(profile);
-                        break;
-                    default:
-                        break;
+                    switch (result.Type)
+                    {
+                        case AdaptyPurchaseResultType.Pending:
+                            // handle pending
+                            break;
+                        case AdaptyPurchaseResultType.UserCancelled:
+                            // handle cancelation
+                            break;
+                        case AdaptyPurchaseResultType.Success:
+                            var profile = result.Profile;
+                            this.Router.SetProfile(profile);
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            });
+            );
         }
 
         public void RestorePurchases(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("RestorePurchases");
 
-            Adapty.RestorePurchases((profile, error) =>
-            {
-                this.LogMethodResult("RestorePurchases", error);
-                completionHandler.Invoke(error);
-
-                if (profile != null)
+            Adapty.RestorePurchases(
+                (profile, error) =>
                 {
-                    this.Router.SetProfile(profile);
+                    this.LogMethodResult("RestorePurchases", error);
+                    completionHandler.Invoke(error);
+
+                    if (profile != null)
+                    {
+                        this.Router.SetProfile(profile);
+                    }
                 }
-            });
+            );
         }
 
         public void Identify(string customerUserId, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("Identify");
 
-            Adapty.Identify(customerUserId, (error) =>
-            {
-                this.LogMethodResult("Identify", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.Identify(
+                customerUserId,
+                (error) =>
+                {
+                    this.LogMethodResult("Identify", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
         public void UpdateProfile(Action<AdaptyError> completionHandler)
@@ -206,7 +254,10 @@ namespace AdaptyExample
             try
             {
                 Debug.Log("#AdaptyListener# UpdateProfile Test [1]: value.length > 50");
-                builder = builder.SetCustomStringAttribute("string_key", "01234567890123456789012345678901234567890123456789_");
+                builder = builder.SetCustomStringAttribute(
+                    "string_key",
+                    "01234567890123456789012345678901234567890123456789_"
+                );
                 Debug.Log("#AdaptyListener# UpdateProfile Test [1]: FAIL");
             }
             catch (Exception e)
@@ -218,7 +269,10 @@ namespace AdaptyExample
             try
             {
                 Debug.Log("#AdaptyListener# UpdateProfile Test [2]: key.length > 30");
-                builder = builder.SetCustomStringAttribute("012345678901234567890123456789_1", "value");
+                builder = builder.SetCustomStringAttribute(
+                    "012345678901234567890123456789_1",
+                    "value"
+                );
                 Debug.Log("#AdaptyListener# UpdateProfile Test [2]: FAIL");
             }
             catch (Exception e)
@@ -245,7 +299,10 @@ namespace AdaptyExample
 
                 for (var i = 1; i <= 31; ++i)
                 {
-                    builder = builder.SetCustomStringAttribute(string.Format("key_{0}", i), string.Format("value_{0}", i));
+                    builder = builder.SetCustomStringAttribute(
+                        string.Format("key_{0}", i),
+                        string.Format("value_{0}", i)
+                    );
                 }
 
                 Debug.Log("#AdaptyListener# UpdateProfile Test [4]: FAIL");
@@ -256,88 +313,116 @@ namespace AdaptyExample
                 Debug.Log("#AdaptyListener# UpdateProfile Test [4]: DONE");
             }
 
-            Adapty.UpdateProfile(builder.Build(), (error) =>
-            {
-                this.LogMethodResult("UpdateProfile", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.UpdateProfile(
+                builder.Build(),
+                (error) =>
+                {
+                    this.LogMethodResult("UpdateProfile", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
         public void SetIntegrationIdentifier(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("SetIntegrationIdentifier");
 
-            Adapty.SetIntegrationIdentifier("test_integration", "test_id", (error) =>
-            {
-                this.LogMethodResult("SetIntegrationIdentifier", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.SetIntegrationIdentifier(
+                "test_integration",
+                "test_id",
+                (error) =>
+                {
+                    this.LogMethodResult("SetIntegrationIdentifier", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
         public void ReportTransaction(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("ReportTransaction");
 
-            Adapty.ReportTransaction("transaction_id", "variation_id", (profile, error) =>
-            {
-                this.LogMethodResult("ReportTransaction", error);
-                completionHandler.Invoke(error);
-
-                if (profile != null)
+            Adapty.ReportTransaction(
+                "transaction_id",
+                "variation_id",
+                (profile, error) =>
                 {
-                    this.Router.SetProfile(profile);
+                    this.LogMethodResult("ReportTransaction", error);
+                    completionHandler.Invoke(error);
+
+                    if (profile != null)
+                    {
+                        this.Router.SetProfile(profile);
+                    }
                 }
-            });
+            );
         }
 
         public void UpdateAttribution(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("UpdateAttribution");
 
-            Adapty.UpdateAttribution("{\"test_key\": \"test_value\"}", "custom", (error) =>
-            {
-                this.LogMethodResult("UpdateAttribution", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.UpdateAttribution(
+                "{\"test_key\": \"test_value\"}",
+                "custom",
+                (error) =>
+                {
+                    this.LogMethodResult("UpdateAttribution", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
         public void LogShowPaywall(AdaptyPaywall paywall, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("LogShowPaywall");
 
-            Adapty.LogShowPaywall(paywall, (error) =>
-            {
-                this.LogMethodResult("LogShowPaywall", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.LogShowPaywall(
+                paywall,
+                (error) =>
+                {
+                    this.LogMethodResult("LogShowPaywall", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
         public void LogShowOnboarding(int value, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("LogShowOnboarding");
 
-            Adapty.LogShowOnboarding("test_onboarding", string.Format("test_screen_{0}", value), (uint)value, (error) =>
-            {
-                this.LogMethodResult("LogShowOnboarding", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.LogShowOnboarding(
+                "test_onboarding",
+                string.Format("test_screen_{0}", value),
+                (uint)value,
+                (error) =>
+                {
+                    this.LogMethodResult("LogShowOnboarding", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
-        public void UpdateAppStoreCollectingRefundDataConsent(Boolean value, Action<AdaptyError> completionHandler)
+        public void UpdateAppStoreCollectingRefundDataConsent(
+            Boolean value,
+            Action<AdaptyError> completionHandler
+        )
         {
             this.LogMethodRequest("UpdateAppStoreCollectingRefundDataConsent");
 
-            Adapty.UpdateAppStoreCollectingRefundDataConsent(value, (error) =>
-            {
-                this.LogMethodResult("UpdateAppStoreCollectingRefundDataConsent", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.UpdateAppStoreCollectingRefundDataConsent(
+                value,
+                (error) =>
+                {
+                    this.LogMethodResult("UpdateAppStoreCollectingRefundDataConsent", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
         public void UpdateAppStoreRefundPreference(int value, Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("UpdateAppStoreRefundPreference");
-
 
             AdaptyRefundPreference preferenceValue = AdaptyRefundPreference.NoPreference;
 
@@ -355,32 +440,39 @@ namespace AdaptyExample
                     break;
             }
 
-            Adapty.UpdateAppStoreRefundPreference(preferenceValue, (error) =>
-            {
-                this.LogMethodResult("UpdateAppStoreRefundPreference", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.UpdateAppStoreRefundPreference(
+                preferenceValue,
+                (error) =>
+                {
+                    this.LogMethodResult("UpdateAppStoreRefundPreference", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
         public void PresentCodeRedemptionSheet()
         {
             this.LogMethodRequest("PresentCodeRedemptionSheet");
 
-            Adapty.PresentCodeRedemptionSheet((error) =>
-            {
-                this.LogMethodResult("PresentCodeRedemptionSheet", error);
-            });
+            Adapty.PresentCodeRedemptionSheet(
+                (error) =>
+                {
+                    this.LogMethodResult("PresentCodeRedemptionSheet", error);
+                }
+            );
         }
 
         public void Logout(Action<AdaptyError> completionHandler)
         {
             this.LogMethodRequest("Logout");
 
-            Adapty.Logout((error) =>
-            {
-                this.LogMethodResult("Logout", error);
-                completionHandler.Invoke(error);
-            });
+            Adapty.Logout(
+                (error) =>
+                {
+                    this.LogMethodResult("Logout", error);
+                    completionHandler.Invoke(error);
+                }
+            );
         }
 
         // - Logging
@@ -404,9 +496,20 @@ namespace AdaptyExample
             }
         }
 
-        private void LogIncomingCall_AdaptyUI(string methodName, AdaptyUIView view, string meta)
+        private void LogIncomingCall_AdaptyUI(
+            string methodName,
+            AdaptyUIPaywallView view,
+            string meta
+        )
         {
-            Debug.Log(string.Format("#AdaptyListener# <-- {0}, viewId = {1}, meta = {2}", methodName, view.Id, meta));
+            Debug.Log(
+                string.Format(
+                    "#AdaptyListener# <-- {0}, viewId = {1}, meta = {2}",
+                    methodName,
+                    view.Id,
+                    meta
+                )
+            );
         }
 
         // – AdaptyEventListener
@@ -418,75 +521,135 @@ namespace AdaptyExample
             this.Router.SetProfile(profile);
         }
 
+        public void OnInstallationDetailsSuccess(AdaptyInstallationDetails details)
+        {
+            Debug.Log(
+                "#AdaptyListener# OnInstallationDetailsSuccess called, details = "
+                    + details.ToString()
+            );
+        }
+
+        public void OnInstallationDetailsFail(AdaptyError error)
+        {
+            Debug.Log(
+                "#AdaptyListener# OnInstallationDetailsFail called, error = " + error.ToString()
+            );
+        }
+
         // AdaptyUI
 
-        public void CreatePaywallView(AdaptyPaywall paywall, bool preloadProducts, Action<AdaptyUIView> completionHandler)
+        public void CreatePaywallView(
+            AdaptyPaywall paywall,
+            bool preloadProducts,
+            Action<AdaptyUIPaywallView> completionHandler
+        )
         {
             this.LogMethodRequest("CreatePaywallView");
 
-            var parameters = new AdaptyUICreateViewParameters()
+            var parameters = new AdaptyUICreatePaywallViewParameters()
                 .SetPreloadProducts(preloadProducts)
                 .SetCustomTags(
-                    new Dictionary<string, string> {
+                    new Dictionary<string, string>
+                    {
                         { "CUSTOM_TAG_NAME", "Walter White" },
                         { "CUSTOM_TAG_PHONE", "+1 234 567890" },
                         { "CUSTOM_TAG_CITY", "Albuquerque" },
-                        { "CUSTOM_TAG_EMAIL", "walter@white.com" }
+                        { "CUSTOM_TAG_EMAIL", "walter@white.com" },
                     }
                 )
                 .SetCustomTimers(
-                    new Dictionary<string, DateTime> {
+                    new Dictionary<string, DateTime>
+                    {
                         { "CUSTOM_TIMER_24H", DateTime.Now.AddSeconds(86400) },
                         { "CUSTOM_TIMER_10H", DateTime.Now.AddSeconds(36000) },
                         { "CUSTOM_TIMER_1H", DateTime.Now.AddSeconds(3600) },
                         { "CUSTOM_TIMER_10M", DateTime.Now.AddSeconds(600) },
                         { "CUSTOM_TIMER_1M", DateTime.Now.AddSeconds(60) },
                         { "CUSTOM_TIMER_10S", DateTime.Now.AddSeconds(10) },
-                        { "CUSTOM_TIMER_5S", DateTime.Now.AddSeconds(5) }
+                        { "CUSTOM_TIMER_5S", DateTime.Now.AddSeconds(5) },
                     }
                 )
                 .SetLoadTimeout(new TimeSpan(0, 0, 3));
 
-            AdaptyUI.CreateView(paywall, parameters, (view, error) =>
-            {
-                this.LogMethodResult("CreatePaywallView", error);
-                completionHandler.Invoke(view);
-            });
+            AdaptyUI.CreatePaywallView(
+                paywall,
+                parameters,
+                (view, error) =>
+                {
+                    this.LogMethodResult("CreatePaywallView", error);
+                    completionHandler.Invoke(view);
+                }
+            );
         }
 
-        public void PresentPaywallView(AdaptyUIView view, Action<AdaptyError> completionHandler)
+        public void PresentPaywallView(
+            AdaptyUIPaywallView view,
+            Action<AdaptyError> completionHandler
+        )
         {
             this.LogMethodRequest("PresentPaywallView");
 
-            AdaptyUI.PresentView(view, (error) =>
-            {
-                this.LogMethodResult("PresentPaywallView", error);
-
-                if (completionHandler != null)
+            AdaptyUI.PresentPaywallView(
+                view,
+                (error) =>
                 {
-                    completionHandler.Invoke(error);
+                    this.LogMethodResult("PresentPaywallView", error);
+
+                    if (completionHandler != null)
+                    {
+                        completionHandler.Invoke(error);
+                    }
                 }
-            });
+            );
         }
 
-        public void DismissPaywallView(AdaptyUIView view, Action<AdaptyError> completionHandler)
+        public void DismissPaywallView(
+            AdaptyUIPaywallView view,
+            Action<AdaptyError> completionHandler
+        )
         {
             this.LogMethodRequest("DismissPaywallView");
 
-            AdaptyUI.DismissView(view, (error) =>
-            {
-                this.LogMethodResult("DismissPaywallView", error);
-
-                if (completionHandler != null)
+            AdaptyUI.DismissPaywallView(
+                view,
+                (error) =>
                 {
-                    completionHandler.Invoke(error);
+                    this.LogMethodResult("DismissPaywallView", error);
+
+                    if (completionHandler != null)
+                    {
+                        completionHandler.Invoke(error);
+                    }
                 }
-            });
+            );
         }
 
         // - AdaptyUIEventListener
 
-        public void PaywallViewDidPerformAction(AdaptyUIView view, AdaptyUIUserAction action)
+        public void PaywallViewDidAppear(AdaptyUIPaywallView view)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidAppear", view, null);
+        }
+
+        public void PaywallViewDidDisappear(AdaptyUIPaywallView view)
+        {
+            LogIncomingCall_AdaptyUI("PaywallViewDidDisappear", view, null);
+        }
+
+        public void PaywallViewDidFinishWebPaymentNavigation(
+            AdaptyUIPaywallView view,
+            AdaptyPaywallProduct product,
+            AdaptyError error
+        )
+        {
+            LogIncomingCall_AdaptyUI(
+                "PaywallViewDidFinishWebPaymentNavigation",
+                view,
+                product.VendorProductId
+            );
+        }
+
+        public void PaywallViewDidPerformAction(AdaptyUIPaywallView view, AdaptyUIUserAction action)
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidPerformAction", view, action.Type.ToString());
 
@@ -503,17 +666,21 @@ namespace AdaptyExample
                         .SetDefaultActionTitle("Cancel")
                         .SetSecondaryActionTitle("OK");
 
-                    AdaptyUI.ShowDialog(view, dialog, (action, error) =>
-                    {
-                        switch (action)
+                    AdaptyUI.ShowDialog(
+                        view,
+                        dialog,
+                        (action, error) =>
                         {
-                            case AdaptyUIDialogActionType.Primary:
-                                break;
-                            case AdaptyUIDialogActionType.Secondary:
-                                Application.OpenURL(urlString);
-                                break;
+                            switch (action)
+                            {
+                                case AdaptyUIDialogActionType.Primary:
+                                    break;
+                                case AdaptyUIDialogActionType.Secondary:
+                                    Application.OpenURL(urlString);
+                                    break;
+                            }
                         }
-                    });
+                    );
 
                     break;
                 default:
@@ -521,23 +688,29 @@ namespace AdaptyExample
             }
         }
 
-        public void PaywallViewDidSelectProduct(AdaptyUIView view, string productId)
+        public void PaywallViewDidSelectProduct(AdaptyUIPaywallView view, string productId)
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidSelectProduct", view, productId);
         }
 
-        public void PaywallViewDidStartPurchase(AdaptyUIView view, AdaptyPaywallProduct product)
+        public void PaywallViewDidStartPurchase(
+            AdaptyUIPaywallView view,
+            AdaptyPaywallProduct product
+        )
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidStartPurchase", view, product.VendorProductId);
         }
 
-        public void PaywallViewDidFinishPurchase(AdaptyUIView view, AdaptyPaywallProduct product, AdaptyPurchaseResult purchasedResult)
+        public void PaywallViewDidFinishPurchase(
+            AdaptyUIPaywallView view,
+            AdaptyPaywallProduct product,
+            AdaptyPurchaseResult purchasedResult
+        )
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidFinishPurchase", view, product.VendorProductId);
 
             switch (purchasedResult.Type)
             {
-
                 case AdaptyPurchaseResultType.UserCancelled:
                     // handle user canceled
                     break;
@@ -557,17 +730,25 @@ namespace AdaptyExample
             }
         }
 
-        public void PaywallViewDidFailPurchase(AdaptyUIView view, AdaptyPaywallProduct product, AdaptyError error)
+        public void PaywallViewDidFailPurchase(
+            AdaptyUIPaywallView view,
+            AdaptyPaywallProduct product,
+            AdaptyError error
+        )
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidFailPurchase", view, string.Format("id: {0}, error: {1}", product.VendorProductId, error.ToString()));
+            LogIncomingCall_AdaptyUI(
+                "PaywallViewDidFailPurchase",
+                view,
+                string.Format("id: {0}, error: {1}", product.VendorProductId, error.ToString())
+            );
         }
 
-        public void PaywallViewDidStartRestore(AdaptyUIView view)
+        public void PaywallViewDidStartRestore(AdaptyUIPaywallView view)
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidStartRestore", view, null);
         }
 
-        public void PaywallViewDidFinishRestore(AdaptyUIView view, AdaptyProfile profile)
+        public void PaywallViewDidFinishRestore(AdaptyUIPaywallView view, AdaptyProfile profile)
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidFinishRestore", view, profile.ProfileId);
 
@@ -576,27 +757,22 @@ namespace AdaptyExample
                 .SetContent("Purchases were successfully restored.")
                 .SetDefaultActionTitle("OK");
 
-
-            AdaptyUI.ShowDialog(view, dialog, (action, error) =>
-            {
-
-            });
+            AdaptyUI.ShowDialog(view, dialog, (action, error) => { });
         }
 
-        public void PaywallViewDidFailRestore(AdaptyUIView view, AdaptyError error)
+        public void PaywallViewDidFailRestore(AdaptyUIPaywallView view, AdaptyError error)
         {
             LogIncomingCall_AdaptyUI("aywallViewDidFailRestore", view, error.ToString());
         }
 
-        public void PaywallViewDidFailRendering(AdaptyUIView view, AdaptyError error)
+        public void PaywallViewDidFailRendering(AdaptyUIPaywallView view, AdaptyError error)
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidFailRendering", view, error.ToString());
         }
 
-        public void PaywallViewDidFailLoadingProducts(AdaptyUIView view, AdaptyError error)
+        public void PaywallViewDidFailLoadingProducts(AdaptyUIPaywallView view, AdaptyError error)
         {
             LogIncomingCall_AdaptyUI("PaywallViewDidFailLoadingProducts", view, error.ToString());
         }
     }
-
 }

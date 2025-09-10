@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 #if UNITY_IOS && !UNITY_EDITOR
 using _Adapty = AdaptySDK.iOS.AdaptyIOS;
 #elif UNITY_ANDROID && !UNITY_EDITOR
@@ -23,21 +22,25 @@ namespace AdaptySDK
         /// </summary>
         public static readonly string SDKVersion = "3.4.1";
 
-
         /// <summary>
         /// Use this method to initialize the Adapty SDK.
         /// </summary>
         /// <param name="configurationBuilder">The builder to use for the configuration.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void Activate(AdaptyConfiguration.Builder configurationBuilder, Action<AdaptyError> completionHandler) =>
-            Activate(configurationBuilder.Build(), completionHandler);
+        public static void Activate(
+            AdaptyConfiguration.Builder configurationBuilder,
+            Action<AdaptyError> completionHandler
+        ) => Activate(configurationBuilder.Build(), completionHandler);
 
         /// <summary>
         /// Use this method to initialize the Adapty SDK.
         /// </summary>
         /// <param name="configuration">The configuration to use for the SDK.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void Activate(AdaptyConfiguration configuration, Action<AdaptyError> completionHandler)
+        public static void Activate(
+            AdaptyConfiguration configuration,
+            Action<AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("configuration", configuration.ToJSONNode());
@@ -54,9 +57,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.Activate(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Activate(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -69,8 +76,10 @@ namespace AdaptySDK
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywall(string placementId, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
-            GetPaywall(placementId, null, null, null, completionHandler);
+        public static void GetPaywall(
+            string placementId,
+            Action<AdaptyPaywall, AdaptyError> completionHandler
+        ) => GetPaywall(placementId, null, null, null, completionHandler);
 
         /// <summary>
         /// Adapty allows you remotely configure the products that will be displayed in your app.
@@ -83,8 +92,12 @@ namespace AdaptySDK
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="loadTimeout">The timeout for the paywall loading.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywall(string placementId, AdaptyPaywallFetchPolicy fetchPolicy, TimeSpan? loadTimeout, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
-            GetPaywall(placementId, null, fetchPolicy, loadTimeout, completionHandler);
+        public static void GetPaywall(
+            string placementId,
+            AdaptyPlacementFetchPolicy fetchPolicy,
+            TimeSpan? loadTimeout,
+            Action<AdaptyPaywall, AdaptyError> completionHandler
+        ) => GetPaywall(placementId, null, fetchPolicy, loadTimeout, completionHandler);
 
         /// <summary>
         /// Adapty allows you remotely configure the products that will be displayed in your app.
@@ -96,8 +109,11 @@ namespace AdaptySDK
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywall(string placementId, string locale, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
-            GetPaywall(placementId, locale, null, null, completionHandler);
+        public static void GetPaywall(
+            string placementId,
+            string locale,
+            Action<AdaptyPaywall, AdaptyError> completionHandler
+        ) => GetPaywall(placementId, locale, null, null, completionHandler);
 
         /// <summary>
         /// Adapty allows you remotely configure the products that will be displayed in your app.
@@ -111,13 +127,24 @@ namespace AdaptySDK
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="loadTimeout">The timeout for the paywall loading.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywall(string placementId, string locale, AdaptyPaywallFetchPolicy fetchPolicy, TimeSpan? loadTimeout, Action<AdaptyPaywall, AdaptyError> completionHandler)
+        public static void GetPaywall(
+            string placementId,
+            string locale,
+            AdaptyPlacementFetchPolicy fetchPolicy,
+            TimeSpan? loadTimeout,
+            Action<AdaptyPaywall, AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("placement_id", placementId);
-            if (locale != null) parameters.Add("locale", locale);
-            if (fetchPolicy != null) parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
-            if (loadTimeout.HasValue) parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
+            if (locale != null)
+                parameters.Add("locale", locale);
+
+            if (fetchPolicy != null)
+                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+
+            if (loadTimeout.HasValue)
+                parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
 
             Request.Send(
                 "get_paywall",
@@ -131,9 +158,46 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywall(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywall(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
+        }
+
+        public static void GetOnboarding(
+            string placementId,
+            Action<AdaptyOnboarding, AdaptyError> completionHandler
+        ) => GetOnboarding(placementId, null, null, null, completionHandler);
+
+        public static void GetOnboarding(
+            string placementId,
+            string locale,
+            AdaptyPlacementFetchPolicy fetchPolicy,
+            TimeSpan? loadTimeout,
+            Action<AdaptyOnboarding, AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+
+            parameters.Add("placement_id", placementId);
+
+            if (locale != null)
+            {
+                parameters.Add("locale", locale);
+            }
+
+            if (fetchPolicy != null)
+            {
+                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+            }
+
+            if (loadTimeout.HasValue)
+            {
+                parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
+            }
         }
 
         /// <summary>
@@ -144,8 +208,10 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(string placementId, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
-           GetPaywallForDefaultAudience(placementId, null, null, completionHandler);
+        public static void GetPaywallForDefaultAudience(
+            string placementId,
+            Action<AdaptyPaywall, AdaptyError> completionHandler
+        ) => GetPaywallForDefaultAudience(placementId, null, null, completionHandler);
 
         /// <summary>
         /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
@@ -156,8 +222,11 @@ namespace AdaptySDK
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(string placementId, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
-            GetPaywallForDefaultAudience(placementId, null, fetchPolicy, completionHandler);
+        public static void GetPaywallForDefaultAudience(
+            string placementId,
+            AdaptyPlacementFetchPolicy fetchPolicy,
+            Action<AdaptyPaywall, AdaptyError> completionHandler
+        ) => GetPaywallForDefaultAudience(placementId, null, fetchPolicy, completionHandler);
 
         /// <summary>
         /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
@@ -168,8 +237,11 @@ namespace AdaptySDK
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(string placementId, string locale, Action<AdaptyPaywall, AdaptyError> completionHandler) =>
-            GetPaywallForDefaultAudience(placementId, locale, null, completionHandler);
+        public static void GetPaywallForDefaultAudience(
+            string placementId,
+            string locale,
+            Action<AdaptyPaywall, AdaptyError> completionHandler
+        ) => GetPaywallForDefaultAudience(placementId, locale, null, completionHandler);
 
         /// <summary>
         /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
@@ -181,12 +253,19 @@ namespace AdaptySDK
         /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(string placementId, string locale, AdaptyPaywallFetchPolicy fetchPolicy, Action<AdaptyPaywall, AdaptyError> completionHandler)
+        public static void GetPaywallForDefaultAudience(
+            string placementId,
+            string locale,
+            AdaptyPlacementFetchPolicy fetchPolicy,
+            Action<AdaptyPaywall, AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("placement_id", placementId);
-            if (locale != null) parameters.Add("locale", locale);
-            if (fetchPolicy != null) parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+            if (locale != null)
+                parameters.Add("locale", locale);
+            if (fetchPolicy != null)
+                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
 
             Request.Send(
                 "get_paywall_for_default_audience",
@@ -200,9 +279,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywallForDefaultAudience(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywallForDefaultAudience(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -210,7 +293,10 @@ namespace AdaptySDK
         /// </summary>
         /// <param name="paywall">an [AdaptyPaywall] for which you want to get a products.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallProducts(AdaptyPaywall paywall, Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler)
+        public static void GetPaywallProducts(
+            AdaptyPaywall paywall,
+            Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("paywall", paywall.ToJSONNode());
@@ -227,9 +313,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<IList<AdaptyPaywallProduct>,AdaptyError> completionHandler in Adapty.GetPaywallProducts(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<IList<AdaptyPaywallProduct>,AdaptyError> completionHandler in Adapty.GetPaywallProducts(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -255,9 +345,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyProfile,AdaptyError> completionHandler in Adapty.GetProfile(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyProfile,AdaptyError> completionHandler in Adapty.GetProfile(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -271,8 +365,33 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Identify(string customerUserId, Action<AdaptyError> completionHandler)
         {
+            Identify(customerUserId, null, completionHandler);
+        }
+
+        /// <summary>
+        /// Use this method for identifying user with it’s user id in your system.
+        /// </summary>
+        /// <remarks>
+        /// If you don’t have a user id on SDK configuration, you can set it later at any time with `.identify()` method.
+        /// The most common cases are after registration/authorization when the user switches from being an anonymous user to an authenticated user.
+        /// </remarks>
+        /// <param name="customerUserId">User identifier in your system.</param>
+        /// <param name="appAccountToken">App account token.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void Identify(
+            string customerUserId,
+            Guid? appAccountToken,
+            Action<AdaptyError> completionHandler
+        )
+        {
             var parameters = new JSONObject();
+
             parameters.Add("customer_user_id", customerUserId);
+
+            if (appAccountToken != null)
+            {
+                parameters.Add("app_account_token", appAccountToken.ToString());
+            }
 
             Request.Send(
                 "identify",
@@ -286,9 +405,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.Identify(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Identify(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -309,9 +432,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<bool,AdaptyError> completionHandler in Adapty.IsActivated(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<bool,AdaptyError> completionHandler in Adapty.IsActivated(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
@@ -328,9 +455,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyLogLevel,AdaptyError> completionHandler in Adapty.GetLoglevel(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyLogLevel,AdaptyError> completionHandler in Adapty.GetLoglevel(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -355,9 +486,38 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetLogLevel(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetLogLevel(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
+        }
+
+        public static void GetCurrentInstallationStatus(
+            Action<AdaptyInstallationStatus, AdaptyError> completionHandler
+        )
+        {
+            Request.Send(
+                "get_current_installation_status",
+                null,
+                JSONNodeExtensions.GetInstallationStatus,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyInstallationDetails,AdaptyError> completionHandler in Adapty.GetCurrentInstallationStatus(..)",
+                            e
+                        );
+                    }
+                }
+            );
         }
 
         /// <summary>
@@ -378,9 +538,129 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.Logout(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Logout(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
+        }
+
+        public static void CreateWebPaywallUrl(
+            AdaptyPaywall paywall,
+            Action<string, AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("paywall", paywall.ToJSONNode());
+
+            Request.Send(
+                "create_web_paywall_url",
+                parameters,
+                JSONNodeExtensions.GetString,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.CreateWebPaywallUrl(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
+        public static void CreateWebPaywallUrl(
+            AdaptyPaywallProduct product,
+            Action<string, AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("product", product.ToJSONNode());
+
+            Request.Send(
+                "create_web_paywall_url",
+                parameters,
+                JSONNodeExtensions.GetString,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.CreateWebPaywallUrl(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
+        public static void OpenWebPaywall(
+            AdaptyPaywall paywall,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("paywall", paywall.ToJSONNode());
+
+            Request.Send(
+                "open_web_paywall",
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.OpenWebPaywall(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
+        public static void OpenWebPaywall(
+            AdaptyPaywallProduct product,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("product", product.ToJSONNode());
+
+            Request.Send(
+                "open_web_paywall",
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.OpenWebPaywall(..)",
+                            e
+                        );
+                    }
+                }
+            );
         }
 
         /// <summary>
@@ -395,8 +675,16 @@ namespace AdaptySDK
         /// <param name="screenName">Readable name of a particular screen as part of onboarding.</param>
         /// <param name="screenOrder">An unsigned integer value representing the order of this screen in your onboarding sequence (it must me greater than 0).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void LogShowOnboarding(string name, string screenName, uint screenOrder, Action<AdaptyError> completionHandler) =>
-            LogShowOnboarding(new AdaptyOnboardingScreenParameters(name, screenName, screenOrder), completionHandler);
+        public static void LogShowOnboarding(
+            string name,
+            string screenName,
+            uint screenOrder,
+            Action<AdaptyError> completionHandler
+        ) =>
+            LogShowOnboarding(
+                new AdaptyOnboardingScreenParameters(name, screenName, screenOrder),
+                completionHandler
+            );
 
         /// <summary>
         /// Call this method to keep track of the user’s steps while onboarding
@@ -408,7 +696,10 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="onboardingScreenParameters">An [AdaptyOnboardingScreenParameters] object.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void LogShowOnboarding(AdaptyOnboardingScreenParameters onbordingScreenparameters, Action<AdaptyError> completionHandler)
+        public static void LogShowOnboarding(
+            AdaptyOnboardingScreenParameters onbordingScreenparameters,
+            Action<AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("params", onbordingScreenparameters.ToJSONNode());
@@ -425,9 +716,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowOnboarding(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowOnboarding(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -441,7 +736,10 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="paywall">An [AdaptyPaywall] object.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void LogShowPaywall(AdaptyPaywall paywall, Action<AdaptyError> completionHandler)
+        public static void LogShowPaywall(
+            AdaptyPaywall paywall,
+            Action<AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("paywall", paywall.ToJSONNode());
@@ -458,9 +756,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowPaywall(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowPaywall(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -471,7 +773,10 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="consent">a Boolean value wehter user gave the consent or not.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void UpdateAppStoreCollectingRefundDataConsent(Boolean consent, Action<AdaptyError> completionHandler)
+        public static void UpdateAppStoreCollectingRefundDataConsent(
+            Boolean consent,
+            Action<AdaptyError> completionHandler
+        )
         {
 #if UNITY_IOS && !UNITY_EDITOR
             var parameters = new JSONObject();
@@ -489,9 +794,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
 #else
             try
             {
@@ -499,7 +808,10 @@ namespace AdaptySDK
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)", e);
+                throw new Exception(
+                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)",
+                    e
+                );
             }
 #endif
         }
@@ -512,7 +824,10 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="refundPreference"> the [AdaptyRefundPreference] value.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void UpdateAppStoreRefundPreference(AdaptyRefundPreference refundPreference, Action<AdaptyError> completionHandler)
+        public static void UpdateAppStoreRefundPreference(
+            AdaptyRefundPreference refundPreference,
+            Action<AdaptyError> completionHandler
+        )
         {
 #if UNITY_IOS && !UNITY_EDITOR
             var parameters = new JSONObject();
@@ -530,9 +845,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
 #else
             try
             {
@@ -540,7 +859,10 @@ namespace AdaptySDK
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)", e);
+                throw new Exception(
+                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)",
+                    e
+                );
             }
 #endif
         }
@@ -553,20 +875,10 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="product">an [AdaptyPaywallProduct] object retrieved from the paywall.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void MakePurchase(AdaptyPaywallProduct product, Action<AdaptyPurchaseResult, AdaptyError> completionHandler) =>
-            MakePurchase(product, null, null, completionHandler);
-
-        /// <summary>
-        /// To make the purchase, you have to call this method.
-        /// </summary>
-        /// <remarks>
-        /// Read more on the <see href="https://adapty.io/docs/making-purchases">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="product">an [AdaptyPaywallProduct] object retrieved from the paywall.</param>
-        /// <param name="subscriptionUpdate">an [AdaptySubscriptionUpdateParameters] object used to upgrade or downgrade a subscription (use for Android).</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void MakePurchase(AdaptyPaywallProduct product, AdaptySubscriptionUpdateParameters subscriptionUpdate, Action<AdaptyPurchaseResult, AdaptyError> completionHandler) =>
-            MakePurchase(product, subscriptionUpdate, null, completionHandler);
+        public static void MakePurchase(
+            AdaptyPaywallProduct product,
+            Action<AdaptyPurchaseResult, AdaptyError> completionHandler
+        ) => MakePurchase(product, null, completionHandler);
 
         /// <summary>
         /// To make the purchase, you have to call this method.
@@ -578,12 +890,16 @@ namespace AdaptySDK
         /// <param name="subscriptionUpdate">an [AdaptySubscriptionUpdateParameters] object used to upgrade or downgrade a subscription (use for Android).</param>
         /// <param name="isOfferPersonalized">Specifies whether the offer is personalized to the buyer (use for Android).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void MakePurchase(AdaptyPaywallProduct product, AdaptySubscriptionUpdateParameters subscriptionUpdate, bool? isOfferPersonalized, Action<AdaptyPurchaseResult, AdaptyError> completionHandler)
+        public static void MakePurchase(
+            AdaptyPaywallProduct product,
+            AdaptyPurchaseParameters purchaseParameters,
+            Action<AdaptyPurchaseResult, AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("product", product.ToJSONNode());
-            if (subscriptionUpdate != null) parameters.Add("subscription_update_params", subscriptionUpdate.ToJSONNode());
-            if (isOfferPersonalized.HasValue) parameters.Add("is_offer_personalized", isOfferPersonalized.Value);
+            if (purchaseParameters != null)
+                parameters.Add("parameters", purchaseParameters.ToJSONNode());
 
             Request.Send(
                 "make_purchase",
@@ -597,9 +913,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyPurchaseResult, AdaptyError> completionHandler in Adapty.MakePurchase(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyPurchaseResult, AdaptyError> completionHandler in Adapty.MakePurchase(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -621,9 +941,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
 #else
             try
             {
@@ -631,7 +955,10 @@ namespace AdaptySDK
             }
             catch (Exception e)
             {
-                throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)", e);
+                throw new Exception(
+                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)",
+                    e
+                );
             }
 #endif
         }
@@ -643,8 +970,10 @@ namespace AdaptySDK
         /// </summary>
         /// <param name="transactionId">A string identifier of your purchased transaction <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> for iOS or string identifier (`purchase.getOrderId()`) of the purchase, where the purchase is an instance of the billing library Purchase class for Android.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void ReportTransaction(string transactionId, Action<AdaptyProfile, AdaptyError> completionHandler) =>
-            ReportTransaction(transactionId, null, completionHandler);
+        public static void ReportTransaction(
+            string transactionId,
+            Action<AdaptyProfile, AdaptyError> completionHandler
+        ) => ReportTransaction(transactionId, null, completionHandler);
 
         /// <summary>
         /// In Observer mode, Adapty SDK doesn’t know, where the purchase was made from.
@@ -654,11 +983,16 @@ namespace AdaptySDK
         /// <param name="transactionId">A string identifier of your purchased transaction <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> for iOS or string identifier (`purchase.getOrderId()`) of the purchase, where the purchase is an instance of the billing library Purchase class for Android.</param>
         /// <param name="variationId">A string identifier of variation. You can get it using variationId property of AdaptyPaywall.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void ReportTransaction(string transactionId, string variationId, Action<AdaptyProfile, AdaptyError> completionHandler)
+        public static void ReportTransaction(
+            string transactionId,
+            string variationId,
+            Action<AdaptyProfile, AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("transaction_id", transactionId);
-            if (variationId != null) parameters.Add("variation_id", variationId);
+            if (variationId != null)
+                parameters.Add("variation_id", variationId);
 
             Request.Send(
                 "report_transaction",
@@ -672,9 +1006,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.ReportTransaction(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.ReportTransaction(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -699,9 +1037,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.RestorePurchases(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.RestorePurchases(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -722,9 +1064,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<string, AdaptyError> completionHandler in Adapty.GetNativeSDKVersion(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<string, AdaptyError> completionHandler in Adapty.GetNativeSDKVersion(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -736,18 +1082,21 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="fileName">The name of the fallback paywalls file.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void SetFallbackPaywalls(string fileName, Action<AdaptyError> completionHandler)
+        public static void SetFallback(string fileName, Action<AdaptyError> completionHandler)
         {
             var parameters = new JSONObject();
 
 #if UNITY_IOS && !UNITY_EDITOR
             parameters.Add("path", UnityEngine.Application.dataPath + "/Raw/" + fileName);
 #elif UNITY_ANDROID && !UNITY_EDITOR
-            parameters.Add("path", "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + fileName);
+            parameters.Add(
+                "path",
+                "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + fileName
+            );
 #endif
 
             Request.Send(
-                "set_fallback_paywalls",
+                "set_fallback",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
                 (value, error) =>
@@ -758,9 +1107,22 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetFallbackPaywalls(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetFallbackPaywalls(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
+        }
+
+        [Obsolete("Use SetFallback instead")]
+        public static void SetFallbackPaywalls(
+            string fileName,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            SetFallback(fileName, completionHandler);
         }
 
         /// <summary>
@@ -769,7 +1131,11 @@ namespace AdaptySDK
         /// <param name="key">a identifier of the integration.</param>
         /// <param name="value">a value of the integration identifier.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void SetIntegrationIdentifier(string key, string value, Action<AdaptyError> completionHandler)
+        public static void SetIntegrationIdentifier(
+            string key,
+            string value,
+            Action<AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             var identifier = new JSONObject();
@@ -788,9 +1154,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetIntegrationIdentifier(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetIntegrationIdentifier(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -800,8 +1170,11 @@ namespace AdaptySDK
         /// <param name="attribution">a map containing attribution (conversion) data.</param>
         /// <param name="source">a source of attribution.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void UpdateAttribution(Dictionary<string, dynamic> attribution, string source, Action<AdaptyError> completionHandler) =>
-            UpdateAttribution(attribution.ToJSONObject().ToString(), source, completionHandler);
+        public static void UpdateAttribution(
+            Dictionary<string, dynamic> attribution,
+            string source,
+            Action<AdaptyError> completionHandler
+        ) => UpdateAttribution(attribution.ToJSONObject().ToString(), source, completionHandler);
 
         /// <summary>
         /// You can set attribution data for the profile, using method.
@@ -810,7 +1183,11 @@ namespace AdaptySDK
         /// <param name="jsonString">a serialized JSON string containing attribution (conversion) data.</param>
         /// <param name="source">a source of attribution.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void UpdateAttribution(string jsonString, string source, Action<AdaptyError> completionHandler)
+        public static void UpdateAttribution(
+            string jsonString,
+            string source,
+            Action<AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("attribution", jsonString);
@@ -828,9 +1205,13 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAttribution(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAttribution(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
@@ -839,7 +1220,10 @@ namespace AdaptySDK
         /// </summary>
         /// <param name="param">use [AdaptyProfileParametersBuilder] to build this object.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void UpdateProfile(AdaptyProfileParameters param, Action<AdaptyError> completionHandler)
+        public static void UpdateProfile(
+            AdaptyProfileParameters param,
+            Action<AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("params", param.ToJSONNode());
@@ -856,38 +1240,54 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateProfile(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateProfile(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
     }
 
     public static partial class AdaptyUI
     {
-
         /// <summary>
-        /// Right after receiving ``AdaptyPaywall``, you can create the corresponding ``AdaptyUIView`` to present it afterwards.
+        /// Right after receiving ``AdaptyPaywall``, you can create the corresponding ``AdaptyUIPaywallView`` to present it afterwards.
         /// </summary>
         /// <param name="paywall">an [AdaptyPaywall] object, for which you are trying to get a controller.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void CreateView(AdaptyPaywall paywall, Action<AdaptyUIView, AdaptyError> completionHandler) =>
-            CreateView(paywall, null, completionHandler);
+        public static void CreatePaywallView(
+            AdaptyPaywall paywall,
+            Action<AdaptyUIPaywallView, AdaptyError> completionHandler
+        ) => CreatePaywallView(paywall, null, completionHandler);
 
         /// <summary>
-        /// Right after receiving ``AdaptyPaywall``, you can create the corresponding ``AdaptyUIView`` to present it afterwards.
+        /// Right after receiving ``AdaptyPaywall``, you can create the corresponding ``AdaptyUIPaywallView`` to present it afterwards.
         /// </summary>
         /// <param name="paywall">an [AdaptyPaywall] object, for which you are trying to get a controller.</param>
-        /// <param name="optionalParameters">an [AdaptyUICreateViewParameters] object that contains optional parameters.</param>
+        /// <param name="optionalParameters">an [AdaptyUICreatePaywallViewParameters] object that contains optional parameters.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void CreateView(AdaptyPaywall paywall, AdaptyUICreateViewParameters optionalParameters, Action<AdaptyUIView, AdaptyError> completionHandler)
+        public static void CreatePaywallView(
+            AdaptyPaywall paywall,
+            AdaptyUICreatePaywallViewParameters optionalParameters,
+            Action<AdaptyUIPaywallView, AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("paywall", paywall.ToJSONNode());
             if (optionalParameters != null)
             {
-                if (optionalParameters.LoadTimeout.HasValue) parameters.Add("load_timeout", optionalParameters.LoadTimeout.Value.TotalSeconds);
+                if (optionalParameters.LoadTimeout.HasValue)
+                {
+                    parameters.Add(
+                        "load_timeout",
+                        optionalParameters.LoadTimeout.Value.TotalSeconds
+                    );
+                }
 
-                if (optionalParameters.PreloadProducts.HasValue) parameters.Add("preload_products", optionalParameters.PreloadProducts.Value);
+                if (optionalParameters.PreloadProducts.HasValue)
+                    parameters.Add("preload_products", optionalParameters.PreloadProducts.Value);
 
                 if (optionalParameters.CustomTags != null)
                 {
@@ -901,7 +1301,9 @@ namespace AdaptySDK
                 if (optionalParameters.CustomTimers != null)
                 {
                     var node = new JSONObject();
-                    foreach (KeyValuePair<string, DateTime> entry in optionalParameters.CustomTimers)
+                    foreach (
+                        KeyValuePair<string, DateTime> entry in optionalParameters.CustomTimers
+                    )
                     {
                         node.Add(entry.Key, entry.Value.ToJSONNode());
                     }
@@ -910,7 +1312,12 @@ namespace AdaptySDK
                 if (optionalParameters.AndroidPersonalizedOffers != null)
                 {
                     var node = new JSONObject();
-                    foreach (KeyValuePair<string, bool> entry in optionalParameters.AndroidPersonalizedOffers)
+                    foreach (
+                        KeyValuePair<
+                            string,
+                            bool
+                        > entry in optionalParameters.AndroidPersonalizedOffers
+                    )
                     {
                         node.Add(entry.Key, entry.Value);
                     }
@@ -919,9 +1326,9 @@ namespace AdaptySDK
             }
 
             Request.Send(
-                "adapty_ui_create_view",
+                "adapty_ui_create_paywall_view",
                 parameters,
-                JSONNodeExtensions.GetAdaptyUIView,
+                JSONNodeExtensions.GetAdaptyUIPaywallView,
                 (value, error) =>
                 {
                     try
@@ -930,27 +1337,37 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyUIView, AdaptyError> completionHandler in Adapty.CreateView(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyUIPaywallView, AdaptyError> completionHandler in Adapty.CreatePaywallView(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
         /// Call this function if you wish to dismiss the view.
         /// </summary>
-        /// <param name="view">an [AdaptyUIView] object, for which is representing the view.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param> 
-        public static void DismissView(AdaptyUIView view, Action<AdaptyError> completionHandler) =>
-            DismissView(view, false, completionHandler);
+        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void DismissPaywallView(
+            AdaptyUIPaywallView view,
+            Action<AdaptyError> completionHandler
+        ) => DismissPaywallView(view, false, completionHandler);
 
-        private static void DismissView(AdaptyUIView view, bool destroy, Action<AdaptyError> completionHandler)
+        private static void DismissPaywallView(
+            AdaptyUIPaywallView view,
+            bool destroy,
+            Action<AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("id", view.Id);
             parameters.Add("destroy", destroy);
 
             Request.Send(
-                "adapty_ui_dismiss_view",
+                "adapty_ui_dismiss_paywall_view",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
                 (value, error) =>
@@ -961,24 +1378,30 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissView(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissPaywallView(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
-
 
         /// <summary>
         /// Call this function if you wish to present the view.
         /// </summary>
-        /// <param name="view">an [AdaptyUIView] object, for which is representing the view.</param>
+        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void PresentView(AdaptyUIView view, Action<AdaptyError> completionHandler)
+        public static void PresentPaywallView(
+            AdaptyUIPaywallView view,
+            Action<AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("id", view.Id);
 
             Request.Send(
-                "adapty_ui_present_view",
+                "adapty_ui_present_paywall_view",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
                 (value, error) =>
@@ -989,18 +1412,26 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentView(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentPaywallView(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
 
         /// <summary>
         /// Call this function if you wish to present the dialog.
         /// </summary>
-        /// <param name="view">an [AdaptyUIView] object, for which is representing the view.</param>
+        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
         /// <param name="configuration">an [AdaptyUIDialogConfiguration] object that contains the dialog configuration.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void ShowDialog(AdaptyUIView view, AdaptyUIDialogConfiguration configuration, Action<AdaptyUIDialogActionType, AdaptyError> completionHandler)
+        public static void ShowDialog(
+            AdaptyUIPaywallView view,
+            AdaptyUIDialogConfiguration configuration,
+            Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
+        )
         {
             var parameters = new JSONObject();
             parameters.Add("id", view.Id);
@@ -1018,15 +1449,24 @@ namespace AdaptySDK
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Failed to invoke Action<AdaptyUIDialogActionType, AdaptyError> completionHandler in Adapty.ShowDialog(..)", e);
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyUIDialogActionType, AdaptyError> completionHandler in Adapty.ShowDialog(..)",
+                            e
+                        );
                     }
-                });
+                }
+            );
         }
     }
 
     internal static class Request
     {
-        internal static void Send<T>(string method, JSONObject request, Func<JSONNode, T> mapResponseValue, Action<T, AdaptyError> completionHandler)
+        internal static void Send<T>(
+            string method,
+            JSONObject request,
+            Func<JSONNode, T> mapResponseValue,
+            Action<T, AdaptyError> completionHandler
+        )
         {
             string stringJson;
             try
@@ -1040,16 +1480,24 @@ namespace AdaptySDK
             }
             catch (Exception ex)
             {
-                var error = new AdaptyError(AdaptyErrorCode.EncodingFailed, $"Failed encoding request: {method}", $"AdaptyUnityError.EncodingFailed({ex})");
+                var error = new AdaptyError(
+                    AdaptyErrorCode.EncodingFailed,
+                    $"Failed encoding request: {method}",
+                    $"AdaptyUnityError.EncodingFailed({ex})"
+                );
                 completionHandler(default(T), error);
                 return;
             }
 
-            _Adapty.Invoke(method, stringJson, (json) =>
-            {
-                var result = json.GetAdaptyResult(mapResponseValue);
-                completionHandler(result.Value, result.Error);
-            });
+            _Adapty.Invoke(
+                method,
+                stringJson,
+                (json) =>
+                {
+                    var result = json.GetAdaptyResult(mapResponseValue);
+                    completionHandler(result.Value, result.Error);
+                }
+            );
         }
     }
 }

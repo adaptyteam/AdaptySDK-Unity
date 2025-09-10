@@ -15,6 +15,7 @@ namespace AdaptySDK
         {
             ApiKey = builder.ApiKey;
             CustomerUserId = builder.CustomerUserId;
+            AppAccountToken = builder.AppAccountToken;
             ObserverMode = builder.ObserverMode;
             AppleIdfaCollectionDisabled = builder.AppleIdfaCollectionDisabled;
             GoogleAdvertisingIdCollectionDisabled = builder.GoogleAdvertisingIdCollectionDisabled;
@@ -22,6 +23,7 @@ namespace AdaptySDK
             BackendBaseUrl = builder.BackendBaseUrl;
             BackendFallbackBaseUrl = builder.BackendFallbackBaseUrl;
             BackendConfigsBaseUrl = builder.BackendConfigsBaseUrl;
+            BackendUABaseUrl = builder.BackendUABaseUrl;
             BackendProxyHost = builder.BackendProxyHost;
             BackendProxyPort = builder.BackendProxyPort;
             LogLevel = builder.LogLevel;
@@ -33,9 +35,12 @@ namespace AdaptySDK
         {
             public string ApiKey;
             public string CustomerUserId; //nullable
+            public System.Guid? AppAccountToken; // UUID, nullable
             public bool? ObserverMode;
 
-            [Obsolete("IdfaCollectionDisabled is deprecated, please use AppleIdfaCollectionDisabled instead.")]
+            [Obsolete(
+                "IdfaCollectionDisabled is deprecated, please use AppleIdfaCollectionDisabled instead."
+            )]
             public bool? IdfaCollectionDisabled
             {
                 get { return AppleIdfaCollectionDisabled; }
@@ -48,34 +53,33 @@ namespace AdaptySDK
             public string BackendBaseUrl; //nullable
             public string BackendFallbackBaseUrl; //nullable
             public string BackendConfigsBaseUrl; //nullable
+            public string BackendUABaseUrl; //nullable
             public string BackendProxyHost; //nullable
             public int? BackendProxyPort;
             public AdaptyLogLevel? LogLevel;
             public bool? ActivateUI;
             public AdaptyUIMediaCacheConfiguration AdaptyUIMediaCache; //nullable
 
-            public Builder(string apiKey) =>
-                ApiKey = apiKey;
+            public Builder(string apiKey) => ApiKey = apiKey;
 
-            public AdaptyConfiguration Build() =>
-                new AdaptyConfiguration(this);
-
+            public AdaptyConfiguration Build() => new AdaptyConfiguration(this);
 
             public override string ToString() =>
-                $"{nameof(ApiKey)}: {ApiKey}, " +
-                $"{nameof(CustomerUserId)}: {CustomerUserId}, " +
-                $"{nameof(ObserverMode)}: {ObserverMode}, " +
-                $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, " +
-                $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, " +
-                $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, " +
-                $"{nameof(ServerCluster)}: {ServerCluster}, " +
-                $"{nameof(BackendBaseUrl)}: {BackendBaseUrl}, " +
-                $"{nameof(BackendFallbackBaseUrl)}: {BackendFallbackBaseUrl}, " +
-                $"{nameof(BackendProxyHost)}: {BackendProxyHost}, " +
-                $"{nameof(BackendProxyPort)}: {BackendProxyPort}, " +
-                $"{nameof(ActivateUI)}: {ActivateUI}, " +
-                $"{nameof(AdaptyUIMediaCache)}: {AdaptyUIMediaCache}, " +
-                $"{nameof(LogLevel)}: {LogLevel}";
+                $"{nameof(ApiKey)}: {ApiKey}, "
+                + $"{nameof(CustomerUserId)}: {CustomerUserId}, "
+                + $"{nameof(AppAccountToken)}: {AppAccountToken}, "
+                + $"{nameof(ObserverMode)}: {ObserverMode}, "
+                + $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, "
+                + $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, "
+                + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
+                + $"{nameof(ServerCluster)}: {ServerCluster}, "
+                + $"{nameof(BackendBaseUrl)}: {BackendBaseUrl}, "
+                + $"{nameof(BackendFallbackBaseUrl)}: {BackendFallbackBaseUrl}, "
+                + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "
+                + $"{nameof(BackendProxyPort)}: {BackendProxyPort}, "
+                + $"{nameof(ActivateUI)}: {ActivateUI}, "
+                + $"{nameof(AdaptyUIMediaCache)}: {AdaptyUIMediaCache}, "
+                + $"{nameof(LogLevel)}: {LogLevel}";
 
             public Builder SetAPIKey(string apiKey)
             {
@@ -89,13 +93,22 @@ namespace AdaptySDK
                 return this;
             }
 
+            public Builder SetCustomerUserId(string customerUserId, System.Guid appAccountToken)
+            {
+                CustomerUserId = customerUserId;
+                AppAccountToken = appAccountToken;
+                return this;
+            }
+
             public Builder SetObserverMode(bool observerMode)
             {
                 ObserverMode = observerMode;
                 return this;
             }
 
-            [Obsolete("SetIDFACollectionDisabled is deprecated, please use SetAppleIDFACollectionDisabled instead.")]
+            [Obsolete(
+                "SetIDFACollectionDisabled is deprecated, please use SetAppleIDFACollectionDisabled instead."
+            )]
             public Builder SetIDFACollectionDisabled(bool appleIdfaCollectionDisabled)
             {
                 return SetAppleIDFACollectionDisabled(appleIdfaCollectionDisabled);
@@ -107,7 +120,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            public Builder SetGoogleAdvertisingIdCollectionDisabled(bool googleAdvertisingIdCollectionDisabled)
+            public Builder SetGoogleAdvertisingIdCollectionDisabled(
+                bool googleAdvertisingIdCollectionDisabled
+            )
             {
                 GoogleAdvertisingIdCollectionDisabled = googleAdvertisingIdCollectionDisabled;
                 return this;
@@ -143,6 +158,12 @@ namespace AdaptySDK
                 return this;
             }
 
+            public Builder SetBackendUABaseUrl(string backendUABaseUrl)
+            {
+                BackendUABaseUrl = backendUABaseUrl;
+                return this;
+            }
+
             public Builder SetBackendProxy(string host, int port)
             {
                 BackendProxyHost = host;
@@ -156,7 +177,11 @@ namespace AdaptySDK
                 return this;
             }
 
-            public Builder SetAdaptyUIMediaCache(int? memoryStorageTotalCostLimit, int? memoryStorageCountLimit, int? diskStorageSizeLimit)
+            public Builder SetAdaptyUIMediaCache(
+                int? memoryStorageTotalCostLimit,
+                int? memoryStorageCountLimit,
+                int? diskStorageSizeLimit
+            )
             {
                 AdaptyUIMediaCache = new AdaptyUIMediaCacheConfiguration(
                     memoryStorageTotalCostLimit,

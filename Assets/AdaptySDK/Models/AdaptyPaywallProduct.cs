@@ -43,18 +43,25 @@ namespace AdaptySDK
         /// Detailed information about subscription (intro, offers, etc.)
         public readonly AdaptySubscription Subscription; //nullable
 
-        private string _PayloadData;
+        /// The index of the product in the paywall.
+        public readonly int PaywallProductIndex;
 
-        public override string ToString() => $"{nameof(VendorProductId)}: {VendorProductId}, " +
-                   $"{nameof(LocalizedDescription)}: {LocalizedDescription}, " +
-                   $"{nameof(LocalizedTitle)}: {LocalizedTitle}, " +
-                   $"{nameof(RegionCode)}: {RegionCode}, " +
-                   $"{nameof(IsFamilyShareable)}: {IsFamilyShareable}, " +
-                   $"{nameof(PaywallVariationId)}: {PaywallVariationId}, " +
-                   $"{nameof(PaywallABTestName)}: {PaywallABTestName}, " +
-                   $"{nameof(PaywallName)}: {PaywallName}, " +
-                   $"{nameof(Price)}: {Price}, " +
-                   $"{nameof(Subscription)}: {Subscription}";
+        private readonly string _PayloadData;
+        private readonly string _WebPurchaseUrl;
+
+        public override string ToString() =>
+            $"{nameof(VendorProductId)}: {VendorProductId}, "
+            + $"{nameof(LocalizedDescription)}: {LocalizedDescription}, "
+            + $"{nameof(LocalizedTitle)}: {LocalizedTitle}, "
+            + $"{nameof(RegionCode)}: {RegionCode}, "
+            + $"{nameof(IsFamilyShareable)}: {IsFamilyShareable}, "
+            + $"{nameof(PaywallVariationId)}: {PaywallVariationId}, "
+            + $"{nameof(PaywallABTestName)}: {PaywallABTestName}, "
+            + $"{nameof(PaywallName)}: {PaywallName}, "
+            + $"{nameof(Price)}: {Price}, "
+            + $"{nameof(Subscription)}: {Subscription}, "
+            + $"{nameof(PaywallProductIndex)}: {PaywallProductIndex}, "
+            + $"{nameof(_PayloadData)}: {_PayloadData}, "
+            + $"{nameof(_WebPurchaseUrl)}: {_WebPurchaseUrl}";
     }
-
 }

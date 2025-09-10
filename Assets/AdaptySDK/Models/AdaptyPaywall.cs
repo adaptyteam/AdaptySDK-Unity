@@ -13,51 +13,34 @@ namespace AdaptySDK
 
     public partial class AdaptyPaywall
     {
-        /// The identifier of the paywall, configured in Adapty Dashboard.
-        public readonly string PlacementId;
+        /// An `AdaptyPlacement` object, that contains information about the placement of the paywall.
+        public readonly AdaptyPlacement Placement;
 
-        private readonly string _InstanceIdentity;
+        public readonly string InstanceIdentity;
 
-        /// Paywall name
+        /// A paywall name configured in Adapty Dashboard.
         public readonly string Name;
-
-        public readonly string AudienceName;
-
-        /// Paywall A/B test name
-        public readonly string ABTestName;
 
         /// The identifier of the variation, used to attribute purchases to the paywall.
         public readonly string VariationId;
 
-        /// The current revision (version) of the paywall.
-        /// Every change within the paywall creates a new revision.
-        public readonly int Revision;
+        /// The custom JSON formatted data configured in Adapty Dashboard.
+        /// (String representation)
+        public readonly AdaptyRemoteConfig RemoteConfig; // nullable
 
         /// If `true`, it is possible to use Adapty Paywall Builder.
         /// Read more here: https://docs.adapty.io/docs/paywall-builder-getting-started
         public bool HasViewConfiguration
         {
-             get
-            {
-                return _ViewConfiguration != null;
-            }
+            get { return _ViewConfiguration != null; }
         }
-
         private readonly ViewConfiguration _ViewConfiguration;
 
-        /// And identifier of a paywall locale.
-        public readonly string Locale;
-
-        /// The custom JSON formatted data configured in Adapty Dashboard.
-        /// (String representation)
-        public readonly string RemoteConfigString; //nullable
-
-        /// An array of ProductModel objects related to this paywall.
         private readonly IList<ProductReference> _Products;
-
-        private readonly int _Version;
-
-        private readonly string _PayloadData;
+        private readonly int _ResponseCreatedAt;
+        private readonly string _PayloadData; // nullable
+        private readonly string _WebPurchaseUrl; // nullable
+        private readonly string _RequestLocale;
 
         /// Array of related products ids.
         public IList<string> VendorProductIds
@@ -73,25 +56,39 @@ namespace AdaptySDK
             }
         }
 
-        /// A custom dictionary configured in Adapty Dashboard for this paywall (same as `remoteConfigString`)
-        public IDictionary<string, dynamic> RemoteConfig
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(RemoteConfigString)) return null;
-                return JSONNode.Parse(RemoteConfigString).GetDictionary();
-            }
-        }
+        /// The identifier of the paywall, configured in Adapty Dashboard.
+        [System.Obsolete("Use Placement.Id instead")]
+        public string PlacementId => Placement.Id;
 
-        public override string ToString() => $"{nameof(PlacementId)}: {PlacementId}, " +
-                   $"{nameof(_InstanceIdentity)}: {_InstanceIdentity}, " +
-                   $"{nameof(Name)}: {Name}, " +
-                   $"{nameof(ABTestName)}: {ABTestName}, " +
-                   $"{nameof(VariationId)}: {VariationId}, " +
-                   $"{nameof(Revision)}: {Revision}, " +
-                   $"{nameof(Locale)}: {Locale}, " +
-                   $"{nameof(_Products)}: {_Products}, " +
-                   $"{nameof(_Version)}: {_Version}";
+        [System.Obsolete("Use Placement.AudienceName instead")]
+        public string AudienceName => Placement.AudienceName;
+
+        /// Paywall A/B test name
+        [System.Obsolete("Use Placement.ABTestName instead")]
+        public string ABTestName => Placement.ABTestName;
+
+        /// The current revision (version) of the paywall.
+        /// Every change within the paywall creates a new revision.
+        [System.Obsolete("Use Placement.Revision instead")]
+        public int Revision => Placement.Revision;
+
+        [System.Obsolete("Use RemoteConfig.Data instead")]
+        public string RemoteConfigString => RemoteConfig.Data;
+
+        [System.Obsolete("Use RemoteConfig.Locale instead")]
+        public string Locale => RemoteConfig?.Locale;
+
+        public override string ToString() =>
+            $"{nameof(Placement)}: {Placement}, "
+            + $"{nameof(InstanceIdentity)}: {InstanceIdentity}, "
+            + $"{nameof(Name)}: {Name}, "
+            + $"{nameof(VariationId)}: {VariationId}, "
+            + $"{nameof(HasViewConfiguration)}: {HasViewConfiguration}, "
+            + $"{nameof(RemoteConfig)}: {RemoteConfig}, "
+            + $"{nameof(_Products)}: {_Products}, "
+            + $"{nameof(_ResponseCreatedAt)}: {_ResponseCreatedAt}, "
+            + $"{nameof(_PayloadData)}: {_PayloadData}, "
+            + $"{nameof(_WebPurchaseUrl)}: {_WebPurchaseUrl}, "
+            + $"{nameof(_RequestLocale)}: {_RequestLocale}";
     }
-
 }
