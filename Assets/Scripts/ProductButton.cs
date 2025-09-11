@@ -16,4 +16,11 @@ public class ProductButton : MonoBehaviour
         // this.EligibilityText.SetText(eligibility.ToString());
         this.EligibilityText.SetText("TODO");
     }
+
+    public void UpdateProductMock(string productId, string priceLocalized, string eligibility)
+    {
+        this.ProductIdText.SetText(productId);
+        this.PriceText.SetText(priceLocalized);
+        this.EligibilityText.SetText(eligibility);
+    }
 }

@@ -18,7 +18,7 @@ enum Log {
         messageDelegate = delegate
         
         Task { @MainActor in
-            AdaptyPlugin.reqister(eventHandler: shared)
+            AdaptyPlugin.register(eventHandler: shared)
         }
     }
 

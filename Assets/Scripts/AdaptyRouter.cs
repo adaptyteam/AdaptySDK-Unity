@@ -1,9 +1,11 @@
+using System.Collections;
 using AdaptySDK;
 using UnityEngine;
-using System.Collections;
 
-namespace AdaptyExample {
-    public class AdaptyRouter : MonoBehaviour {
+namespace AdaptyExample
+{
+    public class AdaptyRouter : MonoBehaviour
+    {
         public RectTransform LoadingPanel;
         public AlertPanel AlertPanel;
 
@@ -39,63 +41,78 @@ namespace AdaptyExample {
         private AdaptyListener listener;
         private AdaptyProfile profile;
 
-        void Start() {
+        void Start()
+        {
             this.listener = GetComponent<AdaptyListener>();
             this.ConfigureLayout();
         }
 
-        void ConfigureLayout() {
-            var offset = 20.0f;
+        void ConfigureLayout()
+        {
+            // Ensure ContentTransform uses Unity's layout system
+            var content = this.ContentTransform;
+            var vertical = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
+            if (vertical == null)
+            {
+                vertical = content.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
+                vertical.childControlHeight = true;
+                vertical.childControlWidth = true;
+                vertical.childForceExpandHeight = false;
+                vertical.childForceExpandWidth = true;
+                vertical.spacing = 64.0f;
+                vertical.padding = new RectOffset(0, 0, 20, 0);
+            }
+
+            var fitter = content.GetComponent<UnityEngine.UI.ContentSizeFitter>();
+            if (fitter == null)
+            {
+                fitter = content.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
+            }
+            fitter.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
+
+            // Helper to parent and stretch a section under the content
+            System.Action<RectTransform> AttachSection = (RectTransform sectionRect) =>
+            {
+                sectionRect.SetParent(this.ContentTransform, false);
+                sectionRect.anchorMin = new Vector2(0, 1);
+                sectionRect.anchorMax = new Vector2(1, 1);
+                sectionRect.offsetMin = new Vector2(0, sectionRect.offsetMin.y);
+                sectionRect.offsetMax = new Vector2(0, sectionRect.offsetMax.y);
+                sectionRect.localScale = Vector3.one;
+
+                var sectionLayout = sectionRect.GetComponent<UnityEngine.UI.LayoutElement>();
+                if (sectionLayout == null)
+                {
+                    sectionLayout =
+                        sectionRect.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+                }
+                sectionLayout.minWidth = 0;
+                sectionLayout.flexibleWidth = 1;
+            };
 
             var profileIdSectionObj = Instantiate(this.ProfileIdSectionPrefab);
-            var profileIdSectionRect =
-                profileIdSectionObj.GetComponent<RectTransform>();
-            profileIdSectionRect.SetParent(this.ContentTransform);
-            profileIdSectionRect.anchoredPosition =
-                new Vector3(profileIdSectionRect.position.x, -offset);
-
-            offset += profileIdSectionRect.rect.height + 20.0f;
+            var profileIdSectionRect = profileIdSectionObj.GetComponent<RectTransform>();
+            AttachSection(profileIdSectionRect);
 
             var identifySectionObj = Instantiate(this.IdentifySectionPrefab);
-            var identifySectionRect =
-                identifySectionObj.GetComponent<RectTransform>();
-            identifySectionRect.SetParent(this.ContentTransform);
-            identifySectionRect.anchoredPosition =
-                new Vector3(identifySectionRect.position.x, -offset);
+            var identifySectionRect = identifySectionObj.GetComponent<RectTransform>();
+            AttachSection(identifySectionRect);
 
-            offset += identifySectionRect.rect.height + 20.0f;
+            var profileInfoSectionObj = Instantiate(this.ProfileInfoSectionPrefab);
+            var profileInfoSectionRect = profileInfoSectionObj.GetComponent<RectTransform>();
+            AttachSection(profileInfoSectionRect);
 
-            var profileInfoSectionObj =
-                Instantiate(this.ProfileInfoSectionPrefab);
-            var profileInfoSectionRect =
-                profileInfoSectionObj.GetComponent<RectTransform>();
-            profileInfoSectionRect.SetParent(this.ContentTransform);
-            profileInfoSectionRect.anchoredPosition =
-                new Vector3(profileInfoSectionRect.position.x, -offset);
-
-            offset += profileInfoSectionRect.rect.height + 20.0f;
-
-            var examplePaywallSectionObj =
-                Instantiate(this.ExamplePaywallSectionPrefab);
-            var examplePaywallSectionRect =
-                examplePaywallSectionObj.GetComponent<RectTransform>();
-            examplePaywallSectionRect.SetParent(this.ContentTransform);
-            examplePaywallSectionRect.anchoredPosition =
-                new Vector3(examplePaywallSectionRect.position.x, -offset);
-
-            offset += examplePaywallSectionRect.rect.height + 20.0f;
+            var examplePaywallSectionObj = Instantiate(this.ExamplePaywallSectionPrefab);
+            var examplePaywallSectionRect = examplePaywallSectionObj.GetComponent<RectTransform>();
+            AttachSection(examplePaywallSectionRect);
 
             var customPaywallSectionObj = Instantiate(this.CustomPaywallSectionPrefab);
             var customPaywallSectionRect = customPaywallSectionObj.GetComponent<RectTransform>();
-            customPaywallSectionRect.SetParent(this.ContentTransform);
-            customPaywallSectionRect.anchoredPosition = new Vector3(customPaywallSectionRect.position.x, -offset);
-
-            offset += customPaywallSectionRect.rect.height + 20.0f;
+            AttachSection(customPaywallSectionRect);
 
             var actionsSectionObj = Instantiate(this.OtherActionsSectionPrefab);
             var actionsSectionRect = actionsSectionObj.GetComponent<RectTransform>();
-            actionsSectionRect.SetParent(this.ContentTransform);
-            actionsSectionRect.anchoredPosition = new Vector3(actionsSectionRect.position.x, -offset);
+            AttachSection(actionsSectionRect);
 
             var profileIdSection = profileIdSectionObj.GetComponent<ProfileIdSection>();
             var identifySection = identifySectionObj.GetComponent<IdentifySection>();
@@ -120,43 +137,55 @@ namespace AdaptyExample {
             this.ExamplePaywallSection = examplePaywallSection;
             this.CustomPaywallSection = customPaywallSection;
             this.ActionsSection = actionsSection;
+
+            // Rebuild to apply layout immediately
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(this.ContentTransform);
         }
 
-        public void SetProfile(AdaptyProfile profile) {
-            if (this.ProfileInfoSection != null && profile != null) {
+        public void SetProfile(AdaptyProfile profile)
+        {
+            if (this.ProfileInfoSection != null && profile != null)
+            {
                 this.ProfileInfoSection.SetProfile(profile);
             }
 
-            if (this.ProfileIdSection != null && profile != null) {
+            if (this.ProfileIdSection != null && profile != null)
+            {
                 this.ProfileIdSection.SetProfile(profile);
             }
 
-            if (this.IdentifySection != null && profile != null) {
+            if (this.IdentifySection != null && profile != null)
+            {
                 this.IdentifySection.SetProfile(profile);
             }
 
             this.profile = profile;
         }
 
-        public void SetIsLoading(bool isLoading) {
+        public void SetIsLoading(bool isLoading)
+        {
             this.LoadingPanel.gameObject.SetActive(isLoading);
         }
 
-        public void ShowAlertPanel(string text) {
+        public void ShowAlertPanel(string text)
+        {
             StartCoroutine(DelayedShowAlertPanel(text));
         }
 
-        private IEnumerator DelayedShowAlertPanel(string text) {
+        private IEnumerator DelayedShowAlertPanel(string text)
+        {
             yield return new WaitForEndOfFrame();
             this.AlertPanel.Text.SetText(text);
             this.AlertPanel.gameObject.SetActive(true);
         }
 
-        public void HideAlertPanel() {
+        public void HideAlertPanel()
+        {
             StartCoroutine(DelayedHideAlertPanel());
         }
 
-        private IEnumerator DelayedHideAlertPanel() {
+        private IEnumerator DelayedHideAlertPanel()
+        {
             yield return new WaitForEndOfFrame();
             this.AlertPanel.gameObject.SetActive(false);
         }

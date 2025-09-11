@@ -19,7 +19,11 @@ namespace AdaptySDK
             node.Add("revision", Revision);
             node.Add("ab_test_name", ABTestName);
             node.Add("placement_audience_version_id", PlacementAudienceVersionId);
-            node.Add("is_tracking_purchases", IsTrackingPurchases);
+
+            if (IsTrackingPurchases != null)
+            {
+                node.Add("is_tracking_purchases", IsTrackingPurchases);
+            }
             return node;
         }
 
@@ -30,7 +34,7 @@ namespace AdaptySDK
             Revision = jsonNode.GetInteger("revision");
             ABTestName = jsonNode.GetString("ab_test_name");
             PlacementAudienceVersionId = jsonNode.GetString("placement_audience_version_id");
-            IsTrackingPurchases = jsonNode.GetBoolean("is_tracking_purchases");
+            IsTrackingPurchases = jsonNode.GetBooleanIfPresent("is_tracking_purchases") ?? false;
         }
     }
 }

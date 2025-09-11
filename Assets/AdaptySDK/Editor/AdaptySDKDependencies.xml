@@ -8,7 +8,7 @@
 		</androidPackage>
 		<androidPackage spec="io.adapty:android-ui:3.4.0">
 			<repositories>
-				<repository>https://repo.maven.apache.org/maven2/</repository> 
+				<repository>https://repo.maven.apache.org/maven2/</repository>
 			</repositories>
 		</androidPackage>
 		<androidPackage spec="io.adapty.internal:crossplatform:3.4.0">
@@ -18,11 +18,11 @@
 		</androidPackage>
 	</androidPackages>
 	<iosPods>
-		<iosPod name="Adapty" version="3.4.2" minTargetSdk="13.0">
+		<iosPod name="Adapty" version="3.11.0" minTargetSdk="13.0">
 		</iosPod>
-		<iosPod name="AdaptyUI" version="3.4.2" minTargetSdk="13.0">
+		<iosPod name="AdaptyUI" version="3.11.0" minTargetSdk="13.0">
 		</iosPod>
-		<iosPod name="AdaptyPlugin" version="3.4.2" minTargetSdk="13.0">
+		<iosPod name="AdaptyPlugin" version="3.11.0" minTargetSdk="13.0">
 		</iosPod>
 	</iosPods>
-</dependencies>	
+</dependencies>

@@ -16,6 +16,7 @@ public class PaywallSection : MonoBehaviour
     public GameObject ProductButtonPrefab;
 
     public RectTransform ContainerTransform;
+    public RectTransform ProductsContainerTransform;
     public TextMeshProUGUI PaywallNameText;
     public TextMeshProUGUI LoadingStatusText;
     public TextMeshProUGUI VariationIdText;
@@ -30,16 +31,27 @@ public class PaywallSection : MonoBehaviour
 
     private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
+    [Header("Mock Settings")]
+    [SerializeField]
+    private bool UseMockProducts = false;
+
+    [SerializeField]
+    private int MockProductsCount = 3;
+
     void Start()
     {
+        EnsureLayout();
         this.PaywallNameText.SetText(this.m_paywallId);
         this.Listener.OnInitializeFinished += OnAdaptyInitialized;
+
+#if UNITY_EDITOR
+        GenerateMockProducts();
+#endif
     }
 
     private void OnAdaptyInitialized()
     {
         this.Listener.OnInitializeFinished -= OnAdaptyInitialized;
-
         this.LoadPaywallForDefaultAudience();
         this.LoadPaywall();
     }
@@ -208,8 +220,13 @@ public class PaywallSection : MonoBehaviour
             m_productButtons.Add(productButton);
         }
 
-        var rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 680.0f + 10 * 150.0f);
+        // Rebuild layout so parent scroll view adapts to new preferred height
+        var productsParent =
+            this.ProductsContainerTransform != null
+                ? this.ProductsContainerTransform
+                : this.ContainerTransform;
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(productsParent);
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(this.ContainerTransform);
     }
 
     private ProductButton CreateProductButton(AdaptyPaywallProduct product, float index)
@@ -217,15 +234,25 @@ public class PaywallSection : MonoBehaviour
         var productButtonObject = Instantiate(this.ProductButtonPrefab);
         var productButtonRect = productButtonObject.GetComponent<RectTransform>();
 
-        productButtonRect.SetParent(this.ContainerTransform);
-        productButtonRect.anchoredPosition = new Vector3(
-            productButtonRect.position.x,
-            -370.0f - 150.0f * index
-        );
-        productButtonRect.sizeDelta = new Vector2(
-            this.ContainerTransform.sizeDelta.x - 40.0f,
-            140.0f
-        );
+        EnsureLayout();
+        var productsParent =
+            this.ProductsContainerTransform != null
+                ? this.ProductsContainerTransform
+                : this.ContainerTransform;
+        productButtonRect.SetParent(productsParent, false);
+        productButtonRect.anchorMin = new Vector2(0, 1);
+        productButtonRect.anchorMax = new Vector2(1, 1);
+        productButtonRect.offsetMin = new Vector2(0, productButtonRect.offsetMin.y);
+        productButtonRect.offsetMax = new Vector2(0, productButtonRect.offsetMax.y);
+        productButtonRect.localScale = Vector3.one;
+
+        var le = productButtonRect.GetComponent<UnityEngine.UI.LayoutElement>();
+        if (le == null)
+        {
+            le = productButtonRect.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+        }
+        le.preferredHeight = 140.0f;
+        le.flexibleWidth = 1.0f;
 
         productButtonObject.GetComponent<ProductButton>().UpdateProduct(product);
         productButtonObject
@@ -242,5 +269,100 @@ public class PaywallSection : MonoBehaviour
                 );
             });
         return productButtonObject.GetComponent<ProductButton>();
+    }
+
+    private void GenerateMockProducts()
+    {
+        Debug.Log(
+            "#PaywallSection# GenerateMockProducts called, details = "
+                + this.MockProductsCount.ToString()
+        );
+        // Clear any existing buttons (both runtime and previous mock)
+        m_productButtons.ForEach(
+            (button) =>
+            {
+                if (button != null)
+                    DestroyImmediate(button.gameObject);
+            }
+        );
+        m_productButtons.Clear();
+
+        EnsureLayout();
+        var productsParent =
+            this.ProductsContainerTransform != null
+                ? this.ProductsContainerTransform
+                : this.ContainerTransform;
+
+        for (int i = 0; i < Mathf.Max(0, this.MockProductsCount); i++)
+        {
+            var go = Instantiate(this.ProductButtonPrefab);
+            go.name = $"MockProduct_{i + 1}";
+
+            var rect = go.GetComponent<RectTransform>();
+            rect.SetParent(productsParent, false);
+
+            var le = rect.GetComponent<UnityEngine.UI.LayoutElement>();
+            if (le == null)
+            {
+                le = rect.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+            }
+            le.preferredHeight = 140.0f;
+            le.flexibleWidth = 1.0f;
+
+            var pb = go.GetComponent<ProductButton>();
+            if (pb != null)
+            {
+                pb.UpdateProductMock($"mock.product.{i + 1}", "$0.99", "N/A");
+                m_productButtons.Add(pb);
+            }
+        }
+
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(productsParent);
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(this.ContainerTransform);
+    }
+
+    private void EnsureLayout()
+    {
+        //     if (this.ContainerTransform == null)
+        //     {
+        //         return;
+        //     }
+
+        //     var productsParent =
+        //         this.ProductsContainerTransform != null
+        //             ? this.ProductsContainerTransform
+        //             : this.ContainerTransform;
+        //     var v = productsParent.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
+        //     if (v == null)
+        //     {
+        //         v = productsParent.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
+        //         v.childControlHeight = true;
+        //         v.childControlWidth = true;
+        //         v.childForceExpandHeight = false;
+        //         v.childForceExpandWidth = true;
+        //         v.spacing = 10.0f;
+        //         v.padding = new RectOffset(20, 20, 300, 20);
+        //     }
+
+        //     var f = productsParent.GetComponent<UnityEngine.UI.ContentSizeFitter>();
+        //     if (f == null)
+        //     {
+        //         f = productsParent.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
+        //     }
+        //     f.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
+
+        //     var selfFitter = GetComponent<UnityEngine.UI.ContentSizeFitter>();
+        //     if (selfFitter == null)
+        //     {
+        //         selfFitter = gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
+        //     }
+        //     selfFitter.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
+
+        //     var selfLE = GetComponent<UnityEngine.UI.LayoutElement>();
+        //     if (selfLE == null)
+        //     {
+        //         selfLE = gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+        //     }
+        //     selfLE.flexibleWidth = 1.0f;
     }
 }
