@@ -12,6 +12,12 @@ namespace AdaptyExample
 
         void Start()
         {
+            Application.SetStackTraceLogType(LogType.Exception, StackTraceLogType.ScriptOnly);
+            Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
+            Application.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
+            Application.SetStackTraceLogType(LogType.Assert, StackTraceLogType.None);
+            Application.SetStackTraceLogType(LogType.Error, StackTraceLogType.None);
+
             this.Router = this.GetComponent<AdaptyRouter>();
 
             this.InitializeAdapty();
