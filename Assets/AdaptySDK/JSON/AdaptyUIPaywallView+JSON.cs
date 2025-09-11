@@ -5,20 +5,25 @@
 //  Created by Aleksei Valiano on 17.12.2024.
 //
 
-namespace AdaptySDK {
+namespace AdaptySDK
+{
     using AdaptySDK.SimpleJSON;
 
-    public partial class AdaptyUIPaywallView {
-        internal AdaptyUIPaywallView(JSONObject jsonNode) {
+    public partial class AdaptyUIPaywallView
+    {
+        internal AdaptyUIPaywallView(JSONObject jsonNode)
+        {
             Id = jsonNode.GetString("id");
             PlacementId = jsonNode.GetString("placement_id");
-            PaywallVariationId = jsonNode.GetString("paywall_variation_id");
+            PaywallVariationId = jsonNode.GetString("variation_id");
         }
     }
 }
 
-namespace AdaptySDK.SimpleJSON {
-    internal static partial class JSONNodeExtensions {
+namespace AdaptySDK.SimpleJSON
+{
+    internal static partial class JSONNodeExtensions
+    {
         internal static AdaptyUIPaywallView GetAdaptyUIPaywallView(this JSONNode node) =>
             new AdaptyUIPaywallView(GetObject(node));
 

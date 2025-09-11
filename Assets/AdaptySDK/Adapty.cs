@@ -1287,7 +1287,9 @@ namespace AdaptySDK
                 }
 
                 if (optionalParameters.PreloadProducts.HasValue)
+                {
                     parameters.Add("preload_products", optionalParameters.PreloadProducts.Value);
+                }
 
                 if (optionalParameters.CustomTags != null)
                 {
