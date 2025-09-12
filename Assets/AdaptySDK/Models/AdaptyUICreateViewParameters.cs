@@ -16,15 +16,20 @@ namespace AdaptySDK
         public bool? PreloadProducts;
         public Dictionary<string, string> CustomTags;
         public Dictionary<string, DateTime> CustomTimers;
-        public Dictionary<string, bool> AndroidPersonalizedOffers;
+        public Dictionary<string, AdaptyCustomAsset> CustomAssets;
 
+        public Dictionary<
+            AdaptyProductIdentifier,
+            AdaptyPurchaseParameters
+        > ProductPurchaseParameters;
 
         public override string ToString() =>
-            $"{nameof(LoadTimeout)}: {LoadTimeout}, " +
-            $"{nameof(PreloadProducts)}: {PreloadProducts}, " +
-            $"{nameof(CustomTags)}: {CustomTags}, " +
-            $"{nameof(CustomTimers)}: {CustomTimers}, " +
-            $"{nameof(AndroidPersonalizedOffers)}: {AndroidPersonalizedOffers}";
+            $"{nameof(LoadTimeout)}: {LoadTimeout}, "
+            + $"{nameof(PreloadProducts)}: {PreloadProducts}, "
+            + $"{nameof(CustomTags)}: {CustomTags}, "
+            + $"{nameof(CustomTimers)}: {CustomTimers}, "
+            + $"{nameof(CustomAssets)}: {CustomAssets}, "
+            + $"{nameof(ProductPurchaseParameters)}: {ProductPurchaseParameters}";
 
         public AdaptyUICreatePaywallViewParameters SetLoadTimeout(TimeSpan? loadTimeout)
         {
@@ -38,21 +43,35 @@ namespace AdaptySDK
             return this;
         }
 
-        public AdaptyUICreatePaywallViewParameters SetCustomTags(Dictionary<string, string> customTags)
+        public AdaptyUICreatePaywallViewParameters SetCustomTags(
+            Dictionary<string, string> customTags
+        )
         {
             CustomTags = customTags;
             return this;
         }
 
-        public AdaptyUICreatePaywallViewParameters SetCustomTimers(Dictionary<string, DateTime> customTimers)
+        public AdaptyUICreatePaywallViewParameters SetCustomTimers(
+            Dictionary<string, DateTime> customTimers
+        )
         {
             CustomTimers = customTimers;
             return this;
         }
 
-        public AdaptyUICreatePaywallViewParameters SetAndroidPersonalizedOffers(Dictionary<string, bool> androidPersonalizedOffers)
+        public AdaptyUICreatePaywallViewParameters SetCustomAssets(
+            Dictionary<string, AdaptyCustomAsset> customAssets
+        )
         {
-            AndroidPersonalizedOffers = androidPersonalizedOffers;
+            CustomAssets = customAssets;
+            return this;
+        }
+
+        public AdaptyUICreatePaywallViewParameters SetProductPurchaseParameters(
+            Dictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters> productPurchaseParameters
+        )
+        {
+            ProductPurchaseParameters = productPurchaseParameters;
             return this;
         }
     }

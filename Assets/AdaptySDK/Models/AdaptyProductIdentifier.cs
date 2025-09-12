@@ -11,7 +11,7 @@ namespace AdaptySDK
     public partial class AdaptyProductIdentifier
     {
         public readonly string VendorProductId;
-        private readonly string _AdaptyProductId;
+        internal readonly string _AdaptyProductId;
         public readonly string BasePlanId; // Android Only, nullable
 
         public AdaptyProductIdentifier(

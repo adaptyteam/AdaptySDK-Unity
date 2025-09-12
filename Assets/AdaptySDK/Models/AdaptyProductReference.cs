@@ -11,7 +11,7 @@ namespace AdaptySDK
     public partial class AdaptyProductReference
     {
         public readonly string VendorProductId;
-        private readonly string _AdaptyProductId;
+        public readonly string _AdaptyProductId;
 
         // iOS Only
         public readonly string PromotionalOfferId; // nullable
@@ -51,7 +51,7 @@ namespace AdaptySDK
         {
             return "(vendorId: "
                 + VendorProductId
-                + ", _adaptyProductId: "
+                + ", adaptyProductId: "
                 + _AdaptyProductId
                 + ", promotionalOfferId: "
                 + PromotionalOfferId

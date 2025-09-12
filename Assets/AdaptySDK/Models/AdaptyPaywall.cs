@@ -56,6 +56,23 @@ namespace AdaptySDK
             }
         }
 
+        /// Array of related product references.
+        public IList<ProductReference> Products => _Products;
+
+        /// Array of related product identifiers.
+        public IList<AdaptyProductIdentifier> ProductIdentifiers
+        {
+            get
+            {
+                var list = new List<AdaptyProductIdentifier>();
+                foreach (var product in _Products)
+                {
+                    list.Add(product.ToAdaptyProductIdentifier());
+                }
+                return list;
+            }
+        }
+
         /// The identifier of the paywall, configured in Adapty Dashboard.
         [System.Obsolete("Use Placement.Id instead")]
         public string PlacementId => Placement.Id;

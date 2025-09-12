@@ -1276,6 +1276,7 @@ namespace AdaptySDK
         {
             var parameters = new JSONObject();
             parameters.Add("paywall", paywall.ToJSONNode());
+
             if (optionalParameters != null)
             {
                 if (optionalParameters.LoadTimeout.HasValue)
@@ -1311,19 +1312,26 @@ namespace AdaptySDK
                     }
                     parameters.Add("custom_timers", node);
                 }
-                if (optionalParameters.AndroidPersonalizedOffers != null)
+                if (optionalParameters.ProductPurchaseParameters != null)
                 {
-                    var node = new JSONObject();
+                    var parametersNode = new JSONObject();
+
                     foreach (
                         KeyValuePair<
-                            string,
-                            bool
-                        > entry in optionalParameters.AndroidPersonalizedOffers
+                            AdaptyProductIdentifier,
+                            AdaptyPurchaseParameters
+                        > entry in optionalParameters.ProductPurchaseParameters
                     )
                     {
-                        node.Add(entry.Key, entry.Value);
+                        parametersNode.Add(entry.Key._AdaptyProductId, entry.Value.ToJSONNode());
                     }
-                    parameters.Add("android_personalized_offers", node);
+
+                    parameters.Add("product_purchase_parameters", parametersNode);
+                }
+
+                if (optionalParameters.CustomAssets != null)
+                {
+                    parameters.Add("custom_assets", optionalParameters.CustomAssets.ToJSONNode());
                 }
             }
 

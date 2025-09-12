@@ -21,8 +21,8 @@ $requests:
         properties:
           success: { const: true }
 
-  ### adaptyUICreateView ###
-  AdaptyUICreateView.Request: #request
+  ### createPaywallView ###
+  AdaptyUICreatePaywallView.Request: #request
     type: object
     required:
       - method
@@ -34,8 +34,9 @@ $requests:
       preload_products: { type: boolean, default: false }
       custom_tags: { $ref: "#/$defs/AdaptyUI.CustomTagsValues" }
       custom_timers: { $ref: "#/$defs/AdaptyUI.CustomTimersValues" }
-      android_personalized_offers:
-        { $ref: "#/$defs/AdaptyUI.AndroidPersonalizedOffers" }
+      custom_assets: { $ref: "#/$defs/AdaptyUI.CustomAssets" }
+      product_purchase_parameters:
+        { $ref: "#/$defs/AdaptyUI.ProductPurchaseParameters" }
 
   AdaptyUICreatePaywallView.Response: #response
     type: object
@@ -47,8 +48,6 @@ $requests:
         properties:
           success: { $ref: "#/$defs/AdaptyUI.PaywallView" }
 
-  ### adaptyUIDismissView ###
-  AdaptyUIDismissView.Request: #request
   ### dismissPaywallView ###
   AdaptyUIDismissPaywallView.Request: #request
     type: object
@@ -603,6 +602,7 @@ $events:
     properties:
       id: { const: "paywall_view_did_disappear" }
       view: { $ref: "#/$defs/AdaptyUI.PaywallView" }
+
   PaywallViewEvent.DidUserAction:
     type: object
     required: [id, view, action]
@@ -1214,16 +1214,26 @@ $defs:
       app_launch_count: { type: integer, nullable: false }
       payload:  { type: string }
 
-  AdaptyUI.View: #response #event
+  AdaptyUI.CustomAssets:
+    type: array
+    items:
+      oneOf:
+        - $ref: "#/$assets/Color"
+        - $ref: "#/$assets/ColorGradient"
+        - $ref: "#/$assets/Image"
+        - $ref: "#/$assets/Video"
+
+  AdaptyUI.PaywallView: #response #event
     type: object
     required:
       - id
       - placement_id
-      - paywall_variation_id
+      - variation_id
     properties:
       id: { type: string }
       placement_id: { type: string }
-      paywall_variation_id: { type: string }
+      variation_id: { type: string }
+
 
   AdaptyUI.UserAction: #event
     type: object
@@ -1248,6 +1258,14 @@ $defs:
     type: object
     additionalProperties: { type: boolean, nullable: false }
 
+  AdaptyUI.ProductPurchaseParameters:  #request
+    type: object
+    propertyNames: { description: "key is adapty_product_id" }
+    additionalProperties: { 
+      $ref: "#/$defs/AdaptyPurchaseParameters", 
+      nullable: false 
+    }
+
   AdaptyUI.DialogConfiguration: #request
     type: object
     required: [default_action]
@@ -1262,6 +1280,19 @@ $defs:
     enum:
       - primary
       - secondary
+
+   AdaptyPurchaseParameters:  #request
+    type: object
+    properties:
+      subscription_update_params:
+        {
+          $ref: "#/$defs/AdaptySubscriptionUpdateParameters",
+          description: "Android Only",
+        }
+      is_offer_personalized: { type: boolean, description: "Android Only" }
+      obfuscated_account_id: { type: string, description: "Android Only" }
+      obfuscated_profile_id: { type: string, description: "Android Only" }
+      
 
   AdaptySubscriptionUpdateParameters: #request # Android Only
     type: object
@@ -1278,9 +1309,80 @@ $defs:
           - without_proration
           - charge_prorated_price
           - with_time_proration
+
   AdaptyRefundPreference:
     type: string
     enum:
       - no_preference
       - grant
       - decline
+$assets:
+  Color:
+    type: object
+    required: [id, type, value]
+    properties:
+      id: { type: string }
+      type: { const: color }
+      value: { $ref: "#/$assets/Color.Hex" }
+
+  Color.Hex:
+    type: string
+    pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$"
+    description: RRGGBB or RRGGBBAA
+
+  ColorGradient:
+    type: object
+    required: [id, type, values, points]
+    properties:
+      id: { type: string }
+      type:
+        type: string
+        enum:
+          - linear-gradient
+      values:
+        type: array
+        items:
+          type: object
+          required: [color, p]
+          properties:
+            color: { $ref: "#/$assets/Color.Hex" }
+            p: { type: number }
+      points:
+        type: object
+        required: [x0, y0, x1, y1]
+        properties:
+          x0: { type: number }
+          y0: { type: number }
+          x1: { type: number }
+          y1: { type: number }
+
+  Image:
+    type: object
+    required: [id, type]
+    properties:
+      id: { type: string }
+      type: { const: image }
+    oneOf:
+      - required: [value]
+        properties:
+          value: { type: string, contentEncoding: base64 }
+      - required: [asset_id]
+        properties:
+          asset_id: { type: string }
+      - required: [path]
+        properties:
+          path: { type: string }
+
+  Video:
+    type: object
+    required: [id, type]
+    properties:
+      id: { type: string }
+      type: { const: video }
+    oneOf:
+      - required: [asset_id]
+        properties:
+          asset_id: { type: string }
+      - required: [path]
+        properties:
+          path: { type: string }

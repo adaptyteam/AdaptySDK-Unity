@@ -14,7 +14,7 @@ namespace AdaptySDK
 
     public partial class AdaptyPaywall
     {
-        internal partial class ProductReference
+        public partial class ProductReference
         {
             internal JSONNode ToJSONNode()
             {
@@ -23,13 +23,17 @@ namespace AdaptySDK
                 node.Add("adapty_product_id", AdaptyProductId);
 
 #if UNITY_ANDROID
-                if (AndroidBasePlanId != null) node.Add("base_plan_id", AndroidBasePlanId);
-                if (AndroidOfferId != null) node.Add("offer_id", AndroidOfferId);
+                if (AndroidBasePlanId != null)
+                    node.Add("base_plan_id", AndroidBasePlanId);
+                if (AndroidOfferId != null)
+                    node.Add("offer_id", AndroidOfferId);
 #endif
 
 #if UNITY_IOS
-                if (PromotionalOfferId != null) node.Add("promotional_offer_id", PromotionalOfferId);
-                if (WinBackOfferId != null) node.Add("win_back_offer_id", WinBackOfferId);
+                if (PromotionalOfferId != null)
+                    node.Add("promotional_offer_id", PromotionalOfferId);
+                if (WinBackOfferId != null)
+                    node.Add("win_back_offer_id", WinBackOfferId);
 #endif
                 return node;
             }
@@ -41,7 +45,7 @@ namespace AdaptySDK
 #if UNITY_ANDROID
                 AndroidBasePlanId = jsonNode.GetStringIfPresent("base_plan_id");
                 AndroidOfferId = jsonNode.GetStringIfPresent("offer_id");
-                #else
+#else
                 AndroidBasePlanId = null;
                 AndroidOfferId = null;
 #endif
@@ -62,23 +66,33 @@ namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static AdaptyPaywall.ProductReference GetAdaptyPaywallProductReference(this JSONNode node, string aKey)
-             => new AdaptyPaywall.ProductReference(GetObject(node, aKey));
+        internal static AdaptyPaywall.ProductReference GetAdaptyPaywallProductReference(
+            this JSONNode node,
+            string aKey
+        ) => new AdaptyPaywall.ProductReference(GetObject(node, aKey));
 
-        internal static AdaptyPaywall.ProductReference GetAdaptyPaywallProductReferenceIfPresent(this JSONNode node, string aKey)
+        internal static AdaptyPaywall.ProductReference GetAdaptyPaywallProductReferenceIfPresent(
+            this JSONNode node,
+            string aKey
+        )
         {
             var obj = GetObjectIfPresent(node, aKey);
-            if (obj is null) return null;
+            if (obj is null)
+                return null;
             return new AdaptyPaywall.ProductReference(obj);
         }
 
-        internal static IList<AdaptyPaywall.ProductReference> GetAdaptyPaywallProductReferenceList(this JSONNode node, string aKey)
+        internal static IList<AdaptyPaywall.ProductReference> GetAdaptyPaywallProductReferenceList(
+            this JSONNode node,
+            string aKey
+        )
         {
             var array = GetArray(node, aKey);
             var result = new List<AdaptyPaywall.ProductReference>();
             foreach (var item in array.Children)
             {
-                if (!item.IsObject) throw new Exception($"Value by index: {result.Count} is not Object");
+                if (!item.IsObject)
+                    throw new Exception($"Value by index: {result.Count} is not Object");
                 result.Add(new AdaptyPaywall.ProductReference(item.AsObject));
             }
             return result;

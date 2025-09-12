@@ -552,6 +552,20 @@ namespace AdaptyExample
         {
             this.LogMethodRequest("CreatePaywallView");
 
+            var productPurchaseParams =
+                new Dictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters>();
+
+            foreach (var productId in paywall.ProductIdentifiers)
+            {
+                productPurchaseParams[productId] = new AdaptyPurchaseParametersBuilder()
+                // .SetObfuscatedAccountId("123e4567-e89b-12d3-a456-426614174000")
+                // .SetObfuscatedProfileId("123e4567-e89b-12d3-a456-426614174000")
+                .Build();
+            }
+
+            // Create custom assets dictionary
+            var customAssets = AdaptyCustomAssetsConfiguration.CreateCustomAssets();
+
             var parameters = new AdaptyUICreatePaywallViewParameters()
                 .SetPreloadProducts(preloadProducts)
                 .SetCustomTags(
@@ -575,6 +589,8 @@ namespace AdaptyExample
                         { "CUSTOM_TIMER_5S", DateTime.Now.AddSeconds(5) },
                     }
                 )
+                .SetCustomAssets(customAssets)
+                .SetProductPurchaseParameters(productPurchaseParams)
                 .SetLoadTimeout(new TimeSpan(0, 0, 3));
 
             AdaptyUI.CreatePaywallView(

@@ -6,6 +6,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 
 namespace AdaptySDK
 {
@@ -16,15 +17,36 @@ namespace AdaptySDK
         internal JSONNode ToJSONNode()
         {
             var node = new JSONObject();
+
             if (SubscriptionUpdateParams != null)
-                node.Add("subscription_update_params", SubscriptionUpdateParams.ToJSONNode());
+            {
+                node.Add(_Keys.SubscriptionUpdateParams, SubscriptionUpdateParams.ToJSONNode());
+            }
+
             if (IsOfferPersonalized.HasValue)
-                node.Add("is_offer_personalized", IsOfferPersonalized.Value);
+            {
+                node.Add(_Keys.IsOfferPersonalized, IsOfferPersonalized.Value);
+            }
+
             if (ObfuscatedAccountId != null)
-                node.Add("obfuscated_account_id", ObfuscatedAccountId);
+            {
+                node.Add(_Keys.ObfuscatedAccountId, ObfuscatedAccountId);
+            }
+
             if (ObfuscatedProfileId != null)
-                node.Add("obfuscated_profile_id", ObfuscatedProfileId);
+            {
+                node.Add(_Keys.ObfuscatedProfileId, ObfuscatedProfileId);
+            }
+
             return node;
         }
+    }
+
+    internal static class _Keys
+    {
+        internal const string SubscriptionUpdateParams = "subscription_update_params";
+        internal const string IsOfferPersonalized = "is_offer_personalized";
+        internal const string ObfuscatedAccountId = "obfuscated_account_id";
+        internal const string ObfuscatedProfileId = "obfuscated_profile_id";
     }
 }

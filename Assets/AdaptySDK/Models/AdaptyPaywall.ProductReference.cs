@@ -9,7 +9,7 @@ namespace AdaptySDK
 {
     public partial class AdaptyPaywall
     {
-        internal partial class ProductReference
+        public partial class ProductReference
         {
             internal readonly string VendorProductId;
             internal readonly string AdaptyProductId;
@@ -18,13 +18,22 @@ namespace AdaptySDK
             internal readonly string AndroidBasePlanId; //nullable
             internal readonly string AndroidOfferId; //nullable
 
+            public AdaptyProductIdentifier ToAdaptyProductIdentifier()
+            {
+                return new AdaptyProductIdentifier(
+                    vendorProductId: VendorProductId,
+                    adaptyProductId: AdaptyProductId,
+                    basePlanId: AndroidBasePlanId
+                );
+            }
+
             public override string ToString() =>
-                $"{nameof(VendorProductId)}: {VendorProductId}, " +
-                $"{nameof(AdaptyProductId)}: {AdaptyProductId}, " +
-                $"{nameof(PromotionalOfferId)}: {PromotionalOfferId}, " +
-                $"{nameof(WinBackOfferId)}: {WinBackOfferId}, " +
-                $"{nameof(AndroidBasePlanId)}: {AndroidBasePlanId}, " +
-                $"{nameof(AndroidOfferId)}: {AndroidOfferId}";
+                $"{nameof(VendorProductId)}: {VendorProductId}, "
+                + $"{nameof(AdaptyProductId)}: {AdaptyProductId}, "
+                + $"{nameof(PromotionalOfferId)}: {PromotionalOfferId}, "
+                + $"{nameof(WinBackOfferId)}: {WinBackOfferId}, "
+                + $"{nameof(AndroidBasePlanId)}: {AndroidBasePlanId}, "
+                + $"{nameof(AndroidOfferId)}: {AndroidOfferId}";
         }
     }
 }
