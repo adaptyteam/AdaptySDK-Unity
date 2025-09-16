@@ -8,7 +8,7 @@ namespace AdaptyExample
     public class AdaptyListener : MonoBehaviour, AdaptyEventListener
     {
         public event Action OnInitializeFinished;
-        AdaptyRouter Router;
+        public AdaptyRouter Router;
 
         void Start()
         {

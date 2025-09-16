@@ -198,6 +198,16 @@ namespace AdaptySDK
             {
                 parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
             }
+
+            Request.Send(
+                "get_onboarding",
+                parameters,
+                JSONNodeExtensions.GetOnboarding,
+                (value, error) =>
+                {
+                    completionHandler?.Invoke(value, error);
+                }
+            );
         }
 
         /// <summary>

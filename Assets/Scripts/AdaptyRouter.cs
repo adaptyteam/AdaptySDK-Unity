@@ -9,9 +9,12 @@ namespace AdaptyExample
         public RectTransform LoadingPanel;
         public AlertPanel AlertPanel;
 
-        [Header("Sections Prefabs")]
-        public RectTransform ContentTransform;
+        public RectTransform MainContentTransform;
+        public RectTransform MainContentScrollRect;
+        public PaywallsListView PaywallsListView;
+        public OnboardingsListView OnboardingsListView;
 
+        [Header("Sections Prefabs")]
         public GameObject ProfileIdSectionPrefab;
         public GameObject IdentifySectionPrefab;
         public GameObject ProfileInfoSectionPrefab;
@@ -43,14 +46,26 @@ namespace AdaptyExample
 
         void Start()
         {
-            this.listener = GetComponent<AdaptyListener>();
+            this.listener = this.GetComponent<AdaptyListener>();
+
+            this.PaywallsListView.Listener = this.listener;
+            this.OnboardingsListView.Listener = this.listener;
+
             this.ConfigureLayout();
+            this.SelectActiveTab(0);
+        }
+
+        public void SelectActiveTab(int tabIndex)
+        {
+            this.MainContentScrollRect.gameObject.SetActive(tabIndex == 0);
+            this.PaywallsListView.gameObject.SetActive(tabIndex == 1);
+            this.OnboardingsListView.gameObject.SetActive(tabIndex == 2);
         }
 
         void ConfigureLayout()
         {
-            // Ensure ContentTransform uses Unity's layout system
-            var content = this.ContentTransform;
+            // Ensure MainContentTransform uses Unity's layout system
+            var content = this.MainContentTransform;
             var vertical = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
             if (vertical == null)
             {
@@ -73,7 +88,7 @@ namespace AdaptyExample
             // Helper to parent and stretch a section under the content
             System.Action<RectTransform> AttachSection = (RectTransform sectionRect) =>
             {
-                sectionRect.SetParent(this.ContentTransform, false);
+                sectionRect.SetParent(this.MainContentTransform, false);
                 sectionRect.anchorMin = new Vector2(0, 1);
                 sectionRect.anchorMax = new Vector2(1, 1);
                 sectionRect.offsetMin = new Vector2(0, sectionRect.offsetMin.y);
@@ -139,7 +154,7 @@ namespace AdaptyExample
             this.ActionsSection = actionsSection;
 
             // Rebuild to apply layout immediately
-            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(this.ContentTransform);
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(this.MainContentTransform);
         }
 
         public void SetProfile(AdaptyProfile profile)
