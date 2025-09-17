@@ -137,14 +137,21 @@ namespace AdaptySDK
         {
             var parameters = new JSONObject();
             parameters.Add("placement_id", placementId);
+
             if (locale != null)
+            {
                 parameters.Add("locale", locale);
+            }
 
             if (fetchPolicy != null)
+            {
                 parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+            }
 
             if (loadTimeout.HasValue)
+            {
                 parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
+            }
 
             Request.Send(
                 "get_paywall",
@@ -166,11 +173,6 @@ namespace AdaptySDK
                 }
             );
         }
-
-        public static void GetOnboarding(
-            string placementId,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        ) => GetOnboarding(placementId, null, null, null, completionHandler);
 
         public static void GetOnboarding(
             string placementId,
@@ -217,49 +219,6 @@ namespace AdaptySDK
         /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(
-            string placementId,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywallForDefaultAudience(placementId, null, null, completionHandler);
-
-        /// <summary>
-        /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(
-            string placementId,
-            AdaptyPlacementFetchPolicy fetchPolicy,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywallForDefaultAudience(placementId, null, fetchPolicy, completionHandler);
-
-        /// <summary>
-        /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(
-            string placementId,
-            string locale,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywallForDefaultAudience(placementId, locale, null, completionHandler);
-
-        /// <summary>
-        /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
@@ -273,9 +232,14 @@ namespace AdaptySDK
             var parameters = new JSONObject();
             parameters.Add("placement_id", placementId);
             if (locale != null)
+            {
                 parameters.Add("locale", locale);
+            }
+
             if (fetchPolicy != null)
+            {
                 parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+            }
 
             Request.Send(
                 "get_paywall_for_default_audience",
@@ -291,6 +255,47 @@ namespace AdaptySDK
                     {
                         throw new Exception(
                             "Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywallForDefaultAudience(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
+        public static void GetOnboardingForDefaultAudience(
+            string placementId,
+            string locale,
+            AdaptyPlacementFetchPolicy fetchPolicy,
+            Action<AdaptyOnboarding, AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("placement_id", placementId);
+
+            if (locale != null)
+            {
+                parameters.Add("locale", locale);
+            }
+
+            if (fetchPolicy != null)
+            {
+                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+            }
+
+            Request.Send(
+                "get_onboarding_for_default_audience",
+                parameters,
+                JSONNodeExtensions.GetOnboarding,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyOnboarding,AdaptyError> completionHandler in Adapty.GetOnboardingForDefaultAudience(..)",
                             e
                         );
                     }
@@ -674,68 +679,6 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this method to keep track of the user’s steps while onboarding
-        /// </summary>
-        /// <remarks>
-        /// The onboarding stage is a very common situation in modern mobile apps.
-        /// The quality of its implementation, content, and number of steps can have a rather significant influence on further user behavior, especially on his desire to become a subscriber or simply make some purchases.
-        /// In order for you to be able to analyze user behavior at this critical stage without leaving Adapty, we have implemented the ability to send dedicated events every time a user visits yet another onboarding screen.
-        /// </remarks>
-        /// <param name="name">Name of your onboarding.</param>
-        /// <param name="screenName">Readable name of a particular screen as part of onboarding.</param>
-        /// <param name="screenOrder">An unsigned integer value representing the order of this screen in your onboarding sequence (it must me greater than 0).</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void LogShowOnboarding(
-            string name,
-            string screenName,
-            uint screenOrder,
-            Action<AdaptyError> completionHandler
-        ) =>
-            LogShowOnboarding(
-                new AdaptyOnboardingScreenParameters(name, screenName, screenOrder),
-                completionHandler
-            );
-
-        /// <summary>
-        /// Call this method to keep track of the user’s steps while onboarding
-        /// </summary>
-        /// <remarks>
-        /// The onboarding stage is a very common situation in modern mobile apps.
-        /// The quality of its implementation, content, and number of steps can have a rather significant influence on further user behavior, especially on his desire to become a subscriber or simply make some purchases.
-        /// In order for you to be able to analyze user behavior at this critical stage without leaving Adapty, we have implemented the ability to send dedicated events every time a user visits yet another onboarding screen.
-        /// </remarks>
-        /// <param name="onboardingScreenParameters">An [AdaptyOnboardingScreenParameters] object.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void LogShowOnboarding(
-            AdaptyOnboardingScreenParameters onbordingScreenparameters,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JSONObject();
-            parameters.Add("params", onbordingScreenparameters.ToJSONNode());
-
-            Request.Send(
-                "log_show_onboarding",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowOnboarding(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
         /// Call this method to notify Adapty SDK, that particular paywall was shown to user.
         /// </summary>
         /// <remarks>
@@ -884,19 +827,6 @@ namespace AdaptySDK
         /// Read more on the <see href="https://adapty.io/docs/making-purchases">Adapty Documentation</see>
         /// </remarks>
         /// <param name="product">an [AdaptyPaywallProduct] object retrieved from the paywall.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void MakePurchase(
-            AdaptyPaywallProduct product,
-            Action<AdaptyPurchaseResult, AdaptyError> completionHandler
-        ) => MakePurchase(product, null, completionHandler);
-
-        /// <summary>
-        /// To make the purchase, you have to call this method.
-        /// </summary>
-        /// <remarks>
-        /// Read more on the <see href="https://adapty.io/docs/making-purchases">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="product">an [AdaptyPaywallProduct] object retrieved from the paywall.</param>
         /// <param name="subscriptionUpdate">an [AdaptySubscriptionUpdateParameters] object used to upgrade or downgrade a subscription (use for Android).</param>
         /// <param name="isOfferPersonalized">Specifies whether the offer is personalized to the buyer (use for Android).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
@@ -909,7 +839,9 @@ namespace AdaptySDK
             var parameters = new JSONObject();
             parameters.Add("product", product.ToJSONNode());
             if (purchaseParameters != null)
+            {
                 parameters.Add("parameters", purchaseParameters.ToJSONNode());
+            }
 
             Request.Send(
                 "make_purchase",
@@ -979,18 +911,6 @@ namespace AdaptySDK
         /// After doing this, you’ll be able to see metrics in Adapty Dashboard.
         /// </summary>
         /// <param name="transactionId">A string identifier of your purchased transaction <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> for iOS or string identifier (`purchase.getOrderId()`) of the purchase, where the purchase is an instance of the billing library Purchase class for Android.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void ReportTransaction(
-            string transactionId,
-            Action<AdaptyProfile, AdaptyError> completionHandler
-        ) => ReportTransaction(transactionId, null, completionHandler);
-
-        /// <summary>
-        /// In Observer mode, Adapty SDK doesn’t know, where the purchase was made from.
-        /// If you display products using our <see href="https://docs.adapty.io/v2.0/docs/paywall">Paywalls</see> or <  see href="https://docs.adapty.io/v2.0/docs/ab-test">A/B Tests</see>, you can manually assign variation to the purchase.
-        /// After doing this, you’ll be able to see metrics in Adapty Dashboard.
-        /// </summary>
-        /// <param name="transactionId">A string identifier of your purchased transaction <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> for iOS or string identifier (`purchase.getOrderId()`) of the purchase, where the purchase is an instance of the billing library Purchase class for Android.</param>
         /// <param name="variationId">A string identifier of variation. You can get it using variationId property of AdaptyPaywall.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
@@ -1002,7 +922,9 @@ namespace AdaptySDK
             var parameters = new JSONObject();
             parameters.Add("transaction_id", transactionId);
             if (variationId != null)
+            {
                 parameters.Add("variation_id", variationId);
+            }
 
             Request.Send(
                 "report_transaction",
@@ -1177,19 +1099,6 @@ namespace AdaptySDK
         /// You can set attribution data for the profile, using method.
         /// Read more on the <see href="https://adapty.io/docs/attribution-integration">Adapty Documentation</see>
         /// </summary>
-        /// <param name="attribution">a map containing attribution (conversion) data.</param>
-        /// <param name="source">a source of attribution.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void UpdateAttribution(
-            Dictionary<string, dynamic> attribution,
-            string source,
-            Action<AdaptyError> completionHandler
-        ) => UpdateAttribution(attribution.ToJSONObject().ToString(), source, completionHandler);
-
-        /// <summary>
-        /// You can set attribution data for the profile, using method.
-        /// Read more on the <see href="https://adapty.io/docs/attribution-integration">Adapty Documentation</see>
-        /// </summary>
         /// <param name="jsonString">a serialized JSON string containing attribution (conversion) data.</param>
         /// <param name="source">a source of attribution.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
@@ -1262,16 +1171,6 @@ namespace AdaptySDK
 
     public static partial class AdaptyUI
     {
-        /// <summary>
-        /// Right after receiving ``AdaptyPaywall``, you can create the corresponding ``AdaptyUIPaywallView`` to present it afterwards.
-        /// </summary>
-        /// <param name="paywall">an [AdaptyPaywall] object, for which you are trying to get a controller.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void CreatePaywallView(
-            AdaptyPaywall paywall,
-            Action<AdaptyUIPaywallView, AdaptyError> completionHandler
-        ) => CreatePaywallView(paywall, null, completionHandler);
-
         /// <summary>
         /// Right after receiving ``AdaptyPaywall``, you can create the corresponding ``AdaptyUIPaywallView`` to present it afterwards.
         /// </summary>
@@ -1366,6 +1265,35 @@ namespace AdaptySDK
             );
         }
 
+        public static void CreateOnboardingView(
+            AdaptyOnboarding onboarding,
+            Action<AdaptyUIOnboardingView, AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("onboarding", onboarding.ToJSONNode());
+
+            Request.Send(
+                "adapty_ui_create_onboarding_view",
+                parameters,
+                JSONNodeExtensions.GetAdaptyUIOnboardingView,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(value, error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyUIOnboardingView, AdaptyError> completionHandler in Adapty.CreateOnboardingView(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
         /// <summary>
         /// Call this function if you wish to dismiss the view.
         /// </summary>
@@ -1434,6 +1362,71 @@ namespace AdaptySDK
                     {
                         throw new Exception(
                             "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentPaywallView(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
+        public static void PresentOnboardingView(
+            AdaptyUIOnboardingView view,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("id", view.Id);
+
+            Request.Send(
+                "adapty_ui_present_onboarding_view",
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentOnboardingView(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
+        public static void DismissOnboardingView(
+            AdaptyUIOnboardingView view,
+            Action<AdaptyError> completionHandler
+        ) => DismissOnboardingView(view, false, completionHandler);
+
+        private static void DismissOnboardingView(
+            AdaptyUIOnboardingView view,
+            bool destroy,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("id", view.Id);
+            parameters.Add("destroy", destroy);
+
+            Request.Send(
+                "adapty_ui_dismiss_onboarding_view",
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissOnboardingView(..)",
                             e
                         );
                     }

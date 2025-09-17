@@ -5,26 +5,42 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace AdaptySDK.SimpleJSON
 {
     public static partial class SimpleJSONCollections
     {
-        public static IDictionary<string, dynamic> GetDictionary(this JSONNode node) => node.AsObject.ToDictionary();
-        public static IDictionary<string, dynamic> GetDictionary(this JSONNode node, string aKey) => node.GetObject(aKey).ToDictionary();
-        public static IDictionary<string, dynamic> GetDictionaryIfPresent(this JSONNode node, string aKey) => node.GetObjectIfPresent(aKey).ToDictionary();
-        public static IDictionary<string, dynamic> GetDictionaryIfPresent(this JSONNode node) => node is null || node.IsNull ? null : node.AsObject.ToDictionary();
+        public static IDictionary<string, dynamic> GetDictionary(this JSONNode node) =>
+            node.AsObject.ToDictionary();
+
+        public static IDictionary<string, dynamic> GetDictionary(this JSONNode node, string aKey) =>
+            node.GetObject(aKey).ToDictionary();
+
+        public static IDictionary<string, dynamic> GetDictionaryIfPresent(
+            this JSONNode node,
+            string aKey
+        ) => node.GetObjectIfPresent(aKey).ToDictionary();
+
+        public static IDictionary<string, dynamic> GetDictionaryIfPresent(this JSONNode node) =>
+            node is null || node.IsNull ? null : node.AsObject.ToDictionary();
 
         public static IList<dynamic> GetList(this JSONNode node) => node.AsArray.ToList();
-        public static IList<dynamic> GetList(this JSONNode node, string aKey) => node.GetArray(aKey).ToList();
-        public static IList<dynamic> GetListIfPresent(this JSONNode node) => node is null || node.IsNull ? null : node.AsArray.ToList();
-        public static IList<dynamic> GetListIfPresent(this JSONNode node, string aKey) => node.GetArrayIfPresent(aKey).ToList();
+
+        public static IList<dynamic> GetList(this JSONNode node, string aKey) =>
+            node.GetArray(aKey).ToList();
+
+        public static IList<dynamic> GetListIfPresent(this JSONNode node) =>
+            node is null || node.IsNull ? null : node.AsArray.ToList();
+
+        public static IList<dynamic> GetListIfPresent(this JSONNode node, string aKey) =>
+            node.GetArrayIfPresent(aKey).ToList();
 
         private static IDictionary<string, dynamic> ToDictionary(this JSONObject obj)
         {
-            if (obj == null) return null;
+            if (obj == null)
+                return null;
 
             var result = new Dictionary<string, dynamic>();
 
@@ -57,7 +73,8 @@ namespace AdaptySDK.SimpleJSON
 
         private static IList<dynamic> ToList(this JSONArray obj)
         {
-            if (obj == null) return null;
+            if (obj == null)
+                return null;
 
             var result = new List<dynamic>();
 
@@ -114,10 +131,16 @@ namespace AdaptySDK.SimpleJSON
                 {
                     result.Add(item.Key, new JSONString(item.Value as string));
                 }
-                else if (item.Value is int || item.Value is uint
-                || item.Value is long || item.Value is ulong
-                || item.Value is short || item.Value is ushort
-                || item.Value is sbyte || item.Value is byte)
+                else if (
+                    item.Value is int
+                    || item.Value is uint
+                    || item.Value is long
+                    || item.Value is ulong
+                    || item.Value is short
+                    || item.Value is ushort
+                    || item.Value is sbyte
+                    || item.Value is byte
+                )
                 {
                     result.Add(item.Key, new JSONNumber(Convert.ToInt64((object)item.Value)));
                 }
@@ -156,10 +179,16 @@ namespace AdaptySDK.SimpleJSON
                 {
                     result.Add(new JSONString(item as string));
                 }
-                else if (item is int || item is uint
-                || item is long || item is ulong
-                || item is short || item is ushort
-                || item is sbyte || item is byte)
+                else if (
+                    item is int
+                    || item is uint
+                    || item is long
+                    || item is ulong
+                    || item is short
+                    || item is ushort
+                    || item is sbyte
+                    || item is byte
+                )
                 {
                     result.Add(new JSONNumber(Convert.ToInt64((object)item)));
                 }
