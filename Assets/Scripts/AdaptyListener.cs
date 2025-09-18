@@ -5,7 +5,11 @@ using UnityEngine;
 
 namespace AdaptyExample
 {
-    public class AdaptyListener : MonoBehaviour, AdaptyEventListener
+    public class AdaptyListener
+        : MonoBehaviour,
+            AdaptyEventListener,
+            AdaptyPaywallsEventsListener,
+            AdaptyOnboardingsEventsListener
     {
         public event Action OnInitializeFinished;
         public AdaptyRouter Router;
@@ -27,6 +31,8 @@ namespace AdaptyExample
         private void InitializeAdapty()
         {
             Adapty.SetEventListener(this);
+            Adapty.SetPaywallsEventsListener(this);
+            Adapty.SetOnboardingsEventsListener(this);
 
             this.LogMethodRequest("SetLogLevel");
 
@@ -393,22 +399,6 @@ namespace AdaptyExample
             );
         }
 
-        public void LogShowOnboarding(int value, Action<AdaptyError> completionHandler)
-        {
-            this.LogMethodRequest("LogShowOnboarding");
-
-            Adapty.LogShowOnboarding(
-                "test_onboarding",
-                string.Format("test_screen_{0}", value),
-                (uint)value,
-                (error) =>
-                {
-                    this.LogMethodResult("LogShowOnboarding", error);
-                    completionHandler.Invoke(error);
-                }
-            );
-        }
-
         public void UpdateAppStoreCollectingRefundDataConsent(
             Boolean value,
             Action<AdaptyError> completionHandler
@@ -502,9 +492,25 @@ namespace AdaptyExample
             }
         }
 
-        private void LogIncomingCall_AdaptyUI(
+        private void LogIncomingCall_AdaptyUIPaywallView(
             string methodName,
             AdaptyUIPaywallView view,
+            string meta
+        )
+        {
+            Debug.Log(
+                string.Format(
+                    "#AdaptyListener# <-- {0}, viewId = {1}, meta = {2}",
+                    methodName,
+                    view.Id,
+                    meta
+                )
+            );
+        }
+
+        private void LogIncomingCall_AdaptyUIOnboardingView(
+            string methodName,
+            AdaptyUIOnboardingView view,
             string meta
         )
         {
@@ -599,7 +605,40 @@ namespace AdaptyExample
                 (view, error) =>
                 {
                     this.LogMethodResult("CreatePaywallView", error);
-                    completionHandler.Invoke(view);
+
+                    if (error != null)
+                    {
+                        this.Router.ShowAlertPanel(error.ToString());
+                    }
+                    else
+                    {
+                        completionHandler.Invoke(view);
+                    }
+                }
+            );
+        }
+
+        public void CreateOnboardingView(
+            AdaptyOnboarding onboarding,
+            Action<AdaptyUIOnboardingView> completionHandler
+        )
+        {
+            this.LogMethodRequest("CreateOnboardingView");
+
+            AdaptyUI.CreateOnboardingView(
+                onboarding,
+                (view, error) =>
+                {
+                    this.LogMethodResult("CreateOnboardingView", error);
+
+                    if (error != null)
+                    {
+                        this.Router.ShowAlertPanel(error.ToString());
+                    }
+                    else
+                    {
+                        completionHandler.Invoke(view);
+                    }
                 }
             );
         }
@@ -650,12 +689,12 @@ namespace AdaptyExample
 
         public void PaywallViewDidAppear(AdaptyUIPaywallView view)
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidAppear", view, null);
+            LogIncomingCall_AdaptyUIPaywallView("PaywallViewDidAppear", view, null);
         }
 
         public void PaywallViewDidDisappear(AdaptyUIPaywallView view)
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidDisappear", view, null);
+            LogIncomingCall_AdaptyUIPaywallView("PaywallViewDidDisappear", view, null);
         }
 
         public void PaywallViewDidFinishWebPaymentNavigation(
@@ -664,7 +703,7 @@ namespace AdaptyExample
             AdaptyError error
         )
         {
-            LogIncomingCall_AdaptyUI(
+            LogIncomingCall_AdaptyUIPaywallView(
                 "PaywallViewDidFinishWebPaymentNavigation",
                 view,
                 product.VendorProductId
@@ -673,7 +712,11 @@ namespace AdaptyExample
 
         public void PaywallViewDidPerformAction(AdaptyUIPaywallView view, AdaptyUIUserAction action)
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidPerformAction", view, action.Type.ToString());
+            LogIncomingCall_AdaptyUIPaywallView(
+                "PaywallViewDidPerformAction",
+                view,
+                action.Type.ToString()
+            );
 
             switch (action.Type)
             {
@@ -712,7 +755,7 @@ namespace AdaptyExample
 
         public void PaywallViewDidSelectProduct(AdaptyUIPaywallView view, string productId)
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidSelectProduct", view, productId);
+            LogIncomingCall_AdaptyUIPaywallView("PaywallViewDidSelectProduct", view, productId);
         }
 
         public void PaywallViewDidStartPurchase(
@@ -720,7 +763,11 @@ namespace AdaptyExample
             AdaptyPaywallProduct product
         )
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidStartPurchase", view, product.VendorProductId);
+            LogIncomingCall_AdaptyUIPaywallView(
+                "PaywallViewDidStartPurchase",
+                view,
+                product.VendorProductId
+            );
         }
 
         public void PaywallViewDidFinishPurchase(
@@ -729,7 +776,11 @@ namespace AdaptyExample
             AdaptyPurchaseResult purchasedResult
         )
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidFinishPurchase", view, product.VendorProductId);
+            LogIncomingCall_AdaptyUIPaywallView(
+                "PaywallViewDidFinishPurchase",
+                view,
+                product.VendorProductId
+            );
 
             switch (purchasedResult.Type)
             {
@@ -758,7 +809,7 @@ namespace AdaptyExample
             AdaptyError error
         )
         {
-            LogIncomingCall_AdaptyUI(
+            LogIncomingCall_AdaptyUIPaywallView(
                 "PaywallViewDidFailPurchase",
                 view,
                 string.Format("id: {0}, error: {1}", product.VendorProductId, error.ToString())
@@ -767,12 +818,16 @@ namespace AdaptyExample
 
         public void PaywallViewDidStartRestore(AdaptyUIPaywallView view)
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidStartRestore", view, null);
+            LogIncomingCall_AdaptyUIPaywallView("PaywallViewDidStartRestore", view, null);
         }
 
         public void PaywallViewDidFinishRestore(AdaptyUIPaywallView view, AdaptyProfile profile)
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidFinishRestore", view, profile.ProfileId);
+            LogIncomingCall_AdaptyUIPaywallView(
+                "PaywallViewDidFinishRestore",
+                view,
+                profile.ProfileId
+            );
 
             var dialog = new AdaptyUIDialogConfiguration()
                 .SetContent("Success!")
@@ -784,17 +839,197 @@ namespace AdaptyExample
 
         public void PaywallViewDidFailRestore(AdaptyUIPaywallView view, AdaptyError error)
         {
-            LogIncomingCall_AdaptyUI("aywallViewDidFailRestore", view, error.ToString());
+            LogIncomingCall_AdaptyUIPaywallView("aywallViewDidFailRestore", view, error.ToString());
         }
 
         public void PaywallViewDidFailRendering(AdaptyUIPaywallView view, AdaptyError error)
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidFailRendering", view, error.ToString());
+            LogIncomingCall_AdaptyUIPaywallView(
+                "PaywallViewDidFailRendering",
+                view,
+                error.ToString()
+            );
         }
 
         public void PaywallViewDidFailLoadingProducts(AdaptyUIPaywallView view, AdaptyError error)
         {
-            LogIncomingCall_AdaptyUI("PaywallViewDidFailLoadingProducts", view, error.ToString());
+            LogIncomingCall_AdaptyUIPaywallView(
+                "PaywallViewDidFailLoadingProducts",
+                view,
+                error.ToString()
+            );
+        }
+
+        // - AdaptyOnboardingsEventsListener
+
+        public void OnboardingViewDidFailWithError(AdaptyUIOnboardingView view, AdaptyError error)
+        {
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewDidFailWithError",
+                view,
+                error.ToString()
+            );
+        }
+
+        public void OnboardingViewDidFinishLoading(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewDidFinishLoading",
+                view,
+                meta.ToString()
+            );
+        }
+
+        public void OnboardingViewOnCloseAction(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            string actionId
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnCloseAction", view, actionId);
+
+            view.Dismiss(null);
+        }
+
+        public void OnboardingViewOnPaywallAction(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            string actionId
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnPaywallAction", view, actionId);
+
+            // TODO: present paywall with ID == actionId
+        }
+
+        public void OnboardingViewOnCustomAction(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            string actionId
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnCustomAction", view, actionId);
+        }
+
+        public void OnboardingViewOnStateUpdatedAction(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            string elementId,
+            AdaptyOnboardingsStateUpdatedParams @params
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewOnStateUpdatedAction",
+                view,
+                elementId
+            );
+
+            // Example: Handle different types of state updates
+            switch (@params)
+            {
+                case AdaptyOnboardingsSelectParams selectParams:
+                    Debug.Log(
+                        $"Select updated - Element: {elementId}, "
+                            + $"ID: {selectParams.Id}, "
+                            + $"Value: {selectParams.Value}, "
+                            + $"Label: {selectParams.Label}"
+                    );
+                    // Store user selection
+                    // PlayerPrefs.SetString($"onboarding_{elementId}", selectParams.Value);
+                    break;
+
+                case AdaptyOnboardingsMultiSelectParams multiSelectParams:
+                    Debug.Log(
+                        $"Multi-select updated - Element: {elementId}, "
+                            + $"Count: {multiSelectParams.Params.Count}"
+                    );
+                    foreach (var param in multiSelectParams.Params)
+                    {
+                        Debug.Log($"  - {param.Id}: {param.Value} ({param.Label})");
+                    }
+                    // Store multiple selections
+                    break;
+
+                case AdaptyOnboardingsInputParams inputParams:
+                    Debug.Log($"Input updated - Element: {elementId}");
+                    switch (inputParams.Input)
+                    {
+                        case AdaptyOnboardingsTextInput textInput:
+                            Debug.Log($"  Text input: {textInput.Value}");
+                            // Store text input
+                            break;
+                        case AdaptyOnboardingsEmailInput emailInput:
+                            Debug.Log($"  Email input: {emailInput.Value}");
+                            // Validate and store email
+                            break;
+                        case AdaptyOnboardingsNumberInput numberInput:
+                            Debug.Log($"  Number input: {numberInput.Value}");
+                            // Store numeric value
+                            break;
+                    }
+                    break;
+
+                case AdaptyOnboardingsDatePickerParams dateParams:
+                    Debug.Log(
+                        $"Date picker updated - Element: {elementId}, "
+                            + $"Date: {dateParams.Year}-{dateParams.Month}-{dateParams.Day}"
+                    );
+                    // Store date selection
+                    break;
+            }
+        }
+
+        public void OnboardingViewOnAnalyticsEvent(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            AdaptyOnboardingsAnalyticsEvent @event
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewOnAnalyticsEvent",
+                view,
+                @event.ToString()
+            );
+
+            // Example: Handle different analytics events
+            switch (@event)
+            {
+                case AdaptyOnboardingsAnalyticsEventOnboardingStarted _:
+                    Debug.Log("Onboarding started!");
+                    break;
+
+                case AdaptyOnboardingsAnalyticsEventScreenPresented _:
+                    Debug.Log($"Screen presented: {meta.ScreenIndex + 1}/{meta.ScreensTotal}");
+                    break;
+
+                case AdaptyOnboardingsAnalyticsEventScreenCompleted screenCompleted:
+                    Debug.Log($"Screen completed: {meta.ScreenIndex + 1}/{meta.ScreensTotal}");
+                    if (!string.IsNullOrEmpty(screenCompleted.ElementId))
+                    {
+                        Debug.Log($"  Completed element: {screenCompleted.ElementId}");
+                    }
+                    if (!string.IsNullOrEmpty(screenCompleted.Reply))
+                    {
+                        Debug.Log($"  User reply: {screenCompleted.Reply}");
+                    }
+                    break;
+
+                case AdaptyOnboardingsAnalyticsEventOnboardingCompleted _:
+                    Debug.Log("Onboarding completed successfully!");
+                    break;
+                case AdaptyOnboardingsAnalyticsEventUserEmailCollected _:
+                    Debug.Log("User email collected during onboarding");
+                    break;
+                case AdaptyOnboardingsAnalyticsEventUnknown unknownEvent:
+                    Debug.Log($"Unknown analytics event: {unknownEvent.Name}");
+                    break;
+                default:
+                    Debug.Log($"Other analytics event: {@event.GetType().Name}");
+                    break;
+            }
         }
     }
 }

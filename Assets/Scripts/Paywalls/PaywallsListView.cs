@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AdaptyExample
 {
-    public class OnboardingsListView : MonoBehaviour
+    public class PaywallsListView : MonoBehaviour
     {
         [HideInInspector]
         public AdaptyListener Listener;
@@ -12,11 +12,11 @@ namespace AdaptyExample
         public TMP_InputField PlacementLocaleTextField;
         public RectTransform ContentViewTransform;
 
-        public GameObject OnboardingItemPrefab;
+        public GameObject PaywallsItemPrefab;
 
         void Start()
         {
-            this.AddPlacement("onb_test_alexey", null);
+            this.AddPlacement("test_alexey", null);
         }
 
         void Update() { }
@@ -39,13 +39,13 @@ namespace AdaptyExample
 
         private void AddPlacement(string placementId, string placementLocale)
         {
-            var onboardingItem = Instantiate(this.OnboardingItemPrefab, this.ContentViewTransform);
-            var onboardingItemView = onboardingItem.GetComponent<OnboardingsItemView>();
+            var paywallItem = Instantiate(this.PaywallsItemPrefab, this.ContentViewTransform);
+            var paywallItemView = paywallItem.GetComponent<PaywallsItemView>();
 
-            onboardingItemView.Listener = this.Listener;
-            onboardingItemView.PlacementId = placementId;
-            onboardingItemView.PlacementLocale = placementLocale;
-            onboardingItemView.LoadOnboarding();
+            paywallItemView.Listener = this.Listener;
+            paywallItemView.PlacementId = placementId;
+            paywallItemView.PlacementLocale = placementLocale;
+            paywallItemView.LoadPaywall();
         }
     }
 }

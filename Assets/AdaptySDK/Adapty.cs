@@ -20,7 +20,7 @@ namespace AdaptySDK
         /// <summary>
         /// The version of the Adapty SDK.
         /// </summary>
-        public static readonly string SDKVersion = "3.4.1";
+        public static readonly string SDKVersion = "3.11.0";
 
         /// <summary>
         /// Use this method to initialize the Adapty SDK.
@@ -1437,7 +1437,7 @@ namespace AdaptySDK
         /// <summary>
         /// Call this function if you wish to present the dialog.
         /// </summary>
-        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
+        /// <param name="view">an [AdaptyUIPaywallView] or [AdaptyUIOnboardingView] object, for which is representing the view.</param>
         /// <param name="configuration">an [AdaptyUIDialogConfiguration] object that contains the dialog configuration.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ShowDialog(
@@ -1446,8 +1446,32 @@ namespace AdaptySDK
             Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
         )
         {
+            ShowDialog(view.Id, configuration, completionHandler);
+        }
+
+        /// <summary>
+        /// Call this function if you wish to present the dialog.
+        /// </summary>
+        /// <param name="view">an [AdaptyUIOnboardingView] object, for which is representing the view.</param>
+        /// <param name="configuration">an [AdaptyUIDialogConfiguration] object that contains the dialog configuration.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void ShowDialog(
+            AdaptyUIOnboardingView view,
+            AdaptyUIDialogConfiguration configuration,
+            Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
+        )
+        {
+            ShowDialog(view.Id, configuration, completionHandler);
+        }
+
+        private static void ShowDialog(
+            string viewId,
+            AdaptyUIDialogConfiguration configuration,
+            Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
+        )
+        {
             var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
+            parameters.Add("id", viewId);
             parameters.Add("configuration", configuration.ToJSONNode());
 
             Request.Send(
