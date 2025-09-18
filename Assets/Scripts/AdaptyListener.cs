@@ -921,63 +921,60 @@ namespace AdaptyExample
             AdaptyOnboardingsStateUpdatedParams @params
         )
         {
-            LogIncomingCall_AdaptyUIOnboardingView(
-                "OnboardingViewOnStateUpdatedAction",
-                view,
-                elementId
-            );
-
-            // Example: Handle different types of state updates
             switch (@params)
             {
                 case AdaptyOnboardingsSelectParams selectParams:
-                    Debug.Log(
-                        $"Select updated - Element: {elementId}, "
-                            + $"ID: {selectParams.Id}, "
-                            + $"Value: {selectParams.Value}, "
-                            + $"Label: {selectParams.Label}"
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnStateUpdatedAction",
+                        view,
+                        "Element: " + elementId + " SelectParams: " + selectParams.ToString()
                     );
-                    // Store user selection
-                    // PlayerPrefs.SetString($"onboarding_{elementId}", selectParams.Value);
-                    break;
 
+                    break;
                 case AdaptyOnboardingsMultiSelectParams multiSelectParams:
-                    Debug.Log(
-                        $"Multi-select updated - Element: {elementId}, "
-                            + $"Count: {multiSelectParams.Params.Count}"
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnStateUpdatedAction",
+                        view,
+                        "Element: "
+                            + elementId
+                            + " MultiSelectParams: "
+                            + multiSelectParams.ToString()
                     );
-                    foreach (var param in multiSelectParams.Params)
-                    {
-                        Debug.Log($"  - {param.Id}: {param.Value} ({param.Label})");
-                    }
-                    // Store multiple selections
                     break;
-
                 case AdaptyOnboardingsInputParams inputParams:
-                    Debug.Log($"Input updated - Element: {elementId}");
+
                     switch (inputParams.Input)
                     {
                         case AdaptyOnboardingsTextInput textInput:
-                            Debug.Log($"  Text input: {textInput.Value}");
-                            // Store text input
+                            LogIncomingCall_AdaptyUIOnboardingView(
+                                "OnboardingViewOnStateUpdatedAction",
+                                view,
+                                "Element: " + elementId + " TextInput: " + textInput.Value
+                            );
                             break;
                         case AdaptyOnboardingsEmailInput emailInput:
-                            Debug.Log($"  Email input: {emailInput.Value}");
-                            // Validate and store email
+                            LogIncomingCall_AdaptyUIOnboardingView(
+                                "OnboardingViewOnStateUpdatedAction",
+                                view,
+                                "Element: " + elementId + " EmailInput: " + emailInput.Value
+                            );
                             break;
                         case AdaptyOnboardingsNumberInput numberInput:
-                            Debug.Log($"  Number input: {numberInput.Value}");
-                            // Store numeric value
+                            LogIncomingCall_AdaptyUIOnboardingView(
+                                "OnboardingViewOnStateUpdatedAction",
+                                view,
+                                "Element: " + elementId + " NumberInput: " + numberInput.Value
+                            );
                             break;
                     }
                     break;
 
                 case AdaptyOnboardingsDatePickerParams dateParams:
-                    Debug.Log(
-                        $"Date picker updated - Element: {elementId}, "
-                            + $"Date: {dateParams.Year}-{dateParams.Month}-{dateParams.Day}"
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnStateUpdatedAction",
+                        view,
+                        "Element: " + elementId + " DatePickerParams: " + dateParams.ToString()
                     );
-                    // Store date selection
                     break;
             }
         }
@@ -985,49 +982,60 @@ namespace AdaptyExample
         public void OnboardingViewOnAnalyticsEvent(
             AdaptyUIOnboardingView view,
             AdaptyUIOnboardingMeta meta,
-            AdaptyOnboardingsAnalyticsEvent @event
+            AdaptyOnboardingsAnalyticsEvent analyticsEvent
         )
         {
-            LogIncomingCall_AdaptyUIOnboardingView(
-                "OnboardingViewOnAnalyticsEvent",
-                view,
-                @event.ToString()
-            );
-
-            // Example: Handle different analytics events
-            switch (@event)
+            switch (analyticsEvent)
             {
-                case AdaptyOnboardingsAnalyticsEventOnboardingStarted _:
-                    Debug.Log("Onboarding started!");
+                case AdaptyOnboardingsAnalyticsEventOnboardingStarted onboardingStarted:
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnAnalyticsEvent",
+                        view,
+                        "OnboardingStarted: " + onboardingStarted.ToString()
+                    );
                     break;
-
-                case AdaptyOnboardingsAnalyticsEventScreenPresented _:
-                    Debug.Log($"Screen presented: {meta.ScreenIndex + 1}/{meta.ScreensTotal}");
+                case AdaptyOnboardingsAnalyticsEventScreenPresented screenPresented:
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnAnalyticsEvent",
+                        view,
+                        "ScreenPresented: " + screenPresented.ToString()
+                    );
                     break;
 
                 case AdaptyOnboardingsAnalyticsEventScreenCompleted screenCompleted:
-                    Debug.Log($"Screen completed: {meta.ScreenIndex + 1}/{meta.ScreensTotal}");
-                    if (!string.IsNullOrEmpty(screenCompleted.ElementId))
-                    {
-                        Debug.Log($"  Completed element: {screenCompleted.ElementId}");
-                    }
-                    if (!string.IsNullOrEmpty(screenCompleted.Reply))
-                    {
-                        Debug.Log($"  User reply: {screenCompleted.Reply}");
-                    }
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnAnalyticsEvent",
+                        view,
+                        "ScreenCompleted: " + screenCompleted.ToString()
+                    );
                     break;
-
-                case AdaptyOnboardingsAnalyticsEventOnboardingCompleted _:
-                    Debug.Log("Onboarding completed successfully!");
+                case AdaptyOnboardingsAnalyticsEventOnboardingCompleted onboardingCompleted:
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnAnalyticsEvent",
+                        view,
+                        "OnboardingCompleted: " + onboardingCompleted.ToString()
+                    );
                     break;
-                case AdaptyOnboardingsAnalyticsEventUserEmailCollected _:
-                    Debug.Log("User email collected during onboarding");
+                case AdaptyOnboardingsAnalyticsEventUserEmailCollected userEmailCollected:
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnAnalyticsEvent",
+                        view,
+                        "UserEmailCollected: " + userEmailCollected.ToString()
+                    );
                     break;
                 case AdaptyOnboardingsAnalyticsEventUnknown unknownEvent:
-                    Debug.Log($"Unknown analytics event: {unknownEvent.Name}");
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnAnalyticsEvent",
+                        view,
+                        "UnknownEvent: " + unknownEvent.Name
+                    );
                     break;
                 default:
-                    Debug.Log($"Other analytics event: {@event.GetType().Name}");
+                    LogIncomingCall_AdaptyUIOnboardingView(
+                        "OnboardingViewOnAnalyticsEvent",
+                        view,
+                        "UnknownEvent (default): " + analyticsEvent.GetType().Name
+                    );
                     break;
             }
         }

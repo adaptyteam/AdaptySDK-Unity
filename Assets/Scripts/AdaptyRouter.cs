@@ -66,24 +66,24 @@ namespace AdaptyExample
         {
             // Ensure MainContentTransform uses Unity's layout system
             var content = this.MainContentTransform;
-            var vertical = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
-            if (vertical == null)
-            {
-                vertical = content.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
-                vertical.childControlHeight = true;
-                vertical.childControlWidth = true;
-                vertical.childForceExpandHeight = false;
-                vertical.childForceExpandWidth = true;
-                vertical.spacing = 64.0f;
-                vertical.padding = new RectOffset(0, 0, 20, 0);
-            }
+            // var vertical = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
+            // if (vertical == null)
+            // {
+            //     vertical = content.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
+            //     vertical.childControlHeight = true;
+            //     vertical.childControlWidth = true;
+            //     vertical.childForceExpandHeight = false;
+            //     vertical.childForceExpandWidth = true;
+            //     vertical.spacing = 64.0f;
+            //     vertical.padding = new RectOffset(0, 0, 20, 0);
+            // }
 
-            var fitter = content.GetComponent<UnityEngine.UI.ContentSizeFitter>();
-            if (fitter == null)
-            {
-                fitter = content.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
-            }
-            fitter.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
+            // var fitter = content.GetComponent<UnityEngine.UI.ContentSizeFitter>();
+            // if (fitter == null)
+            // {
+            //     fitter = content.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
+            // }
+            // fitter.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
 
             // Helper to parent and stretch a section under the content
             System.Action<RectTransform> AttachSection = (RectTransform sectionRect) =>
