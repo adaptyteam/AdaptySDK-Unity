@@ -13,6 +13,8 @@ namespace AdaptySDK
         {
             internal readonly string VendorProductId;
             internal readonly string AdaptyProductId;
+            internal readonly string AccessLevelId;
+            internal readonly string ProductType;
             internal readonly string PromotionalOfferId; //nullable
             internal readonly string WinBackOfferId; //nullable
             internal readonly string AndroidBasePlanId; //nullable
@@ -30,6 +32,8 @@ namespace AdaptySDK
             public override string ToString() =>
                 $"{nameof(VendorProductId)}: {VendorProductId}, "
                 + $"{nameof(AdaptyProductId)}: {AdaptyProductId}, "
+                + $"{nameof(AccessLevelId)}: {AccessLevelId}, "
+                + $"{nameof(ProductType)}: {ProductType}, "
                 + $"{nameof(PromotionalOfferId)}: {PromotionalOfferId}, "
                 + $"{nameof(WinBackOfferId)}: {WinBackOfferId}, "
                 + $"{nameof(AndroidBasePlanId)}: {AndroidBasePlanId}, "

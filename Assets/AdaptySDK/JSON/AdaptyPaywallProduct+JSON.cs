@@ -19,6 +19,8 @@ namespace AdaptySDK
             var node = new JSONObject();
             node.Add("vendor_product_id", VendorProductId);
             node.Add("adapty_product_id", AdaptyProductId);
+            node.Add("access_level_id", AccessLevelId);
+            node.Add("product_type", ProductType);
             node.Add("paywall_variation_id", PaywallVariationId);
             node.Add("paywall_ab_test_name", PaywallABTestName);
             node.Add("paywall_name", PaywallName);
@@ -54,6 +56,8 @@ namespace AdaptySDK
         {
             VendorProductId = jsonNode.GetString("vendor_product_id");
             AdaptyProductId = jsonNode.GetString("adapty_product_id");
+            AccessLevelId = jsonNode.GetString("access_level_id");
+            ProductType = jsonNode.GetString("product_type");
             PaywallVariationId = jsonNode.GetString("paywall_variation_id");
             PaywallABTestName = jsonNode.GetString("paywall_ab_test_name");
             PaywallName = jsonNode.GetString("paywall_name");

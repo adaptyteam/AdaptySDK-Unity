@@ -9,12 +9,19 @@ public class ProductButton : MonoBehaviour
     public TextMeshProUGUI PriceText;
     public TextMeshProUGUI EligibilityText;
 
+    public TextMeshProUGUI AccessLevelIdText;
+
+    public TextMeshProUGUI ProductTypeText;
+
     public void UpdateProduct(AdaptyPaywallProduct product)
     {
         this.ProductIdText.SetText(product.VendorProductId);
         this.PriceText.SetText(product.Price.LocalizedString);
         // this.EligibilityText.SetText(eligibility.ToString());
         this.EligibilityText.SetText("TODO");
+
+        this.AccessLevelIdText.SetText(product.AccessLevelId);
+        this.ProductTypeText.SetText(product.ProductType);
     }
 
     public void UpdateProductMock(string productId, string priceLocalized, string eligibility)
@@ -22,5 +29,8 @@ public class ProductButton : MonoBehaviour
         this.ProductIdText.SetText(productId);
         this.PriceText.SetText(priceLocalized);
         this.EligibilityText.SetText(eligibility);
+
+        this.AccessLevelIdText.SetText("null");
+        this.ProductTypeText.SetText("null");
     }
 }

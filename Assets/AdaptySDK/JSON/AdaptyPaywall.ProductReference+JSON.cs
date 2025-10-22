@@ -21,6 +21,8 @@ namespace AdaptySDK
                 var node = new JSONObject();
                 node.Add("vendor_product_id", VendorProductId);
                 node.Add("adapty_product_id", AdaptyProductId);
+                node.Add("access_level_id", AccessLevelId);
+                node.Add("product_type", ProductType);
 
 #if UNITY_ANDROID
                 if (AndroidBasePlanId != null)
@@ -42,6 +44,9 @@ namespace AdaptySDK
             {
                 VendorProductId = jsonNode.GetString("vendor_product_id");
                 AdaptyProductId = jsonNode.GetString("adapty_product_id");
+                AccessLevelId = jsonNode.GetString("access_level_id");
+                ProductType = jsonNode.GetString("product_type");
+
 #if UNITY_ANDROID
                 AndroidBasePlanId = jsonNode.GetStringIfPresent("base_plan_id");
                 AndroidOfferId = jsonNode.GetStringIfPresent("offer_id");

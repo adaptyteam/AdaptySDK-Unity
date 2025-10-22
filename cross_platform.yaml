@@ -976,6 +976,8 @@ $defs:
     required:
       - vendor_product_id
       - adapty_product_id
+      - access_level_id
+      - product_type
       - paywall_product_index
       - paywall_variation_id
       - paywall_ab_test_name
@@ -987,6 +989,8 @@ $defs:
     properties:
       vendor_product_id: { type: string }
       adapty_product_id: { type: string }
+      access_level_id: { type: string }
+      product_type: { type: string }
       paywall_product_index: { type: integer }
       paywall_variation_id: { type: string }
       paywall_ab_test_name: { type: string }
@@ -1036,6 +1040,8 @@ $defs:
     required:
       - vendor_product_id
       - adapty_product_id
+      - access_level_id
+      - product_type
       - paywall_product_index
       - paywall_variation_id
       - paywall_ab_test_name
@@ -1043,6 +1049,8 @@ $defs:
     properties:
       vendor_product_id: { type: string }
       adapty_product_id: { type: string }
+      access_level_id: { type: string }
+      product_type: { type: string }
       paywall_product_index: { type: integer }
       subscription_offer_identifier:
         { $ref: "#/$defs/AdaptySubscriptionOffer.Identifier" }
@@ -1189,9 +1197,13 @@ $defs:
     required:
       - vendor_product_id
       - adapty_product_id
+      - access_level_id
+      - product_type
     properties:
       vendor_product_id: { type: string }
       adapty_product_id: { type: string }
+      access_level_id: { type: string }
+      product_type: { type: string }
       promotional_offer_id: { type: string, description: "iOS Only" }
       win_back_offer_id: { type: string, description: "iOS Only" }
       base_plan_id: { type: string, description: "Android Only" }
@@ -1489,6 +1501,12 @@ $defs:
       $ref: "#/$defs/AdaptyPurchaseParameters", 
       nullable: false 
     }
+
+  AdaptyUI.IOSPresentationStyle:
+    type: string
+    enum:
+      - full_screen
+      - page_sheet
 
   AdaptyUI.DialogConfiguration: #request
     type: object

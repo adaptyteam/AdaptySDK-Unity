@@ -14,6 +14,12 @@ namespace AdaptySDK
 
         public readonly string AdaptyProductId;
 
+        /// The identifier of the access level configured by you in Adapty Dashboard.
+        public readonly string AccessLevelId;
+
+        /// The type of the product.
+        public readonly string ProductType;
+
         /// The identifier of the variation, used to attribute purchases to the paywall.
         public readonly string PaywallVariationId;
 
@@ -51,6 +57,9 @@ namespace AdaptySDK
 
         public override string ToString() =>
             $"{nameof(VendorProductId)}: {VendorProductId}, "
+            + $"{nameof(AdaptyProductId)}: {AdaptyProductId}, "
+            + $"{nameof(AccessLevelId)}: {AccessLevelId}, "
+            + $"{nameof(ProductType)}: {ProductType}, "
             + $"{nameof(LocalizedDescription)}: {LocalizedDescription}, "
             + $"{nameof(LocalizedTitle)}: {LocalizedTitle}, "
             + $"{nameof(RegionCode)}: {RegionCode}, "
