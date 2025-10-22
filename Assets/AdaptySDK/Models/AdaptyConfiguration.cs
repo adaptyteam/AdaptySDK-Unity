@@ -11,7 +11,7 @@ namespace AdaptySDK
     {
         private readonly string ApiKey;
         private readonly string CustomerUserId; // nullable
-        private readonly System.Guid? AppAccountToken; // UUID, nullable
+        private readonly AdaptyCustomerIdentity? CustomerIdentity; // nullable
         private readonly bool? ObserverMode;
         private readonly bool? AppleIdfaCollectionDisabled;
         private readonly bool? GoogleAdvertisingIdCollectionDisabled;
@@ -30,6 +30,7 @@ namespace AdaptySDK
         public override string ToString() =>
             $"{nameof(ApiKey)}: {ApiKey}, "
             + $"{nameof(CustomerUserId)}: {CustomerUserId}, "
+            + $"{nameof(CustomerIdentity)}: {CustomerIdentity}, "
             + $"{nameof(ObserverMode)}: {ObserverMode}, "
             + $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, "
             + $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, "

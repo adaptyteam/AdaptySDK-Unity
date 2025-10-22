@@ -380,22 +380,24 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Identify(string customerUserId, Action<AdaptyError> completionHandler)
         {
-            Identify(customerUserId, null, completionHandler);
+            Identify(customerUserId, null, null, completionHandler);
         }
 
         /// <summary>
-        /// Use this method for identifying user with it’s user id in your system.
+        /// Use this method for identifying user with it's user id in your system.
         /// </summary>
         /// <remarks>
-        /// If you don’t have a user id on SDK configuration, you can set it later at any time with `.identify()` method.
+        /// If you don't have a user id on SDK configuration, you can set it later at any time with `.identify()` method.
         /// The most common cases are after registration/authorization when the user switches from being an anonymous user to an authenticated user.
         /// </remarks>
         /// <param name="customerUserId">User identifier in your system.</param>
-        /// <param name="appAccountToken">App account token.</param>
+        /// <param name="iosAppAccountToken">The UUID that you generate to associate a customer’s In-App Purchase with its resulting App Store transaction. (use for iOS), [read more](https://developer.apple.com/documentation/appstoreserverapi/appaccounttoken).</param>
+        /// <param name="androidObfuscatedAccountId">The obfuscated account identifier (use for Android), [read more](https://developer.android.com/google/play/billing/developer-payload#attribute).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Identify(
             string customerUserId,
-            Guid? appAccountToken,
+            Guid? iosAppAccountToken,
+            string? androidObfuscatedAccountId,
             Action<AdaptyError> completionHandler
         )
         {
@@ -403,9 +405,14 @@ namespace AdaptySDK
 
             parameters.Add("customer_user_id", customerUserId);
 
-            if (appAccountToken != null)
+            var customerIdentity = new AdaptyCustomerIdentity(
+                iosAppAccountToken,
+                androidObfuscatedAccountId
+            );
+
+            if (!customerIdentity.IsEmpty)
             {
-                parameters.Add("app_account_token", appAccountToken.ToString());
+                parameters.Add("parameters", customerIdentity.ToJSONNode());
             }
 
             Request.Send(

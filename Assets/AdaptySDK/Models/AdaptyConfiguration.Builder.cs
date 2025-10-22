@@ -15,7 +15,7 @@ namespace AdaptySDK
         {
             ApiKey = builder.ApiKey;
             CustomerUserId = builder.CustomerUserId;
-            AppAccountToken = builder.AppAccountToken;
+            CustomerIdentity = builder.CustomerIdentity;
             ObserverMode = builder.ObserverMode;
             AppleIdfaCollectionDisabled = builder.AppleIdfaCollectionDisabled;
             GoogleAdvertisingIdCollectionDisabled = builder.GoogleAdvertisingIdCollectionDisabled;
@@ -35,7 +35,7 @@ namespace AdaptySDK
         {
             public string ApiKey;
             public string CustomerUserId; //nullable
-            public System.Guid? AppAccountToken; // UUID, nullable
+            public AdaptyCustomerIdentity CustomerIdentity; // nullable
             public bool? ObserverMode;
 
             [Obsolete(
@@ -67,7 +67,7 @@ namespace AdaptySDK
             public override string ToString() =>
                 $"{nameof(ApiKey)}: {ApiKey}, "
                 + $"{nameof(CustomerUserId)}: {CustomerUserId}, "
-                + $"{nameof(AppAccountToken)}: {AppAccountToken}, "
+                + $"{nameof(CustomerIdentity)}: {CustomerIdentity}, "
                 + $"{nameof(ObserverMode)}: {ObserverMode}, "
                 + $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, "
                 + $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, "
@@ -93,10 +93,17 @@ namespace AdaptySDK
                 return this;
             }
 
-            public Builder SetCustomerUserId(string customerUserId, System.Guid appAccountToken)
+            public Builder SetCustomerUserId(
+                string customerUserId,
+                Guid? iosAppAccountToken,
+                string? androidObfuscatedAccountId
+            )
             {
                 CustomerUserId = customerUserId;
-                AppAccountToken = appAccountToken;
+                CustomerIdentity = new AdaptyCustomerIdentity(
+                    iosAppAccountToken,
+                    androidObfuscatedAccountId
+                );
                 return this;
             }
 
