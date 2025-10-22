@@ -559,9 +559,9 @@ namespace AdaptyExample
             foreach (var productId in paywall.ProductIdentifiers)
             {
                 productPurchaseParams[productId] = new AdaptyPurchaseParametersBuilder()
-                // .SetObfuscatedAccountId("123e4567-e89b-12d3-a456-426614174000")
-                // .SetObfuscatedProfileId("123e4567-e89b-12d3-a456-426614174000")
-                .Build();
+                    .SetIsOfferPersonalized(false)
+                    // .SetSubscriptionUpdateParams(new AdaptySubscriptionUpdateParameters()
+                    .Build();
             }
 
             // Create custom assets dictionary

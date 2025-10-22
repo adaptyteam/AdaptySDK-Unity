@@ -15,7 +15,8 @@ namespace AdaptySDK
         {
             Type = jsonNode.GetAdaptyPurchaseResultType("type");
             Profile = jsonNode.GetAdaptyProfileIfPresent("profile");
-            JWSTransaction = jsonNode.GetStringIfPresent("jws_transaction");
+            AppleJWSTransaction = jsonNode.GetStringIfPresent("apple_jws_transaction");
+            GooglePurchaseToken = jsonNode.GetStringIfPresent("google_purchase_token");
         }
     }
 }

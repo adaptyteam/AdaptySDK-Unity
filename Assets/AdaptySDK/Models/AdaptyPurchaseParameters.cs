@@ -11,27 +11,19 @@ namespace AdaptySDK
     {
         public readonly AdaptySubscriptionUpdateParameters SubscriptionUpdateParams; // Android Only, nullable
         public readonly bool? IsOfferPersonalized; // Android Only, nullable
-        public readonly string ObfuscatedAccountId; // Android Only, nullable
-        public readonly string ObfuscatedProfileId; // Android Only, nullable
 
         public AdaptyPurchaseParameters(
             AdaptySubscriptionUpdateParameters subscriptionUpdateParams = null,
-            bool? isOfferPersonalized = null,
-            string obfuscatedAccountId = null,
-            string obfuscatedProfileId = null
+            bool? isOfferPersonalized = null
         )
         {
             SubscriptionUpdateParams = subscriptionUpdateParams;
             IsOfferPersonalized = isOfferPersonalized;
-            ObfuscatedAccountId = obfuscatedAccountId;
-            ObfuscatedProfileId = obfuscatedProfileId;
         }
 
         public override string ToString() =>
             $"{nameof(SubscriptionUpdateParams)}: {SubscriptionUpdateParams}, "
-            + $"{nameof(IsOfferPersonalized)}: {IsOfferPersonalized}, "
-            + $"{nameof(ObfuscatedAccountId)}: {ObfuscatedAccountId}, "
-            + $"{nameof(ObfuscatedProfileId)}: {ObfuscatedProfileId}";
+            + $"{nameof(IsOfferPersonalized)}: {IsOfferPersonalized}";
     }
 
     public class AdaptyPurchaseParametersBuilder
@@ -44,9 +36,7 @@ namespace AdaptySDK
         {
             _parameters = new AdaptyPurchaseParameters(
                 subscriptionUpdateParams,
-                _parameters.IsOfferPersonalized,
-                _parameters.ObfuscatedAccountId,
-                _parameters.ObfuscatedProfileId
+                _parameters.IsOfferPersonalized
             );
             return this;
         }
@@ -55,31 +45,7 @@ namespace AdaptySDK
         {
             _parameters = new AdaptyPurchaseParameters(
                 _parameters.SubscriptionUpdateParams,
-                isOfferPersonalized,
-                _parameters.ObfuscatedAccountId,
-                _parameters.ObfuscatedProfileId
-            );
-            return this;
-        }
-
-        public AdaptyPurchaseParametersBuilder SetObfuscatedAccountId(string obfuscatedAccountId)
-        {
-            _parameters = new AdaptyPurchaseParameters(
-                _parameters.SubscriptionUpdateParams,
-                _parameters.IsOfferPersonalized,
-                obfuscatedAccountId,
-                _parameters.ObfuscatedProfileId
-            );
-            return this;
-        }
-
-        public AdaptyPurchaseParametersBuilder SetObfuscatedProfileId(string obfuscatedProfileId)
-        {
-            _parameters = new AdaptyPurchaseParameters(
-                _parameters.SubscriptionUpdateParams,
-                _parameters.IsOfferPersonalized,
-                _parameters.ObfuscatedAccountId,
-                obfuscatedProfileId
+                isOfferPersonalized
             );
             return this;
         }

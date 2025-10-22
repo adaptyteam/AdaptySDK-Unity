@@ -1418,7 +1418,9 @@ $defs:
         properties:
           type: { type: string, const: "success" }
           profile: { $ref: "#/$defs/AdaptyProfile" }
-          jws_transaction: { type: string }
+          apple_jws_transaction: { type: string }
+          google_purchase_token: { type: string }
+
 
   AdaptyInstallationStatus: #response #event
     type: object
@@ -1497,9 +1499,9 @@ $defs:
   AdaptyUI.ProductPurchaseParameters:  #request
     type: object
     propertyNames: { description: "key is adapty_product_id" }
-    additionalProperties: { 
-      $ref: "#/$defs/AdaptyPurchaseParameters", 
-      nullable: false 
+    additionalProperties: {
+      $ref: "#/$defs/AdaptyPurchaseParameters",
+      nullable: false
     }
 
   AdaptyUI.IOSPresentationStyle:
@@ -1523,7 +1525,7 @@ $defs:
       - primary
       - secondary
 
-   AdaptyPurchaseParameters:  #request
+  AdaptyPurchaseParameters:  #request
     type: object
     properties:
       subscription_update_params:
@@ -1532,9 +1534,7 @@ $defs:
           description: "Android Only",
         }
       is_offer_personalized: { type: boolean, description: "Android Only" }
-      obfuscated_account_id: { type: string, description: "Android Only" }
-      obfuscated_profile_id: { type: string, description: "Android Only" }
-      
+
 
   AdaptySubscriptionUpdateParameters: #request # Android Only
     type: object

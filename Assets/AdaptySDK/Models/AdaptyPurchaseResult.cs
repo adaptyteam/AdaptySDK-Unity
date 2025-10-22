@@ -12,11 +12,14 @@ namespace AdaptySDK
         public readonly AdaptyPurchaseResultType Type;
         public readonly AdaptyProfile Profile;
 
-        public readonly string JWSTransaction; // nullable, iOS Only
+        public readonly string AppleJWSTransaction; // nullable, iOS Only
+
+        public readonly string GooglePurchaseToken; // nullable, Android Only
 
         public override string ToString() =>
             $"{nameof(Type)}: {Type}, "
             + $"{nameof(Profile)}: {Profile}, "
-            + $"{nameof(JWSTransaction)}: {JWSTransaction}";
+            + $"{nameof(AppleJWSTransaction)}: {AppleJWSTransaction}, "
+            + $"{nameof(GooglePurchaseToken)}: {GooglePurchaseToken}";
     }
 }
