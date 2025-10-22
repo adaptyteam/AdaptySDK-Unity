@@ -1,5 +1,5 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://adapty.io/crossPlatform/3.11.0/schema"
+$id: "https://adapty.io/crossPlatform/3.12.0/schema"
 title: "Cross Platform Format"
 
 $requests:
@@ -112,6 +112,7 @@ $requests:
     properties:
       method: { const: "adapty_ui_present_onboarding_view" }
       id: { type: string, description: "View Id" }
+      ios_presentation_style: { $ref: "#/$defs/AdaptyUI.IOSPresentationStyle" }
 
   AdaptyUIPresentOnboardingView.Response: #response
     type: object
@@ -130,6 +131,7 @@ $requests:
     properties:
       method: { const: "adapty_ui_present_paywall_view" }
       id: { type: string, description: "View Id" }
+      ios_presentation_style: { $ref: "#/$defs/AdaptyUI.IOSPresentationStyle" }
 
   AdaptyUIPresentPaywallView.Response: #response
     type: object

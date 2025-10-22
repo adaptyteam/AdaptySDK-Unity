@@ -132,7 +132,12 @@ namespace AdaptyExample
                 true,
                 (view) =>
                 {
-                    view.Present((error) => { });
+                    view.Present(
+                        fullScreen
+                            ? AdaptyUIIOSPresentationStyle.FullScreen
+                            : AdaptyUIIOSPresentationStyle.PageSheet,
+                        (error) => { }
+                    );
                 }
             );
         }

@@ -96,7 +96,12 @@ namespace AdaptyExample
                 this.m_onboarding,
                 (view) =>
                 {
-                    view.Present((error) => { });
+                    view.Present(
+                        fullScreen
+                            ? AdaptyUIIOSPresentationStyle.FullScreen
+                            : AdaptyUIIOSPresentationStyle.PageSheet,
+                        (error) => { }
+                    );
                 }
             );
         }

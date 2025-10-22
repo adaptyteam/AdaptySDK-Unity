@@ -1339,14 +1339,30 @@ namespace AdaptySDK
         /// Call this function if you wish to present the view.
         /// </summary>
         /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
+        /// <param name="iosPresentationStyle">an [AdaptyUIIOSPresentationStyle] object, for which is representing the iOS presentation style.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void PresentPaywallView(
             AdaptyUIPaywallView view,
             Action<AdaptyError> completionHandler
         )
         {
+            PresentPaywallView(view, AdaptyUIIOSPresentationStyle.FullScreen, completionHandler);
+        }
+
+        /// <summary>
+        /// Call this function if you wish to present the view.
+        /// </summary>
+        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void PresentPaywallView(
+            AdaptyUIPaywallView view,
+            AdaptyUIIOSPresentationStyle iosPresentationStyle,
+            Action<AdaptyError> completionHandler
+        )
+        {
             var parameters = new JSONObject();
             parameters.Add("id", view.Id);
+            parameters.Add("ios_presentation_style", iosPresentationStyle.ToJSONNode());
 
             Request.Send(
                 "adapty_ui_present_paywall_view",
@@ -1369,13 +1385,34 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Call this function if you wish to present the view.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="completionHandler"></param>
         public static void PresentOnboardingView(
             AdaptyUIOnboardingView view,
             Action<AdaptyError> completionHandler
         )
         {
+            PresentOnboardingView(view, AdaptyUIIOSPresentationStyle.FullScreen, completionHandler);
+        }
+
+        /// <summary>
+        /// Call this function if you wish to present the view.
+        /// </summary>
+        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
+        /// <param name="iosPresentationStyle">an [AdaptyUIIOSPresentationStyle] object, for which is representing the iOS presentation style.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void PresentOnboardingView(
+            AdaptyUIOnboardingView view,
+            AdaptyUIIOSPresentationStyle iosPresentationStyle,
+            Action<AdaptyError> completionHandler
+        )
+        {
             var parameters = new JSONObject();
             parameters.Add("id", view.Id);
+            parameters.Add("ios_presentation_style", iosPresentationStyle.ToJSONNode());
 
             Request.Send(
                 "adapty_ui_present_onboarding_view",
@@ -1398,6 +1435,11 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Call this function if you wish to dismiss the view.
+        /// </summary>
+        /// <param name="view">an [AdaptyUIOnboardingView] object, for which is representing the view.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void DismissOnboardingView(
             AdaptyUIOnboardingView view,
             Action<AdaptyError> completionHandler
