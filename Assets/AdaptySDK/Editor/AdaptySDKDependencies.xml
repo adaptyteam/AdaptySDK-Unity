@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
-	<androidPackages>
-		<androidPackage spec="io.adapty:android-sdk:3.4.1">
-			<repositories>
-				<repository>https://repo.maven.apache.org/maven2/</repository>
-			</repositories>
-		</androidPackage>
-		<androidPackage spec="io.adapty:android-ui:3.4.0">
-			<repositories>
-				<repository>https://repo.maven.apache.org/maven2/</repository>
-			</repositories>
-		</androidPackage>
-		<androidPackage spec="io.adapty.internal:crossplatform:3.4.0">
-			<repositories>
-				<repository>https://repo.maven.apache.org/maven2/</repository>
-			</repositories>
-		</androidPackage>
-	</androidPackages>
-	<iosPods>
-		<iosPod name="Adapty" version="3.11.0" minTargetSdk="13.0">
-		</iosPod>
-		<iosPod name="AdaptyUI" version="3.11.0" minTargetSdk="13.0">
-		</iosPod>
-		<iosPod name="AdaptyPlugin" version="3.11.0" minTargetSdk="13.0">
-		</iosPod>
-	</iosPods>
+  <androidPackages>
+    <androidPackage spec="io.adapty:android-sdk:3.4.1">
+      <repositories>
+        <repository>https://repo.maven.apache.org/maven2/</repository>
+      </repositories>
+    </androidPackage>
+    <androidPackage spec="io.adapty:android-ui:3.4.0">
+      <repositories>
+        <repository>https://repo.maven.apache.org/maven2/</repository>
+      </repositories>
+    </androidPackage>
+    <androidPackage spec="io.adapty.internal:crossplatform:3.4.0">
+      <repositories>
+        <repository>https://repo.maven.apache.org/maven2/</repository>
+      </repositories>
+    </androidPackage>
+  </androidPackages>
+  <iosPods>
+    <iosPod name="Adapty" version="3.12.0" minTargetSdk="13.0"></iosPod>
+    <iosPod name="AdaptyUI" version="3.12.0" minTargetSdk="13.0"></iosPod>
+    <iosPod name="AdaptyPlugin" version="3.12.0" minTargetSdk="13.0"></iosPod>
+  </iosPods>
 </dependencies>
