@@ -19,6 +19,7 @@ namespace AdaptySDK
             ObserverMode = builder.ObserverMode;
             AppleIdfaCollectionDisabled = builder.AppleIdfaCollectionDisabled;
             GoogleAdvertisingIdCollectionDisabled = builder.GoogleAdvertisingIdCollectionDisabled;
+            GoogleEnablePendingPrepaidPlans = builder.GoogleEnablePendingPrepaidPlans;
             IpAddressCollectionDisabled = builder.IpAddressCollectionDisabled;
             BackendBaseUrl = builder.BackendBaseUrl;
             BackendFallbackBaseUrl = builder.BackendFallbackBaseUrl;
@@ -48,6 +49,7 @@ namespace AdaptySDK
             }
             public bool? AppleIdfaCollectionDisabled;
             public bool? GoogleAdvertisingIdCollectionDisabled;
+            public bool? GoogleEnablePendingPrepaidPlans;
             public bool? IpAddressCollectionDisabled;
             public AdaptyServerCluster? ServerCluster;
             public string BackendBaseUrl; //nullable
@@ -132,6 +134,12 @@ namespace AdaptySDK
             )
             {
                 GoogleAdvertisingIdCollectionDisabled = googleAdvertisingIdCollectionDisabled;
+                return this;
+            }
+
+            public Builder SetGoogleEnablePendingPrepaidPlans(bool googleEnablePendingPrepaidPlans)
+            {
+                GoogleEnablePendingPrepaidPlans = googleEnablePendingPrepaidPlans;
                 return this;
             }
 

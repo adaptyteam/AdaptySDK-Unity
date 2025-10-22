@@ -15,6 +15,7 @@ namespace AdaptySDK
         private readonly bool? ObserverMode;
         private readonly bool? AppleIdfaCollectionDisabled;
         private readonly bool? GoogleAdvertisingIdCollectionDisabled;
+        private readonly bool? GoogleEnablePendingPrepaidPlans;
         private readonly bool? IpAddressCollectionDisabled;
         private readonly AdaptyServerCluster? ServerCluster;
         private readonly string BackendBaseUrl; // nullable
@@ -34,6 +35,7 @@ namespace AdaptySDK
             + $"{nameof(ObserverMode)}: {ObserverMode}, "
             + $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, "
             + $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, "
+            + $"{nameof(GoogleEnablePendingPrepaidPlans)}: {GoogleEnablePendingPrepaidPlans}, "
             + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
             + $"{nameof(ServerCluster)}: {ServerCluster}, "
             + $"{nameof(BackendBaseUrl)}: {BackendBaseUrl}, "

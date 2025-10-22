@@ -26,6 +26,8 @@ namespace AdaptySDK
                 node.Add("apple_idfa_collection_disabled", AppleIdfaCollectionDisabled);
             if (GoogleAdvertisingIdCollectionDisabled != null)
                 node.Add("google_adid_collection_disabled", GoogleAdvertisingIdCollectionDisabled);
+            if (GoogleEnablePendingPrepaidPlans != null)
+                node.Add("google_enable_pending_prepaid_plans", GoogleEnablePendingPrepaidPlans);
             if (IpAddressCollectionDisabled != null)
                 node.Add("ip_address_collection_disabled", IpAddressCollectionDisabled);
             if (LogLevel != null)
