@@ -357,15 +357,10 @@ namespace AdaptyExample
             Adapty.ReportTransaction(
                 "transaction_id",
                 "variation_id",
-                (profile, error) =>
+                (error) =>
                 {
                     this.LogMethodResult("ReportTransaction", error);
                     completionHandler.Invoke(error);
-
-                    if (profile != null)
-                    {
-                        this.Router.SetProfile(profile);
-                    }
                 }
             );
         }

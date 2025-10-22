@@ -94,7 +94,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
             string transactionId,
-            Action<AdaptyProfile, AdaptyError> completionHandler
+            Action<AdaptyError> completionHandler
         ) => ReportTransaction(transactionId, null, completionHandler);
 
         /// <summary>

@@ -923,7 +923,7 @@ namespace AdaptySDK
         public static void ReportTransaction(
             string transactionId,
             string variationId,
-            Action<AdaptyProfile, AdaptyError> completionHandler
+            Action<AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
@@ -941,12 +941,12 @@ namespace AdaptySDK
                 {
                     try
                     {
-                        completionHandler?.Invoke(value, error);
+                        completionHandler?.Invoke(error);
                     }
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.ReportTransaction(..)",
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.ReportTransaction(..)",
                             e
                         );
                     }

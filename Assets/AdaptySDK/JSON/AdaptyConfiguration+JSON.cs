@@ -16,7 +16,7 @@ namespace AdaptySDK
             var node = new JSONObject();
             node.Add("api_key", ApiKey);
 
-            if (CustomerUserId != null) {
+            if (CustomerUserId != null)
                 node.Add("customer_user_id", CustomerUserId);
             if (CustomerIdentity != null && !CustomerIdentity.IsEmpty)
                 node.Add("customer_identity_parameters", CustomerIdentity.ToJSONNode());
