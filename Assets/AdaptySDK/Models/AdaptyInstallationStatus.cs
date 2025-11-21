@@ -7,19 +7,35 @@
 
 namespace AdaptySDK
 {
-    public enum AdaptyInstallationStatusType
+    public abstract class AdaptyInstallationStatus
     {
-        NotAvailable,
-        NotDetermined,
-        Determined,
+        internal AdaptyInstallationStatus() { }
     }
 
-    public partial class AdaptyInstallationStatus
+    public sealed class AdaptyInstallationStatusNotAvailable : AdaptyInstallationStatus
     {
-        public readonly AdaptyInstallationStatusType Status;
-        public readonly AdaptyInstallationDetails Details; // nullable unless status == determined
+        public AdaptyInstallationStatusNotAvailable() { }
+
+        public override string ToString() => nameof(AdaptyInstallationStatusNotAvailable);
+    }
+
+    public sealed class AdaptyInstallationStatusNotDetermined : AdaptyInstallationStatus
+    {
+        public AdaptyInstallationStatusNotDetermined() { }
+
+        public override string ToString() => nameof(AdaptyInstallationStatusNotDetermined);
+    }
+
+    public sealed class AdaptyInstallationStatusDetermined : AdaptyInstallationStatus
+    {
+        public readonly AdaptyInstallationDetails Details;
+
+        public AdaptyInstallationStatusDetermined(AdaptyInstallationDetails details)
+        {
+            Details = details;
+        }
 
         public override string ToString() =>
-            $"{nameof(Status)}: {Status}, " + $"{nameof(Details)}: {Details}";
+            $"{nameof(AdaptyInstallationStatusDetermined)}({Details})";
     }
 }

@@ -11,24 +11,27 @@ namespace AdaptySDK
 
     public partial class AdaptyInstallationDetails
     {
-        internal JSONNode ToJSONNode()
-        {
-            var node = new JSONObject();
-            if (InstallId != null)
-                node.Add("install_id", InstallId);
-            node.Add("install_time", InstallTime);
-            node.Add("app_launch_count", AppLaunchCount);
-            if (Payload != null)
-                node.Add("payload", Payload);
-            return node;
-        }
-
         internal AdaptyInstallationDetails(JSONObject jsonNode)
         {
             InstallId = jsonNode.GetStringIfPresent("install_id");
-            InstallTime = jsonNode.GetString("install_time");
+            InstallTime = jsonNode.GetDateTime("install_time");
             AppLaunchCount = jsonNode.GetInteger("app_launch_count");
             Payload = jsonNode.GetStringIfPresent("payload");
         }
+    }
+}
+
+namespace AdaptySDK.SimpleJSON
+{
+    internal static partial class JSONNodeExtensions
+    {
+        internal static AdaptyInstallationDetails GetAdaptyInstallationDetails(
+            this JSONNode node
+        ) => new AdaptyInstallationDetails(JSONNodeExtensions.GetObject(node));
+
+        internal static AdaptyInstallationDetails GetAdaptyInstallationDetails(
+            this JSONNode node,
+            string aKey
+        ) => new AdaptyInstallationDetails(JSONNodeExtensions.GetObject(node, aKey));
     }
 }

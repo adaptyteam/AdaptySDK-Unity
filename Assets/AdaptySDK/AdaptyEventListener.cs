@@ -144,12 +144,12 @@ namespace AdaptySDK
                 return;
             }
 
-            var parapeters = response.AsObject;
+            var parameters = response.AsObject;
             switch (id)
             {
                 case "did_load_latest_profile":
                 {
-                    var profile = parapeters.GetAdaptyProfile("profile");
+                    var profile = parameters.GetAdaptyProfile("profile");
                     try
                     {
                         m_Listener.OnLoadLatestProfile(profile);
@@ -163,10 +163,42 @@ namespace AdaptySDK
                     }
                     return;
                 }
+                case "on_installation_details_success":
+                {
+                    var details = parameters.GetAdaptyInstallationDetails("details");
+                    try
+                    {
+                        m_Listener.OnInstallationDetailsSuccess(details);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke AdaptyEventListener.OnInstallationDetailsSuccess(..)",
+                            e
+                        );
+                    }
+                    return;
+                }
+                case "on_installation_details_fail":
+                {
+                    var error = parameters.GetAdaptyError("error");
+                    try
+                    {
+                        m_Listener.OnInstallationDetailsFail(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke AdaptyEventListener.OnInstallationDetailsFail(..)",
+                            e
+                        );
+                    }
+                    return;
+                }
                 case "onboarding_did_fail_with_error":
                 {
-                    var view = parapeters.GetAdaptyUIOnboardingView("view");
-                    var error = parapeters.GetAdaptyError("error");
+                    var view = parameters.GetAdaptyUIOnboardingView("view");
+                    var error = parameters.GetAdaptyError("error");
                     try
                     {
                         m_OnboardingsEventsListener.OnboardingViewDidFailWithError(view, error);
@@ -182,9 +214,9 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_analytics_action":
                 {
-                    var view = parapeters.GetAdaptyUIOnboardingView("view");
-                    var meta = parapeters.GetAdaptyUIOnboardingMeta("meta");
-                    var ev = parapeters.GetOnboardingsAnalyticsEvent("event");
+                    var view = parameters.GetAdaptyUIOnboardingView("view");
+                    var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
+                    var ev = parameters.GetOnboardingsAnalyticsEvent("event");
                     try
                     {
                         m_OnboardingsEventsListener.OnboardingViewOnAnalyticsEvent(view, meta, ev);
@@ -200,8 +232,8 @@ namespace AdaptySDK
                 }
                 case "onboarding_did_finish_loading":
                 {
-                    var view = parapeters.GetAdaptyUIOnboardingView("view");
-                    var meta = parapeters.GetAdaptyUIOnboardingMeta("meta");
+                    var view = parameters.GetAdaptyUIOnboardingView("view");
+                    var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
                     try
                     {
                         m_OnboardingsEventsListener.OnboardingViewDidFinishLoading(view, meta);
@@ -217,9 +249,9 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_close_action":
                 {
-                    var view = parapeters.GetAdaptyUIOnboardingView("view");
-                    var meta = parapeters.GetAdaptyUIOnboardingMeta("meta");
-                    var actionId = parapeters.GetString("action_id");
+                    var view = parameters.GetAdaptyUIOnboardingView("view");
+                    var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
+                    var actionId = parameters.GetString("action_id");
                     try
                     {
                         m_OnboardingsEventsListener.OnboardingViewOnCloseAction(
@@ -239,9 +271,9 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_paywall_action":
                 {
-                    var view = parapeters.GetAdaptyUIOnboardingView("view");
-                    var meta = parapeters.GetAdaptyUIOnboardingMeta("meta");
-                    var actionId = parapeters.GetString("action_id");
+                    var view = parameters.GetAdaptyUIOnboardingView("view");
+                    var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
+                    var actionId = parameters.GetString("action_id");
                     try
                     {
                         m_OnboardingsEventsListener.OnboardingViewOnPaywallAction(
@@ -261,9 +293,9 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_custom_action":
                 {
-                    var view = parapeters.GetAdaptyUIOnboardingView("view");
-                    var meta = parapeters.GetAdaptyUIOnboardingMeta("meta");
-                    var actionId = parapeters.GetString("action_id");
+                    var view = parameters.GetAdaptyUIOnboardingView("view");
+                    var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
+                    var actionId = parameters.GetString("action_id");
                     try
                     {
                         m_OnboardingsEventsListener.OnboardingViewOnCustomAction(
@@ -283,12 +315,12 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_state_updated_action":
                 {
-                    var view = parapeters.GetAdaptyUIOnboardingView("view");
-                    var meta = parapeters.GetAdaptyUIOnboardingMeta("meta");
+                    var view = parameters.GetAdaptyUIOnboardingView("view");
+                    var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
                     var elementId = JSONNodeExtensions
-                        .GetObject(parapeters, "action")
+                        .GetObject(parameters, "action")
                         .GetString("element_id");
-                    var @params = parapeters.GetOnboardingsStateUpdatedParams("action");
+                    var @params = parameters.GetOnboardingsStateUpdatedParams("action");
                     try
                     {
                         m_OnboardingsEventsListener.OnboardingViewOnStateUpdatedAction(
@@ -309,7 +341,7 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_appear":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidAppear(view);
@@ -325,7 +357,7 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_disappear":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidDisappear(view);
@@ -341,8 +373,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_perform_action":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var action = parapeters.GetAdaptyUIUserAction("action");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var action = parameters.GetAdaptyUIUserAction("action");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidPerformAction(view, action);
@@ -358,8 +390,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_select_product":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var productId = parapeters.GetString("product_id");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var productId = parameters.GetString("product_id");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidSelectProduct(view, productId);
@@ -375,8 +407,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_start_purchase":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var product = parapeters.GetAdaptyPaywallProduct("product");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var product = parameters.GetAdaptyPaywallProduct("product");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidStartPurchase(view, product);
@@ -392,9 +424,9 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_finish_purchase":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var product = parapeters.GetAdaptyPaywallProduct("product");
-                    var purchaseResult = parapeters.GetAdaptyPurchaseResult("purchased_result");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var product = parameters.GetAdaptyPaywallProduct("product");
+                    var purchaseResult = parameters.GetAdaptyPurchaseResult("purchased_result");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidFinishPurchase(
@@ -414,9 +446,9 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_fail_purchase":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var product = parapeters.GetAdaptyPaywallProduct("product");
-                    var error = parapeters.GetAdaptyError("error");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var product = parameters.GetAdaptyPaywallProduct("product");
+                    var error = parameters.GetAdaptyError("error");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidFailPurchase(view, product, error);
@@ -432,7 +464,7 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_start_restore":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidStartRestore(view);
@@ -448,8 +480,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_finish_restore":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var profile = parapeters.GetAdaptyProfile("profile");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var profile = parameters.GetAdaptyProfile("profile");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidFinishRestore(view, profile);
@@ -465,8 +497,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_fail_restore":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var error = parapeters.GetAdaptyError("error");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var error = parameters.GetAdaptyError("error");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidFailRestore(view, error);
@@ -482,8 +514,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_fail_rendering":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var error = parapeters.GetAdaptyError("error");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var error = parameters.GetAdaptyError("error");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidFailRendering(view, error);
@@ -499,8 +531,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_fail_loading_products":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var error = parapeters.GetAdaptyError("error");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var error = parameters.GetAdaptyError("error");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidFailLoadingProducts(view, error);
@@ -516,9 +548,9 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_finish_web_payment_navigation":
                 {
-                    var view = parapeters.GetAdaptyUIPaywallView("view");
-                    var product = parapeters.GetAdaptyPaywallProduct("product");
-                    var error = parapeters.GetAdaptyError("error");
+                    var view = parameters.GetAdaptyUIPaywallView("view");
+                    var product = parameters.GetAdaptyPaywallProduct("product");
+                    var error = parameters.GetAdaptyError("error");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidFinishWebPaymentNavigation(

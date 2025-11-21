@@ -466,6 +466,21 @@ namespace AdaptyExample
             );
         }
 
+        public void GetInstallationDetails(
+            Action<AdaptyInstallationStatus, AdaptyError> completionHandler
+        )
+        {
+            this.LogMethodRequest("GetInstallationDetails");
+
+            Adapty.GetCurrentInstallationStatus(
+                (status, error) =>
+                {
+                    this.LogMethodResult("GetInstallationDetails", error);
+                    completionHandler.Invoke(status, error);
+                }
+            );
+        }
+
         // - Logging
 
         private void LogMethodRequest(string methodName)
@@ -534,6 +549,8 @@ namespace AdaptyExample
                 "#AdaptyListener# OnInstallationDetailsSuccess called, details = "
                     + details.ToString()
             );
+
+            this.Router.SetInstallation(new AdaptyInstallationStatusDetermined(details));
         }
 
         public void OnInstallationDetailsFail(AdaptyError error)

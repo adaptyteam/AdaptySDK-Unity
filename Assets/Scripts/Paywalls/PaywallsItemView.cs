@@ -52,6 +52,7 @@ namespace AdaptyExample
         }
 
         private AdaptyPaywall m_paywall;
+        private List<ProductButton> m_productButtons = new List<ProductButton>(3);
 
         public void LoadPaywall()
         {
@@ -167,6 +168,56 @@ namespace AdaptyExample
             this.ErrorText.SetText("Error: " + error);
         }
 
-        private void UpdateProductsData(IList<AdaptyPaywallProduct> products) { }
+        private void UpdateProductsData(IList<AdaptyPaywallProduct> products)
+        {
+            // Clear existing product buttons
+            m_productButtons.ForEach(
+                (button) =>
+                {
+                    if (button != null)
+                    {
+                        Destroy(button.gameObject);
+                    }
+                }
+            );
+            m_productButtons.Clear();
+
+            // Create product buttons for each product
+            for (var i = 0; i < products.Count; ++i)
+            {
+                var product = products[i];
+                var productButton = this.CreateProductButton(product, i);
+                m_productButtons.Add(productButton);
+            }
+        }
+
+        private ProductButton CreateProductButton(AdaptyPaywallProduct product, int index)
+        {
+            var productButtonObject = Instantiate(this.ProductButtonPrefab);
+            var productButtonRect = productButtonObject.GetComponent<RectTransform>();
+
+            productButtonRect.SetParent(this.ProductsContainerTransform, false);
+
+            var productButton = productButtonObject.GetComponent<ProductButton>();
+            productButton.UpdateProduct(product);
+
+            var button = productButtonObject.GetComponent<UnityEngine.UI.Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(() =>
+                {
+                    this.Listener.Router.SetIsLoading(true);
+                    this.Listener.MakePurchase(
+                        product,
+                        (error) =>
+                        {
+                            this.Listener.Router.SetIsLoading(false);
+                        }
+                    );
+                });
+            }
+
+            return productButton;
+        }
     }
 }

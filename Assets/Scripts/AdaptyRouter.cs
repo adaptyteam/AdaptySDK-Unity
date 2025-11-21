@@ -15,6 +15,7 @@ namespace AdaptyExample
         public OnboardingsListView OnboardingsListView;
 
         [Header("Sections Scripts")]
+        public InstallationDetailsSection InstallationDetailsSection;
         public ProfileIdSection ProfileIdSection;
         public ProfileInfoSection ProfileInfoSection;
 
@@ -70,6 +71,14 @@ namespace AdaptyExample
 
             // Rebuild to apply layout immediately
             UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(this.MainContentTransform);
+        }
+
+        public void SetInstallation(AdaptyInstallationStatus status)
+        {
+            if (this.InstallationDetailsSection != null && status != null)
+            {
+                this.InstallationDetailsSection.SetInstallation(status);
+            }
         }
 
         public void SetProfile(AdaptyProfile profile)

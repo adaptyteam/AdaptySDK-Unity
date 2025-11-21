@@ -11,29 +11,33 @@ namespace AdaptySDK
 {
     using AdaptySDK.SimpleJSON;
 
-    public partial class AdaptyInstallationStatus
+    internal static partial class AdaptyInstallationStatusFactory
     {
-        internal AdaptyInstallationStatus(JSONObject jsonNode)
+        internal static AdaptyInstallationStatus CreateFromJSON(JSONObject jsonNode)
         {
             var statusString = jsonNode.GetString("status");
             switch (statusString)
             {
                 case "determined":
-                    Status = AdaptyInstallationStatusType.Determined;
-                    break;
+                    var detailsObj = JSONNodeExtensions.GetObjectIfPresent(jsonNode, "details");
+                    if (detailsObj == null)
+                    {
+                        throw new Exception(
+                            "AdaptyInstallationStatus 'determined' requires 'details' field"
+                        );
+                    }
+                    return new AdaptyInstallationStatusDetermined(
+                        new AdaptyInstallationDetails(detailsObj)
+                    );
                 case "not_available":
-                    Status = AdaptyInstallationStatusType.NotAvailable;
-                    break;
+                    return new AdaptyInstallationStatusNotAvailable();
                 case "not_determined":
-                    Status = AdaptyInstallationStatusType.NotDetermined;
-                    break;
+                    return new AdaptyInstallationStatusNotDetermined();
                 default:
                     throw new Exception(
                         $"Unknown AdaptyInstallationStatus status: '{statusString}'"
                     );
             }
-            var detailsObj = JSONNodeExtensions.GetObjectIfPresent(jsonNode, "details");
-            Details = detailsObj is null ? null : new AdaptyInstallationDetails(detailsObj);
         }
     }
 }
@@ -43,11 +47,11 @@ namespace AdaptySDK.SimpleJSON
     internal static partial class JSONNodeExtensions
     {
         internal static AdaptyInstallationStatus GetInstallationStatus(this JSONNode node) =>
-            new AdaptyInstallationStatus(JSONNodeExtensions.GetObject(node));
+            AdaptyInstallationStatusFactory.CreateFromJSON(JSONNodeExtensions.GetObject(node));
 
         internal static AdaptyInstallationStatus GetInstallationStatus(
             this JSONNode node,
             string aKey
-        ) => new AdaptyInstallationStatus(JSONNodeExtensions.GetObject(node, aKey));
+        ) => AdaptyInstallationStatusFactory.CreateFromJSON(JSONNodeExtensions.GetObject(node, aKey));
     }
 }
