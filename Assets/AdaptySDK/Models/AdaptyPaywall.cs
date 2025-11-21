@@ -37,7 +37,7 @@ namespace AdaptySDK
         private readonly ViewConfiguration _ViewConfiguration;
 
         private readonly IList<ProductReference> _Products;
-        private readonly int _ResponseCreatedAt;
+        private readonly long _ResponseCreatedAt;
         private readonly string _PayloadData; // nullable
         private readonly string _WebPurchaseUrl; // nullable
         private readonly string _RequestLocale;
@@ -87,7 +87,7 @@ namespace AdaptySDK
         /// The current revision (version) of the paywall.
         /// Every change within the paywall creates a new revision.
         [System.Obsolete("Use Placement.Revision instead")]
-        public int Revision => Placement.Revision;
+        public long Revision => Placement.Revision;
 
         [System.Obsolete("Use RemoteConfig.Data instead")]
         public string RemoteConfigString => RemoteConfig.Data;

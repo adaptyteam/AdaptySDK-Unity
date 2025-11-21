@@ -31,7 +31,7 @@ namespace AdaptySDK
         {
             Id = jsonNode.GetString("developer_id");
             AudienceName = jsonNode.GetString("audience_name");
-            Revision = jsonNode.GetInteger("revision");
+            Revision = jsonNode.GetLong("revision");
             ABTestName = jsonNode.GetString("ab_test_name");
             PlacementAudienceVersionId = jsonNode.GetString("placement_audience_version_id");
             IsTrackingPurchases = jsonNode.GetBooleanIfPresent("is_tracking_purchases") ?? false;

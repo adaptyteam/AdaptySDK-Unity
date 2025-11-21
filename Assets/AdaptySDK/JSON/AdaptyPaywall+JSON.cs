@@ -58,7 +58,7 @@ namespace AdaptySDK
             Placement = jsonNode.GetPlacement("placement");
             InstanceIdentity = jsonNode.GetString("paywall_id");
             Name = jsonNode.GetString("paywall_name");
-            _ResponseCreatedAt = jsonNode.GetInteger("response_created_at");
+            _ResponseCreatedAt = jsonNode.GetLong("response_created_at");
             VariationId = jsonNode.GetString("variation_id");
             RemoteConfig = jsonNode.GetRemoteConfigIfPresent("remote_config");
             _ViewConfiguration = jsonNode.GetAdaptyPaywallViewConfigurationIfPresent(

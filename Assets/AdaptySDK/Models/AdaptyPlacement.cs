@@ -20,7 +20,7 @@ namespace AdaptySDK
         public readonly string AudienceName;
 
         /// The current revision (version) of the placement.
-        public readonly int Revision;
+        public readonly long Revision;
 
         /// Placement A/B test name
         public readonly string ABTestName;
