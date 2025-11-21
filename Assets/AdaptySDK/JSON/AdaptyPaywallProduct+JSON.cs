@@ -71,7 +71,9 @@ namespace AdaptySDK
             RegionCode = jsonNode.GetStringIfPresent("region_code");
             Price = jsonNode.GetAdaptyPrice("price");
             Subscription = jsonNode.GetAdaptySubscriptionIfPresent("subscription");
+            PaywallProductIndex = jsonNode.GetInteger("paywall_product_index");
             _PayloadData = jsonNode.GetStringIfPresent("payload_data");
+            _WebPurchaseUrl = jsonNode.GetStringIfPresent("web_purchase_url");
         }
     }
 }

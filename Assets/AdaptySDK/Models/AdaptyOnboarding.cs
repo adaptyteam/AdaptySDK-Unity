@@ -25,7 +25,7 @@ namespace AdaptySDK
 
         private readonly OnboardingBuilder _Builder;
 
-        private readonly int _ResponseCreatedAt;
+        private readonly long _ResponseCreatedAt;
         private readonly string _PayloadData; // nullable
         private readonly string _RequestLocale;
 

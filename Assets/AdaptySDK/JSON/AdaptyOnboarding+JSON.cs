@@ -46,7 +46,7 @@ namespace AdaptySDK
             _Builder = new OnboardingBuilder(builder.GetString("config_url"));
 
             _PayloadData = jsonNode.GetStringIfPresent("payload_data");
-            _ResponseCreatedAt = jsonNode.GetInteger("response_created_at");
+            _ResponseCreatedAt = jsonNode.GetLong("response_created_at");
             _RequestLocale = jsonNode.GetString("request_locale");
         }
     }

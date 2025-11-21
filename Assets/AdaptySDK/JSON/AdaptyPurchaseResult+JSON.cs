@@ -33,7 +33,7 @@ namespace AdaptySDK.SimpleJSON
             string aKey
         ) => new AdaptyPurchaseResult(GetObject(node, aKey));
 
-        internal static AdaptyPurchaseResult GetAdaptyPrGetAdaptyPurchaseResultIfPresent(
+        internal static AdaptyPurchaseResult GetAdaptyPurchaseResultIfPresent(
             this JSONNode node,
             string aKey
         )

@@ -22,8 +22,6 @@ namespace AdaptySDK
             Period = jsonNode.GetAdaptySubscriptionPeriod("period");
             LocalizedPeriod = jsonNode.GetStringIfPresent("localized_period");
             Offer = jsonNode.GetAdaptySubscriptionOfferIfPresent("offer");
-            RenewalType = jsonNode.GetAdaptySubscriptionRenewalTypeIfPresent("renewal_type") ?? AdaptySubscriptionRenewalType.Autorenewable;
-            BasePlanId = jsonNode.GetStringIfPresent("base_plan_id");
 
 #if UNITY_ANDROID
             RenewalType = jsonNode.GetAdaptySubscriptionRenewalType("renewal_type");
@@ -32,23 +30,25 @@ namespace AdaptySDK
             RenewalType = AdaptySubscriptionRenewalType.Autorenewable;
             BasePlanId = null;
 #endif
-
         }
     }
-
 }
 
 namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static AdaptySubscription GetAdaptySubscription(this JSONNode node, string aKey)
-             => new AdaptySubscription(GetObject(node, aKey));
+        internal static AdaptySubscription GetAdaptySubscription(this JSONNode node, string aKey) =>
+            new AdaptySubscription(GetObject(node, aKey));
 
-        internal static AdaptySubscription GetAdaptySubscriptionIfPresent(this JSONNode node, string aKey)
+        internal static AdaptySubscription GetAdaptySubscriptionIfPresent(
+            this JSONNode node,
+            string aKey
+        )
         {
             var obj = GetObjectIfPresent(node, aKey);
-            if (obj is null) return null;
+            if (obj is null)
+                return null;
             return new AdaptySubscription(obj);
         }
     }
