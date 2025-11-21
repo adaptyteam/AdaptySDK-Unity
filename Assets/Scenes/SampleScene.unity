@@ -3123,17 +3123,9 @@ MonoBehaviour:
   MainContentScrollRect: {fileID: 1467929705}
   PaywallsListView: {fileID: 203578197}
   OnboardingsListView: {fileID: 536233421}
-  IdentifySectionPrefab: {fileID: 5910776291940181971, guid: 552352e9c79d7446baec6acd1007bcc9,
-    type: 3}
-  ExamplePaywallSectionPrefab: {fileID: 1929123934848718610, guid: c19458705ea6c4d43ae1bc7be5b0bf4b,
-    type: 3}
-  CustomPaywallSectionPrefab: {fileID: 1929123934848718610, guid: d2bc119b9b62243df8ca7497121d754f,
-    type: 3}
   ProfileIdSection: {fileID: 1578689258421478389}
   ProfileInfoSection: {fileID: 469656315014257811}
   IdentifySection: {fileID: 1140944918143320420}
-  ExamplePaywallSection: {fileID: 0}
-  CustomPaywallSection: {fileID: 0}
   ActionsSection: {fileID: 4053823967713777864}
 --- !u!1 &778670122
 GameObject:
