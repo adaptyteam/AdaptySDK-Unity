@@ -21,10 +21,6 @@ namespace AdaptySDK
             GoogleAdvertisingIdCollectionDisabled = builder.GoogleAdvertisingIdCollectionDisabled;
             GoogleEnablePendingPrepaidPlans = builder.GoogleEnablePendingPrepaidPlans;
             IpAddressCollectionDisabled = builder.IpAddressCollectionDisabled;
-            BackendBaseUrl = builder.BackendBaseUrl;
-            BackendFallbackBaseUrl = builder.BackendFallbackBaseUrl;
-            BackendConfigsBaseUrl = builder.BackendConfigsBaseUrl;
-            BackendUABaseUrl = builder.BackendUABaseUrl;
             BackendProxyHost = builder.BackendProxyHost;
             BackendProxyPort = builder.BackendProxyPort;
             LogLevel = builder.LogLevel;
@@ -52,10 +48,6 @@ namespace AdaptySDK
             public bool? GoogleEnablePendingPrepaidPlans;
             public bool? IpAddressCollectionDisabled;
             public AdaptyServerCluster? ServerCluster;
-            public string BackendBaseUrl; //nullable
-            public string BackendFallbackBaseUrl; //nullable
-            public string BackendConfigsBaseUrl; //nullable
-            public string BackendUABaseUrl; //nullable
             public string BackendProxyHost; //nullable
             public int? BackendProxyPort;
             public AdaptyLogLevel? LogLevel;
@@ -75,8 +67,6 @@ namespace AdaptySDK
                 + $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, "
                 + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
                 + $"{nameof(ServerCluster)}: {ServerCluster}, "
-                + $"{nameof(BackendBaseUrl)}: {BackendBaseUrl}, "
-                + $"{nameof(BackendFallbackBaseUrl)}: {BackendFallbackBaseUrl}, "
                 + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "
                 + $"{nameof(BackendProxyPort)}: {BackendProxyPort}, "
                 + $"{nameof(ActivateUI)}: {ActivateUI}, "
@@ -152,30 +142,6 @@ namespace AdaptySDK
             public Builder SetServerCluster(AdaptyServerCluster serverCluster)
             {
                 ServerCluster = serverCluster;
-                return this;
-            }
-
-            public Builder SetBackendBaseUrl(string backendBaseUrl)
-            {
-                BackendBaseUrl = backendBaseUrl;
-                return this;
-            }
-
-            public Builder SetBackendFallbackBaseUrl(string backendFallbackBaseUrl)
-            {
-                BackendFallbackBaseUrl = backendFallbackBaseUrl;
-                return this;
-            }
-
-            public Builder SetBackendConfigsBaseUrl(string backendConfigsBaseUrl)
-            {
-                BackendConfigsBaseUrl = backendConfigsBaseUrl;
-                return this;
-            }
-
-            public Builder SetBackendUABaseUrl(string backendUABaseUrl)
-            {
-                BackendUABaseUrl = backendUABaseUrl;
                 return this;
             }
 

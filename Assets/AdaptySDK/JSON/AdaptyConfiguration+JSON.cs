@@ -34,12 +34,6 @@ namespace AdaptySDK
                 node.Add("log_level", LogLevel.Value.ToJSONNode());
             if (ServerCluster != null)
                 node.Add("server_cluster", ServerCluster.Value.ToJSONNode());
-            if (BackendBaseUrl != null)
-                node.Add("backend_base_url", BackendBaseUrl);
-            if (BackendFallbackBaseUrl != null)
-                node.Add("backend_fallback_base_url", BackendFallbackBaseUrl);
-            if (BackendConfigsBaseUrl != null)
-                node.Add("backend_configs_base_url", BackendConfigsBaseUrl);
             if (BackendProxyHost != null)
                 node.Add("backend_proxy_host", BackendProxyHost);
             if (BackendProxyPort != null)

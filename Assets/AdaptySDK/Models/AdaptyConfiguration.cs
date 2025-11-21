@@ -18,10 +18,6 @@ namespace AdaptySDK
         private readonly bool? GoogleEnablePendingPrepaidPlans;
         private readonly bool? IpAddressCollectionDisabled;
         private readonly AdaptyServerCluster? ServerCluster;
-        private readonly string BackendBaseUrl; // nullable
-        private readonly string BackendFallbackBaseUrl; // nullable
-        private readonly string BackendConfigsBaseUrl; // nullable
-        private readonly string BackendUABaseUrl; // nullable
         private readonly string BackendProxyHost; // nullable
         private readonly int? BackendProxyPort; // nullable
         private readonly AdaptyLogLevel? LogLevel;
@@ -38,10 +34,6 @@ namespace AdaptySDK
             + $"{nameof(GoogleEnablePendingPrepaidPlans)}: {GoogleEnablePendingPrepaidPlans}, "
             + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
             + $"{nameof(ServerCluster)}: {ServerCluster}, "
-            + $"{nameof(BackendBaseUrl)}: {BackendBaseUrl}, "
-            + $"{nameof(BackendFallbackBaseUrl)}: {BackendFallbackBaseUrl}, "
-            + $"{nameof(BackendConfigsBaseUrl)}: {BackendConfigsBaseUrl}, "
-            + $"{nameof(BackendUABaseUrl)}: {BackendUABaseUrl}, "
             + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "
             + $"{nameof(BackendProxyPort)}: {BackendProxyPort}, "
             + $"{nameof(ActivateUI)}: {ActivateUI}, "
