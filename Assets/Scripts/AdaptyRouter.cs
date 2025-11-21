@@ -14,31 +14,12 @@ namespace AdaptyExample
         public PaywallsListView PaywallsListView;
         public OnboardingsListView OnboardingsListView;
 
-        [Header("Sections Prefabs")]
-        public GameObject ProfileIdSectionPrefab;
-        public GameObject IdentifySectionPrefab;
-        public GameObject ProfileInfoSectionPrefab;
-        public GameObject ExamplePaywallSectionPrefab;
-        public GameObject CustomPaywallSectionPrefab;
-        public GameObject OtherActionsSectionPrefab;
-        public GameObject VisualPaywallSectionPrefab;
-
-        [HideInInspector]
+        [Header("Sections Scripts")]
         public ProfileIdSection ProfileIdSection;
-
-        [HideInInspector]
-        public IdentifySection IdentifySection;
-
-        [HideInInspector]
         public ProfileInfoSection ProfileInfoSection;
 
-        [HideInInspector]
-        public PaywallSection ExamplePaywallSection;
+        public IdentifySection IdentifySection;
 
-        [HideInInspector]
-        public CustomPaywallSection CustomPaywallSection;
-
-        [HideInInspector]
         public ActionsSection ActionsSection;
 
         private AdaptyListener listener;
@@ -66,24 +47,6 @@ namespace AdaptyExample
         {
             // Ensure MainContentTransform uses Unity's layout system
             var content = this.MainContentTransform;
-            // var vertical = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
-            // if (vertical == null)
-            // {
-            //     vertical = content.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
-            //     vertical.childControlHeight = true;
-            //     vertical.childControlWidth = true;
-            //     vertical.childForceExpandHeight = false;
-            //     vertical.childForceExpandWidth = true;
-            //     vertical.spacing = 64.0f;
-            //     vertical.padding = new RectOffset(0, 0, 20, 0);
-            // }
-
-            // var fitter = content.GetComponent<UnityEngine.UI.ContentSizeFitter>();
-            // if (fitter == null)
-            // {
-            //     fitter = content.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
-            // }
-            // fitter.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
 
             // Helper to parent and stretch a section under the content
             System.Action<RectTransform> AttachSection = (RectTransform sectionRect) =>
@@ -104,54 +67,6 @@ namespace AdaptyExample
                 sectionLayout.minWidth = 0;
                 sectionLayout.flexibleWidth = 1;
             };
-
-            var profileIdSectionObj = Instantiate(this.ProfileIdSectionPrefab);
-            var profileIdSectionRect = profileIdSectionObj.GetComponent<RectTransform>();
-            AttachSection(profileIdSectionRect);
-
-            var identifySectionObj = Instantiate(this.IdentifySectionPrefab);
-            var identifySectionRect = identifySectionObj.GetComponent<RectTransform>();
-            AttachSection(identifySectionRect);
-
-            var profileInfoSectionObj = Instantiate(this.ProfileInfoSectionPrefab);
-            var profileInfoSectionRect = profileInfoSectionObj.GetComponent<RectTransform>();
-            AttachSection(profileInfoSectionRect);
-
-            var examplePaywallSectionObj = Instantiate(this.ExamplePaywallSectionPrefab);
-            var examplePaywallSectionRect = examplePaywallSectionObj.GetComponent<RectTransform>();
-            AttachSection(examplePaywallSectionRect);
-
-            var customPaywallSectionObj = Instantiate(this.CustomPaywallSectionPrefab);
-            var customPaywallSectionRect = customPaywallSectionObj.GetComponent<RectTransform>();
-            AttachSection(customPaywallSectionRect);
-
-            var actionsSectionObj = Instantiate(this.OtherActionsSectionPrefab);
-            var actionsSectionRect = actionsSectionObj.GetComponent<RectTransform>();
-            AttachSection(actionsSectionRect);
-
-            var profileIdSection = profileIdSectionObj.GetComponent<ProfileIdSection>();
-            var identifySection = identifySectionObj.GetComponent<IdentifySection>();
-            var profileInfoSection = profileInfoSectionObj.GetComponent<ProfileInfoSection>();
-            var examplePaywallSection = examplePaywallSectionObj.GetComponent<PaywallSection>();
-            var customPaywallSection = customPaywallSectionObj.GetComponent<CustomPaywallSection>();
-            var actionsSection = actionsSectionObj.GetComponent<ActionsSection>();
-
-            identifySection.Listener = this.listener;
-            identifySection.Router = this;
-            profileInfoSection.Listener = this.listener;
-            examplePaywallSection.Listener = this.listener;
-            examplePaywallSection.Router = this;
-            customPaywallSection.Listener = this.listener;
-            customPaywallSection.Router = this;
-            actionsSection.Listener = this.listener;
-            actionsSection.Router = this;
-
-            this.IdentifySection = identifySection;
-            this.ProfileIdSection = profileIdSection;
-            this.ProfileInfoSection = profileInfoSection;
-            this.ExamplePaywallSection = examplePaywallSection;
-            this.CustomPaywallSection = customPaywallSection;
-            this.ActionsSection = actionsSection;
 
             // Rebuild to apply layout immediately
             UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(this.MainContentTransform);
