@@ -57,7 +57,7 @@ namespace AdaptySDK
         void PaywallViewDidFinishWebPaymentNavigation(
             AdaptyUIPaywallView view,
             AdaptyPaywallProduct product,
-            AdaptyError error
+            AdaptyError? error
         );
     }
 
@@ -550,7 +550,7 @@ namespace AdaptySDK
                 {
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var product = parameters.GetAdaptyPaywallProduct("product");
-                    var error = parameters.GetAdaptyError("error");
+                    var error = parameters.GetAdaptyErrorIfPresent("error");
                     try
                     {
                         m_PaywallsEventsListener.PaywallViewDidFinishWebPaymentNavigation(

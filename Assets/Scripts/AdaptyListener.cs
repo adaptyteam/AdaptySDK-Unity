@@ -712,13 +712,18 @@ namespace AdaptyExample
         public void PaywallViewDidFinishWebPaymentNavigation(
             AdaptyUIPaywallView view,
             AdaptyPaywallProduct product,
-            AdaptyError error
+            AdaptyError? error
         )
         {
+            var meta = product.VendorProductId;
+            if (error != null)
+            {
+                meta += ", error = " + error.ToString();
+            }
             LogIncomingCall_AdaptyUIPaywallView(
                 "PaywallViewDidFinishWebPaymentNavigation",
                 view,
-                product.VendorProductId
+                meta
             );
         }
 
