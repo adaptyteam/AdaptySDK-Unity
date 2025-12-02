@@ -18,6 +18,7 @@ namespace AdaptyExample
         public string PlacementLocale;
 
         public GameObject ProductButtonPrefab;
+        public GameObject OpenWebPaywallButtonPrefab;
         public RectTransform LoadingTransform;
         public RectTransform ProductsContainerTransform;
 
@@ -35,7 +36,6 @@ namespace AdaptyExample
         void Start()
         {
             this.SetLoading(false);
-            this.LoadPaywall();
         }
 
         void Update()
@@ -53,8 +53,9 @@ namespace AdaptyExample
 
         private AdaptyPaywall m_paywall;
         private List<ProductButton> m_productButtons = new List<ProductButton>(3);
+        private List<GameObject> m_openWebPaywallButtons = new List<GameObject>(3);
 
-        public void LoadPaywall()
+        public void LoadPaywall(PlacementLoadStrategy loadStrategy, bool isDefaultAudience)
         {
             if (string.IsNullOrEmpty(this.PlacementId))
             {
@@ -69,26 +70,42 @@ namespace AdaptyExample
 
             this.SetLoading(true);
 
-            Adapty.GetPaywall(
-                this.PlacementId,
-                placementLocale,
-                AdaptyPlacementFetchPolicy.Default,
-                null,
-                (paywall, error) =>
+            var fetchPolicy = loadStrategy.ToFetchPolicy();
+
+            Action<AdaptyPaywall, AdaptyError> onLoadPaywall = (paywall, error) =>
+            {
+                if (error != null)
                 {
-                    if (error != null)
-                    {
-                        this.UpdatePaywallError(error.Message);
-                        this.SetLoading(false);
-                    }
-                    else
-                    {
-                        this.m_paywall = paywall;
-                        this.UpdatePaywallData(paywall);
-                        this.LoadProducts(paywall);
-                    }
+                    this.UpdatePaywallError(error.Message);
+                    this.SetLoading(false);
                 }
-            );
+                else
+                {
+                    this.m_paywall = paywall;
+                    this.UpdatePaywallData(paywall);
+                    this.LoadProducts(paywall);
+                }
+            };
+
+            if (isDefaultAudience)
+            {
+                Adapty.GetPaywallForDefaultAudience(
+                    this.PlacementId,
+                    placementLocale,
+                    fetchPolicy,
+                    onLoadPaywall
+                );
+            }
+            else
+            {
+                Adapty.GetPaywall(
+                    this.PlacementId,
+                    placementLocale,
+                    fetchPolicy,
+                    null,
+                    onLoadPaywall
+                );
+            }
         }
 
         void LoadProducts(AdaptyPaywall paywall)
@@ -143,6 +160,74 @@ namespace AdaptyExample
             );
         }
 
+        public void OpenWebPaywallPressed()
+        {
+            if (this.m_paywall == null)
+            {
+                return;
+            }
+
+            Adapty.CreateWebPaywallUrl(
+                this.m_paywall,
+                (url, error) =>
+                {
+                    if (error != null)
+                    {
+                        this.Listener.Router.ShowAlertPanel(error.ToString());
+                    }
+                    else
+                    {
+                        Debug.Log("CreateWebPaywallUrl: " + url);
+                    }
+                }
+            );
+
+            Adapty.OpenWebPaywall(
+                this.m_paywall,
+                (error) =>
+                {
+                    if (error != null)
+                    {
+                        this.Listener.Router.ShowAlertPanel(error.ToString());
+                    }
+                }
+            );
+        }
+
+        public void OpenWebPaywallProductPressed(AdaptyPaywallProduct product)
+        {
+            if (product == null)
+            {
+                return;
+            }
+
+            Adapty.CreateWebPaywallUrl(
+                product,
+                (url, error) =>
+                {
+                    if (error != null)
+                    {
+                        this.Listener.Router.ShowAlertPanel(error.ToString());
+                    }
+                    else
+                    {
+                        Debug.Log("CreateWebPaywallUrl: " + url);
+                    }
+                }
+            );
+
+            Adapty.OpenWebPaywall(
+                product,
+                (error) =>
+                {
+                    if (error != null)
+                    {
+                        this.Listener.Router.ShowAlertPanel(error.ToString());
+                    }
+                }
+            );
+        }
+
         private void UpdatePaywallData(AdaptyPaywall paywall)
         {
             this.StatusText.SetText("OK");
@@ -181,6 +266,16 @@ namespace AdaptyExample
                 }
             );
             m_productButtons.Clear();
+            m_openWebPaywallButtons.ForEach(
+                (button) =>
+                {
+                    if (button != null)
+                    {
+                        Destroy(button);
+                    }
+                }
+            );
+            m_openWebPaywallButtons.Clear();
 
             // Create product buttons for each product
             for (var i = 0; i < products.Count; ++i)
@@ -188,7 +283,25 @@ namespace AdaptyExample
                 var product = products[i];
                 var productButton = this.CreateProductButton(product, i);
                 m_productButtons.Add(productButton);
+
+                var openWebPaywallButton = this.CreateOpenWebPaywallButton(product);
+                m_openWebPaywallButtons.Add(openWebPaywallButton);
             }
+        }
+
+        private GameObject CreateOpenWebPaywallButton(AdaptyPaywallProduct product)
+        {
+            var openWebPaywallButtonObject = Instantiate(this.OpenWebPaywallButtonPrefab);
+            var openWebPaywallButtonRect = openWebPaywallButtonObject.GetComponent<RectTransform>();
+            openWebPaywallButtonRect.SetParent(this.ProductsContainerTransform, false);
+            var openWebPaywallButton =
+                openWebPaywallButtonObject.GetComponent<UnityEngine.UI.Button>();
+            openWebPaywallButton.onClick.AddListener(() =>
+            {
+                this.OpenWebPaywallProductPressed(product);
+            });
+
+            return openWebPaywallButtonObject;
         }
 
         private ProductButton CreateProductButton(AdaptyPaywallProduct product, int index)

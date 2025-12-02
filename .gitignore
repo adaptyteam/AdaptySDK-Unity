@@ -31,3 +31,4 @@ dist
 build.gradle_mine
 .DS_Store
 *.idea
+build_device

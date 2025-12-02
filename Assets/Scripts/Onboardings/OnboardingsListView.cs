@@ -16,6 +16,8 @@ namespace AdaptyExample
 
         void Start()
         {
+            this.PlacementLocaleTextField.contentType = TMP_InputField.ContentType.Standard;
+            this.PlacementLocaleTextField.inputType = TMP_InputField.InputType.Standard;
             this.AddPlacement("onb_test_alexey", null);
         }
 

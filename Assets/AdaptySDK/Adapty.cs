@@ -1047,7 +1047,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetFallbackPaywalls(..)",
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetFallback(..)",
                             e
                         );
                     }
