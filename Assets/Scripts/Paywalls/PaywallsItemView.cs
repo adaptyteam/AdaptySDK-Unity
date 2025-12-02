@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using AdaptySDK;
 using TMPro;
 using UnityEngine;
@@ -84,12 +85,19 @@ namespace AdaptyExample
                     else
                     {
                         this.m_paywall = paywall;
-                        this.UpdatePaywallData(paywall);
+                        StartCoroutine(DelayedUpdatePaywall(paywall));
                         this.LoadProducts(paywall);
                     }
                 }
             );
         }
+
+        private IEnumerator DelayedUpdatePaywall(AdaptyPaywall paywall)
+        {
+            yield return new WaitForEndOfFrame();
+            this.UpdatePaywallData(paywall);
+        }
+
 
         void LoadProducts(AdaptyPaywall paywall)
         {
@@ -99,7 +107,7 @@ namespace AdaptyExample
                 {
                     if (products != null)
                     {
-                        this.UpdateProductsData(products);
+                        StartCoroutine(DelayedUpdateProducts(products));
                     }
                     else
                     {
@@ -109,6 +117,13 @@ namespace AdaptyExample
                     this.SetLoading(false);
                 }
             );
+        }
+
+            
+        private IEnumerator DelayedUpdateProducts(IList<AdaptyPaywallProduct> products)
+        {
+            yield return new WaitForEndOfFrame();
+            this.UpdateProductsData(products);
         }
 
         public void LogShowPaywallPressed()
