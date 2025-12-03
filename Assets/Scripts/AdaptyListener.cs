@@ -47,7 +47,7 @@ namespace AdaptyExample
             var builder = new AdaptyConfiguration.Builder(
                 "public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6"
             )
-                .SetCustomerUserId("test_251203")
+                .SetCustomerUserId(null)
                 .SetObserverMode(false)
                 .SetServerCluster(AdaptyServerCluster.Default)
                 .SetIPAddressCollectionDisabled(false)
