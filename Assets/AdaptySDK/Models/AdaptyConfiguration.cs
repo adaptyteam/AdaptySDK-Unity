@@ -11,7 +11,7 @@ namespace AdaptySDK
     {
         private readonly string ApiKey;
         private readonly string CustomerUserId; // nullable
-        private readonly AdaptyCustomerIdentity? CustomerIdentity; // nullable
+        private readonly AdaptyCustomerIdentity CustomerIdentity; // nullable
         private readonly bool? ObserverMode;
         private readonly bool? AppleIdfaCollectionDisabled;
         private readonly bool? GoogleAdvertisingIdCollectionDisabled;

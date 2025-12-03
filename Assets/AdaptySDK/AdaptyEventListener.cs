@@ -57,7 +57,7 @@ namespace AdaptySDK
         void PaywallViewDidFinishWebPaymentNavigation(
             AdaptyUIPaywallView view,
             AdaptyPaywallProduct product,
-            AdaptyError? error
+            AdaptyError error // can be null if no error occurred
         );
     }
 

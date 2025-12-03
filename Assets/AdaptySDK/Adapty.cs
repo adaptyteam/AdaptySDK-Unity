@@ -380,7 +380,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Identify(string customerUserId, Action<AdaptyError> completionHandler)
         {
-            Identify(customerUserId, null, null, completionHandler);
+            Identify(customerUserId, Guid.Empty, null, completionHandler);
         }
 
         /// <summary>
@@ -396,8 +396,8 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Identify(
             string customerUserId,
-            Guid? iosAppAccountToken,
-            string? androidObfuscatedAccountId,
+            Guid iosAppAccountToken,
+            string androidObfuscatedAccountId,
             Action<AdaptyError> completionHandler
         )
         {

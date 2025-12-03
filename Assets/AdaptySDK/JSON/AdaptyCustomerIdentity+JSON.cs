@@ -5,6 +5,8 @@
 //  Created by AI Assistant on 14.01.2025.
 //
 
+using System;
+
 namespace AdaptySDK
 {
     using AdaptySDK.SimpleJSON;
@@ -15,12 +17,12 @@ namespace AdaptySDK
         {
             var node = new JSONObject();
 
-            if (IosAppAccountToken != null)
+            if (IosAppAccountToken != Guid.Empty)
             {
                 node.Add(_CustomerIdentityKeys.IosAppAccountToken, IosAppAccountToken.ToString());
             }
 
-            if (AndroidObfuscatedAccountId != null)
+            if (!string.IsNullOrEmpty(AndroidObfuscatedAccountId))
             {
                 node.Add(
                     _CustomerIdentityKeys.AndroidObfuscatedAccountId,

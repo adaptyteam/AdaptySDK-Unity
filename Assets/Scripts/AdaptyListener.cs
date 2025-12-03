@@ -25,7 +25,7 @@ namespace AdaptyExample
             this.Router = this.GetComponent<AdaptyRouter>();
 
             this.InitializeAdapty();
-            this.SetFallBackPaywalls();
+            this.SetFallbacks();
         }
 
         private void InitializeAdapty()
@@ -47,7 +47,7 @@ namespace AdaptyExample
             var builder = new AdaptyConfiguration.Builder(
                 "public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6"
             )
-                .SetCustomerUserId(null)
+                .SetCustomerUserId("test_251203")
                 .SetObserverMode(false)
                 .SetServerCluster(AdaptyServerCluster.Default)
                 .SetIPAddressCollectionDisabled(false)
@@ -73,7 +73,7 @@ namespace AdaptyExample
             );
         }
 
-        private void SetFallBackPaywalls()
+        private void SetFallbacks()
         {
 #if UNITY_IOS
             var assetId = "adapty_fallback_ios.json";
@@ -83,12 +83,12 @@ namespace AdaptyExample
             var assetId = "";
 #endif
 
-            this.LogMethodRequest("SetFallBackPaywalls");
-            Adapty.SetFallbackPaywalls(
+            this.LogMethodRequest("SetFallbacks");
+            Adapty.SetFallback(
                 assetId,
                 (error) =>
                 {
-                    this.LogMethodResult("SetFallBackPaywalls", error);
+                    this.LogMethodResult("SetFallbacks", error);
                 }
             );
         }
@@ -712,7 +712,7 @@ namespace AdaptyExample
         public void PaywallViewDidFinishWebPaymentNavigation(
             AdaptyUIPaywallView view,
             AdaptyPaywallProduct product,
-            AdaptyError? error
+            AdaptyError error
         )
         {
             var meta = product.VendorProductId;

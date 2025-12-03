@@ -38,20 +38,20 @@ namespace AdaptySDK
             [Obsolete(
                 "IdfaCollectionDisabled is deprecated, please use AppleIdfaCollectionDisabled instead."
             )]
-            public bool? IdfaCollectionDisabled
+            public bool IdfaCollectionDisabled
             {
                 get { return AppleIdfaCollectionDisabled; }
                 set { AppleIdfaCollectionDisabled = value; }
             }
-            public bool? AppleIdfaCollectionDisabled;
-            public bool? GoogleAdvertisingIdCollectionDisabled;
-            public bool? GoogleEnablePendingPrepaidPlans;
-            public bool? IpAddressCollectionDisabled;
-            public AdaptyServerCluster? ServerCluster;
+            public bool AppleIdfaCollectionDisabled;
+            public bool GoogleAdvertisingIdCollectionDisabled;
+            public bool GoogleEnablePendingPrepaidPlans;
+            public bool IpAddressCollectionDisabled;
+            public AdaptyServerCluster ServerCluster;
             public string BackendProxyHost; //nullable
-            public int? BackendProxyPort;
-            public AdaptyLogLevel? LogLevel;
-            public bool? ActivateUI;
+            public int BackendProxyPort;
+            public AdaptyLogLevel LogLevel;
+            public bool ActivateUI;
             public AdaptyUIMediaCacheConfiguration AdaptyUIMediaCache; //nullable
 
             public Builder(string apiKey) => ApiKey = apiKey;
@@ -87,8 +87,8 @@ namespace AdaptySDK
 
             public Builder SetCustomerUserId(
                 string customerUserId,
-                Guid? iosAppAccountToken,
-                string? androidObfuscatedAccountId
+                Guid iosAppAccountToken, // nullable
+                string androidObfuscatedAccountId // nullable
             )
             {
                 CustomerUserId = customerUserId;
