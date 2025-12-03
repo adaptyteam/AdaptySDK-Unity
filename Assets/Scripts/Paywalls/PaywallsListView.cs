@@ -14,6 +14,8 @@ namespace AdaptyExample
 
         public GameObject PaywallsItemPrefab;
 
+        private PlacementLoadStrategy m_loadStrategy = PlacementLoadStrategy.LoadElseCache;
+
         void Start()
         {
             this.PlacementLocaleTextField.contentType = TMP_InputField.ContentType.Standard;
@@ -21,8 +23,6 @@ namespace AdaptyExample
         }
 
         void Update() { }
-
-        private PlacementLoadStrategy m_loadStrategy = PlacementLoadStrategy.LoadElseCache;
 
         public void OnDropdownValueChanged(int value)
         {
@@ -47,8 +47,6 @@ namespace AdaptyExample
                     this.m_loadStrategy = PlacementLoadStrategy.LoadElseCache;
                     break;
             }
-
-            Debug.Log("LoadStrategy changed to: " + this.m_loadStrategy);
         }
 
         public void AddPlacementPressed()

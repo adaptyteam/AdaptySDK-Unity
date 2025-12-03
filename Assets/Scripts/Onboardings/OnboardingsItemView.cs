@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using AdaptySDK;
 using TMPro;
 using UnityEngine;
@@ -30,7 +33,6 @@ namespace AdaptyExample
         void Start()
         {
             this.SetLoading(false);
-            this.LoadOnboarding();
         }
 
         void Update()
@@ -48,7 +50,7 @@ namespace AdaptyExample
 
         private AdaptyOnboarding m_onboarding;
 
-        public void LoadOnboarding()
+        public void LoadOnboarding(PlacementLoadStrategy loadStrategy, bool isDefaultAudience)
         {
             if (string.IsNullOrEmpty(this.PlacementId))
             {
@@ -63,26 +65,42 @@ namespace AdaptyExample
 
             this.SetLoading(true);
 
-            Adapty.GetOnboarding(
-                this.PlacementId,
-                placementLocale,
-                AdaptyPlacementFetchPolicy.Default,
-                null,
-                (onboarding, error) =>
-                {
-                    if (error != null)
-                    {
-                        this.UpdateOnboardingError(error.Message);
-                    }
-                    else
-                    {
-                        this.m_onboarding = onboarding;
-                        this.UpdateOnboardingData(onboarding);
-                    }
+            var fetchPolicy = loadStrategy.ToFetchPolicy();
 
-                    this.SetLoading(false);
+            Action<AdaptyOnboarding, AdaptyError> onLoadOnboarding = (onboarding, error) =>
+            {
+                if (error != null)
+                {
+                    this.UpdateOnboardingError(error.Message);
                 }
-            );
+                else
+                {
+                    this.m_onboarding = onboarding;
+                    this.UpdateOnboardingData(onboarding);
+                }
+
+                this.SetLoading(false);
+            };
+
+            if (isDefaultAudience)
+            {
+                Adapty.GetOnboardingForDefaultAudience(
+                    this.PlacementId,
+                    placementLocale,
+                    fetchPolicy,
+                    onLoadOnboarding
+                );
+            }
+            else
+            {
+                Adapty.GetOnboarding(
+                    this.PlacementId,
+                    placementLocale,
+                    fetchPolicy,
+                    null,
+                    onLoadOnboarding
+                );
+            }
         }
 
         public void PresentOnboardingPressed(bool fullScreen)
