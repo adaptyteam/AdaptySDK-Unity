@@ -7,49 +7,92 @@
 
 namespace AdaptySDK
 {
+    /// <summary>
+    /// Represents a product available for purchase in a paywall.
+    /// </summary>
+    /// <remarks>
+    /// This class contains all information about a product including pricing, subscription details, and metadata.
+    /// Read more at <see href="https://adapty.io/docs/product">Adapty Documentation</see>
+    /// </remarks>
     public partial class AdaptyPaywallProduct
     {
-        /// Unique identifier of the product.
+        /// <summary>
+        /// The unique identifier of the product in the App Store or Google Play Store.
+        /// </summary>
         public readonly string VendorProductId;
 
+        /// <summary>
+        /// The unique identifier of the product in Adapty.
+        /// </summary>
         public readonly string AdaptyProductId;
 
-        /// The identifier of the access level configured by you in Adapty Dashboard.
+        /// <summary>
+        /// The identifier of the access level configured in the Adapty Dashboard.
+        /// </summary>
+        /// <remarks>
+        /// When a user purchases this product, they will be granted access to this access level.
+        /// </remarks>
         public readonly string AccessLevelId;
 
-        /// The type of the product.
+        /// <summary>
+        /// The type of the product (e.g., "consumable", "non_consumable", "subscription").
+        /// </summary>
         public readonly string ProductType;
 
+        /// <summary>
         /// The identifier of the variation, used to attribute purchases to the paywall.
+        /// </summary>
         public readonly string PaywallVariationId;
 
-        /// Parent A/B test name
+        /// <summary>
+        /// The parent A/B test name associated with this product.
+        /// </summary>
         public readonly string PaywallABTestName;
 
-        /// Parent paywall name
+        /// <summary>
+        /// The parent paywall name associated with this product.
+        /// </summary>
         public readonly string PaywallName;
 
-        /// A description of the product.
+        /// <summary>
+        /// A localized description of the product.
+        /// </summary>
         public readonly string LocalizedDescription;
 
-        /// The name of the product.
+        /// <summary>
+        /// The localized name of the product.
+        /// </summary>
         public readonly string LocalizedTitle;
 
-        /// Indicates whether the product is available for family sharing in App Store Connect.
+        /// <summary>
+        /// Indicates whether the product is available for family sharing in App Store Connect (iOS only).
+        /// </summary>
         public readonly bool IsFamilyShareable;
 
-        /// Product locale region code.
-        ///
-        /// [Nullable]
+        /// <summary>
+        /// The product locale region code.
+        /// </summary>
+        /// <remarks>
+        /// This can be null if the region code is not available.
+        /// </remarks>
         public readonly string RegionCode;
 
-        /// The object which represents the main price for the product.
+        /// <summary>
+        /// The object that represents the main price for the product.
+        /// </summary>
         public readonly AdaptyPrice Price;
 
-        /// Detailed information about subscription (intro, offers, etc.)
+        /// <summary>
+        /// Detailed information about the subscription, including introductory offers, promotional offers, etc.
+        /// </summary>
+        /// <remarks>
+        /// This is null for non-subscription products.
+        /// </remarks>
         public readonly AdaptySubscription Subscription; //nullable
 
-        /// The index of the product in the paywall.
+        /// <summary>
+        /// The index of the product in the paywall (0-based).
+        /// </summary>
         public readonly int PaywallProductIndex;
 
         private readonly string _PayloadData;

@@ -11,16 +11,26 @@ using System.Linq;
 
 namespace AdaptySDK
 {
+    /// <summary>
+    /// Represents a user profile in Adapty.
+    /// </summary>
+    /// <remarks>
+    /// The profile contains all information about the user including access levels, subscriptions, non-subscription purchases, and custom attributes.
+    /// Read more at <see href="https://adapty.io/docs/unity-check-subscription-status">Adapty Documentation</see>
+    /// </remarks>
     public partial class AdaptyProfile
     {
         /// <summary>
-        /// An identifier of the user in Adapty
+        /// An identifier of the user in Adapty.
         /// </summary>
         public readonly string ProfileId;
 
         /// <summary>
         /// An identifier of the user in your system.
         /// </summary>
+        /// <remarks>
+        /// This is the customer user ID that you set using <see cref="Adapty.Identify(string, Action{AdaptyError})"/>.
+        /// </remarks>
         public readonly string CustomerUserId;
 
         /// <summary>
@@ -29,34 +39,37 @@ namespace AdaptySDK
         internal readonly string SegmentId;
 
         /// <summary>
-        /// Previously set user custom attributes with `.updateProfile()` method.
+        /// Previously set user custom attributes with <see cref="Adapty.UpdateProfile(AdaptyProfileParameters, Action{AdaptyError})"/> method.
         /// </summary>
         public readonly IDictionary<string, dynamic> CustomAttributes;
 
         /// <summary>
-        /// The keys are access level identifiers configured by you in Adapty Dashboard.
+        /// A dictionary of access levels configured in the Adapty Dashboard.
         /// </summary>
         /// <remarks>
-        /// The values are [AdaptyAccessLevelInfo] objects.
+        /// The keys are access level identifiers configured by you in the Adapty Dashboard.
+        /// The values are <see cref="AccessLevel"/> objects.
         /// Can be null if the customer has no access levels.
         /// </remarks>
         public readonly IDictionary<string, AccessLevel> AccessLevels;
 
         /// <summary>
-        /// The keys are product ids from App Store Connect.
+        /// A dictionary of active subscriptions.
         /// </summary>
         /// <remarks>
-        /// The values are [AdaptySubscription] objects.
+        /// The keys are product IDs from App Store Connect or Google Play Console.
+        /// The values are <see cref="Subscription"/> objects.
         /// Can be null if the customer has no subscriptions.
         /// </remarks>
         public readonly IDictionary<string, Subscription> Subscriptions;
 
         /// <summary>
-        /// The keys are product ids from App Store Connect.
+        /// A dictionary of non-subscription purchases.
         /// </summary>
         /// <remarks>
-        /// The values are array[] of [AdaptyNonSubscription] objects.
-        /// Can be null if the customer has no purchases.
+        /// The keys are product IDs from App Store Connect or Google Play Console.
+        /// The values are lists of <see cref="NonSubscription"/> objects (one product can have multiple purchases).
+        /// Can be null if the customer has no non-subscription purchases.
         /// </remarks>
         public readonly IDictionary<string, IList<NonSubscription>> NonSubscriptions;
 

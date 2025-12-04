@@ -75,7 +75,6 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void GetPaywall(
             string placementId,
             Action<AdaptyPaywall, AdaptyError> completionHandler
@@ -174,6 +173,18 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Adapty allows you remotely configure onboarding screens that will be displayed in your app.
+        /// This way you don't have to hardcode the onboarding content and can dynamically change it or run A/B tests without app releases.
+        /// </summary>
+        /// <remarks>
+        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
+        /// <param name="locale">The identifier of the onboarding <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
+        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
+        /// <param name="loadTimeout">The timeout for the onboarding loading.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void GetOnboarding(
             string placementId,
             string locale,
@@ -216,7 +227,7 @@ namespace AdaptySDK
         /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
         /// </summary>
         /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
+        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products#speed-up-paywall-fetching-with-default-audience-paywall">Adapty Documentation</see>
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
@@ -262,6 +273,16 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// This method enables you to retrieve the onboarding from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
+        /// </summary>
+        /// <remarks>
+        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
+        /// <param name="locale">The identifier of the onboarding <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
+        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void GetOnboardingForDefaultAudience(
             string placementId,
             string locale,
@@ -304,10 +325,14 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Once you have a [AdaptyPaywall], fetch corresponding products array using this method.
+        /// Fetches the products array for a given paywall.
         /// </summary>
-        /// <param name="paywall">an [AdaptyPaywall] for which you want to get a products.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
+        /// <remarks>
+        /// Once you have an <see cref="AdaptyPaywall"/>, use this method to fetch the corresponding products with full pricing and subscription information.
+        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="paywall">An <see cref="AdaptyPaywall"/> for which you want to get the products.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains a list of <see cref="AdaptyPaywallProduct"/> objects.</param>
         public static void GetPaywallProducts(
             AdaptyPaywall paywall,
             Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler
@@ -338,14 +363,15 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// The main function for getting a user profile. Allows you to define the level of access, as well as other parameters.
+        /// Retrieves the current user profile with access levels, subscriptions, and other information.
         /// </summary>
         /// <remarks>
-        /// The getProfile method provides the most up-to-date result as it always tries to query the API.
-        /// If for some reason (e.g. no internet connection), the Adapty SDK fails to retrieve information from the server, the data from cache will be returned.
-        /// It is also important to note that the Adapty SDK updates AdaptyProfile cache on a regular basis, in order to keep this information as up-to-date as possible.
+        /// The GetProfile method provides the most up-to-date result as it always tries to query the API.
+        /// If for some reason (e.g., no internet connection), the Adapty SDK fails to retrieve information from the server, the data from cache will be returned.
+        /// It is also important to note that the Adapty SDK updates the AdaptyProfile cache on a regular basis to keep this information as up-to-date as possible.
+        /// Read more at <see href="https://adapty.io/docs/unity-check-subscription-status">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains a [AdaptyProfile] object.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyProfile"/> object.</param>
         public static void GetProfile(Action<AdaptyProfile, AdaptyError> completionHandler)
         {
             Request.Send(
@@ -370,13 +396,14 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Use this method for identifying user with it’s user id in your system.
+        /// Identifies the user with their user ID in your system.
         /// </summary>
         /// <remarks>
-        /// If you don’t have a user id on SDK configuration, you can set it later at any time with `.identify()` method.
+        /// If you don't have a user ID in the SDK configuration, you can set it later at any time with this method.
         /// The most common cases are after registration/authorization when the user switches from being an anonymous user to an authenticated user.
+        /// Read more at <see href="https://adapty.io/docs/unity-quickstart-identify">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="customerUserId">User identifier in your system.</param>
+        /// <param name="customerUserId">The user identifier in your system.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Identify(string customerUserId, Action<AdaptyError> completionHandler)
         {
@@ -384,15 +411,17 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Use this method for identifying user with it's user id in your system.
+        /// Identifies the user with their user ID and platform-specific account identifiers.
         /// </summary>
         /// <remarks>
-        /// If you don't have a user id on SDK configuration, you can set it later at any time with `.identify()` method.
+        /// If you don't have a user ID in the SDK configuration, you can set it later at any time with this method.
         /// The most common cases are after registration/authorization when the user switches from being an anonymous user to an authenticated user.
+        /// This overload allows you to provide platform-specific account identifiers for better purchase tracking.
+        /// Read more at <see href="https://adapty.io/docs/unity-quickstart-identify">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="customerUserId">User identifier in your system.</param>
-        /// <param name="iosAppAccountToken">The UUID that you generate to associate a customer’s In-App Purchase with its resulting App Store transaction. (use for iOS), [read more](https://developer.apple.com/documentation/appstoreserverapi/appaccounttoken).</param>
-        /// <param name="androidObfuscatedAccountId">The obfuscated account identifier (use for Android), [read more](https://developer.android.com/google/play/billing/developer-payload#attribute).</param>
+        /// <param name="customerUserId">The user identifier in your system.</param>
+        /// <param name="iosAppAccountToken">The UUID that you generate to associate a customer's In-App Purchase with its resulting App Store transaction (iOS only). Read more at <see href="https://developer.apple.com/documentation/appstoreserverapi/appaccounttoken">Apple Documentation</see>.</param>
+        /// <param name="androidObfuscatedAccountId">The obfuscated account identifier (Android only). Read more at <see href="https://developer.android.com/google/play/billing/developer-payload#attribute">Android Documentation</see>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Identify(
             string customerUserId,
@@ -437,9 +466,9 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Checks if the Native SDK is activated.
+        /// Checks if the native Adapty SDK is activated and ready to use.
         /// </summary>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains a boolean value indicating whether the SDK is activated.</param>
         public static void IsActivated(Action<bool, AdaptyError> completionHandler)
         {
             Request.Send(
@@ -463,6 +492,10 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Returns the current log level of the Adapty SDK.
+        /// </summary>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains the current <see cref="AdaptyLogLevel"/> value.</param>
         public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
         {
             Request.Send(
@@ -487,10 +520,13 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Set to the most appropriate level of logging.
+        /// Sets the log level for the Adapty SDK.
         /// </summary>
-        /// <param name="level">AdaptyLogLevel value</param>
-        /// <param name="completionHandler">Action whith the result</param>
+        /// <remarks>
+        /// Use this method to control the verbosity of SDK logging. Available levels include Error, Warn, Info, and Verbose.
+        /// </remarks>
+        /// <param name="level">The <see cref="AdaptyLogLevel"/> value to set.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void SetLogLevel(AdaptyLogLevel level, Action<AdaptyError> completionHandler)
         {
             var parameters = new JSONObject();
@@ -517,6 +553,14 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Returns the current installation status of the app.
+        /// </summary>
+        /// <remarks>
+        /// This method provides information about whether the app installation status has been determined.
+        /// Read more at <see href="https://adapty.io/docs/user-acquisition">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyInstallationStatus"/> object.</param>
         public static void GetCurrentInstallationStatus(
             Action<AdaptyInstallationStatus, AdaptyError> completionHandler
         )
@@ -543,8 +587,12 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// You can logout the user anytime by calling this method.
+        /// Logs out the current user and clears the local profile data.
         /// </summary>
+        /// <remarks>
+        /// After calling this method, the SDK will create a new anonymous profile for the next user session.
+        /// Read more at <see href="https://adapty.io/docs/unity-quickstart-identify#log-users-out">Adapty Documentation</see>
+        /// </remarks>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Logout(Action<AdaptyError> completionHandler)
         {
@@ -569,6 +617,15 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Creates a web URL for the paywall that can be used to display the paywall in a web view or browser.
+        /// </summary>
+        /// <remarks>
+        /// This is useful for platforms that don't support native paywall views or for web-based implementations.
+        /// Read more at <see href="https://adapty.io/docs/web-paywall">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object for which to create the web URL.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains the web URL string.</param>
         public static void CreateWebPaywallUrl(
             AdaptyPaywall paywall,
             Action<string, AdaptyError> completionHandler
@@ -598,6 +655,15 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Creates a web URL for a specific product that can be used to display the purchase page in a web view or browser.
+        /// </summary>
+        /// <remarks>
+        /// This is useful for platforms that don't support native purchase flows or for web-based implementations.
+        /// Read more at <see href="https://adapty.io/docs/web-paywall">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="product">An <see cref="AdaptyPaywallProduct"/> object for which to create the web URL.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains the web URL string.</param>
         public static void CreateWebPaywallUrl(
             AdaptyPaywallProduct product,
             Action<string, AdaptyError> completionHandler
@@ -627,6 +693,15 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Opens the paywall in a web view or browser.
+        /// </summary>
+        /// <remarks>
+        /// This method opens the web paywall URL in the default browser or web view.
+        /// Read more at <see href="https://adapty.io/docs/web-paywall">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object to open.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void OpenWebPaywall(
             AdaptyPaywall paywall,
             Action<AdaptyError> completionHandler
@@ -656,6 +731,15 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Opens the product purchase page in a web view or browser.
+        /// </summary>
+        /// <remarks>
+        /// This method opens the web purchase URL for the specific product in the default browser or web view.
+        /// Read more at <see href="https://adapty.io/docs/web-paywall">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="product">An <see cref="AdaptyPaywallProduct"/> object to open.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void OpenWebPaywall(
             AdaptyPaywallProduct product,
             Action<AdaptyError> completionHandler
@@ -692,7 +776,7 @@ namespace AdaptySDK
         /// Adapty helps you to measure the performance of the paywalls.
         /// We automatically collect all the metrics related to purchases except for paywall views.
         /// This is because only you know when the paywall was shown to a customer. Whenever you show a paywall to your user, call .logShowPaywall(paywall) to log the event, and it will be accumulated in the paywall metrics.
-        /// Read more on the <see href="https://adapty.io/docs/present-remote-config-paywalls#track-paywall-view-events">Adapty Documentation</see>
+        /// Read more on the <see href="https://adapty.io/docs/present-remote-config-paywalls-unity#track-paywall-view-events">Adapty Documentation</see>
         /// </remarks>
         /// <param name="paywall">An [AdaptyPaywall] object.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
@@ -726,12 +810,13 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this method to update the current user's refund data consent.
+        /// Updates the current user's refund data collection consent for App Store purchases.
         /// </summary>
         /// <remarks>
+        /// This method is iOS-only and allows you to manage user consent for refund data collection.
         /// Read more on the <see href="https://adapty.io/docs/refund-saver#obtain-user-consent">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="consent">a Boolean value wehter user gave the consent or not.</param>
+        /// <param name="consent">A boolean value indicating whether the user gave consent for refund data collection.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateAppStoreCollectingRefundDataConsent(
             Boolean consent,
@@ -777,12 +862,13 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this method to set the refund preference individually for current user.
+        /// Sets the refund preference individually for the current user.
         /// </summary>
         /// <remarks>
+        /// This method is iOS-only and allows you to set how refunds should be handled for a specific user.
         /// Read more on the <see href="https://adapty.io/docs/refund-saver#set-refund-behavior-for-a-specific-user-in-the-dashboard">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="refundPreference"> the [AdaptyRefundPreference] value.</param>
+        /// <param name="refundPreference">The <see cref="AdaptyRefundPreference"/> value to set.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateAppStoreRefundPreference(
             AdaptyRefundPreference refundPreference,
@@ -828,15 +914,15 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// To make the purchase, you have to call this method.
+        /// Makes a purchase for the specified product.
         /// </summary>
         /// <remarks>
-        /// Read more on the <see href="https://adapty.io/docs/making-purchases">Adapty Documentation</see>
+        /// This method initiates the purchase flow for a product. The result contains information about the purchase status.
+        /// Read more on the <see href="https://adapty.io/docs/unity-making-purchases">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="product">an [AdaptyPaywallProduct] object retrieved from the paywall.</param>
-        /// <param name="subscriptionUpdate">an [AdaptySubscriptionUpdateParameters] object used to upgrade or downgrade a subscription (use for Android).</param>
-        /// <param name="isOfferPersonalized">Specifies whether the offer is personalized to the buyer (use for Android).</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
+        /// <param name="product">An <see cref="AdaptyPaywallProduct"/> object retrieved from the paywall.</param>
+        /// <param name="purchaseParameters">An optional <see cref="AdaptyPurchaseParameters"/> object containing purchase configuration (e.g., subscription update parameters for Android, offer personalization, etc.).</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyPurchaseResult"/> object.</param>
         public static void MakePurchase(
             AdaptyPaywallProduct product,
             AdaptyPurchaseParameters purchaseParameters,
@@ -872,8 +958,12 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this method to have StoreKit present a sheet enabling the user to redeem codes provided by your app.
+        /// Presents the App Store code redemption sheet, enabling the user to redeem promotional codes.
         /// </summary>
+        /// <remarks>
+        /// This method is iOS-only and presents the native App Store code redemption interface.
+        /// Read more at <see href="https://developer.apple.com/documentation/storekit/appstore/presentoffercoderedeemsheet(in:)">Apple Documentation</see>
+        /// </remarks>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void PresentCodeRedemptionSheet(Action<AdaptyError> completionHandler)
         {
@@ -913,12 +1003,16 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// In Observer mode, Adapty SDK doesn’t know, where the purchase was made from.
-        /// If you display products using our <see href="https://docs.adapty.io/v2.0/docs/paywall">Paywalls</see> or <  see href="https://docs.adapty.io/v2.0/docs/ab-test">A/B Tests</see>, you can manually assign variation to the purchase.
-        /// After doing this, you’ll be able to see metrics in Adapty Dashboard.
+        /// Reports a transaction to Adapty in Observer mode.
         /// </summary>
-        /// <param name="transactionId">A string identifier of your purchased transaction <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> for iOS or string identifier (`purchase.getOrderId()`) of the purchase, where the purchase is an instance of the billing library Purchase class for Android.</param>
-        /// <param name="variationId">A string identifier of variation. You can get it using variationId property of AdaptyPaywall.</param>
+        /// <remarks>
+        /// In Observer mode, Adapty SDK doesn't know where the purchase was made from.
+        /// If you display products using Adapty Paywalls or A/B Tests, you can manually assign a variation to the purchase.
+        /// After doing this, you'll be able to see metrics in the Adapty Dashboard.
+        /// Read more at <see href="https://adapty.io/docs/observer-vs-full-mode">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the transaction identifier from <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see>. For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
+        /// <param name="variationId">An optional string identifier of the variation. You can get it using the <see cref="AdaptyPaywall.VariationId"/> property of <see cref="AdaptyPaywall"/>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
             string transactionId,
@@ -955,13 +1049,14 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// To restore purchases, you have to call this method.
+        /// Restores previous purchases made by the user.
         /// </summary>
         /// <remarks>
-        /// A result containing the AdaptyProfile object. This model contains info about access levels, subscriptions, and non-subscription purchases.
-        /// Generally, you have to check only access level status to determine whether the user has premium access to the app.
+        /// This method restores all previous purchases and returns an <see cref="AdaptyProfile"/> object containing information about access levels, subscriptions, and non-subscription purchases.
+        /// Generally, you only need to check the access level status to determine whether the user has premium access to the app.
+        /// Read more at <see href="https://adapty.io/docs/unity-restore-purchase">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyProfile"/> object.</param>
         public static void RestorePurchases(Action<AdaptyProfile, AdaptyError> completionHandler)
         {
             Request.Send(
@@ -986,9 +1081,12 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Returns the version of the Native SDK.
+        /// Returns the version of the native Adapty SDK (iOS or Android).
         /// </summary>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
+        /// <remarks>
+        /// This method returns the version string of the underlying native SDK, which may differ from the Unity wrapper version.
+        /// </remarks>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains the native SDK version string.</param>
         public static void GetNativeSDKVersion(Action<string, AdaptyError> completionHandler)
         {
             Request.Send(
@@ -1013,13 +1111,15 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// To set fallback paywalls, use this method. You should pass exactly the same payload you’re getting from Adapty backend. You can copy it from Adapty Dashboard.
+        /// Sets fallback paywalls that will be used when there's no internet connection or when the Adapty backend is unavailable.
         /// </summary>
         /// <remarks>
-        /// Adapty allows you to provide fallback paywalls that will be used when a user opens the app for the first time and there’s no internet connection or in the rare case when Adapty backend is down and there’s no cache on the device.
+        /// Adapty allows you to provide fallback paywalls that will be used when a user opens the app for the first time and there's no internet connection, or in the rare case when the Adapty backend is down and there's no cache on the device.
+        /// You should pass exactly the same payload you're getting from the Adapty backend. You can copy it from the Adapty Dashboard.
+        /// The fallback paywalls file should be placed in the <c>StreamingAssets</c> folder in your Unity project.
         /// Read more on the <see href="https://adapty.io/docs/unity-use-fallback-paywalls">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="fileName">The name of the fallback paywalls file.</param>
+        /// <param name="fileName">The name of the fallback paywalls file. The file should be placed in the <c>StreamingAssets</c> folder in your Unity project.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void SetFallback(string fileName, Action<AdaptyError> completionHandler)
         {
@@ -1065,10 +1165,13 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// You can set integration identifiers for the profile, using method.
+        /// Sets integration identifiers for the profile to integrate with third-party analytics and attribution services.
         /// </summary>
-        /// <param name="key">a identifier of the integration.</param>
-        /// <param name="value">a value of the integration identifier.</param>
+        /// <remarks>
+        /// Integration identifiers allow you to link Adapty profiles with external services like analytics platforms or attribution providers.
+        /// </remarks>
+        /// <param name="key">The identifier key of the integration (e.g., "amplitude_user_id", "mixpanel_distinct_id").</param>
+        /// <param name="value">The value of the integration identifier.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void SetIntegrationIdentifier(
             string key,
@@ -1103,11 +1206,14 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// You can set attribution data for the profile, using method.
-        /// Read more on the <see href="https://adapty.io/docs/attribution-integration">Adapty Documentation</see>
+        /// Updates attribution data for the profile to track user acquisition sources.
         /// </summary>
-        /// <param name="jsonString">a serialized JSON string containing attribution (conversion) data.</param>
-        /// <param name="source">a source of attribution.</param>
+        /// <remarks>
+        /// This method allows you to send attribution data from various sources (e.g., AppsFlyer, Adjust, Branch) to Adapty.
+        /// Read more on the <see href="https://adapty.io/docs/attribution-integration">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="jsonString">A serialized JSON string containing attribution (conversion) data from the attribution provider.</param>
+        /// <param name="source">The source of attribution (e.g., "appsflyer", "adjust", "branch", "custom").</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateAttribution(
             string jsonString,
@@ -1141,10 +1247,14 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// You can set optional attributes such as email, phone number, etc, to the user of your app.
-        /// You can then use attributes to create user <see href="https://adapty.io/docs/segments">segments</see> or just view them in CRM.
+        /// Updates the user profile with optional attributes such as email, phone number, name, etc.
         /// </summary>
-        /// <param name="param">use [AdaptyProfileParametersBuilder] to build this object.</param>
+        /// <remarks>
+        /// You can use these attributes to create user <see href="https://adapty.io/docs/segments">segments</see> or view them in the CRM.
+        /// Use <see cref="AdaptyProfileParameters.Builder"/> to build the parameters object.
+        /// Read more at <see href="https://adapty.io/docs/unity-setting-user-attributes">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="param">An <see cref="AdaptyProfileParameters"/> object containing the attributes to update. Use <see cref="AdaptyProfileParameters.Builder"/> to build this object.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateProfile(
             AdaptyProfileParameters param,
@@ -1179,11 +1289,15 @@ namespace AdaptySDK
     public static partial class AdaptyUI
     {
         /// <summary>
-        /// Right after receiving ``AdaptyPaywall``, you can create the corresponding ``AdaptyUIPaywallView`` to present it afterwards.
+        /// Creates a paywall view from an AdaptyPaywall object.
         /// </summary>
-        /// <param name="paywall">an [AdaptyPaywall] object, for which you are trying to get a controller.</param>
-        /// <param name="optionalParameters">an [AdaptyUICreatePaywallViewParameters] object that contains optional parameters.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
+        /// <remarks>
+        /// Right after receiving an <see cref="AdaptyPaywall"/>, you can create the corresponding <see cref="AdaptyUIPaywallView"/> to present it afterwards.
+        /// Read more at <see href="https://adapty.io/docs/unity-quickstart-paywalls">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object for which you are trying to create a view.</param>
+        /// <param name="optionalParameters">An optional <see cref="AdaptyUICreatePaywallViewParameters"/> object that contains optional parameters like load timeout, custom tags, custom timers, product purchase parameters, and custom assets.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIPaywallView"/> object.</param>
         public static void CreatePaywallView(
             AdaptyPaywall paywall,
             AdaptyUICreatePaywallViewParameters optionalParameters,
@@ -1272,6 +1386,15 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// Creates an onboarding view from an AdaptyOnboarding object.
+        /// </summary>
+        /// <remarks>
+        /// Right after receiving an <see cref="AdaptyOnboarding"/>, you can create the corresponding <see cref="AdaptyUIOnboardingView"/> to present it afterwards.
+        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="onboarding">An <see cref="AdaptyOnboarding"/> object for which you are trying to create a view.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIOnboardingView"/> object.</param>
         public static void CreateOnboardingView(
             AdaptyOnboarding onboarding,
             Action<AdaptyUIOnboardingView, AdaptyError> completionHandler
@@ -1302,9 +1425,12 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this function if you wish to dismiss the view.
+        /// Dismisses the paywall view.
         /// </summary>
-        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
+        /// <remarks>
+        /// Call this method when you want to dismiss the paywall view from the screen.
+        /// </remarks>
+        /// <param name="view">An <see cref="AdaptyUIPaywallView"/> object representing the view to dismiss.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void DismissPaywallView(
             AdaptyUIPaywallView view,
@@ -1393,10 +1519,13 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this function if you wish to present the view.
+        /// Presents the onboarding view to the user.
         /// </summary>
-        /// <param name="view"></param>
-        /// <param name="completionHandler"></param>
+        /// <remarks>
+        /// This method presents the onboarding view using the default full-screen presentation style.
+        /// </remarks>
+        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to present.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void PresentOnboardingView(
             AdaptyUIOnboardingView view,
             Action<AdaptyError> completionHandler
@@ -1406,10 +1535,13 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this function if you wish to present the view.
+        /// Presents the onboarding view to the user with a specified presentation style.
         /// </summary>
-        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
-        /// <param name="iosPresentationStyle">an [AdaptyUIIOSPresentationStyle] object, for which is representing the iOS presentation style.</param>
+        /// <remarks>
+        /// This method presents the onboarding view using the specified iOS presentation style (iOS only).
+        /// </remarks>
+        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to present.</param>
+        /// <param name="iosPresentationStyle">An <see cref="AdaptyUIIOSPresentationStyle"/> object representing the iOS presentation style (iOS only).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void PresentOnboardingView(
             AdaptyUIOnboardingView view,
@@ -1443,9 +1575,12 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this function if you wish to dismiss the view.
+        /// Dismisses the onboarding view.
         /// </summary>
-        /// <param name="view">an [AdaptyUIOnboardingView] object, for which is representing the view.</param>
+        /// <remarks>
+        /// Call this method when you want to dismiss the onboarding view from the screen.
+        /// </remarks>
+        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to dismiss.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void DismissOnboardingView(
             AdaptyUIOnboardingView view,
@@ -1484,11 +1619,14 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this function if you wish to present the dialog.
+        /// Presents a dialog on the paywall view.
         /// </summary>
-        /// <param name="view">an [AdaptyUIPaywallView] or [AdaptyUIOnboardingView] object, for which is representing the view.</param>
-        /// <param name="configuration">an [AdaptyUIDialogConfiguration] object that contains the dialog configuration.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
+        /// <remarks>
+        /// This method shows a dialog with custom configuration on the paywall view. The dialog can be used for various purposes like showing terms, privacy policy, or custom messages.
+        /// </remarks>
+        /// <param name="view">An <see cref="AdaptyUIPaywallView"/> object representing the view on which to show the dialog.</param>
+        /// <param name="configuration">An <see cref="AdaptyUIDialogConfiguration"/> object that contains the dialog configuration.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains the <see cref="AdaptyUIDialogActionType"/> indicating which action was taken.</param>
         public static void ShowDialog(
             AdaptyUIPaywallView view,
             AdaptyUIDialogConfiguration configuration,
@@ -1499,11 +1637,14 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this function if you wish to present the dialog.
+        /// Presents a dialog on the onboarding view.
         /// </summary>
-        /// <param name="view">an [AdaptyUIOnboardingView] object, for which is representing the view.</param>
-        /// <param name="configuration">an [AdaptyUIDialogConfiguration] object that contains the dialog configuration.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
+        /// <remarks>
+        /// This method shows a dialog with custom configuration on the onboarding view. The dialog can be used for various purposes like showing terms, privacy policy, or custom messages.
+        /// </remarks>
+        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view on which to show the dialog.</param>
+        /// <param name="configuration">An <see cref="AdaptyUIDialogConfiguration"/> object that contains the dialog configuration.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains the <see cref="AdaptyUIDialogActionType"/> indicating which action was taken.</param>
         public static void ShowDialog(
             AdaptyUIOnboardingView view,
             AdaptyUIDialogConfiguration configuration,

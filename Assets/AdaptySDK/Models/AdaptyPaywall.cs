@@ -11,25 +11,50 @@ namespace AdaptySDK
 {
     using AdaptySDK.SimpleJSON;
 
+    /// <summary>
+    /// Represents a paywall configuration in Adapty.
+    /// </summary>
+    /// <remarks>
+    /// A paywall is a set of products that can be displayed to users. It contains information about the placement, products, and visual configuration.
+    /// Read more at <see href="https://adapty.io/docs/unity-quickstart-paywalls">Adapty Documentation</see>
+    /// </remarks>
     public partial class AdaptyPaywall
     {
-        /// An `AdaptyPlacement` object, that contains information about the placement of the paywall.
+        /// <summary>
+        /// An <see cref="AdaptyPlacement"/> object that contains information about the placement of the paywall.
+        /// </summary>
         public readonly AdaptyPlacement Placement;
 
+        /// <summary>
+        /// A unique identifier for this paywall instance.
+        /// </summary>
         public readonly string InstanceIdentity;
 
-        /// A paywall name configured in Adapty Dashboard.
+        /// <summary>
+        /// The paywall name configured in the Adapty Dashboard.
+        /// </summary>
         public readonly string Name;
 
+        /// <summary>
         /// The identifier of the variation, used to attribute purchases to the paywall.
+        /// </summary>
         public readonly string VariationId;
 
-        /// The custom JSON formatted data configured in Adapty Dashboard.
-        /// (String representation)
+        /// <summary>
+        /// The custom JSON formatted data configured in the Adapty Dashboard.
+        /// </summary>
+        /// <remarks>
+        /// This can be null if no remote config is configured for the paywall.
+        /// </remarks>
         public readonly AdaptyRemoteConfig RemoteConfig; // nullable
 
-        /// If `true`, it is possible to use Adapty Paywall Builder.
-        /// Read more here: https://docs.adapty.io/docs/paywall-builder-getting-started
+        /// <summary>
+        /// Indicates whether it is possible to use Adapty Paywall Builder for this paywall.
+        /// </summary>
+        /// <remarks>
+        /// If <c>true</c>, you can use <see cref="AdaptyUI.CreatePaywallView(AdaptyPaywall, AdaptyUICreatePaywallViewParameters, Action{AdaptyUIPaywallView, AdaptyError})"/> to create a native paywall view.
+        /// Read more at <see href="https://adapty.io/docs/unity-quickstart-paywalls">Adapty Documentation</see>
+        /// </remarks>
         public bool HasViewConfiguration
         {
             get { return _ViewConfiguration != null; }
@@ -42,7 +67,9 @@ namespace AdaptySDK
         private readonly string _WebPurchaseUrl; // nullable
         private readonly string _RequestLocale;
 
-        /// Array of related products ids.
+        /// <summary>
+        /// Array of vendor product IDs (App Store or Google Play product identifiers) associated with this paywall.
+        /// </summary>
         public IList<string> VendorProductIds
         {
             get
@@ -56,10 +83,14 @@ namespace AdaptySDK
             }
         }
 
-        /// Array of related product references.
+        /// <summary>
+        /// Array of product references associated with this paywall.
+        /// </summary>
         public IList<ProductReference> Products => _Products;
 
-        /// Array of related product identifiers.
+        /// <summary>
+        /// Array of product identifiers associated with this paywall.
+        /// </summary>
         public IList<AdaptyProductIdentifier> ProductIdentifiers
         {
             get
