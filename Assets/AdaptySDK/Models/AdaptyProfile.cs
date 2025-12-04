@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdaptySDK
 {
@@ -37,7 +38,7 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// The values are [AdaptyAccessLevelInfo] objects.
-        /// Can be null if the customer has no access levels. 
+        /// Can be null if the customer has no access levels.
         /// </remarks>
         public readonly IDictionary<string, AccessLevel> AccessLevels;
 
@@ -63,15 +64,50 @@ namespace AdaptySDK
 
         internal readonly bool IsTestUser;
 
-        public override string ToString() => 
-            $"{nameof(ProfileId)}: {ProfileId}, " +
-            $"{nameof(SegmentId)}: {SegmentId}, " +
-            $"{nameof(CustomerUserId)}: {CustomerUserId}, " +
-            $"{nameof(CustomAttributes)}: {CustomAttributes}, " +
-            $"{nameof(AccessLevels)}: {AccessLevels}, " +
-            $"{nameof(Subscriptions)}: {Subscriptions}, " +
-            $"{nameof(NonSubscriptions)}: {NonSubscriptions}, " +
-            $"{nameof(Version)}: {Version}, " +
-            $"{nameof(IsTestUser)}: {IsTestUser}";
+        public override string ToString()
+        {
+            var customAttributesStr =
+                CustomAttributes == null
+                    ? "null"
+                    : "{"
+                        + string.Join(", ", CustomAttributes.Select(kv => $"{kv.Key}: {kv.Value}"))
+                        + "}";
+
+            var accessLevelsStr =
+                AccessLevels == null
+                    ? "null"
+                    : "{"
+                        + string.Join(", ", AccessLevels.Select(kv => $"{kv.Key}: [{kv.Value}]"))
+                        + "}";
+
+            var subscriptionsStr =
+                Subscriptions == null
+                    ? "null"
+                    : "{"
+                        + string.Join(", ", Subscriptions.Select(kv => $"{kv.Key}: [{kv.Value}]"))
+                        + "}";
+
+            var nonSubscriptionsStr =
+                NonSubscriptions == null
+                    ? "null"
+                    : "{"
+                        + string.Join(
+                            ", ",
+                            NonSubscriptions.Select(kv =>
+                                $"{kv.Key}: [{string.Join(", ", kv.Value.Select(ns => $"[{ns}]"))}]"
+                            )
+                        )
+                        + "}";
+
+            return $"{nameof(ProfileId)}: {ProfileId}, "
+                + $"{nameof(SegmentId)}: {SegmentId}, "
+                + $"{nameof(CustomerUserId)}: {CustomerUserId}, "
+                + $"{nameof(CustomAttributes)}: {customAttributesStr}, "
+                + $"{nameof(AccessLevels)}: {accessLevelsStr}, "
+                + $"{nameof(Subscriptions)}: {subscriptionsStr}, "
+                + $"{nameof(NonSubscriptions)}: {nonSubscriptionsStr}, "
+                + $"{nameof(Version)}: {Version}, "
+                + $"{nameof(IsTestUser)}: {IsTestUser}";
+        }
     }
 }

@@ -676,27 +676,6 @@ namespace AdaptyExample
             );
         }
 
-        public void DismissPaywallView(
-            AdaptyUIPaywallView view,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            this.LogMethodRequest("DismissPaywallView");
-
-            AdaptyUI.DismissPaywallView(
-                view,
-                (error) =>
-                {
-                    this.LogMethodResult("DismissPaywallView", error);
-
-                    if (completionHandler != null)
-                    {
-                        completionHandler.Invoke(error);
-                    }
-                }
-            );
-        }
-
         // - AdaptyUIEventListener
 
         public void PaywallViewDidAppear(AdaptyUIPaywallView view)
@@ -808,12 +787,70 @@ namespace AdaptyExample
                     // handle pending purchase
                     break;
                 case AdaptyPurchaseResultType.Success:
-                    var profile = purchasedResult.Profile;
-                    var accessLevel = profile.AccessLevels["premium"];
-                    if (accessLevel != null && accessLevel.IsActive)
+                    try
                     {
-                        this.DismissPaywallView(view, null);
+                        view.Dismiss(null);
+
+                        var profile = purchasedResult.Profile;
+
+                        if (profile == null)
+                        {
+                            Debug.Log(
+                                string.Format(
+                                    "#AdaptyListener# PaywallViewDidFinishPurchase: Success, profile is null!"
+                                )
+                            );
+                            break;
+                        }
+
+                        Debug.Log(
+                            string.Format(
+                                "#AdaptyListener# PaywallViewDidFinishPurchase: Success, profile = {0}",
+                                profile.ToString()
+                            )
+                        );
+
+                        var accessLevels = profile.AccessLevels;
+
+                        if (accessLevels == null)
+                        {
+                            Debug.Log(
+                                string.Format(
+                                    "#AdaptyListener# PaywallViewDidFinishPurchase: Success, accessLevels is null!"
+                                )
+                            );
+                            break;
+                        }
+
+                        var premiumAccessLevel = accessLevels["premium"];
+
+                        if (premiumAccessLevel == null)
+                        {
+                            Debug.Log(
+                                string.Format(
+                                    "#AdaptyListener# PaywallViewDidFinishPurchase: Success, premium accessLevel is null!"
+                                )
+                            );
+                            break;
+                        }
+
+                        Debug.Log(
+                            string.Format(
+                                "#AdaptyListener# PaywallViewDidFinishPurchase: Success, accessLevel = {0}",
+                                premiumAccessLevel.ToString()
+                            )
+                        );
                     }
+                    catch (Exception e)
+                    {
+                        Debug.Log(
+                            string.Format(
+                                "#AdaptyListener# PaywallViewDidFinishPurchase: Success, error = {0}",
+                                e.ToString()
+                            )
+                        );
+                    }
+
                     break;
                 default:
                     break;

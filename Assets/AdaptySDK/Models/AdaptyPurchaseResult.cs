@@ -18,8 +18,8 @@ namespace AdaptySDK
 
         public override string ToString() =>
             $"{nameof(Type)}: {Type}, "
-            + $"{nameof(Profile)}: {Profile}, "
-            + $"{nameof(AppleJWSTransaction)}: {AppleJWSTransaction}, "
-            + $"{nameof(GooglePurchaseToken)}: {GooglePurchaseToken}";
+            + $"{nameof(Profile)}: {Profile.ToString()}, "
+            + $"{nameof(AppleJWSTransaction)}: {(string.IsNullOrEmpty(AppleJWSTransaction) ? "null or empty" : AppleJWSTransaction)}, "
+            + $"{nameof(GooglePurchaseToken)}: {(string.IsNullOrEmpty(GooglePurchaseToken) ? "null or empty" : GooglePurchaseToken)}";
     }
 }
