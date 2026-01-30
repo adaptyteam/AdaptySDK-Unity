@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
   <androidPackages>
-    <androidPackage spec="io.adapty:android-sdk:3.14.1">
+    <androidPackage spec="io.adapty:android-sdk:3.15.2">
       <repositories>
         <repository>https://repo.maven.apache.org/maven2/</repository>
       </repositories>
     </androidPackage>
-    <androidPackage spec="io.adapty:android-ui:3.14.0">
+    <androidPackage spec="io.adapty:android-ui:3.15.2">
       <repositories>
         <repository>https://repo.maven.apache.org/maven2/</repository>
       </repositories>
     </androidPackage>
-    <androidPackage spec="io.adapty.internal:crossplatform:3.14.0">
+    <androidPackage spec="io.adapty.internal:crossplatform:3.15.6">
       <repositories>
         <repository>https://repo.maven.apache.org/maven2/</repository>
       </repositories>
     </androidPackage>
   </androidPackages>
   <iosPods>
-    <iosPod name="Adapty" version="3.14.1" minTargetSdk="13.0"></iosPod>
-    <iosPod name="AdaptyUI" version="3.14.1" minTargetSdk="13.0"></iosPod>
-    <iosPod name="AdaptyPlugin" version="3.14.1" minTargetSdk="13.0"></iosPod>
+    <iosPod name="Adapty" version="3.15.4" minTargetSdk="13.0"></iosPod>
+    <iosPod name="AdaptyUI" version="3.15.4" minTargetSdk="13.0"></iosPod>
+    <iosPod name="AdaptyPlugin" version="3.15.4" minTargetSdk="13.0"></iosPod>
   </iosPods>
 </dependencies>

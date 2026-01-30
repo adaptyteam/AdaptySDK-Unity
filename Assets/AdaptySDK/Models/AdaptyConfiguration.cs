@@ -16,7 +16,9 @@ namespace AdaptySDK
         private readonly bool? AppleIdfaCollectionDisabled;
         private readonly bool? GoogleAdvertisingIdCollectionDisabled;
         private readonly bool? GoogleEnablePendingPrepaidPlans;
+        private readonly bool? GoogleLocalAccessLevelAllowed;
         private readonly bool? IpAddressCollectionDisabled;
+        private readonly bool? AppleClearDataOnBackup;
         private readonly AdaptyServerCluster? ServerCluster;
         private readonly string BackendProxyHost; // nullable
         private readonly int? BackendProxyPort; // nullable
@@ -32,7 +34,9 @@ namespace AdaptySDK
             + $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, "
             + $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, "
             + $"{nameof(GoogleEnablePendingPrepaidPlans)}: {GoogleEnablePendingPrepaidPlans}, "
+            + $"{nameof(GoogleLocalAccessLevelAllowed)}: {GoogleLocalAccessLevelAllowed}, "
             + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
+            + $"{nameof(AppleClearDataOnBackup)}: {AppleClearDataOnBackup}, "
             + $"{nameof(ServerCluster)}: {ServerCluster}, "
             + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "
             + $"{nameof(BackendProxyPort)}: {BackendProxyPort}, "

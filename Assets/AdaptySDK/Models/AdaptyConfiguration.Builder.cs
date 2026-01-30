@@ -20,7 +20,9 @@ namespace AdaptySDK
             AppleIdfaCollectionDisabled = builder.AppleIdfaCollectionDisabled;
             GoogleAdvertisingIdCollectionDisabled = builder.GoogleAdvertisingIdCollectionDisabled;
             GoogleEnablePendingPrepaidPlans = builder.GoogleEnablePendingPrepaidPlans;
+            GoogleLocalAccessLevelAllowed = builder.GoogleLocalAccessLevelAllowed;
             IpAddressCollectionDisabled = builder.IpAddressCollectionDisabled;
+            AppleClearDataOnBackup = builder.AppleClearDataOnBackup;
             BackendProxyHost = builder.BackendProxyHost;
             BackendProxyPort = builder.BackendProxyPort;
             LogLevel = builder.LogLevel;
@@ -46,7 +48,9 @@ namespace AdaptySDK
             public bool AppleIdfaCollectionDisabled;
             public bool GoogleAdvertisingIdCollectionDisabled;
             public bool GoogleEnablePendingPrepaidPlans;
+            public bool? GoogleLocalAccessLevelAllowed;
             public bool IpAddressCollectionDisabled;
+            public bool? AppleClearDataOnBackup;
             public AdaptyServerCluster ServerCluster;
             public string BackendProxyHost; //nullable
             public int BackendProxyPort;
@@ -65,7 +69,9 @@ namespace AdaptySDK
                 + $"{nameof(ObserverMode)}: {ObserverMode}, "
                 + $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, "
                 + $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, "
+                + $"{nameof(GoogleLocalAccessLevelAllowed)}: {GoogleLocalAccessLevelAllowed}, "
                 + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
+                + $"{nameof(AppleClearDataOnBackup)}: {AppleClearDataOnBackup}, "
                 + $"{nameof(ServerCluster)}: {ServerCluster}, "
                 + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "
                 + $"{nameof(BackendProxyPort)}: {BackendProxyPort}, "
@@ -133,9 +139,21 @@ namespace AdaptySDK
                 return this;
             }
 
+            public Builder SetGoogleLocalAccessLevelAllowed(bool googleLocalAccessLevelAllowed)
+            {
+                GoogleLocalAccessLevelAllowed = googleLocalAccessLevelAllowed;
+                return this;
+            }
+
             public Builder SetIPAddressCollectionDisabled(bool ipAddressCollectionDisabled)
             {
                 IpAddressCollectionDisabled = ipAddressCollectionDisabled;
+                return this;
+            }
+
+            public Builder SetAppleClearDataOnBackup(bool appleClearDataOnBackup)
+            {
+                AppleClearDataOnBackup = appleClearDataOnBackup;
                 return this;
             }
 

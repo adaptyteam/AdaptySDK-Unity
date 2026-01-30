@@ -139,6 +139,26 @@ namespace AdaptySDK
             string source,
             Action<AdaptyError> completionHandler
         ) => UpdateAttribution(attribution.ToJSONObject().ToString(), source, completionHandler);
+
+        /// <summary>
+        /// Opens the paywall in a web view or browser.
+        /// </summary>
+        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object to open.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void OpenWebPaywall(
+            AdaptyPaywall paywall,
+            Action<AdaptyError> completionHandler
+        ) => OpenWebPaywall(paywall, AdaptyWebPresentation.ExternalBrowser, completionHandler);
+
+        /// <summary>
+        /// Opens the product purchase page in a web view or browser.
+        /// </summary>
+        /// <param name="product">An <see cref="AdaptyPaywallProduct"/> object to open.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void OpenWebPaywall(
+            AdaptyPaywallProduct product,
+            Action<AdaptyError> completionHandler
+        ) => OpenWebPaywall(product, AdaptyWebPresentation.ExternalBrowser, completionHandler);
     }
 
     public static partial class AdaptyUI
@@ -156,5 +176,20 @@ namespace AdaptySDK
             AdaptyPaywall paywall,
             Action<AdaptyUIPaywallView, AdaptyError> completionHandler
         ) => CreatePaywallView(paywall, null, completionHandler);
+
+        /// <summary>
+        /// Creates an onboarding view from an AdaptyOnboarding object.
+        /// </summary>
+        /// <param name="onboarding">An <see cref="AdaptyOnboarding"/> object for which you are trying to create a view.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIOnboardingView"/> object.</param>
+        public static void CreateOnboardingView(
+            AdaptyOnboarding onboarding,
+            Action<AdaptyUIOnboardingView, AdaptyError> completionHandler
+        ) =>
+            CreateOnboardingView(
+                onboarding,
+                AdaptyWebPresentation.ExternalBrowser,
+                completionHandler
+            );
     }
 }

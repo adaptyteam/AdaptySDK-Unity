@@ -52,7 +52,10 @@ namespace AdaptyExample
                 .SetServerCluster(AdaptyServerCluster.Default)
                 .SetIPAddressCollectionDisabled(false)
                 .SetAppleIDFACollectionDisabled(false)
+                .SetAppleClearDataOnBackup(true)
                 .SetGoogleAdvertisingIdCollectionDisabled(false)
+                .SetGoogleEnablePendingPrepaidPlans(true)
+                .SetGoogleLocalAccessLevelAllowed(true)
                 .SetActivateUI(true)
                 .SetAdaptyUIMediaCache(
                     100 * 1024 * 1024, // 100MB

@@ -28,8 +28,12 @@ namespace AdaptySDK
                 node.Add("google_adid_collection_disabled", GoogleAdvertisingIdCollectionDisabled);
             if (GoogleEnablePendingPrepaidPlans != null)
                 node.Add("google_enable_pending_prepaid_plans", GoogleEnablePendingPrepaidPlans);
+            if (GoogleLocalAccessLevelAllowed != null)
+                node.Add("google_local_access_level_allowed", GoogleLocalAccessLevelAllowed);
             if (IpAddressCollectionDisabled != null)
                 node.Add("ip_address_collection_disabled", IpAddressCollectionDisabled);
+            if (AppleClearDataOnBackup != null)
+                node.Add("clear_data_on_backup", AppleClearDataOnBackup);
             if (LogLevel != null)
                 node.Add("log_level", LogLevel.Value.ToJSONNode());
             if (ServerCluster != null)

@@ -1,5 +1,5 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
-$id: "https://adapty.io/crossPlatform/3.14.0/schema"
+$id: "https://adapty.io/crossPlatform/3.15.4/schema"
 title: "Cross Platform Format"
 
 $requests:
@@ -56,6 +56,8 @@ $requests:
       - onboarding
     properties:
       method: { const: "adapty_ui_create_onboarding_view" }
+      onboarding: { $ref: "#/$defs/AdaptyOnboarding" }
+      external_urls_presentation: { $ref: "#/$defs/AdaptyWebPresentation" }
 
   AdaptyUICreateOnboardingView.Response: #response
     type: object
@@ -290,7 +292,7 @@ $requests:
     properties:
       method: { const: "identify" }
       customer_user_id: { type: string }
-      parameters: { $ref: "#/$defs/CustomerIdentityParameters" }
+      parameters: { $ref: "#/$defs/CustomerIdentityParameters" } 
 
   Identify.Response: #response
     type: object
@@ -401,6 +403,7 @@ $requests:
     required: [method]
     properties:
       method: { const: "open_web_paywall" }
+      open_in: { $ref: "#/$defs/AdaptyWebPresentation", default: "browser_out_app" }
     oneOf:
       - required: [product]
         properties:
@@ -408,6 +411,7 @@ $requests:
       - required: [paywall]
         properties:
           paywall: { $ref: "#/$defs/AdaptyPaywall" }
+
 
   OpenWebPaywall.Response: #response
     type: object
@@ -921,12 +925,14 @@ $defs:
     properties:
       api_key: { type: string }
       customer_user_id: { type: string }
-      customer_identity_parameters: { $ref: "#/$defs/CustomerIdentityParameters" }
+      customer_identity_parameters: { $ref: "#/$defs/CustomerIdentityParameters" }    
       observer_mode: { type: boolean, default: false }
       apple_idfa_collection_disabled: { type: boolean, default: false }
       google_adid_collection_disabled: { type: boolean, default: false }
       google_enable_pending_prepaid_plans: { type: boolean, default: false }
+      google_local_access_level_allowed: { type: boolean, default: false }
       ip_address_collection_disabled: { type: boolean, default: false }
+      clear_data_on_backup: { type: boolean, default: false }
       server_cluster: { type: string, enum: ["default", "eu", "cn"] }
       backend_proxy_host: { type: string }
       backend_proxy_port: { type: integer }
@@ -947,7 +953,7 @@ $defs:
     properties:
       app_account_token: { $ref: "#/$defs/UUID", description: "iOS Only" }
       obfuscated_account_id: { type: string, description: "Android Only" }
-      obfuscated_profile_id: { type: string, description: "Android Only" }
+      obfuscated_profile_id: { type: string, description: "Android Only" }     
 
   AdaptyPaywallProduct.Response: #response
     type: object
@@ -1469,9 +1475,9 @@ $defs:
   AdaptyUI.ProductPurchaseParameters:  #request
     type: object
     propertyNames: { description: "key is adapty_product_id" }
-    additionalProperties: {
-      $ref: "#/$defs/AdaptyPurchaseParameters",
-      nullable: false
+    additionalProperties: { 
+      $ref: "#/$defs/AdaptyPurchaseParameters", 
+      nullable: false 
     }
 
   AdaptyUI.IOSPresentationStyle:
@@ -1479,6 +1485,12 @@ $defs:
     enum:
       - full_screen
       - page_sheet
+
+  AdaptyWebPresentation: #request
+    type: string
+    enum:
+      - browser_out_app
+      - browser_in_app
 
   AdaptyUI.DialogConfiguration: #request
     type: object
@@ -1494,7 +1506,7 @@ $defs:
     enum:
       - primary
       - secondary
-
+  
   AdaptyPurchaseParameters:  #request
     type: object
     properties:
@@ -1504,7 +1516,7 @@ $defs:
           description: "Android Only",
         }
       is_offer_personalized: { type: boolean, description: "Android Only" }
-
+      
 
   AdaptySubscriptionUpdateParameters: #request # Android Only
     type: object

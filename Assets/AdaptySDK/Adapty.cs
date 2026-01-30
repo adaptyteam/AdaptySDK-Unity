@@ -20,7 +20,7 @@ namespace AdaptySDK
         /// <summary>
         /// The version of the Adapty SDK.
         /// </summary>
-        public static readonly string SDKVersion = "3.14.0";
+        public static readonly string SDKVersion = "3.15.4";
 
         /// <summary>
         /// Use this method to initialize the Adapty SDK.
@@ -701,14 +701,17 @@ namespace AdaptySDK
         /// Read more at <see href="https://adapty.io/docs/web-paywall">Adapty Documentation</see>
         /// </remarks>
         /// <param name="paywall">An <see cref="AdaptyPaywall"/> object to open.</param>
+        /// <param name="openIn">Controls whether to open in external browser or in-app browser. Default is <see cref="AdaptyWebPresentation.ExternalBrowser"/>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void OpenWebPaywall(
             AdaptyPaywall paywall,
+            AdaptyWebPresentation openIn,
             Action<AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
             parameters.Add("paywall", paywall.ToJSONNode());
+            parameters.Add("open_in", openIn.ToJSONNode());
 
             Request.Send(
                 "open_web_paywall",
@@ -739,14 +742,17 @@ namespace AdaptySDK
         /// Read more at <see href="https://adapty.io/docs/web-paywall">Adapty Documentation</see>
         /// </remarks>
         /// <param name="product">An <see cref="AdaptyPaywallProduct"/> object to open.</param>
+        /// <param name="openIn">Controls whether to open in external browser or in-app browser. Default is <see cref="AdaptyWebPresentation.ExternalBrowser"/>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void OpenWebPaywall(
             AdaptyPaywallProduct product,
+            AdaptyWebPresentation openIn,
             Action<AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
             parameters.Add("product", product.ToJSONNode());
+            parameters.Add("open_in", openIn.ToJSONNode());
 
             Request.Send(
                 "open_web_paywall",
@@ -1394,14 +1400,17 @@ namespace AdaptySDK
         /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
         /// </remarks>
         /// <param name="onboarding">An <see cref="AdaptyOnboarding"/> object for which you are trying to create a view.</param>
+        /// <param name="externalUrlsPresentation">Controls how external URLs are presented in the onboarding (in-app browser vs external browser). Default is <see cref="AdaptyWebPresentation.ExternalBrowser"/>.</param>
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIOnboardingView"/> object.</param>
         public static void CreateOnboardingView(
             AdaptyOnboarding onboarding,
+            AdaptyWebPresentation externalUrlsPresentation,
             Action<AdaptyUIOnboardingView, AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
             parameters.Add("onboarding", onboarding.ToJSONNode());
+            parameters.Add("external_urls_presentation", externalUrlsPresentation.ToJSONNode());
 
             Request.Send(
                 "adapty_ui_create_onboarding_view",
