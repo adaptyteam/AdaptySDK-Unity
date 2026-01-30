@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using UnityEngine;
 #if UNITY_IOS && !UNITY_EDITOR
 using _AdaptyCallbackAction = AdaptySDK.iOS.AdaptyIOSCallbackAction;
 #elif UNITY_ANDROID && !UNITY_EDITOR
@@ -277,14 +278,73 @@ namespace AdaptySDK
             m_OnboardingsEventsListener = listener;
         }
 
+        private static bool RequireEventListener(string eventId)
+        {
+            if (m_Listener == null)
+            {
+                Debug.LogWarning(
+                    string.Format(
+                        "[Adapty] Event listener is not set, ignoring event '{0}'. Call Adapty.SetEventListener() to receive events.",
+                        eventId
+                    )
+                );
+                return false;
+            }
+            return true;
+        }
+
+        private static bool RequirePaywallsListener(string eventId)
+        {
+            if (m_PaywallsEventsListener == null)
+            {
+                Debug.LogWarning(
+                    string.Format(
+                        "[Adapty] Paywalls events listener is not set, ignoring event '{0}'. Call Adapty.SetPaywallsEventsListener() to receive paywall events.",
+                        eventId
+                    )
+                );
+                return false;
+            }
+            return true;
+        }
+
+        private static bool RequireOnboardingsListener(string eventId)
+        {
+            if (m_OnboardingsEventsListener == null)
+            {
+                Debug.LogWarning(
+                    string.Format(
+                        "[Adapty] Onboardings events listener is not set, ignoring event '{0}'. Call Adapty.SetOnboardingsEventsListener() to receive onboarding events.",
+                        eventId
+                    )
+                );
+                return false;
+            }
+            return true;
+        }
+
         internal static void OnMessage(string id, string json)
         {
-            if (string.IsNullOrEmpty(json) || m_Listener == null)
+            if (string.IsNullOrEmpty(json))
+                return;
+
+            JSONNode response;
+            try
             {
+                response = JSONNode.Parse(json);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(
+                    string.Format(
+                        "[Adapty] Failed to parse event JSON for event '{0}': {1}",
+                        id ?? "(null)",
+                        e.Message
+                    )
+                );
                 return;
             }
 
-            var response = JSONNode.Parse(json);
             if (response == null || response.IsNull)
             {
                 return;
@@ -300,6 +360,8 @@ namespace AdaptySDK
             {
                 case "did_load_latest_profile":
                 {
+                    if (!RequireEventListener(id))
+                        return;
                     var profile = parameters.GetAdaptyProfile("profile");
                     try
                     {
@@ -308,7 +370,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.OnLoadLatestProfile((..)",
+                            "Failed to invoke AdaptyEventListener.OnLoadLatestProfile(..)",
                             e
                         );
                     }
@@ -316,6 +378,8 @@ namespace AdaptySDK
                 }
                 case "on_installation_details_success":
                 {
+                    if (!RequireEventListener(id))
+                        return;
                     var details = parameters.GetAdaptyInstallationDetails("details");
                     try
                     {
@@ -332,6 +396,8 @@ namespace AdaptySDK
                 }
                 case "on_installation_details_fail":
                 {
+                    if (!RequireEventListener(id))
+                        return;
                     var error = parameters.GetAdaptyError("error");
                     try
                     {
@@ -348,6 +414,8 @@ namespace AdaptySDK
                 }
                 case "onboarding_did_fail_with_error":
                 {
+                    if (!RequireOnboardingsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIOnboardingView("view");
                     var error = parameters.GetAdaptyError("error");
                     try
@@ -365,6 +433,8 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_analytics_action":
                 {
+                    if (!RequireOnboardingsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIOnboardingView("view");
                     var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
                     var ev = parameters.GetOnboardingsAnalyticsEvent("event");
@@ -383,6 +453,8 @@ namespace AdaptySDK
                 }
                 case "onboarding_did_finish_loading":
                 {
+                    if (!RequireOnboardingsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIOnboardingView("view");
                     var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
                     try
@@ -400,6 +472,8 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_close_action":
                 {
+                    if (!RequireOnboardingsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIOnboardingView("view");
                     var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
                     var actionId = parameters.GetString("action_id");
@@ -422,6 +496,8 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_paywall_action":
                 {
+                    if (!RequireOnboardingsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIOnboardingView("view");
                     var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
                     var actionId = parameters.GetString("action_id");
@@ -444,6 +520,8 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_custom_action":
                 {
+                    if (!RequireOnboardingsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIOnboardingView("view");
                     var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
                     var actionId = parameters.GetString("action_id");
@@ -466,6 +544,8 @@ namespace AdaptySDK
                 }
                 case "onboarding_on_state_updated_action":
                 {
+                    if (!RequireOnboardingsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIOnboardingView("view");
                     var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
                     var elementId = JSONNodeExtensions
@@ -492,6 +572,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_appear":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     try
                     {
@@ -500,7 +582,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidAppear((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidAppear(..)",
                             e
                         );
                     }
@@ -508,6 +590,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_disappear":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     try
                     {
@@ -516,7 +600,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidDisappear((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidDisappear(..)",
                             e
                         );
                     }
@@ -524,6 +608,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_perform_action":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var action = parameters.GetAdaptyUIUserAction("action");
                     try
@@ -533,7 +619,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidPerformAction((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidPerformAction(..)",
                             e
                         );
                     }
@@ -541,6 +627,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_select_product":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var productId = parameters.GetString("product_id");
                     try
@@ -550,7 +638,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidSelectProduct((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidSelectProduct(..)",
                             e
                         );
                     }
@@ -558,6 +646,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_start_purchase":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var product = parameters.GetAdaptyPaywallProduct("product");
                     try
@@ -567,7 +657,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidStartPurchase((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidStartPurchase(..)",
                             e
                         );
                     }
@@ -575,6 +665,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_finish_purchase":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var product = parameters.GetAdaptyPaywallProduct("product");
                     var purchaseResult = parameters.GetAdaptyPurchaseResult("purchased_result");
@@ -589,7 +681,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidFinishPurchase((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidFinishPurchase(..)",
                             e
                         );
                     }
@@ -597,6 +689,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_fail_purchase":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var product = parameters.GetAdaptyPaywallProduct("product");
                     var error = parameters.GetAdaptyError("error");
@@ -607,7 +701,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidFailPurchase((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidFailPurchase(..)",
                             e
                         );
                     }
@@ -615,6 +709,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_start_restore":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     try
                     {
@@ -623,7 +719,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidStartRestore((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidStartRestore(..)",
                             e
                         );
                     }
@@ -631,6 +727,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_finish_restore":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var profile = parameters.GetAdaptyProfile("profile");
                     try
@@ -640,7 +738,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidFinishRestore((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidFinishRestore(..)",
                             e
                         );
                     }
@@ -648,6 +746,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_fail_restore":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var error = parameters.GetAdaptyError("error");
                     try
@@ -657,7 +757,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidFailRestore((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidFailRestore(..)",
                             e
                         );
                     }
@@ -665,6 +765,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_fail_rendering":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var error = parameters.GetAdaptyError("error");
                     try
@@ -674,7 +776,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidFailRendering((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidFailRendering(..)",
                             e
                         );
                     }
@@ -682,6 +784,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_fail_loading_products":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var error = parameters.GetAdaptyError("error");
                     try
@@ -691,7 +795,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidFailLoadingProducts((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidFailLoadingProducts(..)",
                             e
                         );
                     }
@@ -699,6 +803,8 @@ namespace AdaptySDK
                 }
                 case "paywall_view_did_finish_web_payment_navigation":
                 {
+                    if (!RequirePaywallsListener(id))
+                        return;
                     var view = parameters.GetAdaptyUIPaywallView("view");
                     var product = parameters.GetAdaptyPaywallProduct("product");
                     var error = parameters.GetAdaptyErrorIfPresent("error");
@@ -713,13 +819,16 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke AdaptyEventListener.PaywallViewDidFinishWebPaymentNavigation((..)",
+                            "Failed to invoke AdaptyPaywallsEventsListener.PaywallViewDidFinishWebPaymentNavigation(..)",
                             e
                         );
                     }
                     return;
                 }
                 default:
+                    Debug.LogWarning(
+                        string.Format("[Adapty] Unknown event id '{0}', ignoring.", id ?? "(null)")
+                    );
                     return;
             }
         }
