@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AdaptySDK;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AdaptyExample
 {
@@ -29,6 +30,8 @@ namespace AdaptyExample
         public TextMeshProUGUI VariationIdText;
         public TextMeshProUGUI RemoteConfigText;
         public TextMeshProUGUI ErrorText;
+
+        public Toggle Toggle;
 
         void Start()
         {
@@ -112,6 +115,9 @@ namespace AdaptyExample
 
             this.Listener.CreateOnboardingView(
                 this.m_onboarding,
+                this.Toggle.isOn
+                    ? AdaptyWebPresentation.InAppBrowser
+                    : AdaptyWebPresentation.ExternalBrowser,
                 (view) =>
                 {
                     view.Present(

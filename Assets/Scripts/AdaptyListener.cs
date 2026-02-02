@@ -635,6 +635,7 @@ namespace AdaptyExample
 
         public void CreateOnboardingView(
             AdaptyOnboarding onboarding,
+            AdaptyWebPresentation externalUrlsPresentation,
             Action<AdaptyUIOnboardingView> completionHandler
         )
         {
@@ -642,6 +643,7 @@ namespace AdaptyExample
 
             AdaptyUI.CreateOnboardingView(
                 onboarding,
+                externalUrlsPresentation,
                 (view, error) =>
                 {
                     this.LogMethodResult("CreateOnboardingView", error);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AdaptySDK;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AdaptyExample
 {
@@ -33,6 +34,8 @@ namespace AdaptyExample
         public TextMeshProUGUI RevisionText;
         public TextMeshProUGUI RemoteConfigText;
         public TextMeshProUGUI ErrorText;
+
+        public Toggle Toggle;
 
         void Start()
         {
@@ -197,6 +200,9 @@ namespace AdaptyExample
 
             Adapty.OpenWebPaywall(
                 this.m_paywall,
+                this.Toggle.isOn
+                    ? AdaptyWebPresentation.InAppBrowser
+                    : AdaptyWebPresentation.ExternalBrowser,
                 (error) =>
                 {
                     if (error != null)
@@ -231,6 +237,9 @@ namespace AdaptyExample
 
             Adapty.OpenWebPaywall(
                 product,
+                this.Toggle.isOn
+                    ? AdaptyWebPresentation.InAppBrowser
+                    : AdaptyWebPresentation.ExternalBrowser,
                 (error) =>
                 {
                     if (error != null)
