@@ -45,7 +45,7 @@ namespace AdaptyExample
             );
 
             var builder = new AdaptyConfiguration.Builder(
-                "public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6"
+                "public_live_QzY2YBrm.j0U3MNaKe2HAgeK4XV13"
             )
                 .SetCustomerUserId(null)
                 .SetObserverMode(false)
