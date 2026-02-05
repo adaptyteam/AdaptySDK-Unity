@@ -32,3 +32,4 @@ build.gradle_mine
 .DS_Store
 *.idea
 build_device
+Assets/AdaptySDK/docs
