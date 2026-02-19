@@ -18,8 +18,8 @@
     </androidPackage>
   </androidPackages>
   <iosPods>
-    <iosPod name="Adapty" version="3.15.4" minTargetSdk="13.0"></iosPod>
-    <iosPod name="AdaptyUI" version="3.15.4" minTargetSdk="13.0"></iosPod>
-    <iosPod name="AdaptyPlugin" version="3.15.4" minTargetSdk="13.0"></iosPod>
+    <iosPod name="Adapty" version="3.15.5" minTargetSdk="13.0"></iosPod>
+    <iosPod name="AdaptyUI" version="3.15.5" minTargetSdk="13.0"></iosPod>
+    <iosPod name="AdaptyPlugin" version="3.15.5" minTargetSdk="13.0"></iosPod>
   </iosPods>
 </dependencies>
