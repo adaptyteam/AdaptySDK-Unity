@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:*)",
+      "Skill(superpowers:*)",
+      "Bash(git:*)",
+      "mcp__ide__getDiagnostics"
+    ]
+  }
+}

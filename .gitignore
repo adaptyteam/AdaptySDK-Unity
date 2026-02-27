@@ -34,3 +34,4 @@ build.gradle_mine
 build_device
 Assets/AdaptySDK/docs
 .ios-sdk/
+settings.local.json
