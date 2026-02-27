@@ -33,3 +33,4 @@ build.gradle_mine
 *.idea
 build_device
 Assets/AdaptySDK/docs
+.ios-sdk/
