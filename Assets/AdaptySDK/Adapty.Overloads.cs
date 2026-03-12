@@ -135,7 +135,7 @@ namespace AdaptySDK
         /// <param name="source">The source of attribution (e.g., "appsflyer", "adjust", "branch", "custom").</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateAttribution(
-            Dictionary<string, dynamic> attribution,
+            Dictionary<string, object> attribution,
             string source,
             Action<AdaptyError> completionHandler
         ) => UpdateAttribution(attribution.ToJSONObject().ToString(), source, completionHandler);

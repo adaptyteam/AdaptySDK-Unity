@@ -15,7 +15,7 @@ namespace AdaptySDK
         public readonly string Data;
 
         /// A custom dictionary configured in Adapty Dashboard for this paywall (same as `remoteConfigString`)
-        public IDictionary<string, dynamic> Dictionary
+        public IDictionary<string, object> Dictionary
         {
             get
             {

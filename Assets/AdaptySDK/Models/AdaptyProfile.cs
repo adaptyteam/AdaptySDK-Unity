@@ -41,7 +41,7 @@ namespace AdaptySDK
         /// <summary>
         /// Previously set user custom attributes with <see cref="Adapty.UpdateProfile(AdaptyProfileParameters, Action{AdaptyError})"/> method.
         /// </summary>
-        public readonly IDictionary<string, dynamic> CustomAttributes;
+        public readonly IDictionary<string, object> CustomAttributes;
 
         /// <summary>
         /// A dictionary of access levels configured in the Adapty Dashboard.
