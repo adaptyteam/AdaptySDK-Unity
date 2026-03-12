@@ -9,7 +9,7 @@ namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static JSONNode ToJJSONNode(this AdaptyProfileGender value)
+        internal static JSONNode ToJSONNode(this AdaptyProfileGender value)
         {
             switch (value)
             {
