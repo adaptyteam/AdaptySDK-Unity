@@ -5,10 +5,10 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
+using AdaptySDK.SimpleJSON;
+
 namespace AdaptySDK
 {
-    using AdaptySDK.SimpleJSON;
-
     public partial class AdaptyPrice
     {
         internal AdaptyPrice(JSONObject jsonNode)
@@ -26,7 +26,7 @@ namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static AdaptyPrice GetAdaptyPrice(this JSONNode node, string aKey) => 
+        internal static AdaptyPrice GetAdaptyPrice(this JSONNode node, string aKey) =>
             new AdaptyPrice(GetObject(node, aKey));
 
         internal static AdaptyPrice GetAdaptyPriceIfPresent(this JSONNode node, string aKey)

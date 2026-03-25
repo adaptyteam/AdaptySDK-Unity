@@ -9,7 +9,7 @@ namespace AdaptySDK {
     public partial class AdaptyError {
         public readonly AdaptyErrorCode Code;
         public readonly string Message;
-        public readonly string Detail; //nullable
+        public readonly string Detail; // nullable
 
         public override string ToString() =>
             $"{nameof(Code)}: {Code}, " +

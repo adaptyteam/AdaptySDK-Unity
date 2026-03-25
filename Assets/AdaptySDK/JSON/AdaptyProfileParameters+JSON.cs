@@ -16,7 +16,7 @@ namespace AdaptySDK
 
             if (FirstName != null) node.Add("first_name", FirstName);
             if (LastName != null) node.Add("last_name", LastName);
-            if (Gender.HasValue) node.Add("gender", Gender.Value.ToJJSONNode());
+            if (Gender.HasValue) node.Add("gender", Gender.Value.ToJSONNode());
             if (Birthday != null) node.Add("birthday", $"{Birthday.Value.Year}-{Birthday.Value.Month}-{Birthday.Value.Day}");
             if (Email != null) node.Add("email", Email);
             if (PhoneNumber != null) node.Add("phone_number", PhoneNumber);

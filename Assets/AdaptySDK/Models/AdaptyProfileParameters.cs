@@ -24,9 +24,9 @@ namespace AdaptySDK
         public AppTrackingTransparencyStatus? AppTrackingTransparencyStatus;
         public bool? AnalyticsDisabled;
 
-        private Dictionary<string, dynamic> _CustomAttributes = new Dictionary<string, dynamic>();
+        private Dictionary<string, object> _CustomAttributes = new Dictionary<string, object>();
 
-        public Dictionary<string, dynamic> CustomAttributes => _CustomAttributes;
+        public Dictionary<string, object> CustomAttributes => _CustomAttributes;
 
         public void SetCustomStringAttribute(string key, string value)
         {

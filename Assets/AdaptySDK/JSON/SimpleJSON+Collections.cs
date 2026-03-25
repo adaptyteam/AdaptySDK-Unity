@@ -12,37 +12,37 @@ namespace AdaptySDK.SimpleJSON
 {
     public static partial class SimpleJSONCollections
     {
-        public static IDictionary<string, dynamic> GetDictionary(this JSONNode node) =>
+        public static IDictionary<string, object> GetDictionary(this JSONNode node) =>
             node.AsObject.ToDictionary();
 
-        public static IDictionary<string, dynamic> GetDictionary(this JSONNode node, string aKey) =>
+        public static IDictionary<string, object> GetDictionary(this JSONNode node, string aKey) =>
             node.GetObject(aKey).ToDictionary();
 
-        public static IDictionary<string, dynamic> GetDictionaryIfPresent(
+        public static IDictionary<string, object> GetDictionaryIfPresent(
             this JSONNode node,
             string aKey
         ) => node.GetObjectIfPresent(aKey).ToDictionary();
 
-        public static IDictionary<string, dynamic> GetDictionaryIfPresent(this JSONNode node) =>
+        public static IDictionary<string, object> GetDictionaryIfPresent(this JSONNode node) =>
             node is null || node.IsNull ? null : node.AsObject.ToDictionary();
 
-        public static IList<dynamic> GetList(this JSONNode node) => node.AsArray.ToList();
+        public static IList<object> GetList(this JSONNode node) => node.AsArray.ToList();
 
-        public static IList<dynamic> GetList(this JSONNode node, string aKey) =>
+        public static IList<object> GetList(this JSONNode node, string aKey) =>
             node.GetArray(aKey).ToList();
 
-        public static IList<dynamic> GetListIfPresent(this JSONNode node) =>
+        public static IList<object> GetListIfPresent(this JSONNode node) =>
             node is null || node.IsNull ? null : node.AsArray.ToList();
 
-        public static IList<dynamic> GetListIfPresent(this JSONNode node, string aKey) =>
+        public static IList<object> GetListIfPresent(this JSONNode node, string aKey) =>
             node.GetArrayIfPresent(aKey).ToList();
 
-        private static IDictionary<string, dynamic> ToDictionary(this JSONObject obj)
+        private static IDictionary<string, object> ToDictionary(this JSONObject obj)
         {
             if (obj == null)
                 return null;
 
-            var result = new Dictionary<string, dynamic>();
+            var result = new Dictionary<string, object>();
 
             foreach (var item in obj)
             {
@@ -71,12 +71,12 @@ namespace AdaptySDK.SimpleJSON
             return result;
         }
 
-        private static IList<dynamic> ToList(this JSONArray obj)
+        private static IList<object> ToList(this JSONArray obj)
         {
             if (obj == null)
                 return null;
 
-            var result = new List<dynamic>();
+            var result = new List<object>();
 
             foreach (var item in obj.Children)
             {
@@ -105,7 +105,7 @@ namespace AdaptySDK.SimpleJSON
             return result;
         }
 
-        public static JSONObject ToJSONObject(this IDictionary<string, dynamic> obj)
+        public static JSONObject ToJSONObject(this IDictionary<string, object> obj)
         {
             var result = new JSONObject();
 
@@ -115,13 +115,13 @@ namespace AdaptySDK.SimpleJSON
                 {
                     result.Add(item.Key, item.Value as JSONNode);
                 }
-                else if (item.Value is Dictionary<string, dynamic>)
+                else if (item.Value is Dictionary<string, object>)
                 {
-                    result.Add(item.Key, ToJSONObject(item.Value as Dictionary<string, dynamic>));
+                    result.Add(item.Key, ToJSONObject(item.Value as Dictionary<string, object>));
                 }
-                else if (item.Value is IList<dynamic>)
+                else if (item.Value is IList<object>)
                 {
-                    result.Add(item.Key, ToJSONArray(item.Value as IList<dynamic>));
+                    result.Add(item.Key, ToJSONArray(item.Value as IList<object>));
                 }
                 else if (item.Value is null)
                 {
@@ -153,7 +153,7 @@ namespace AdaptySDK.SimpleJSON
             return result;
         }
 
-        public static JSONArray ToJSONArray(this IList<dynamic> obj)
+        public static JSONArray ToJSONArray(this IList<object> obj)
         {
             var result = new JSONArray();
 
@@ -163,13 +163,13 @@ namespace AdaptySDK.SimpleJSON
                 {
                     result.Add(item as JSONNode);
                 }
-                else if (item is Dictionary<string, dynamic>)
+                else if (item is Dictionary<string, object>)
                 {
-                    result.Add(ToJSONObject(item as Dictionary<string, dynamic>));
+                    result.Add(ToJSONObject(item as Dictionary<string, object>));
                 }
-                else if (item is IList<dynamic>)
+                else if (item is IList<object>)
                 {
-                    result.Add(ToJSONArray(item as IList<dynamic>));
+                    result.Add(ToJSONArray(item as IList<object>));
                 }
                 else if (item is null)
                 {
