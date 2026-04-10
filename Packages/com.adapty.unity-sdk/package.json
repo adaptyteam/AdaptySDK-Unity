@@ -1,0 +1,24 @@
+{
+  "name": "com.adapty.unity-sdk",
+  "version": "3.15.2",
+  "displayName": "Adapty Unity SDK",
+  "description": "Unity SDK for Adapty in-app purchases, subscriptions, paywalls, and onboarding flows.",
+  "_upm": {
+    "changelog": "### Changed\n\n- Packaged the SDK as a Unity Package Manager package for installation via Git URL."
+  },
+  "documentationUrl": "https://adapty.io/docs/unity-sdk-overview",
+  "licensesUrl": "https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/LICENSE",
+  "homepageUrl": "https://github.com/adaptyteam/AdaptySDK-Unity",
+  "keywords": [
+    "adapty",
+    "subscriptions",
+    "in-app purchases",
+    "paywalls",
+    "onboarding"
+  ],
+  "author": {
+    "name": "Adapty",
+    "email": "support@adapty.io",
+    "url": "https://adapty.io"
+  }
+}

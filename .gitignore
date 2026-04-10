@@ -55,6 +55,8 @@ ExportedObj/
 *.csproj
 *.unityproj
 *.sln
+*.slnx
+*.slnf
 *.suo
 *.tmp
 *.user
@@ -90,6 +92,7 @@ ExportedObj/
 
 # Visual Studio
 .vs/
+.vscode/
 
 # JetBrains Rider
 /[Aa]ssets/Plugins/Editor/JetBrains*
