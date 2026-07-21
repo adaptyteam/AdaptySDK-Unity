@@ -56,6 +56,7 @@ namespace AdaptySDK
         {
             VendorProductId = jsonNode.GetString("vendor_product_id");
             AdaptyProductId = jsonNode.GetString("adapty_product_id");
+            FlowProductId = jsonNode.GetStringIfPresent("flow_product_id");
             AccessLevelId = jsonNode.GetString("access_level_id");
             ProductType = jsonNode.GetString("product_type");
             PaywallVariationId = jsonNode.GetString("paywall_variation_id");

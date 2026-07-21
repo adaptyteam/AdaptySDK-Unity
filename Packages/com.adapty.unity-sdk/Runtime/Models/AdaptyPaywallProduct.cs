@@ -27,6 +27,14 @@ namespace AdaptySDK
         public readonly string AdaptyProductId;
 
         /// <summary>
+        /// The identifier of the product within the flow.
+        /// </summary>
+        /// <remarks>
+        /// This can be null if the product does not belong to a flow.
+        /// </remarks>
+        public readonly string FlowProductId; //nullable
+
+        /// <summary>
         /// The identifier of the access level configured in the Adapty Dashboard.
         /// </summary>
         /// <remarks>
@@ -101,6 +109,7 @@ namespace AdaptySDK
         public override string ToString() =>
             $"{nameof(VendorProductId)}: {VendorProductId}, "
             + $"{nameof(AdaptyProductId)}: {AdaptyProductId}, "
+            + $"{nameof(FlowProductId)}: {FlowProductId}, "
             + $"{nameof(AccessLevelId)}: {AccessLevelId}, "
             + $"{nameof(ProductType)}: {ProductType}, "
             + $"{nameof(LocalizedDescription)}: {LocalizedDescription}, "

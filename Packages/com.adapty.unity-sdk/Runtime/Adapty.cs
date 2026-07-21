@@ -20,7 +20,7 @@ namespace AdaptySDK
         /// <summary>
         /// The version of the Adapty SDK.
         /// </summary>
-        public static readonly string SDKVersion = "3.17.0";
+        public static readonly string SDKVersion = "4.0.0";
 
         /// <summary>
         /// Use this method to initialize the Adapty SDK.
@@ -75,10 +75,10 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywall(
+        public static void GetFlow(
             string placementId,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywall(placementId, null, null, null, completionHandler);
+            Action<AdaptyFlow, AdaptyError> completionHandler
+        ) => GetFlow(placementId, null, null, completionHandler);
 
         /// <summary>
         /// Adapty allows you remotely configure the products that will be displayed in your app.
@@ -89,58 +89,17 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="loadTimeout">The timeout for the paywall loading.</param>
+        /// <param name="loadTimeout">The timeout for the flow loading.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywall(
+        public static void GetFlow(
             string placementId,
             AdaptyPlacementFetchPolicy fetchPolicy,
             TimeSpan? loadTimeout,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywall(placementId, null, fetchPolicy, loadTimeout, completionHandler);
-
-        /// <summary>
-        /// Adapty allows you remotely configure the products that will be displayed in your app.
-        /// This way you don’t have to hardcode the products and can dynamically change offers or run A/B tests without app releases.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywall(
-            string placementId,
-            string locale,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywall(placementId, locale, null, null, completionHandler);
-
-        /// <summary>
-        /// Adapty allows you remotely configure the products that will be displayed in your app.
-        /// This way you don’t have to hardcode the products and can dynamically change offers or run A/B tests without app releases.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
-        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="loadTimeout">The timeout for the paywall loading.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywall(
-            string placementId,
-            string locale,
-            AdaptyPlacementFetchPolicy fetchPolicy,
-            TimeSpan? loadTimeout,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
+            Action<AdaptyFlow, AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
             parameters.Add("placement_id", placementId);
-
-            if (locale != null)
-            {
-                parameters.Add("locale", locale);
-            }
 
             if (fetchPolicy != null)
             {
@@ -153,9 +112,9 @@ namespace AdaptySDK
             }
 
             Request.Send(
-                "get_paywall",
+                "get_flow",
                 parameters,
-                JSONNodeExtensions.GetPaywall,
+                JSONNodeExtensions.GetFlow,
                 (value, error) =>
                 {
                     try
@@ -165,7 +124,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywall(..)",
+                            "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlow(..)",
                             e
                         );
                     }
@@ -185,6 +144,7 @@ namespace AdaptySDK
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="loadTimeout">The timeout for the onboarding loading.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete("The legacy onboarding API is deprecated in favor of Flows. Use GetFlow instead.")]
         public static void GetOnboarding(
             string placementId,
             string locale,
@@ -224,28 +184,22 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
+        /// This method enables you to retrieve the flow from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
         /// </summary>
         /// <remarks>
         /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products#speed-up-paywall-fetching-with-default-audience-paywall">Adapty Documentation</see>
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(
+        public static void GetFlowForDefaultAudience(
             string placementId,
-            string locale,
             AdaptyPlacementFetchPolicy fetchPolicy,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
+            Action<AdaptyFlow, AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
             parameters.Add("placement_id", placementId);
-            if (locale != null)
-            {
-                parameters.Add("locale", locale);
-            }
 
             if (fetchPolicy != null)
             {
@@ -253,9 +207,9 @@ namespace AdaptySDK
             }
 
             Request.Send(
-                "get_paywall_for_default_audience",
+                "get_flow_for_default_audience",
                 parameters,
-                JSONNodeExtensions.GetPaywall,
+                JSONNodeExtensions.GetFlow,
                 (value, error) =>
                 {
                     try
@@ -265,7 +219,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<AdaptyPaywall,AdaptyError> completionHandler in Adapty.GetPaywallForDefaultAudience(..)",
+                            "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlowForDefaultAudience(..)",
                             e
                         );
                     }
@@ -283,6 +237,9 @@ namespace AdaptySDK
         /// <param name="locale">The identifier of the onboarding <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
+        )]
         public static void GetOnboardingForDefaultAudience(
             string placementId,
             string locale,
@@ -325,21 +282,21 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Fetches the products array for a given paywall.
+        /// Fetches the products array for a given flow.
         /// </summary>
         /// <remarks>
-        /// Once you have an <see cref="AdaptyPaywall"/>, use this method to fetch the corresponding products with full pricing and subscription information.
+        /// Once you have an <see cref="AdaptyFlow"/>, use this method to fetch the corresponding products with full pricing and subscription information.
         /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="paywall">An <see cref="AdaptyPaywall"/> for which you want to get the products.</param>
+        /// <param name="flow">An <see cref="AdaptyFlow"/> for which you want to get the products.</param>
         /// <param name="completionHandler">The action that will be called with the result. The result contains a list of <see cref="AdaptyPaywallProduct"/> objects.</param>
         public static void GetPaywallProducts(
-            AdaptyPaywall paywall,
+            AdaptyFlow flow,
             Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
-            parameters.Add("paywall", paywall.ToJSONNode());
+            parameters.Add("flow", flow.ToJSONNode());
 
             Request.Send(
                 "get_paywall_products",
@@ -624,10 +581,10 @@ namespace AdaptySDK
         /// This is useful for platforms that don't support native paywall views or for web-based implementations.
         /// Read more at <see href="https://adapty.io/docs/web-paywall">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object for which to create the web URL.</param>
+        /// <param name="paywall">An <see cref="AdaptyFlowPaywall"/> object for which to create the web URL.</param>
         /// <param name="completionHandler">The action that will be called with the result. The result contains the web URL string.</param>
         public static void CreateWebPaywallUrl(
-            AdaptyPaywall paywall,
+            AdaptyFlowPaywall paywall,
             Action<string, AdaptyError> completionHandler
         )
         {
@@ -700,11 +657,11 @@ namespace AdaptySDK
         /// This method opens the web paywall URL in the default browser or web view.
         /// Read more at <see href="https://adapty.io/docs/web-paywall">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object to open.</param>
+        /// <param name="paywall">An <see cref="AdaptyFlowPaywall"/> object to open.</param>
         /// <param name="openIn">Controls whether to open in external browser or in-app browser. Default is <see cref="AdaptyWebPresentation.ExternalBrowser"/>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void OpenWebPaywall(
-            AdaptyPaywall paywall,
+            AdaptyFlowPaywall paywall,
             AdaptyWebPresentation openIn,
             Action<AdaptyError> completionHandler
         )
@@ -776,26 +733,23 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Call this method to notify Adapty SDK, that particular paywall was shown to user.
+        /// Call this method to notify Adapty SDK, that particular flow was shown to user.
         /// </summary>
         /// <remarks>
-        /// Adapty helps you to measure the performance of the paywalls.
-        /// We automatically collect all the metrics related to purchases except for paywall views.
-        /// This is because only you know when the paywall was shown to a customer. Whenever you show a paywall to your user, call .logShowPaywall(paywall) to log the event, and it will be accumulated in the paywall metrics.
+        /// Adapty helps you to measure the performance of the flows.
+        /// We automatically collect all the metrics related to purchases except for flow views.
+        /// This is because only you know when the flow was shown to a customer. Whenever you show a flow to your user, call .LogShowFlow(flow) to log the event, and it will be accumulated in the flow metrics.
         /// Read more on the <see href="https://adapty.io/docs/present-remote-config-paywalls-unity#track-paywall-view-events">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="paywall">An [AdaptyPaywall] object.</param>
+        /// <param name="flow">An [AdaptyFlow] object.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void LogShowPaywall(
-            AdaptyPaywall paywall,
-            Action<AdaptyError> completionHandler
-        )
+        public static void LogShowFlow(AdaptyFlow flow, Action<AdaptyError> completionHandler)
         {
             var parameters = new JSONObject();
-            parameters.Add("paywall", paywall.ToJSONNode());
+            parameters.Add("flow", flow.ToJSONNode());
 
             Request.Send(
-                "log_show_paywall",
+                "log_show_flow",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
                 (value, error) =>
@@ -807,7 +761,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowPaywall(..)",
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowFlow(..)",
                             e
                         );
                     }
@@ -1018,7 +972,7 @@ namespace AdaptySDK
         /// Read more at <see href="https://adapty.io/docs/observer-vs-full-mode">Adapty Documentation</see>
         /// </remarks>
         /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the transaction identifier from <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see>. For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
-        /// <param name="variationId">An optional string identifier of the variation. You can get it using the <see cref="AdaptyPaywall.VariationId"/> property of <see cref="AdaptyPaywall"/>.</param>
+        /// <param name="variationId">An optional string identifier of the variation. You can get it using the <see cref="AdaptyFlow.VariationId"/> property of <see cref="AdaptyFlow"/>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
             string transactionId,
@@ -1036,7 +990,7 @@ namespace AdaptySDK
             Request.Send(
                 "report_transaction",
                 parameters,
-                JSONNodeExtensions.GetAdaptyProfile,
+                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1159,15 +1113,6 @@ namespace AdaptySDK
                     }
                 }
             );
-        }
-
-        [Obsolete("Use SetFallback instead")]
-        public static void SetFallbackPaywalls(
-            string fileName,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            SetFallback(fileName, completionHandler);
         }
 
         /// <summary>
@@ -1295,23 +1240,23 @@ namespace AdaptySDK
     public static partial class AdaptyUI
     {
         /// <summary>
-        /// Creates a paywall view from an AdaptyPaywall object.
+        /// Creates a flow view from an AdaptyFlow object.
         /// </summary>
         /// <remarks>
-        /// Right after receiving an <see cref="AdaptyPaywall"/>, you can create the corresponding <see cref="AdaptyUIPaywallView"/> to present it afterwards.
+        /// Right after receiving an <see cref="AdaptyFlow"/>, you can create the corresponding <see cref="AdaptyUIFlowView"/> to present it afterwards.
         /// Read more at <see href="https://adapty.io/docs/unity-quickstart-paywalls">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object for which you are trying to create a view.</param>
-        /// <param name="optionalParameters">An optional <see cref="AdaptyUICreatePaywallViewParameters"/> object that contains optional parameters like load timeout, custom tags, custom timers, product purchase parameters, and custom assets.</param>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIPaywallView"/> object.</param>
-        public static void CreatePaywallView(
-            AdaptyPaywall paywall,
-            AdaptyUICreatePaywallViewParameters optionalParameters,
-            Action<AdaptyUIPaywallView, AdaptyError> completionHandler
+        /// <param name="flow">An <see cref="AdaptyFlow"/> object for which you are trying to create a view.</param>
+        /// <param name="optionalParameters">An optional <see cref="AdaptyUICreateFlowViewParameters"/> object that contains optional parameters like load timeout, custom tags, custom timers, product purchase parameters, and custom assets.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIFlowView"/> object.</param>
+        public static void CreateFlowView(
+            AdaptyFlow flow,
+            AdaptyUICreateFlowViewParameters optionalParameters,
+            Action<AdaptyUIFlowView, AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
-            parameters.Add("paywall", paywall.ToJSONNode());
+            parameters.Add("flow", flow.ToJSONNode());
 
             if (optionalParameters != null)
             {
@@ -1372,9 +1317,9 @@ namespace AdaptySDK
             }
 
             Request.Send(
-                "adapty_ui_create_paywall_view",
+                "adapty_ui_create_flow_view",
                 parameters,
-                JSONNodeExtensions.GetAdaptyUIPaywallView,
+                JSONNodeExtensions.GetAdaptyUIFlowView,
                 (value, error) =>
                 {
                     try
@@ -1384,7 +1329,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<AdaptyUIPaywallView, AdaptyError> completionHandler in Adapty.CreatePaywallView(..)",
+                            "Failed to invoke Action<AdaptyUIFlowView, AdaptyError> completionHandler in Adapty.CreateFlowView(..)",
                             e
                         );
                     }
@@ -1402,6 +1347,9 @@ namespace AdaptySDK
         /// <param name="onboarding">An <see cref="AdaptyOnboarding"/> object for which you are trying to create a view.</param>
         /// <param name="externalUrlsPresentation">Controls how external URLs are presented in the onboarding (in-app browser vs external browser). Default is <see cref="AdaptyWebPresentation.ExternalBrowser"/>.</param>
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIOnboardingView"/> object.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use CreateFlowView instead."
+        )]
         public static void CreateOnboardingView(
             AdaptyOnboarding onboarding,
             AdaptyWebPresentation externalUrlsPresentation,
@@ -1434,20 +1382,21 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Dismisses the paywall view.
+        /// Dismisses the flow view.
         /// </summary>
         /// <remarks>
-        /// Call this method when you want to dismiss the paywall view from the screen.
+        /// Call this method when you want to dismiss the flow view from the screen.
+        /// A dismissed view is released and cannot be presented again — create a new view via <see cref="CreateFlowView(AdaptyFlow, AdaptyUICreateFlowViewParameters, Action{AdaptyUIFlowView, AdaptyError})"/> if you need to re-present it.
         /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIPaywallView"/> object representing the view to dismiss.</param>
+        /// <param name="view">An <see cref="AdaptyUIFlowView"/> object representing the view to dismiss.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void DismissPaywallView(
-            AdaptyUIPaywallView view,
+        public static void DismissFlowView(
+            AdaptyUIFlowView view,
             Action<AdaptyError> completionHandler
-        ) => DismissPaywallView(view, false, completionHandler);
+        ) => DismissFlowView(view, true, completionHandler);
 
-        private static void DismissPaywallView(
-            AdaptyUIPaywallView view,
+        private static void DismissFlowView(
+            AdaptyUIFlowView view,
             bool destroy,
             Action<AdaptyError> completionHandler
         )
@@ -1457,7 +1406,7 @@ namespace AdaptySDK
             parameters.Add("destroy", destroy);
 
             Request.Send(
-                "adapty_ui_dismiss_paywall_view",
+                "adapty_ui_dismiss_flow_view",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
                 (value, error) =>
@@ -1469,7 +1418,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissPaywallView(..)",
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissFlowView(..)",
                             e
                         );
                     }
@@ -1480,24 +1429,24 @@ namespace AdaptySDK
         /// <summary>
         /// Call this function if you wish to present the view.
         /// </summary>
-        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
-        /// <param name="iosPresentationStyle">an [AdaptyUIIOSPresentationStyle] object, for which is representing the iOS presentation style.</param>
+        /// <param name="view">an [AdaptyUIFlowView] object, for which is representing the view.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void PresentPaywallView(
-            AdaptyUIPaywallView view,
+        public static void PresentFlowView(
+            AdaptyUIFlowView view,
             Action<AdaptyError> completionHandler
         )
         {
-            PresentPaywallView(view, AdaptyUIIOSPresentationStyle.FullScreen, completionHandler);
+            PresentFlowView(view, AdaptyUIIOSPresentationStyle.FullScreen, completionHandler);
         }
 
         /// <summary>
         /// Call this function if you wish to present the view.
         /// </summary>
-        /// <param name="view">an [AdaptyUIPaywallView] object, for which is representing the view.</param>
+        /// <param name="view">an [AdaptyUIFlowView] object, for which is representing the view.</param>
+        /// <param name="iosPresentationStyle">an [AdaptyUIIOSPresentationStyle] object, for which is representing the iOS presentation style.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void PresentPaywallView(
-            AdaptyUIPaywallView view,
+        public static void PresentFlowView(
+            AdaptyUIFlowView view,
             AdaptyUIIOSPresentationStyle iosPresentationStyle,
             Action<AdaptyError> completionHandler
         )
@@ -1507,7 +1456,7 @@ namespace AdaptySDK
             parameters.Add("ios_presentation_style", iosPresentationStyle.ToJSONNode());
 
             Request.Send(
-                "adapty_ui_present_paywall_view",
+                "adapty_ui_present_flow_view",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
                 (value, error) =>
@@ -1519,7 +1468,7 @@ namespace AdaptySDK
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentPaywallView(..)",
+                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentFlowView(..)",
                             e
                         );
                     }
@@ -1535,6 +1484,9 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to present.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use PresentFlowView instead."
+        )]
         public static void PresentOnboardingView(
             AdaptyUIOnboardingView view,
             Action<AdaptyError> completionHandler
@@ -1552,6 +1504,9 @@ namespace AdaptySDK
         /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to present.</param>
         /// <param name="iosPresentationStyle">An <see cref="AdaptyUIIOSPresentationStyle"/> object representing the iOS presentation style (iOS only).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use PresentFlowView instead."
+        )]
         public static void PresentOnboardingView(
             AdaptyUIOnboardingView view,
             AdaptyUIIOSPresentationStyle iosPresentationStyle,
@@ -1591,6 +1546,9 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to dismiss.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use DismissFlowView instead."
+        )]
         public static void DismissOnboardingView(
             AdaptyUIOnboardingView view,
             Action<AdaptyError> completionHandler
@@ -1628,16 +1586,16 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Presents a dialog on the paywall view.
+        /// Presents a dialog on the flow view.
         /// </summary>
         /// <remarks>
-        /// This method shows a dialog with custom configuration on the paywall view. The dialog can be used for various purposes like showing terms, privacy policy, or custom messages.
+        /// This method shows a dialog with custom configuration on the flow view. The dialog can be used for various purposes like showing terms, privacy policy, or custom messages.
         /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIPaywallView"/> object representing the view on which to show the dialog.</param>
+        /// <param name="view">An <see cref="AdaptyUIFlowView"/> object representing the view on which to show the dialog.</param>
         /// <param name="configuration">An <see cref="AdaptyUIDialogConfiguration"/> object that contains the dialog configuration.</param>
         /// <param name="completionHandler">The action that will be called with the result. The result contains the <see cref="AdaptyUIDialogActionType"/> indicating which action was taken.</param>
         public static void ShowDialog(
-            AdaptyUIPaywallView view,
+            AdaptyUIFlowView view,
             AdaptyUIDialogConfiguration configuration,
             Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
         )
@@ -1692,6 +1650,102 @@ namespace AdaptySDK
                     }
                 }
             );
+        }
+
+        /// <summary>
+        /// Opens the URL natively, honoring the presentation option.
+        /// </summary>
+        /// <remarks>
+        /// This is the same handling the SDK applies by default to <c>open_url</c> user actions. Use it when you override <see cref="IAdaptyFlowsEventsListener.FlowViewDidPerformAction(AdaptyUIFlowView, AdaptyUIUserAction)"/> and want to keep the default URL behavior.
+        /// </remarks>
+        /// <param name="url">The URL to open.</param>
+        /// <param name="openIn">Controls whether to open in external browser or in-app browser. Default is <see cref="AdaptyWebPresentation.ExternalBrowser"/>.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void OpenUrl(
+            string url,
+            AdaptyWebPresentation openIn,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JSONObject();
+            parameters.Add("url", url);
+            parameters.Add("open_in", openIn.ToJSONNode());
+
+            Request.Send(
+                "adapty_ui_open_url",
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in AdaptyUI.OpenUrl(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
+        /// <summary>
+        /// Requests a native store review prompt (App Store / Google Play in-app review).
+        /// </summary>
+        /// <remarks>
+        /// This is the same handling the SDK applies by default to the flow app review request. Use it when you override <see cref="IAdaptyUISystemRequestsHandler.FlowViewDidRequestAppReview(AdaptyUIFlowView)"/> and want to keep the default behavior.
+        /// </remarks>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void RequestAppReview(Action<AdaptyError> completionHandler)
+        {
+            Request.Send(
+                "adapty_ui_request_app_review",
+                null,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) =>
+                {
+                    try
+                    {
+                        completionHandler?.Invoke(error);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(
+                            "Failed to invoke Action<AdaptyError> completionHandler in AdaptyUI.RequestAppReview(..)",
+                            e
+                        );
+                    }
+                }
+            );
+        }
+
+        internal static void FlowViewAnswerPermission(string eventId, bool granted, string detail)
+        {
+            var parameters = new JSONObject();
+            parameters.Add("event_id", eventId);
+            parameters.Add("status", granted ? "granted" : "denied");
+            if (detail != null)
+            {
+                parameters.Add("detail", detail);
+            }
+
+            Request.Send(
+                "flow_view_did_answer_permission",
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) => { }
+            );
+        }
+
+        internal static void SendObserverEvent(string method, string eventId)
+        {
+            var parameters = new JSONObject();
+            parameters.Add("event_id", eventId);
+
+            Request.Send(method, parameters, JSONNodeExtensions.GetBoolean, (value, error) => { });
         }
     }
 

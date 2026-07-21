@@ -1,0 +1,120 @@
+//
+//  AdaptyFlow.cs
+//  AdaptySDK
+//
+
+using System.Collections.Generic;
+
+namespace AdaptySDK
+{
+    /// <summary>
+    /// Represents a flow configuration in Adapty.
+    /// </summary>
+    /// <remarks>
+    /// A flow is a set of paywall variations that can be displayed to users. It contains information about the placement, paywalls, and remote configs.
+    /// Read more at <see href="https://adapty.io/docs/unity-quickstart-paywalls">Adapty Documentation</see>
+    /// </remarks>
+    public partial class AdaptyFlow
+    {
+        /// <summary>
+        /// An <see cref="AdaptyPlacement"/> object that contains information about the placement of the flow.
+        /// </summary>
+        public readonly AdaptyPlacement Placement;
+
+        /// <summary>
+        /// A unique identifier for this flow instance.
+        /// </summary>
+        public readonly string InstanceIdentity;
+
+        /// <summary>
+        /// The flow name configured in the Adapty Dashboard.
+        /// </summary>
+        public readonly string Name;
+
+        /// <summary>
+        /// The identifier of the variation, used to attribute purchases to the flow.
+        /// </summary>
+        public readonly string VariationId;
+
+        /// <summary>
+        /// The identifier of the flow version.
+        /// </summary>
+        /// <remarks>
+        /// This can be null if the version identifier is not available.
+        /// </remarks>
+        public readonly string FlowVersionId; // nullable
+
+        /// <summary>
+        /// Array of custom JSON formatted data configured in the Adapty Dashboard, one entry per locale.
+        /// </summary>
+        public readonly IList<AdaptyRemoteConfig> RemoteConfigs;
+
+        /// <summary>
+        /// The first custom JSON formatted data configured in the Adapty Dashboard.
+        /// </summary>
+        /// <remarks>
+        /// This can be null if no remote config is configured for the flow. Use <see cref="RemoteConfigs"/> to access configs for a specific locale.
+        /// </remarks>
+        public AdaptyRemoteConfig RemoteConfig
+        {
+            get { return RemoteConfigs.Count > 0 ? RemoteConfigs[0] : null; }
+        }
+
+        /// <summary>
+        /// Array of paywall variations associated with this flow.
+        /// </summary>
+        public readonly IList<AdaptyFlowPaywall> Paywalls;
+
+        private readonly long _ResponseCreatedAt;
+        private readonly string _PayloadData; // nullable
+
+        /// <summary>
+        /// Array of vendor product IDs (App Store or Google Play product identifiers) aggregated across all paywall variations of this flow.
+        /// </summary>
+        public IList<string> VendorProductIds
+        {
+            get
+            {
+                var list = new List<string>();
+                foreach (var paywall in Paywalls)
+                {
+                    foreach (var item in paywall.VendorProductIds)
+                    {
+                        list.Add(item);
+                    }
+                }
+                return list;
+            }
+        }
+
+        /// <summary>
+        /// Array of product identifiers aggregated across all paywall variations of this flow.
+        /// </summary>
+        public IList<AdaptyProductIdentifier> ProductIdentifiers
+        {
+            get
+            {
+                var list = new List<AdaptyProductIdentifier>();
+                foreach (var paywall in Paywalls)
+                {
+                    foreach (var item in paywall.ProductIdentifiers)
+                    {
+                        list.Add(item);
+                    }
+                }
+                return list;
+            }
+        }
+
+        public override string ToString() =>
+            $"{nameof(Placement)}: {Placement}, "
+            + $"{nameof(InstanceIdentity)}: {InstanceIdentity}, "
+            + $"{nameof(Name)}: {Name}, "
+            + $"{nameof(VariationId)}: {VariationId}, "
+            + $"{nameof(FlowVersionId)}: {FlowVersionId}, "
+            + $"{nameof(RemoteConfigs)}: {RemoteConfigs}, "
+            + $"{nameof(Paywalls)}: {Paywalls}, "
+            + $"{nameof(_ResponseCreatedAt)}: {_ResponseCreatedAt}, "
+            + $"{nameof(_PayloadData)}: {_PayloadData}";
+    }
+}

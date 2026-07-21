@@ -3,24 +3,17 @@ using UnityEngine;
 
 namespace AdaptyExample
 {
-    public class PaywallsListView : MonoBehaviour
+    public class FlowsListView : MonoBehaviour
     {
         [HideInInspector]
         public AdaptyListener Listener;
 
         public TMP_InputField PlacementIdTextField;
-        public TMP_InputField PlacementLocaleTextField;
         public RectTransform ContentViewTransform;
 
-        public GameObject PaywallsItemPrefab;
+        public GameObject FlowsItemPrefab;
 
         private PlacementLoadStrategy m_loadStrategy = PlacementLoadStrategy.LoadElseCache;
-
-        void Start()
-        {
-            this.PlacementLocaleTextField.contentType = TMP_InputField.ContentType.Standard;
-            this.PlacementLocaleTextField.inputType = TMP_InputField.InputType.Standard;
-        }
 
         void Update() { }
 
@@ -57,12 +50,10 @@ namespace AdaptyExample
             }
 
             var placementId = this.PlacementIdTextField.text;
-            var placementLocale = this.PlacementLocaleTextField.text;
 
-            this.AddPlacement(placementId, placementLocale, false);
+            this.AddPlacement(placementId, false);
 
             this.PlacementIdTextField.text = "";
-            this.PlacementLocaleTextField.text = "";
         }
 
         public void AddPlacementDefaultAudiencePressed()
@@ -73,27 +64,20 @@ namespace AdaptyExample
             }
 
             var placementId = this.PlacementIdTextField.text;
-            var placementLocale = this.PlacementLocaleTextField.text;
 
-            this.AddPlacement(placementId, placementLocale, true);
+            this.AddPlacement(placementId, true);
 
             this.PlacementIdTextField.text = "";
-            this.PlacementLocaleTextField.text = "";
         }
 
-        private void AddPlacement(
-            string placementId,
-            string placementLocale,
-            bool isDefaultAudience
-        )
+        private void AddPlacement(string placementId, bool isDefaultAudience)
         {
-            var paywallItem = Instantiate(this.PaywallsItemPrefab, this.ContentViewTransform);
-            var paywallItemView = paywallItem.GetComponent<PaywallsItemView>();
+            var flowItem = Instantiate(this.FlowsItemPrefab, this.ContentViewTransform);
+            var flowItemView = flowItem.GetComponent<FlowsItemView>();
 
-            paywallItemView.Listener = this.Listener;
-            paywallItemView.PlacementId = placementId;
-            paywallItemView.PlacementLocale = placementLocale;
-            paywallItemView.LoadPaywall(this.m_loadStrategy, isDefaultAudience);
+            flowItemView.Listener = this.Listener;
+            flowItemView.PlacementId = placementId;
+            flowItemView.LoadFlow(this.m_loadStrategy, isDefaultAudience);
         }
     }
 }

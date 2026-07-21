@@ -1,8 +1,6 @@
-﻿//
-//  AdaptyPaywall.ProductReference+JSON.cs
-//  AdaptySDK
 //
-//  Created by Aleksei Valiano on 20.12.2022.
+//  AdaptyFlowPaywall.ProductReference+JSON.cs
+//  AdaptySDK
 //
 
 using System;
@@ -12,7 +10,7 @@ namespace AdaptySDK
 {
     using AdaptySDK.SimpleJSON;
 
-    public partial class AdaptyPaywall
+    public partial class AdaptyFlowPaywall
     {
         public partial class ProductReference
         {
@@ -23,6 +21,9 @@ namespace AdaptySDK
                 node.Add("adapty_product_id", AdaptyProductId);
                 node.Add("access_level_id", AccessLevelId);
                 node.Add("product_type", ProductType);
+
+                if (FlowProductId != null)
+                    node.Add("flow_product_id", FlowProductId);
 
 #if UNITY_ANDROID
                 if (AndroidBasePlanId != null)
@@ -46,6 +47,7 @@ namespace AdaptySDK
                 AdaptyProductId = jsonNode.GetString("adapty_product_id");
                 AccessLevelId = jsonNode.GetString("access_level_id");
                 ProductType = jsonNode.GetString("product_type");
+                FlowProductId = jsonNode.GetStringIfPresent("flow_product_id");
 
 #if UNITY_ANDROID
                 AndroidBasePlanId = jsonNode.GetStringIfPresent("base_plan_id");
@@ -71,12 +73,12 @@ namespace AdaptySDK.SimpleJSON
 {
     internal static partial class JSONNodeExtensions
     {
-        internal static AdaptyPaywall.ProductReference GetAdaptyPaywallProductReference(
+        internal static AdaptyFlowPaywall.ProductReference GetAdaptyFlowPaywallProductReference(
             this JSONNode node,
             string aKey
-        ) => new AdaptyPaywall.ProductReference(GetObject(node, aKey));
+        ) => new AdaptyFlowPaywall.ProductReference(GetObject(node, aKey));
 
-        internal static AdaptyPaywall.ProductReference GetAdaptyPaywallProductReferenceIfPresent(
+        internal static AdaptyFlowPaywall.ProductReference GetAdaptyFlowPaywallProductReferenceIfPresent(
             this JSONNode node,
             string aKey
         )
@@ -84,21 +86,21 @@ namespace AdaptySDK.SimpleJSON
             var obj = GetObjectIfPresent(node, aKey);
             if (obj is null)
                 return null;
-            return new AdaptyPaywall.ProductReference(obj);
+            return new AdaptyFlowPaywall.ProductReference(obj);
         }
 
-        internal static IList<AdaptyPaywall.ProductReference> GetAdaptyPaywallProductReferenceList(
+        internal static IList<AdaptyFlowPaywall.ProductReference> GetAdaptyFlowPaywallProductReferenceList(
             this JSONNode node,
             string aKey
         )
         {
             var array = GetArray(node, aKey);
-            var result = new List<AdaptyPaywall.ProductReference>();
+            var result = new List<AdaptyFlowPaywall.ProductReference>();
             foreach (var item in array.Children)
             {
                 if (!item.IsObject)
                     throw new Exception($"Value by index: {result.Count} is not Object");
-                result.Add(new AdaptyPaywall.ProductReference(item.AsObject));
+                result.Add(new AdaptyFlowPaywall.ProductReference(item.AsObject));
             }
             return result;
         }

@@ -1,22 +1,20 @@
 //
-//  AdaptyUIPaywallView.cs
+//  AdaptyUIFlowView.cs
 //  AdaptySDK
-//
-//  Created by Aleksei Valiano on 17.12.2024.
 //
 
 namespace AdaptySDK
 {
-    public partial class AdaptyUIPaywallView
+    public partial class AdaptyUIFlowView
     {
         public string Id;
         public string PlacementId;
-        public string PaywallVariationId;
+        public string VariationId;
 
         public override string ToString() =>
             $"{nameof(Id)}: {Id}, "
             + $"{nameof(PlacementId)}: {PlacementId}, "
-            + $"{nameof(PaywallVariationId)}: {PaywallVariationId}";
+            + $"{nameof(VariationId)}: {VariationId}";
 
         /// <summary>
         /// Call this function if you wish to present the view.
@@ -26,14 +24,14 @@ namespace AdaptySDK
         public void Present(
             AdaptyUIIOSPresentationStyle iosPresentationStyle,
             System.Action<AdaptyError> completionHandler
-        ) => AdaptyUI.PresentPaywallView(this, iosPresentationStyle, completionHandler);
+        ) => AdaptyUI.PresentFlowView(this, iosPresentationStyle, completionHandler);
 
         /// <summary>
         /// Call this function if you wish to present the view.
         /// </summary>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public void Present(System.Action<AdaptyError> completionHandler) =>
-            AdaptyUI.PresentPaywallView(
+            AdaptyUI.PresentFlowView(
                 this,
                 AdaptyUIIOSPresentationStyle.FullScreen,
                 completionHandler
@@ -42,8 +40,11 @@ namespace AdaptySDK
         /// <summary>
         /// Call this function if you wish to dismiss the view.
         /// </summary>
+        /// <remarks>
+        /// A dismissed view is released and cannot be presented again. Create a new view via <see cref="AdaptyUI.CreateFlowView(AdaptyFlow, AdaptyUICreateFlowViewParameters, System.Action{AdaptyUIFlowView, AdaptyError})"/> if you need to re-present it.
+        /// </remarks>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public void Dismiss(System.Action<AdaptyError> completionHandler) =>
-            AdaptyUI.DismissPaywallView(this, completionHandler);
+            AdaptyUI.DismissFlowView(this, completionHandler);
     }
 }

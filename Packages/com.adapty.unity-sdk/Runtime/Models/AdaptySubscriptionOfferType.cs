@@ -11,6 +11,7 @@ namespace AdaptySDK
     {
         Introductory,
         Promotional,
-        WinBack
+        WinBack,
+        Code // iOS Only
     }
 }

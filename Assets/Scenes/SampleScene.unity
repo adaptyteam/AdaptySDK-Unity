@@ -1635,7 +1635,7 @@ GameObject:
   - component: {fileID: 203578194}
   - component: {fileID: 203578197}
   m_Layer: 5
-  m_Name: Scroll View - Paywalls
+  m_Name: Scroll View - Flows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1742,12 +1742,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cc98bc0745454164abccbf7d78fe47b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PaywallsListView
+  m_EditorClassIdentifier: Assembly-CSharp::FlowsListView
   Listener: {fileID: 0}
   PlacementIdTextField: {fileID: 1359082644}
   PlacementLocaleTextField: {fileID: 1080197599}
   ContentViewTransform: {fileID: 1585004056}
-  PaywallsItemPrefab: {fileID: 1566553029373966823, guid: aa90db420d78448b58e68afefb220176,
+  FlowsItemPrefab: {fileID: 1566553029373966823, guid: aa90db420d78448b58e68afefb220176,
     type: 3}
 --- !u!1 &228856067
 GameObject:
@@ -2769,7 +2769,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 203578197}
-        m_TargetAssemblyTypeName: AdaptyExample.PaywallsListView, Assembly-CSharp
+        m_TargetAssemblyTypeName: AdaptyExample.FlowsListView, Assembly-CSharp
         m_MethodName: OnDropdownValueChanged
         m_Mode: 0
         m_Arguments:
@@ -2876,7 +2876,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Paywalls
+  m_text: Flows
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5246,7 +5246,7 @@ MonoBehaviour:
   AlertPanel: {fileID: 1129633859}
   MainContentTransform: {fileID: 607650114}
   MainContentScrollRect: {fileID: 1467929705}
-  PaywallsListView: {fileID: 203578197}
+  FlowsListView: {fileID: 203578197}
   OnboardingsListView: {fileID: 536233421}
   InstallationDetailsSection: {fileID: 1065146653}
   ProfileIdSection: {fileID: 1578689258421478389}
@@ -6705,7 +6705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1080197599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10431,7 +10431,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 203578197}
-        m_TargetAssemblyTypeName: AdaptyExample.PaywallsListView, Assembly-CSharp
+        m_TargetAssemblyTypeName: AdaptyExample.FlowsListView, Assembly-CSharp
         m_MethodName: AddPlacementDefaultAudiencePressed
         m_Mode: 1
         m_Arguments:
@@ -10905,7 +10905,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 203578197}
-        m_TargetAssemblyTypeName: PaywallsListView, Assembly-CSharp
+        m_TargetAssemblyTypeName: FlowsListView, Assembly-CSharp
         m_MethodName: AddPlacementPressed
         m_Mode: 1
         m_Arguments:

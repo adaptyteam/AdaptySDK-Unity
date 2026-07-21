@@ -22,8 +22,13 @@ namespace AdaptySDK
                 node.Add("customer_identity_parameters", CustomerIdentity.ToJSONNode());
             if (ObserverMode != null)
                 node.Add("observer_mode", ObserverMode);
+#if ADAPTY_KIDS_MODE && UNITY_IOS
+            // The KidsMode trait compiles IDFA out of the binary; keep the config in sync.
+            node.Add("apple_idfa_collection_disabled", true);
+#else
             if (AppleIdfaCollectionDisabled != null)
                 node.Add("apple_idfa_collection_disabled", AppleIdfaCollectionDisabled);
+#endif
             if (GoogleAdvertisingIdCollectionDisabled != null)
                 node.Add("google_adid_collection_disabled", GoogleAdvertisingIdCollectionDisabled);
             if (GoogleEnablePendingPrepaidPlans != null)

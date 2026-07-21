@@ -1,6 +1,6 @@
 {
   "name": "com.adapty.unity-sdk",
-  "version": "3.17.0",
+  "version": "4.0.0",
   "displayName": "Adapty Unity SDK",
   "description": "Unity SDK for Adapty in-app purchases, subscriptions, paywalls, and onboarding flows.",
   "_upm": {

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 15003, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: iOS (Device)
+  m_Name: iOS (Simulator) Kids
   m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.Build.Profile.BuildProfile
   m_AssetVersion: 1
   m_BuildTarget: 9
@@ -20,8 +20,9 @@ MonoBehaviour:
     rid: 4976674439866875951
   m_OverrideGlobalSceneList: 0
   m_Scenes: []
-  m_HasScriptingDefines: 0
-  m_ScriptingDefines: []
+  m_HasScriptingDefines: 1
+  m_ScriptingDefines:
+  - ADAPTY_KIDS_MODE
   m_PlayerSettingsYaml:
     m_Settings:
     - line: '| PlayerSettings:'
@@ -212,8 +213,8 @@ MonoBehaviour:
     - line: '|   StripUnusedMeshComponents: 1'
     - line: '|   strictShaderVariantMatching: 0'
     - line: '|   VertexChannelCompressionMask: 4054'
-    - line: '|   iPhoneSdkVersion: 988'
-    - line: '|   iOSSimulatorArchitecture: 0'
+    - line: '|   iPhoneSdkVersion: 989'
+    - line: '|   iOSSimulatorArchitecture: 1'
     - line: '|   iOSTargetOSVersionString: 15.0'
     - line: '|   tvOSSdkVersion: 0'
     - line: '|   tvOSSimulatorArchitecture: 0'
@@ -871,7 +872,8 @@ MonoBehaviour:
     - line: '|   webGLCloseOnQuit: 0'
     - line: '|   webWasm2023: 0'
     - line: '|   webEnableSubmoduleStrippingCompatibility: 0'
-    - line: '|   scriptingDefineSymbols: {}'
+    - line: '|   scriptingDefineSymbols:'
+    - line: '|     iPhone: ADAPTY_KIDS_MODE'
     - line: '|   additionalCompilerArguments: {}'
     - line: '|   platformArchitecture: {}'
     - line: '|   scriptingBackend:'
@@ -985,7 +987,7 @@ MonoBehaviour:
     - line: '|   qnxGraphicConfPath: '
     - line: '|   apiCompatibilityLevel: 6'
     - line: '|   captureStartupLogs: {}'
-    - line: '|   activeInputHandler: 0'
+    - line: '|   activeInputHandler: 1'
     - line: '|   windowsGamepadBackendHint: 0'
     - line: '|   enableDirectStorage: 0'
     - line: '|   cloudProjectId: '
@@ -1011,7 +1013,7 @@ MonoBehaviour:
     - rid: 4976674439866875951
       type: {class: iOSPlatformSettings, ns: UnityEditor.iOS, asm: UnityEditor.iOS.Extensions}
       data:
-        m_Development: 1
+        m_Development: 0
         m_ConnectProfiler: 0
         m_BuildWithDeepProfilingSupport: 0
         m_AllowDebugging: 0
@@ -1025,7 +1027,7 @@ MonoBehaviour:
         m_InsightsSettingsContainer:
           m_BuildProfileEngineDiagnosticsState: 2
         m_AdaptivePerformanceEnabled: 0
-        m_iOSXcodeBuildConfig: 0
+        m_iOSXcodeBuildConfig: 1
         m_SymlinkSources: 0
         m_PreferredXcode: 16.4_/Applications/Xcode-16.4.0.app
         m_SymlinkTrampoline: 0
