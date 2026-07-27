@@ -36,15 +36,6 @@ namespace AdaptySDK
             public string CustomerUserId; //nullable
             public AdaptyCustomerIdentity CustomerIdentity; // nullable
             public bool? ObserverMode;
-
-            [Obsolete(
-                "IdfaCollectionDisabled is deprecated, please use AppleIdfaCollectionDisabled instead."
-            )]
-            public bool IdfaCollectionDisabled
-            {
-                get { return AppleIdfaCollectionDisabled; }
-                set { AppleIdfaCollectionDisabled = value; }
-            }
             public bool AppleIdfaCollectionDisabled;
             public bool GoogleAdvertisingIdCollectionDisabled;
             public bool GoogleEnablePendingPrepaidPlans;
@@ -109,14 +100,6 @@ namespace AdaptySDK
             {
                 ObserverMode = observerMode;
                 return this;
-            }
-
-            [Obsolete(
-                "SetIDFACollectionDisabled is deprecated, please use SetAppleIDFACollectionDisabled instead."
-            )]
-            public Builder SetIDFACollectionDisabled(bool appleIdfaCollectionDisabled)
-            {
-                return SetAppleIDFACollectionDisabled(appleIdfaCollectionDisabled);
             }
 
             public Builder SetAppleIDFACollectionDisabled(bool appleIdfaCollectionDisabled)

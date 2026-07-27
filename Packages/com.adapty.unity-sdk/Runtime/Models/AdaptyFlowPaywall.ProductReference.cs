@@ -1,16 +1,15 @@
-﻿//
-//  AdaptyPaywall.ProductReference.cs
-//  AdaptySDK
 //
-//  Created by Aleksei Valiano on 11.09.2023.
+//  AdaptyFlowPaywall.ProductReference.cs
+//  AdaptySDK
 //
 
 namespace AdaptySDK
 {
-    public partial class AdaptyPaywall
+    public partial class AdaptyFlowPaywall
     {
         public partial class ProductReference
         {
+            internal readonly string FlowProductId; //nullable
             internal readonly string VendorProductId;
             internal readonly string AdaptyProductId;
             internal readonly string AccessLevelId;
@@ -30,7 +29,8 @@ namespace AdaptySDK
             }
 
             public override string ToString() =>
-                $"{nameof(VendorProductId)}: {VendorProductId}, "
+                $"{nameof(FlowProductId)}: {FlowProductId}, "
+                + $"{nameof(VendorProductId)}: {VendorProductId}, "
                 + $"{nameof(AdaptyProductId)}: {AdaptyProductId}, "
                 + $"{nameof(AccessLevelId)}: {AccessLevelId}, "
                 + $"{nameof(ProductType)}: {ProductType}, "

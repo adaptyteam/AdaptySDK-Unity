@@ -1,5 +1,5 @@
 //
-//  AdaptyUICreatePaywallViewParameters.cs
+//  AdaptyUICreateFlowViewParameters.cs
 //  AdaptySDK
 //
 //  Created by Aleksei Valiano on 18.12.2024.
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace AdaptySDK
 {
-    public partial class AdaptyUICreatePaywallViewParameters
+    public partial class AdaptyUICreateFlowViewParameters
     {
         public TimeSpan? LoadTimeout;
         public bool? PreloadProducts;
@@ -31,19 +31,19 @@ namespace AdaptySDK
             + $"{nameof(CustomAssets)}: {CustomAssets}, "
             + $"{nameof(ProductPurchaseParameters)}: {ProductPurchaseParameters}";
 
-        public AdaptyUICreatePaywallViewParameters SetLoadTimeout(TimeSpan? loadTimeout)
+        public AdaptyUICreateFlowViewParameters SetLoadTimeout(TimeSpan? loadTimeout)
         {
             LoadTimeout = loadTimeout;
             return this;
         }
 
-        public AdaptyUICreatePaywallViewParameters SetPreloadProducts(bool? preloadProducts)
+        public AdaptyUICreateFlowViewParameters SetPreloadProducts(bool? preloadProducts)
         {
             PreloadProducts = preloadProducts;
             return this;
         }
 
-        public AdaptyUICreatePaywallViewParameters SetCustomTags(
+        public AdaptyUICreateFlowViewParameters SetCustomTags(
             Dictionary<string, string> customTags
         )
         {
@@ -51,7 +51,7 @@ namespace AdaptySDK
             return this;
         }
 
-        public AdaptyUICreatePaywallViewParameters SetCustomTimers(
+        public AdaptyUICreateFlowViewParameters SetCustomTimers(
             Dictionary<string, DateTime> customTimers
         )
         {
@@ -59,7 +59,7 @@ namespace AdaptySDK
             return this;
         }
 
-        public AdaptyUICreatePaywallViewParameters SetCustomAssets(
+        public AdaptyUICreateFlowViewParameters SetCustomAssets(
             Dictionary<string, AdaptyCustomAsset> customAssets
         )
         {
@@ -67,7 +67,7 @@ namespace AdaptySDK
             return this;
         }
 
-        public AdaptyUICreatePaywallViewParameters SetProductPurchaseParameters(
+        public AdaptyUICreateFlowViewParameters SetProductPurchaseParameters(
             Dictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters> productPurchaseParameters
         )
         {

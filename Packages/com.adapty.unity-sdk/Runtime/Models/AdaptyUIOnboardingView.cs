@@ -23,6 +23,7 @@ namespace AdaptySDK
         /// </summary>
         /// <param name="iosPresentationStyle">an [AdaptyUIIOSPresentationStyle] object, for which is representing the iOS presentation style.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
         public void Present(
             AdaptyUIIOSPresentationStyle iosPresentationStyle,
             System.Action<AdaptyError> completionHandler
@@ -32,6 +33,7 @@ namespace AdaptySDK
         /// Call this function if you wish to present the view.
         /// </summary>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
         public void Present(System.Action<AdaptyError> completionHandler) =>
             AdaptyUI.PresentOnboardingView(
                 this,
@@ -43,6 +45,7 @@ namespace AdaptySDK
         /// Call this function if you wish to dismiss the view.
         /// </summary>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
         public void Dismiss(System.Action<AdaptyError> completionHandler) =>
             AdaptyUI.DismissOnboardingView(this, completionHandler);
     }

@@ -43,5 +43,23 @@ namespace AdaptySDK.SimpleJSON
                 return null;
             return new AdaptyRemoteConfig(obj);
         }
+
+        internal static System.Collections.Generic.IList<AdaptyRemoteConfig> GetRemoteConfigList(
+            this JSONNode node,
+            string aKey
+        )
+        {
+            var result = new System.Collections.Generic.List<AdaptyRemoteConfig>();
+            var array = GetArrayIfPresent(node, aKey);
+            if (array is null)
+                return result;
+            foreach (var item in array.Children)
+            {
+                if (!item.IsObject)
+                    throw new System.Exception($"Value by index: {result.Count} is not Object");
+                result.Add(new AdaptyRemoteConfig(item.AsObject));
+            }
+            return result;
+        }
     }
 }

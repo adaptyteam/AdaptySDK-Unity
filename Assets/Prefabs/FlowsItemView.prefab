@@ -364,7 +364,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5694425454275161510}
-        m_TargetAssemblyTypeName: AdaptyExample.PaywallsItemView, Assembly-CSharp
+        m_TargetAssemblyTypeName: AdaptyExample.FlowsItemView, Assembly-CSharp
         m_MethodName: OpenWebPaywallPressed
         m_Mode: 1
         m_Arguments:
@@ -967,7 +967,7 @@ GameObject:
   - component: {fileID: 6138301253755868580}
   - component: {fileID: 7391624984430429265}
   m_Layer: 5
-  m_Name: PaywallsItemView
+  m_Name: FlowsItemView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1009,7 +1009,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7556b344abc03441c9f8a327eaa02d26, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PaywallsItemView
+  m_EditorClassIdentifier: Assembly-CSharp::FlowsItemView
   Listener: {fileID: 0}
   PlacementId: 
   PlacementLocale: 
@@ -1491,8 +1491,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5694425454275161510}
-        m_TargetAssemblyTypeName: AdaptyExample.PaywallsItemView, Assembly-CSharp
-        m_MethodName: LogShowPaywallPressed
+        m_TargetAssemblyTypeName: AdaptyExample.FlowsItemView, Assembly-CSharp
+        m_MethodName: LogShowFlowPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2887,8 +2887,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5694425454275161510}
-        m_TargetAssemblyTypeName: AdaptyExample.PaywallsItemView, Assembly-CSharp
-        m_MethodName: PresentPaywallPressed
+        m_TargetAssemblyTypeName: AdaptyExample.FlowsItemView, Assembly-CSharp
+        m_MethodName: PresentFlowPressed
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3414,8 +3414,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5694425454275161510}
-        m_TargetAssemblyTypeName: AdaptyExample.PaywallsItemView, Assembly-CSharp
-        m_MethodName: PresentPaywallPressed
+        m_TargetAssemblyTypeName: AdaptyExample.FlowsItemView, Assembly-CSharp
+        m_MethodName: PresentFlowPressed
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3737,7 +3737,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8915634547536245594
 RectTransform:
   m_ObjectHideFlags: 0

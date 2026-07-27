@@ -8,47 +8,17 @@ namespace AdaptySDK
     public static partial class Adapty
     {
         /// <summary>
-        /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
+        /// This method enables you to retrieve the flow from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
         /// </summary>
         /// <remarks>
         /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products-unity">Adapty Documentation</see>
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(
+        public static void GetFlowForDefaultAudience(
             string placementId,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywallForDefaultAudience(placementId, null, null, completionHandler);
-
-        /// <summary>
-        /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products-unity">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(
-            string placementId,
-            AdaptyPlacementFetchPolicy fetchPolicy,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywallForDefaultAudience(placementId, null, fetchPolicy, completionHandler);
-
-        /// <summary>
-        /// This method enables you to retrieve the paywall from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products-unity">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the paywall <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void GetPaywallForDefaultAudience(
-            string placementId,
-            string locale,
-            Action<AdaptyPaywall, AdaptyError> completionHandler
-        ) => GetPaywallForDefaultAudience(placementId, locale, null, completionHandler);
+            Action<AdaptyFlow, AdaptyError> completionHandler
+        ) => GetFlowForDefaultAudience(placementId, null, completionHandler);
 
         /// <summary>
         /// This method enables you to retrieve the onboarding from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
@@ -56,6 +26,9 @@ namespace AdaptySDK
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="locale">The identifier of the onboarding localization.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
+        )]
         public static void GetOnboardingForDefaultAudience(
             string placementId,
             string locale,
@@ -68,6 +41,9 @@ namespace AdaptySDK
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
+        )]
         public static void GetOnboardingForDefaultAudience(
             string placementId,
             AdaptyPlacementFetchPolicy fetchPolicy,
@@ -79,6 +55,9 @@ namespace AdaptySDK
         /// </summary>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
+        )]
         public static void GetOnboardingForDefaultAudience(
             string placementId,
             Action<AdaptyOnboarding, AdaptyError> completionHandler
@@ -89,6 +68,7 @@ namespace AdaptySDK
         /// </summary>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
+        [Obsolete("The legacy onboarding API is deprecated in favor of Flows. Use GetFlow instead.")]
         public static void GetOnboarding(
             string placementId,
             Action<AdaptyOnboarding, AdaptyError> completionHandler
@@ -143,10 +123,10 @@ namespace AdaptySDK
         /// <summary>
         /// Opens the paywall in a web view or browser.
         /// </summary>
-        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object to open.</param>
+        /// <param name="paywall">An <see cref="AdaptyFlowPaywall"/> object to open.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void OpenWebPaywall(
-            AdaptyPaywall paywall,
+            AdaptyFlowPaywall paywall,
             Action<AdaptyError> completionHandler
         ) => OpenWebPaywall(paywall, AdaptyWebPresentation.ExternalBrowser, completionHandler);
 
@@ -164,24 +144,27 @@ namespace AdaptySDK
     public static partial class AdaptyUI
     {
         /// <summary>
-        /// Creates a paywall view from an AdaptyPaywall object.
+        /// Creates a flow view from an AdaptyFlow object.
         /// </summary>
         /// <remarks>
-        /// Right after receiving an <see cref="AdaptyPaywall"/>, you can create the corresponding <see cref="AdaptyUIPaywallView"/> to present it afterwards.
+        /// Right after receiving an <see cref="AdaptyFlow"/>, you can create the corresponding <see cref="AdaptyUIFlowView"/> to present it afterwards.
         /// Read more at <see href="https://adapty.io/docs/unity-quickstart-paywalls">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="paywall">An <see cref="AdaptyPaywall"/> object for which you are trying to create a view.</param>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIPaywallView"/> object.</param>
-        public static void CreatePaywallView(
-            AdaptyPaywall paywall,
-            Action<AdaptyUIPaywallView, AdaptyError> completionHandler
-        ) => CreatePaywallView(paywall, null, completionHandler);
+        /// <param name="flow">An <see cref="AdaptyFlow"/> object for which you are trying to create a view.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIFlowView"/> object.</param>
+        public static void CreateFlowView(
+            AdaptyFlow flow,
+            Action<AdaptyUIFlowView, AdaptyError> completionHandler
+        ) => CreateFlowView(flow, null, completionHandler);
 
         /// <summary>
         /// Creates an onboarding view from an AdaptyOnboarding object.
         /// </summary>
         /// <param name="onboarding">An <see cref="AdaptyOnboarding"/> object for which you are trying to create a view.</param>
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIOnboardingView"/> object.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use CreateFlowView instead."
+        )]
         public static void CreateOnboardingView(
             AdaptyOnboarding onboarding,
             Action<AdaptyUIOnboardingView, AdaptyError> completionHandler

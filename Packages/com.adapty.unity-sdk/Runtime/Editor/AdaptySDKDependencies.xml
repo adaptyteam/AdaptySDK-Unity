@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
-  <iosPods>
-    <iosPod name="Adapty" version="3.17.2" minTargetSdk="13.0"></iosPod>
-    <iosPod name="AdaptyUI" version="3.17.2" minTargetSdk="13.0"></iosPod>
-    <iosPod name="AdaptyPlugin" version="3.17.2" minTargetSdk="13.0"></iosPod>
-  </iosPods>
+  <remoteSwiftPackage url="https://github.com/adaptyteam/AdaptySDK-iOS.git" version="4.0.1">
+    <swiftPackage name="Adapty"/>
+    <swiftPackage name="AdaptyUI"/>
+    <swiftPackage name="AdaptyPlugin"/>
+  </remoteSwiftPackage>
 </dependencies>

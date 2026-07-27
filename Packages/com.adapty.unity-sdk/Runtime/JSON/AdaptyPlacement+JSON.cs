@@ -1,5 +1,5 @@
 //
-//  AdaptyPaywall+JSON.cs
+//  AdaptyPlacement+JSON.cs
 //  AdaptySDK
 //
 //  Created by Aleksei Goncharov on 09.09.2025.

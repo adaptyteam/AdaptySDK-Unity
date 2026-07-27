@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AdaptyExample
 {
-    public class PaywallsItemView : MonoBehaviour
+    public class FlowsItemView : MonoBehaviour
     {
         [HideInInspector]
         public AdaptyListener Listener;
@@ -16,16 +16,12 @@ namespace AdaptyExample
         [HideInInspector]
         public string PlacementId;
 
-        [HideInInspector]
-        public string PlacementLocale;
-
         public GameObject ProductButtonPrefab;
         public GameObject OpenWebPaywallButtonPrefab;
         public RectTransform LoadingTransform;
         public RectTransform ProductsContainerTransform;
 
         public TextMeshProUGUI PlacementIdText;
-        public TextMeshProUGUI RequestLocaleText;
         public TextMeshProUGUI StatusText;
         public RectTransform DetailsContainerTransform;
         public TextMeshProUGUI NameText;
@@ -45,9 +41,6 @@ namespace AdaptyExample
         void Update()
         {
             this.PlacementIdText.SetText(this.PlacementId);
-            this.RequestLocaleText.SetText(
-                string.IsNullOrEmpty(this.PlacementLocale) ? "null" : this.PlacementLocale
-            );
         }
 
         void SetLoading(bool loading)
@@ -55,73 +48,58 @@ namespace AdaptyExample
             this.LoadingTransform.gameObject.SetActive(loading);
         }
 
-        private AdaptyPaywall m_paywall;
+        private AdaptyFlow m_flow;
         private List<ProductButton> m_productButtons = new List<ProductButton>(3);
         private List<GameObject> m_openWebPaywallButtons = new List<GameObject>(3);
 
-        public void LoadPaywall(PlacementLoadStrategy loadStrategy, bool isDefaultAudience)
+        public void LoadFlow(PlacementLoadStrategy loadStrategy, bool isDefaultAudience)
         {
             if (string.IsNullOrEmpty(this.PlacementId))
             {
-                this.UpdatePaywallError("PaywallId is empty");
+                this.UpdateFlowError("PlacementId is empty");
                 this.SetLoading(false);
                 return;
             }
-
-            var placementLocale = string.IsNullOrEmpty(this.PlacementLocale)
-                ? null
-                : this.PlacementLocale;
 
             this.SetLoading(true);
 
             var fetchPolicy = loadStrategy.ToFetchPolicy();
 
-            Action<AdaptyPaywall, AdaptyError> onLoadPaywall = (paywall, error) =>
+            Action<AdaptyFlow, AdaptyError> onLoadFlow = (flow, error) =>
             {
                 if (error != null)
                 {
-                    this.UpdatePaywallError(error.Message);
+                    this.UpdateFlowError(error.Message);
                     this.SetLoading(false);
                 }
                 else
                 {
-                    this.m_paywall = paywall;
-                    StartCoroutine(DelayedUpdatePaywall(paywall));
-                    this.LoadProducts(paywall);
+                    this.m_flow = flow;
+                    StartCoroutine(DelayedUpdateFlow(flow));
+                    this.LoadProducts(flow);
                 }
             };
 
             if (isDefaultAudience)
             {
-                Adapty.GetPaywallForDefaultAudience(
-                    this.PlacementId,
-                    placementLocale,
-                    fetchPolicy,
-                    onLoadPaywall
-                );
+                Adapty.GetFlowForDefaultAudience(this.PlacementId, fetchPolicy, onLoadFlow);
             }
             else
             {
-                Adapty.GetPaywall(
-                    this.PlacementId,
-                    placementLocale,
-                    fetchPolicy,
-                    null,
-                    onLoadPaywall
-                );
+                Adapty.GetFlow(this.PlacementId, fetchPolicy, null, onLoadFlow);
             }
         }
 
-        private IEnumerator DelayedUpdatePaywall(AdaptyPaywall paywall)
+        private IEnumerator DelayedUpdateFlow(AdaptyFlow flow)
         {
             yield return new WaitForEndOfFrame();
-            this.UpdatePaywallData(paywall);
+            this.UpdateFlowData(flow);
         }
 
-        void LoadProducts(AdaptyPaywall paywall)
+        void LoadProducts(AdaptyFlow flow)
         {
             Adapty.GetPaywallProducts(
-                paywall,
+                flow,
                 (products, error) =>
                 {
                     if (products != null)
@@ -144,25 +122,25 @@ namespace AdaptyExample
             this.UpdateProductsData(products);
         }
 
-        public void LogShowPaywallPressed()
+        public void LogShowFlowPressed()
         {
-            if (this.m_paywall == null)
+            if (this.m_flow == null)
             {
                 return;
             }
 
-            this.Listener.LogShowPaywall(this.m_paywall, (error) => { });
+            this.Listener.LogShowFlow(this.m_flow, (error) => { });
         }
 
-        public void PresentPaywallPressed(bool fullScreen)
+        public void PresentFlowPressed(bool fullScreen)
         {
-            if (this.m_paywall == null)
+            if (this.m_flow == null)
             {
                 return;
             }
 
-            this.Listener.CreatePaywallView(
-                this.m_paywall,
+            this.Listener.CreateFlowView(
+                this.m_flow,
                 true,
                 (view) =>
                 {
@@ -178,13 +156,15 @@ namespace AdaptyExample
 
         public void OpenWebPaywallPressed()
         {
-            if (this.m_paywall == null)
+            if (this.m_flow == null || this.m_flow.Paywalls.Count == 0)
             {
                 return;
             }
 
+            var flowPaywall = this.m_flow.Paywalls[0];
+
             Adapty.CreateWebPaywallUrl(
-                this.m_paywall,
+                flowPaywall,
                 (url, error) =>
                 {
                     if (error != null)
@@ -199,7 +179,7 @@ namespace AdaptyExample
             );
 
             Adapty.OpenWebPaywall(
-                this.m_paywall,
+                flowPaywall,
                 this.Toggle.isOn
                     ? AdaptyWebPresentation.InAppBrowser
                     : AdaptyWebPresentation.ExternalBrowser,
@@ -250,21 +230,21 @@ namespace AdaptyExample
             );
         }
 
-        private void UpdatePaywallData(AdaptyPaywall paywall)
+        private void UpdateFlowData(AdaptyFlow flow)
         {
             this.StatusText.SetText("OK");
             this.StatusText.color = Color.green;
 
             this.DetailsContainerTransform.gameObject.SetActive(true);
-            this.NameText.SetText(paywall.Name);
-            this.AudienceNameText.SetText(paywall.Placement.AudienceName);
-            this.VariationIdText.SetText(paywall.VariationId);
-            this.RemoteConfigText.SetText(paywall.RemoteConfig?.Locale ?? "null");
+            this.NameText.SetText(flow.Name);
+            this.AudienceNameText.SetText(flow.Placement.AudienceName);
+            this.VariationIdText.SetText(flow.VariationId);
+            this.RemoteConfigText.SetText(flow.RemoteConfig?.Locale ?? "null");
 
             this.ErrorText.gameObject.SetActive(false);
         }
 
-        private void UpdatePaywallError(string error)
+        private void UpdateFlowError(string error)
         {
             this.StatusText.SetText("FAIL");
             this.StatusText.color = Color.red;

@@ -17,6 +17,7 @@ namespace AdaptySDK.SimpleJSON
                 AdaptySubscriptionOfferType.Introductory => "introductory",
                 AdaptySubscriptionOfferType.Promotional => "promotional",
                 AdaptySubscriptionOfferType.WinBack => "win_back",
+                AdaptySubscriptionOfferType.Code => "code",
                 _ => "unknown",
             };
 
@@ -32,6 +33,7 @@ namespace AdaptySDK.SimpleJSON
                 "introductory" => AdaptySubscriptionOfferType.Introductory,
                 "promotional" => AdaptySubscriptionOfferType.Promotional,
                 "win_back" => AdaptySubscriptionOfferType.WinBack,
+                "code" => AdaptySubscriptionOfferType.Code,
                 _ => throw new Exception($"AdaptySubscriptionOfferType unknown value: {value}"),
             };
     }
