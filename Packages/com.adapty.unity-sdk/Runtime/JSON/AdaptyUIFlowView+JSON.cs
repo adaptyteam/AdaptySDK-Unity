@@ -14,6 +14,7 @@ namespace AdaptySDK
             Id = jsonNode.GetString("id");
             PlacementId = jsonNode.GetString("placement_id");
             VariationId = jsonNode.GetString("variation_id");
+            Locale = jsonNode.GetStringIfPresent("locale");
         }
     }
 }

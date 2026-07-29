@@ -76,11 +76,15 @@ namespace AdaptySDK
             get
             {
                 var list = new List<string>();
+                var seen = new HashSet<string>();
                 foreach (var paywall in Paywalls)
                 {
                     foreach (var item in paywall.VendorProductIds)
                     {
-                        list.Add(item);
+                        if (seen.Add(item))
+                        {
+                            list.Add(item);
+                        }
                     }
                 }
                 return list;
@@ -95,11 +99,15 @@ namespace AdaptySDK
             get
             {
                 var list = new List<AdaptyProductIdentifier>();
+                var seen = new HashSet<AdaptyProductIdentifier>();
                 foreach (var paywall in Paywalls)
                 {
                     foreach (var item in paywall.ProductIdentifiers)
                     {
-                        list.Add(item);
+                        if (seen.Add(item))
+                        {
+                            list.Add(item);
+                        }
                     }
                 }
                 return list;

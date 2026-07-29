@@ -16,6 +16,9 @@ namespace AdaptyExample
         [HideInInspector]
         public string PlacementId;
 
+        [HideInInspector]
+        public string PlacementLocale;
+
         public GameObject ProductButtonPrefab;
         public GameObject OpenWebPaywallButtonPrefab;
         public RectTransform LoadingTransform;
@@ -29,6 +32,7 @@ namespace AdaptyExample
         public TextMeshProUGUI VariationIdText;
         public TextMeshProUGUI RevisionText;
         public TextMeshProUGUI RemoteConfigText;
+        public TextMeshProUGUI RequestLocaleText;
         public TextMeshProUGUI ErrorText;
 
         public Toggle Toggle;
@@ -47,6 +51,9 @@ namespace AdaptyExample
         {
             this.LoadingTransform.gameObject.SetActive(loading);
         }
+
+        private string RequestedLocale =>
+            string.IsNullOrEmpty(this.PlacementLocale) ? "null" : this.PlacementLocale;
 
         private AdaptyFlow m_flow;
         private List<ProductButton> m_productButtons = new List<ProductButton>(3);
@@ -142,8 +149,13 @@ namespace AdaptyExample
             this.Listener.CreateFlowView(
                 this.m_flow,
                 true,
+                this.PlacementLocale,
                 (view) =>
                 {
+                    this.RequestLocaleText.SetText(
+                        string.Format("{0} -> {1}", this.RequestedLocale, view.Locale ?? "null")
+                    );
+
                     view.Present(
                         fullScreen
                             ? AdaptyUIIOSPresentationStyle.FullScreen
@@ -240,6 +252,7 @@ namespace AdaptyExample
             this.AudienceNameText.SetText(flow.Placement.AudienceName);
             this.VariationIdText.SetText(flow.VariationId);
             this.RemoteConfigText.SetText(flow.RemoteConfig?.Locale ?? "null");
+            this.RequestLocaleText.SetText(this.RequestedLocale);
 
             this.ErrorText.gameObject.SetActive(false);
         }

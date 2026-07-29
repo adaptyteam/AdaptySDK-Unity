@@ -12,7 +12,6 @@ namespace AdaptyExample
         public RectTransform MainContentTransform;
         public RectTransform MainContentScrollRect;
         public FlowsListView FlowsListView;
-        public OnboardingsListView OnboardingsListView;
 
         [Header("Sections Scripts")]
         public InstallationDetailsSection InstallationDetailsSection;
@@ -31,7 +30,6 @@ namespace AdaptyExample
             this.listener = this.GetComponent<AdaptyListener>();
 
             this.FlowsListView.Listener = this.listener;
-            this.OnboardingsListView.Listener = this.listener;
 
             this.ConfigureLayout();
             this.SelectActiveTab(0);
@@ -41,7 +39,6 @@ namespace AdaptyExample
         {
             this.MainContentScrollRect.gameObject.SetActive(tabIndex == 0);
             this.FlowsListView.gameObject.SetActive(tabIndex == 1);
-            this.OnboardingsListView.gameObject.SetActive(tabIndex == 2);
         }
 
         void ConfigureLayout()

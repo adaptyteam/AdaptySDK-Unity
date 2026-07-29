@@ -118,25 +118,12 @@ namespace AdaptySDK
             var node = new JSONObject();
             node.Add("type", "linear-gradient");
 
-            var colorKeys = Gradient.colorKeys;
-            var alphaKeys = Gradient.alphaKeys;
-
-            if (colorKeys.Length != alphaKeys.Length)
-            {
-                throw new ArgumentException(
-                    "Color keys and alpha keys arrays must have the same length"
-                );
-            }
-
             var values = new JSONArray();
-            for (int i = 0; i < colorKeys.Length; i++)
+            foreach (var time in KeyTimes())
             {
-                var color = colorKeys[i].color;
-                color.a = alphaKeys[i].alpha;
-
                 var valueNode = new JSONObject();
-                valueNode.Add("color", ColorToHex(color));
-                valueNode.Add("p", colorKeys[i].time);
+                valueNode.Add("color", ColorToHex(Gradient.Evaluate(time)));
+                valueNode.Add("p", time);
                 values.Add(valueNode);
             }
             node.Add("values", values);
@@ -149,6 +136,35 @@ namespace AdaptySDK
             node.Add("points", pointsNode);
 
             return node;
+        }
+
+        /// <summary>
+        /// Color keys and alpha keys are independent in a Unity Gradient: they may differ in count and sit
+        /// at different times. Emit a stop at every key time of either channel and let Gradient.Evaluate
+        /// resolve the RGBA there, so the serialized gradient matches what Unity renders.
+        /// </summary>
+        private List<float> KeyTimes()
+        {
+            var times = new List<float>();
+
+            foreach (var key in Gradient.colorKeys)
+            {
+                if (!times.Contains(key.time))
+                {
+                    times.Add(key.time);
+                }
+            }
+
+            foreach (var key in Gradient.alphaKeys)
+            {
+                if (!times.Contains(key.time))
+                {
+                    times.Add(key.time);
+                }
+            }
+
+            times.Sort();
+            return times;
         }
 
         private static string ColorToHex(Color color)

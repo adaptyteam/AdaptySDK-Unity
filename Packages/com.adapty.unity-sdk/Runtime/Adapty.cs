@@ -881,7 +881,7 @@ namespace AdaptySDK
         /// Read more on the <see href="https://adapty.io/docs/unity-making-purchases">Adapty Documentation</see>
         /// </remarks>
         /// <param name="product">An <see cref="AdaptyPaywallProduct"/> object retrieved from the paywall.</param>
-        /// <param name="purchaseParameters">An optional <see cref="AdaptyPurchaseParameters"/> object containing purchase configuration (e.g., subscription update parameters for Android, offer personalization, etc.).</param>
+        /// <param name="purchaseParameters">Android only. An optional <see cref="AdaptyPurchaseParameters"/> object containing purchase configuration (e.g., subscription update parameters, offer personalization, etc.). Ignored on iOS.</param>
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyPurchaseResult"/> object.</param>
         public static void MakePurchase(
             AdaptyPaywallProduct product,
@@ -1260,6 +1260,11 @@ namespace AdaptySDK
 
             if (optionalParameters != null)
             {
+                if (optionalParameters.Locale != null)
+                {
+                    parameters.Add("locale", optionalParameters.Locale);
+                }
+
                 if (optionalParameters.LoadTimeout.HasValue)
                 {
                     parameters.Add(
@@ -1313,6 +1318,14 @@ namespace AdaptySDK
                 if (optionalParameters.CustomAssets != null)
                 {
                     parameters.Add("custom_assets", optionalParameters.CustomAssets.ToJSONNode());
+                }
+
+                if (optionalParameters.EnableSafeAreaPaddings.HasValue)
+                {
+                    parameters.Add(
+                        "enable_safe_area_paddings",
+                        optionalParameters.EnableSafeAreaPaddings.Value
+                    );
                 }
             }
 
@@ -1393,17 +1406,11 @@ namespace AdaptySDK
         public static void DismissFlowView(
             AdaptyUIFlowView view,
             Action<AdaptyError> completionHandler
-        ) => DismissFlowView(view, true, completionHandler);
-
-        private static void DismissFlowView(
-            AdaptyUIFlowView view,
-            bool destroy,
-            Action<AdaptyError> completionHandler
         )
         {
             var parameters = new JSONObject();
             parameters.Add("id", view.Id);
-            parameters.Add("destroy", destroy);
+            parameters.Add("destroy", true);
 
             Request.Send(
                 "adapty_ui_dismiss_flow_view",
@@ -1736,7 +1743,7 @@ namespace AdaptySDK
                 "flow_view_did_answer_permission",
                 parameters,
                 JSONNodeExtensions.GetBoolean,
-                (value, error) => { }
+                (value, error) => LogRoundTripError("flow_view_did_answer_permission", error)
             );
         }
 
@@ -1745,7 +1752,28 @@ namespace AdaptySDK
             var parameters = new JSONObject();
             parameters.Add("event_id", eventId);
 
-            Request.Send(method, parameters, JSONNodeExtensions.GetBoolean, (value, error) => { });
+            Request.Send(
+                method,
+                parameters,
+                JSONNodeExtensions.GetBoolean,
+                (value, error) => LogRoundTripError(method, error)
+            );
+        }
+
+        private static void LogRoundTripError(string method, AdaptyError error)
+        {
+            if (error == null)
+            {
+                return;
+            }
+
+            UnityEngine.Debug.LogError(
+                string.Format(
+                    "[Adapty] '{0}' failed: {1}. The flow may stay blocked waiting for this answer.",
+                    method,
+                    error
+                )
+            );
         }
     }
 

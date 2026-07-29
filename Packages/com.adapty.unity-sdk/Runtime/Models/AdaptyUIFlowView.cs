@@ -11,10 +11,21 @@ namespace AdaptySDK
         public string PlacementId;
         public string VariationId;
 
+        /// <summary>
+        /// The localization the view was actually built with.
+        /// </summary>
+        /// <remarks>
+        /// This is the locale passed to <see cref="AdaptyUICreateFlowViewParameters.SetLocale(string)"/> when that
+        /// localization exists, and the flow's default localization otherwise. It is null when the native SDK is
+        /// older than iOS 4.0.2 / Android 4.0.1 and does not report it.
+        /// </remarks>
+        public string Locale;
+
         public override string ToString() =>
             $"{nameof(Id)}: {Id}, "
             + $"{nameof(PlacementId)}: {PlacementId}, "
-            + $"{nameof(VariationId)}: {VariationId}";
+            + $"{nameof(VariationId)}: {VariationId}, "
+            + $"{nameof(Locale)}: {Locale}";
 
         /// <summary>
         /// Call this function if you wish to present the view.

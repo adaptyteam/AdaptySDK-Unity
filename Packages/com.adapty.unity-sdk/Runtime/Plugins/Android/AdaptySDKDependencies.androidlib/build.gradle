@@ -3,6 +3,10 @@ apply plugin: 'com.android.library'
 def unityLibraryAndroid = project(':unityLibrary').android
 
 dependencies {
+    // Bump to 4.0.1 once io.adapty:android-sdk and io.adapty:android-ui are published at that
+    // version: it carries the flow view locale plumbing behind AdaptyUICreateFlowViewParameters.Locale,
+    // which 4.0.0 accepts and ignores. io.adapty.internal:crossplatform:4.0.1 is already published,
+    // but bumping it alone also requires rebuilding the wrapper AAR in adaptyandroidwrapper/.
     api 'io.adapty.internal:crossplatform:4.0.0'
     api 'io.adapty:android-sdk:4.0.0'
     api 'io.adapty:android-ui:4.0.0'

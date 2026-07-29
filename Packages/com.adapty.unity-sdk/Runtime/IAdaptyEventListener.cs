@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using AdaptySDK.SimpleJSON;
 #if UNITY_IOS && !UNITY_EDITOR
@@ -1000,24 +1001,29 @@ namespace AdaptySDK
                         {
                             Debug.LogWarning(
                                 string.Format(
-                                    "[Adapty] System requests handler is not set, ignoring permission request '{0}'. Call Adapty.SetSystemRequestsHandler() to handle permission requests.",
+                                    "[Adapty] System requests handler is not set, answering 'denied' to permission request '{0}'. Call Adapty.SetSystemRequestsHandler() to handle permission requests.",
                                     permission
                                 )
+                            );
+                            AdaptyUI.FlowViewAnswerPermission(
+                                eventId,
+                                false,
+                                "No IAdaptyUISystemRequestsHandler is set in the Unity SDK."
                             );
                             return;
                         }
 
-                        var answered = false;
+                        // respond(..) is typically invoked from an OS permission callback, off the main thread.
+                        var answered = 0;
                         Action<bool, string> respond = (granted, detail) =>
                         {
-                            if (answered)
+                            if (Interlocked.Exchange(ref answered, 1) == 1)
                             {
                                 Debug.LogWarning(
                                     "[Adapty] Permission request has already been answered, ignoring subsequent respond(..) call."
                                 );
                                 return;
                             }
-                            answered = true;
                             AdaptyUI.FlowViewAnswerPermission(eventId, granted, detail);
                         };
 

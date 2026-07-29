@@ -43,7 +43,7 @@ All SDK calls follow a single JSON-based bridge:
 - **`Packages/com.adapty.unity-sdk/`** — The SDK package distributed to users (UPM layout):
   - `Runtime/Adapty.cs` — Main API (all public methods + internal `Request` class)
   - `Runtime/Adapty.Overloads.cs` — Convenience overloads with fewer parameters
-  - `Runtime/AdaptyEventListener.cs` — Event listener interfaces (`AdaptyEventListener`, `AdaptyFlowsEventsListener`, `AdaptyUISystemRequestsHandler`, `AdaptyUIObserverModeResolver`, `AdaptyOnboardingsEventsListener`) and the `OnMessage` dispatcher
+  - `Runtime/IAdaptyEventListener.cs` — Event listener interfaces (`IAdaptyEventListener`, `IAdaptyFlowsEventsListener`, `IAdaptyUISystemRequestsHandler`, `IAdaptyUIObserverModeResolver`, `IAdaptyOnboardingsEventsListener`) and the `OnMessage` dispatcher
   - `Runtime/Models/` — C# data models (one file per type, e.g. `AdaptyFlow.cs`)
   - `Runtime/JSON/` — JSON serialization/deserialization extensions (one `+JSON.cs` per model, plus `SimpleJSON.cs` library)
   - `Runtime/Plugins/iOS/` — `AdaptyIOS.cs` (P/Invoke bridge) + `Source/` (Swift/ObjC native plugin code)
@@ -58,7 +58,7 @@ All SDK calls follow a single JSON-based bridge:
 
 ### Event System
 
-Native SDKs push events (profile updates, flow view lifecycle, onboarding events) via the same JSON bridge. `Adapty.OnMessage(id, json)` in `AdaptyEventListener.cs` dispatches by event `id` string to the registered listener interfaces. Two event families are round-trips: flow permission requests are answered via `flow_view_did_answer_permission` (keyed by `event_id`), and Observer-mode purchases/restores report back via `observer_*_did_start/finish`.
+Native SDKs push events (profile updates, flow view lifecycle, onboarding events) via the same JSON bridge. `Adapty.OnMessage(id, json)` in `IAdaptyEventListener.cs` dispatches by event `id` string to the registered listener interfaces. Two event families are round-trips: flow permission requests are answered via `flow_view_did_answer_permission` (keyed by `event_id`), and Observer-mode purchases/restores report back via `observer_*_did_start/finish`.
 
 ### Model + JSON Convention
 
@@ -74,4 +74,5 @@ When releasing a new version, update:
 1. `Adapty.SDKVersion` in `Packages/com.adapty.unity-sdk/Runtime/Adapty.cs`
 2. `version` in `Packages/com.adapty.unity-sdk/package.json`
 3. Native dependency versions: iOS in `Runtime/Editor/AdaptySDKDependencies.xml`, Android in `Runtime/Plugins/Android/AdaptySDKDependencies.androidlib/build.gradle` and `adaptyandroidwrapper/unitywrapper/build.gradle` (then rebuild the AAR into `Runtime/Plugins/Android/Local/io/adapty/internal/unity-wrapper/<version>/`)
-4. `cross_platform.yaml` schema `$id` version
+4. `cross_platform.yaml` schema `$id` version — must match the canonical contract in AdaptySDK-iOS (`Sources.AdaptyPlugin/cross_platform.yaml`); diff the two files, not just the version
+5. `CHANGELOG.md` and the `_upm.changelog` string in `package.json` — keep both in sync, the latter is what Package Manager shows after an update

@@ -2,7 +2,6 @@
   "dependencies": {
     "com.adapty.unity-sdk": "file:com.adapty.unity-sdk",
     "com.google.external-dependency-manager": "1.2.188",
-    "com.unity.ai.assistant": "2.15.0-pre.2",
     "com.unity.ide.rider": "3.0.40",
     "com.unity.ide.visualstudio": "2.0.27",
     "com.unity.inputsystem": "1.19.0",
@@ -28,7 +27,8 @@
     "com.unity.modules.unitywebrequesttexture": "1.0.0",
     "com.unity.modules.unitywebrequestwww": "1.0.0",
     "com.unity.modules.vectorgraphics": "1.0.0",
-    "com.unity.modules.video": "1.0.0"
+    "com.unity.modules.video": "1.0.0",
+    "com.unity.pipeline": "0.4.0-exp.1"
   },
   "scopedRegistries": [
     {
