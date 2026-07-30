@@ -999,16 +999,15 @@ namespace AdaptySDK
 
                         if (m_SystemRequestsHandler == null)
                         {
+                            // Send no answer: the native HostRequestRegistry keeps the request pending
+                            // until the view tears down, then resolves it as denied there. Fabricating an
+                            // answer here would duplicate that fallback across two layers — this matches
+                            // both the native no-handler behavior and the Flutter SDK.
                             Debug.LogWarning(
                                 string.Format(
-                                    "[Adapty] System requests handler is not set, answering 'denied' to permission request '{0}'. Call Adapty.SetSystemRequestsHandler() to handle permission requests.",
+                                    "[Adapty] System requests handler is not set, ignoring permission request '{0}'. Call Adapty.SetSystemRequestsHandler() to handle permission requests.",
                                     permission
                                 )
-                            );
-                            AdaptyUI.FlowViewAnswerPermission(
-                                eventId,
-                                false,
-                                "No IAdaptyUISystemRequestsHandler is set in the Unity SDK."
                             );
                             return;
                         }

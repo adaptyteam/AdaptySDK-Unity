@@ -39,10 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (iOS 4.0.1, Android 4.0.0). `MakePurchase`'s purchase parameters and
   `AdaptyUICreateFlowViewParameters.ProductPurchaseParameters` are now documented as Android only,
   matching what the native SDKs actually do with them.
-- A permission request that arrives with no `IAdaptyUISystemRequestsHandler` set is now answered
-  `denied` instead of being ignored, which used to leave the flow waiting until the view was torn
-  down. Errors returned by `flow_view_did_answer_permission` and by the observer-mode round trips
-  are now logged instead of being swallowed.
+- Errors returned by `flow_view_did_answer_permission` and by the observer-mode round trips are now
+  logged instead of being swallowed.
 
 ### Fixed
 
