@@ -15,11 +15,18 @@ using UnityEngine;
 namespace AdaptySDK.Editor
 {
     /// <summary>
-    /// Compiled in only when the ADAPTY_KIDS_MODE scripting define is set (the same define that
-    /// forces apple_idfa_collection_disabled in the runtime configuration), so the two can never
-    /// disagree. Enables the KidsMode trait on the AdaptySDK-iOS Swift package reference in the
-    /// generated Xcode project, so IDFA / AdSupport / AppTrackingTransparency code is compiled out
-    /// (App Store Kids Category / COPPA compliance).
+    /// Enables the KidsMode trait on the AdaptySDK-iOS Swift package reference in the generated
+    /// Xcode project, so IDFA / AdSupport / AppTrackingTransparency code is compiled out of the
+    /// binary (App Store Kids Category / COPPA compliance). Requires an Xcode version that
+    /// supports Swift package traits (Xcode 26 or newer).
+    ///
+    /// Compiled in only when the ADAPTY_KIDS_MODE scripting define is set — the same define that
+    /// forces apple_idfa_collection_disabled in the runtime configuration. Prefer setting it in Player
+    /// Settings: a build profile's defines reach the Editor assemblies only after Unity recompiles them,
+    /// so switching profiles and building in the same session can run this build against stale Editor
+    /// assemblies and skip the trait while the runtime still reports Kids Mode. AdaptyIOSBuildValidator
+    /// fails the build on that state. BuildPlayerOptions.extraScriptingDefines never reaches Editor
+    /// assemblies at all and is invisible to every Editor API, so it cannot be detected.
     /// </summary>
     internal static class AdaptyIOSKidsModePostprocessor
     {

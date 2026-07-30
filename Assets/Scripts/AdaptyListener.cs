@@ -9,7 +9,8 @@ namespace AdaptyExample
         : MonoBehaviour,
             IAdaptyEventListener,
             IAdaptyFlowsEventsListener,
-            IAdaptyOnboardingsEventsListener
+            IAdaptyUISystemRequestsHandler,
+            IAdaptyUIObserverModeResolver
     {
         public event Action OnInitializeFinished;
         public AdaptyRouter Router;
@@ -32,7 +33,8 @@ namespace AdaptyExample
         {
             Adapty.SetEventListener(this);
             Adapty.SetFlowsEventsListener(this);
-            Adapty.SetOnboardingsEventsListener(this);
+            Adapty.SetSystemRequestsHandler(this);
+            Adapty.SetObserverModeResolver(this);
 
             this.LogMethodRequest("SetLogLevel");
 
@@ -517,22 +519,6 @@ namespace AdaptyExample
             );
         }
 
-        private void LogIncomingCall_AdaptyUIOnboardingView(
-            string methodName,
-            AdaptyUIOnboardingView view,
-            string meta
-        )
-        {
-            Debug.Log(
-                string.Format(
-                    "#AdaptyListener# <-- {0}, viewId = {1}, meta = {2}",
-                    methodName,
-                    view.Id,
-                    meta
-                )
-            );
-        }
-
         // – IAdaptyEventListener
 
         public void OnLoadLatestProfile(AdaptyProfile profile)
@@ -564,6 +550,7 @@ namespace AdaptyExample
         public void CreateFlowView(
             AdaptyFlow flow,
             bool preloadProducts,
+            string locale,
             Action<AdaptyUIFlowView> completionHandler
         )
         {
@@ -584,6 +571,7 @@ namespace AdaptyExample
             var customAssets = AdaptyCustomAssetsConfiguration.CreateCustomAssets();
 
             var parameters = new AdaptyUICreateFlowViewParameters()
+                .SetLocale(string.IsNullOrEmpty(locale) ? null : locale)
                 .SetPreloadProducts(preloadProducts)
                 .SetCustomTags(
                     new Dictionary<string, string>
@@ -616,33 +604,6 @@ namespace AdaptyExample
                 (view, error) =>
                 {
                     this.LogMethodResult("CreateFlowView", error);
-
-                    if (error != null)
-                    {
-                        this.Router.ShowAlertPanel(error.ToString());
-                    }
-                    else
-                    {
-                        completionHandler.Invoke(view);
-                    }
-                }
-            );
-        }
-
-        public void CreateOnboardingView(
-            AdaptyOnboarding onboarding,
-            AdaptyWebPresentation externalUrlsPresentation,
-            Action<AdaptyUIOnboardingView> completionHandler
-        )
-        {
-            this.LogMethodRequest("CreateOnboardingView");
-
-            AdaptyUI.CreateOnboardingView(
-                onboarding,
-                externalUrlsPresentation,
-                (view, error) =>
-                {
-                    this.LogMethodResult("CreateOnboardingView", error);
 
                     if (error != null)
                     {
@@ -910,184 +871,73 @@ namespace AdaptyExample
             LogIncomingCall_AdaptyUIFlowView("FlowViewDidReceiveAnalyticEvent", view, name);
         }
 
-        // - IAdaptyOnboardingsEventsListener
+        // - IAdaptyUISystemRequestsHandler
 
-        public void OnboardingViewDidFailWithError(AdaptyUIOnboardingView view, AdaptyError error)
+        public void FlowViewDidAskPermission(
+            AdaptyUIFlowView view,
+            string permission,
+            IDictionary<string, string> customArgs,
+            Action<bool, string> respond
+        )
         {
-            LogIncomingCall_AdaptyUIOnboardingView(
-                "OnboardingViewDidFailWithError",
-                view,
-                error.ToString()
+            var meta = permission;
+            if (customArgs != null)
+            {
+                foreach (KeyValuePair<string, string> arg in customArgs)
+                {
+                    meta += string.Format(", {0} = {1}", arg.Key, arg.Value);
+                }
+            }
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidAskPermission", view, meta);
+
+            // A real app requests the permission from the OS here and reports the actual outcome.
+            respond(true, "Answered by the Unity sample app without asking the OS.");
+        }
+
+        public void FlowViewDidRequestAppReview(AdaptyUIFlowView view)
+        {
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidRequestAppReview", view, null);
+
+            this.LogMethodRequest("RequestAppReview");
+
+            AdaptyUI.RequestAppReview(
+                (error) =>
+                {
+                    this.LogMethodResult("RequestAppReview", error);
+                }
             );
         }
 
-        public void OnboardingViewDidFinishLoading(
-            AdaptyUIOnboardingView view,
-            AdaptyUIOnboardingMeta meta
+        // - IAdaptyUIObserverModeResolver
+
+        public void FlowViewDidInitiatePurchase(
+            AdaptyUIFlowView view,
+            AdaptyPaywallProduct product,
+            Action onStartPurchase,
+            Action onFinishPurchase
         )
         {
-            LogIncomingCall_AdaptyUIOnboardingView(
-                "OnboardingViewDidFinishLoading",
+            LogIncomingCall_AdaptyUIFlowView(
+                "FlowViewDidInitiatePurchase",
                 view,
-                meta.ToString()
+                product.VendorProductId
             );
+
+            // A real app runs its own billing flow between these two calls.
+            onStartPurchase();
+            onFinishPurchase();
         }
 
-        public void OnboardingViewOnCloseAction(
-            AdaptyUIOnboardingView view,
-            AdaptyUIOnboardingMeta meta,
-            string actionId
+        public void FlowViewDidInitiateRestore(
+            AdaptyUIFlowView view,
+            Action onStartRestore,
+            Action onFinishRestore
         )
         {
-            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnCloseAction", view, actionId);
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidInitiateRestore", view, null);
 
-            view.Dismiss(null);
-        }
-
-        public void OnboardingViewOnPaywallAction(
-            AdaptyUIOnboardingView view,
-            AdaptyUIOnboardingMeta meta,
-            string actionId
-        )
-        {
-            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnPaywallAction", view, actionId);
-
-            // TODO: present paywall with ID == actionId
-        }
-
-        public void OnboardingViewOnCustomAction(
-            AdaptyUIOnboardingView view,
-            AdaptyUIOnboardingMeta meta,
-            string actionId
-        )
-        {
-            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnCustomAction", view, actionId);
-        }
-
-        public void OnboardingViewOnStateUpdatedAction(
-            AdaptyUIOnboardingView view,
-            AdaptyUIOnboardingMeta meta,
-            string elementId,
-            AdaptyOnboardingsStateUpdatedParams @params
-        )
-        {
-            switch (@params)
-            {
-                case AdaptyOnboardingsSelectParams selectParams:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnStateUpdatedAction",
-                        view,
-                        "Element: " + elementId + " SelectParams: " + selectParams.ToString()
-                    );
-
-                    break;
-                case AdaptyOnboardingsMultiSelectParams multiSelectParams:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnStateUpdatedAction",
-                        view,
-                        "Element: "
-                            + elementId
-                            + " MultiSelectParams: "
-                            + multiSelectParams.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsInputParams inputParams:
-
-                    switch (inputParams.Input)
-                    {
-                        case AdaptyOnboardingsTextInput textInput:
-                            LogIncomingCall_AdaptyUIOnboardingView(
-                                "OnboardingViewOnStateUpdatedAction",
-                                view,
-                                "Element: " + elementId + " TextInput: " + textInput.Value
-                            );
-                            break;
-                        case AdaptyOnboardingsEmailInput emailInput:
-                            LogIncomingCall_AdaptyUIOnboardingView(
-                                "OnboardingViewOnStateUpdatedAction",
-                                view,
-                                "Element: " + elementId + " EmailInput: " + emailInput.Value
-                            );
-                            break;
-                        case AdaptyOnboardingsNumberInput numberInput:
-                            LogIncomingCall_AdaptyUIOnboardingView(
-                                "OnboardingViewOnStateUpdatedAction",
-                                view,
-                                "Element: " + elementId + " NumberInput: " + numberInput.Value
-                            );
-                            break;
-                    }
-                    break;
-
-                case AdaptyOnboardingsDatePickerParams dateParams:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnStateUpdatedAction",
-                        view,
-                        "Element: " + elementId + " DatePickerParams: " + dateParams.ToString()
-                    );
-                    break;
-            }
-        }
-
-        public void OnboardingViewOnAnalyticsEvent(
-            AdaptyUIOnboardingView view,
-            AdaptyUIOnboardingMeta meta,
-            AdaptyOnboardingsAnalyticsEvent analyticsEvent
-        )
-        {
-            switch (analyticsEvent)
-            {
-                case AdaptyOnboardingsAnalyticsEventOnboardingStarted onboardingStarted:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "OnboardingStarted: " + onboardingStarted.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsAnalyticsEventScreenPresented screenPresented:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "ScreenPresented: " + screenPresented.ToString()
-                    );
-                    break;
-
-                case AdaptyOnboardingsAnalyticsEventScreenCompleted screenCompleted:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "ScreenCompleted: " + screenCompleted.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsAnalyticsEventOnboardingCompleted onboardingCompleted:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "OnboardingCompleted: " + onboardingCompleted.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsAnalyticsEventUserEmailCollected userEmailCollected:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "UserEmailCollected: " + userEmailCollected.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsAnalyticsEventUnknown unknownEvent:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "UnknownEvent: " + unknownEvent.Name
-                    );
-                    break;
-                default:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "UnknownEvent (default): " + analyticsEvent.GetType().Name
-                    );
-                    break;
-            }
+            onStartRestore();
+            onFinishRestore();
         }
     }
 }

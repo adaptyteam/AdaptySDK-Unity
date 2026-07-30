@@ -9,6 +9,13 @@ namespace AdaptyExample
         public AdaptyListener Listener;
 
         public TMP_InputField PlacementIdTextField;
+
+        /// <summary>
+        /// The localization the flow view is built with. A flow itself is not localized at fetch time,
+        /// so this is passed to AdaptyUICreateFlowViewParameters, not to GetFlow.
+        /// </summary>
+        public TMP_InputField PlacementLocaleTextField;
+
         public RectTransform ContentViewTransform;
 
         public GameObject FlowsItemPrefab;
@@ -50,10 +57,12 @@ namespace AdaptyExample
             }
 
             var placementId = this.PlacementIdTextField.text;
+            var placementLocale = this.PlacementLocaleTextField.text;
 
-            this.AddPlacement(placementId, false);
+            this.AddPlacement(placementId, placementLocale, false);
 
             this.PlacementIdTextField.text = "";
+            this.PlacementLocaleTextField.text = "";
         }
 
         public void AddPlacementDefaultAudiencePressed()
@@ -64,19 +73,26 @@ namespace AdaptyExample
             }
 
             var placementId = this.PlacementIdTextField.text;
+            var placementLocale = this.PlacementLocaleTextField.text;
 
-            this.AddPlacement(placementId, true);
+            this.AddPlacement(placementId, placementLocale, true);
 
             this.PlacementIdTextField.text = "";
+            this.PlacementLocaleTextField.text = "";
         }
 
-        private void AddPlacement(string placementId, bool isDefaultAudience)
+        private void AddPlacement(
+            string placementId,
+            string placementLocale,
+            bool isDefaultAudience
+        )
         {
             var flowItem = Instantiate(this.FlowsItemPrefab, this.ContentViewTransform);
             var flowItemView = flowItem.GetComponent<FlowsItemView>();
 
             flowItemView.Listener = this.Listener;
             flowItemView.PlacementId = placementId;
+            flowItemView.PlacementLocale = placementLocale;
             flowItemView.LoadFlow(this.m_loadStrategy, isDefaultAudience);
         }
     }

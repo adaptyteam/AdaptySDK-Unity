@@ -3,9 +3,9 @@ apply plugin: 'com.android.library'
 def unityLibraryAndroid = project(':unityLibrary').android
 
 dependencies {
-    api 'io.adapty.internal:crossplatform:4.0.0'
-    api 'io.adapty:android-sdk:4.0.0'
-    api 'io.adapty:android-ui:4.0.0'
+    api 'io.adapty.internal:crossplatform:4.0.2'
+    api 'io.adapty:android-sdk:4.0.1'
+    api 'io.adapty:android-ui:4.0.1'
 }
 
 android {

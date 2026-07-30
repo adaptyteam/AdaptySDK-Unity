@@ -80,6 +80,31 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 
 Follow our [quickstart guide](https://adapty.io/docs/unity-sdk-overview#get-started?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
 
+## Kids Mode on iOS
+
+Apps in the App Store Kids Category must not link the advertising identifier. Add the
+`ADAPTY_KIDS_MODE` scripting define to build such an app:
+
+- the `KidsMode` trait is enabled on the AdaptySDK-iOS Swift package during the iOS build, so IDFA,
+  AdSupport and AppTrackingTransparency are compiled out of the binary;
+- `apple_idfa_collection_disabled` is forced in the runtime configuration.
+
+Requires Xcode 26 or newer, which is where Swift package traits are supported.
+
+Set the define in **Player Settings > Other Settings > Scripting Define Symbols**. The build step
+that enables the trait lives in an Editor assembly, and Player Settings is what Editor assemblies
+are compiled with.
+
+A build profile's scripting defines also work, but only once Unity has recompiled the Editor
+assemblies for them. Switching build profiles and building in the same session — especially from a
+script — can run the build against Editor assemblies compiled for the previous profile, in which
+case the trait is silently not applied while the runtime still reports Kids Mode. The SDK fails the
+iOS build when it detects that state, so it cannot ship. Setting the define in Player Settings and
+letting the Editor recompile before building avoids the situation entirely.
+
+`BuildPlayerOptions.extraScriptingDefines` never works for this define: it reaches the player
+assemblies only, and it is invisible to every Editor API, so the mismatch cannot be detected either.
+
 ## Contributing
 
 - Feel free to open an issue, we check all of them or drop us an email at [support@adapty.io](mailto:support@adapty.io) and tell us everything you want.
