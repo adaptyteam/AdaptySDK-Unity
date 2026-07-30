@@ -4,7 +4,7 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.0] - 2026-07-29
+## [4.0.0-beta.1] - 2026-07-30
 
 ### Added
 
@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `IAdaptyUIObserverModeResolver`, `IAdaptyOnboardingsEventsListener`).
 - The legacy onboarding API is deprecated in favor of flows.
 - Updated the cross-platform contract to 4.0.2 and the native SDK dependencies to 4.x
-  (iOS 4.0.1, Android 4.0.0). `MakePurchase`'s purchase parameters and
+  (iOS 4.0.2, Android 4.0.1). `MakePurchase`'s purchase parameters and
   `AdaptyUICreateFlowViewParameters.ProductPurchaseParameters` are now documented as Android only,
   matching what the native SDKs actually do with them.
 - Errors returned by `flow_view_did_answer_permission` and by the observer-mode round trips are now
