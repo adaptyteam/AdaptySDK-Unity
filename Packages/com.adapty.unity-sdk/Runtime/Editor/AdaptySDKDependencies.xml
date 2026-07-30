@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
-  <!-- Bump to 4.0.2 once it is tagged: that release carries the flow view locale plumbing behind
-       AdaptyUICreateFlowViewParameters.Locale, which this version accepts and ignores. External
-       Dependency Manager only understands version / upToNextMinor / upToNextMajor here, so the
-       unreleased branch cannot be tracked the way the Flutter SDK does it. -->
-  <remoteSwiftPackage url="https://github.com/adaptyteam/AdaptySDK-iOS.git" version="4.0.1">
+  <remoteSwiftPackage url="https://github.com/adaptyteam/AdaptySDK-iOS.git" version="4.0.2">
     <swiftPackage name="Adapty"/>
     <swiftPackage name="AdaptyUI"/>
     <swiftPackage name="AdaptyPlugin"/>

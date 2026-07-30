@@ -19,8 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   assemblies only and would leave the trait unapplied while the runtime reports Kids Mode.
 - `AdaptyUICreateFlowViewParameters.Locale` — the localization to render the flow with. A flow is
   localized when its view is built, so this is the only place that selects the localization.
-  Requires the native iOS 4.0.2 and Android 4.0.1 releases; until the pinned native dependencies are
-  bumped to them, the value is accepted and ignored by the native SDK.
+  Requires the native iOS 4.0.2 and Android 4.0.1 releases, both of which are now the pinned
+  dependencies.
 - `AdaptyUIFlowView.Locale` — the localization the view was actually built with: the requested one
   when it resolved, and the flow's default localization otherwise. Null when paired with a native SDK
   that does not report it.
