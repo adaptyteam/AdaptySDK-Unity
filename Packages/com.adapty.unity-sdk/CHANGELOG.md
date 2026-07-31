@@ -35,8 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`IAdaptyEventListener`, `IAdaptyFlowsEventsListener`, `IAdaptyUISystemRequestsHandler`,
   `IAdaptyUIObserverModeResolver`, `IAdaptyOnboardingsEventsListener`).
 - The legacy onboarding API is deprecated in favor of flows.
-- Updated the cross-platform contract to 4.0.2 and the native SDK dependencies to 4.x
-  (iOS 4.0.1, Android 4.0.0). `MakePurchase`'s purchase parameters and
+- Updated the cross-platform contract to 4.0.2 and the native SDK dependencies to
+  iOS 4.0.2 and Android 4.0.1. `MakePurchase`'s purchase parameters and
   `AdaptyUICreateFlowViewParameters.ProductPurchaseParameters` are now documented as Android only,
   matching what the native SDKs actually do with them.
 - Errors returned by `flow_view_did_answer_permission` and by the observer-mode round trips are now
