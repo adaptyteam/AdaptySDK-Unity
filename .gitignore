@@ -125,5 +125,8 @@ settings.local.json
 # Generated SDK docs (not distributed via git)
 Assets/AdaptySDK/docs
 
+# Documentation is never committed
+docs/
+
 # Platform build outputs
 /*/outputs/
