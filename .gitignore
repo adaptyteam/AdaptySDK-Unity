@@ -135,3 +135,6 @@ tests/**/*.received.txt
 
 # Platform build outputs
 /*/outputs/
+
+# iOS player output of the demo build scripts
+ios-sim-build/
