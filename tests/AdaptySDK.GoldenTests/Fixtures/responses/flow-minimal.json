@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "developer_id": "onboarding",
+    "audience_name": "All Users",
+    "revision": 1,
+    "ab_test_name": "default",
+    "placement_audience_version_id": "pav-0002"
+  },
+  "flow_id": "flow-0002",
+  "flow_name": "Minimal Flow",
+  "variation_id": "variation-0002",
+  "variations": [],
+  "response_created_at": 1753876800000
+}

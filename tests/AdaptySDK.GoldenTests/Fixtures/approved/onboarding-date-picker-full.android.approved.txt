@@ -1,0 +1,6 @@
+{
+  "$type": "AdaptyOnboardingsDatePickerParams",
+  "Day": 30,
+  "Month": 7,
+  "Year": 2026
+}

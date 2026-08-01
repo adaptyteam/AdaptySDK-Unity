@@ -1,0 +1,7 @@
+{
+  "$type": "AdaptyPurchaseResult",
+  "AppleJWSTransaction": null,
+  "GooglePurchaseToken": null,
+  "Profile": null,
+  "Type": "UserCancelled (1)"
+}

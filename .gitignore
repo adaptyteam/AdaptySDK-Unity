@@ -128,5 +128,10 @@ Assets/AdaptySDK/docs
 # Documentation is never committed
 docs/
 
+# .NET build output of the golden tests
+tests/**/bin/
+tests/**/obj/
+tests/**/*.received.txt
+
 # Platform build outputs
 /*/outputs/

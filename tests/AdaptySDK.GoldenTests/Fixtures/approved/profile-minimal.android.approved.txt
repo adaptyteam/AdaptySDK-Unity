@@ -1,0 +1,13 @@
+{
+  "$type": "AdaptyProfile",
+  "AccessLevels": {},
+  "AppliedAttributionSources": [],
+  "CustomAttributes": {},
+  "CustomerUserId": null,
+  "IsTestUser": false,
+  "NonSubscriptions": {},
+  "ProfileId": "d3f4a1b2-0000-4c8d-9e2f-111122223333",
+  "SegmentId": "8f14e45fceea167a",
+  "Subscriptions": {},
+  "Version": 1753876800000
+}

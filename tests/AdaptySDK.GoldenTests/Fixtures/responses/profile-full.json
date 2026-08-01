@@ -1,0 +1,74 @@
+{
+  "profile_id": "d3f4a1b2-0000-4c8d-9e2f-111122223333",
+  "customer_user_id": "user-42",
+  "segment_hash": "8f14e45fceea167a",
+  "custom_attributes": {
+    "favourite_colour": "green",
+    "score": 12.5
+  },
+  "paid_access_levels": {
+    "premium": {
+      "id": "premium",
+      "is_active": true,
+      "vendor_product_id": "com.adapty.sample.monthly",
+      "store": "app_store",
+      "activated_at": "2026-01-15T09:30:00.000Z",
+      "renewed_at": "2026-07-15T09:30:00.000Z",
+      "expires_at": "2026-08-15T09:30:00.000Z",
+      "starts_at": "2026-01-15T09:30:00.000Z",
+      "is_lifetime": false,
+      "active_introductory_offer_type": "free_trial",
+      "active_promotional_offer_type": "promotional",
+      "active_promotional_offer_id": "promo-winter",
+      "offer_id": "offer-1",
+      "will_renew": true,
+      "is_in_grace_period": false,
+      "unsubscribed_at": "2026-07-20T10:00:00.000Z",
+      "billing_issue_detected_at": "2026-07-19T10:00:00.000Z",
+      "cancellation_reason": "voluntarily_cancelled",
+      "is_refund": false
+    }
+  },
+  "subscriptions": {
+    "com.adapty.sample.monthly": {
+      "store": "app_store",
+      "vendor_product_id": "com.adapty.sample.monthly",
+      "vendor_transaction_id": "2000000123456789",
+      "vendor_original_transaction_id": "2000000000000001",
+      "is_active": true,
+      "is_lifetime": false,
+      "activated_at": "2026-01-15T09:30:00.000Z",
+      "renewed_at": "2026-07-15T09:30:00.000Z",
+      "expires_at": "2026-08-15T09:30:00.000Z",
+      "starts_at": "2026-01-15T09:30:00.000Z",
+      "unsubscribed_at": "2026-07-20T10:00:00.000Z",
+      "billing_issue_detected_at": "2026-07-19T10:00:00.000Z",
+      "is_in_grace_period": false,
+      "is_refund": false,
+      "is_sandbox": true,
+      "will_renew": true,
+      "active_introductory_offer_type": "free_trial",
+      "active_promotional_offer_type": "promotional",
+      "active_promotional_offer_id": "promo-winter",
+      "offer_id": "offer-1",
+      "cancellation_reason": "voluntarily_cancelled"
+    }
+  },
+  "non_subscriptions": {
+    "com.adapty.sample.coins": [
+      {
+        "purchase_id": "a1b2c3d4-0000-4444-8888-999900001111",
+        "store": "app_store",
+        "vendor_product_id": "com.adapty.sample.coins",
+        "vendor_transaction_id": "2000000987654321",
+        "purchased_at": "2026-06-01T12:00:00.000Z",
+        "is_sandbox": true,
+        "is_refund": false,
+        "is_consumable": true
+      }
+    ]
+  },
+  "timestamp": 1753876800000,
+  "is_test_user": true,
+  "applied_attribution_sources": ["appsflyer", "adjust"]
+}

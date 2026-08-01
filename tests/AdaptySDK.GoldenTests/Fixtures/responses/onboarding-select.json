@@ -1,0 +1,7 @@
+{
+  "action": {
+    "element_id": "plan",
+    "element_type": "select",
+    "value": { "id": "plan-1", "value": "monthly", "label": "Monthly" }
+  }
+}
