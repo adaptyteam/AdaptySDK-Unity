@@ -42,9 +42,10 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Gets a value indicating whether both AppAccountToken and ObfuscatedAccountId are null.
+        /// Gets a value indicating whether neither AppAccountToken nor ObfuscatedAccountId carries a value.
         /// </summary>
-        public bool IsEmpty => IosAppAccountToken == null && AndroidObfuscatedAccountId == null;
+        public bool IsEmpty =>
+            IosAppAccountToken == Guid.Empty && string.IsNullOrEmpty(AndroidObfuscatedAccountId);
 
         public override string ToString() =>
             $"{nameof(IosAppAccountToken)}: {IosAppAccountToken}, "
