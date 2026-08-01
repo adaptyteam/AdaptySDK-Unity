@@ -1,0 +1,11 @@
+<!--
+  Newtonsoft creates the SDK models by reflection, so managed stripping has no way to see that
+  their constructors and members are used. Verified on an IL2CPP player with stripping High:
+  without this file every model fails with "Unable to find a constructor to use for type ...".
+
+  The Newtonsoft package ships its own link.xml, but it only preserves System.ComponentModel
+  converters and nothing from this assembly.
+-->
+<linker>
+  <assembly fullname="com.adapty.unity-sdk.next" preserve="all" />
+</linker>
