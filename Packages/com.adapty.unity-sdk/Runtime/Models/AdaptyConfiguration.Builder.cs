@@ -23,6 +23,7 @@ namespace AdaptySDK
             GoogleLocalAccessLevelAllowed = builder.GoogleLocalAccessLevelAllowed;
             IpAddressCollectionDisabled = builder.IpAddressCollectionDisabled;
             AppleClearDataOnBackup = builder.AppleClearDataOnBackup;
+            ServerCluster = builder.ServerCluster;
             BackendProxyHost = builder.BackendProxyHost;
             BackendProxyPort = builder.BackendProxyPort;
             LogLevel = builder.LogLevel;
@@ -42,7 +43,7 @@ namespace AdaptySDK
             public bool? GoogleLocalAccessLevelAllowed;
             public bool IpAddressCollectionDisabled;
             public bool? AppleClearDataOnBackup;
-            public AdaptyServerCluster ServerCluster;
+            public AdaptyServerCluster? ServerCluster;
             public string BackendProxyHost; //nullable
             public int BackendProxyPort;
             public AdaptyLogLevel LogLevel;

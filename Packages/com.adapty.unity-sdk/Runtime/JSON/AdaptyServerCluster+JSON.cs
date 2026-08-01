@@ -14,7 +14,7 @@ namespace AdaptySDK.SimpleJSON
             {
                 AdaptyServerCluster.EU => "eu",
                 AdaptyServerCluster.CN => "cn",
-                _ => null,
+                _ => "default",
             };
     }
 }
