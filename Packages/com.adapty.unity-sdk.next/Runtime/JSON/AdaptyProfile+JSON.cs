@@ -1,0 +1,60 @@
+﻿//
+//  AdaptyProfile+JSON.cs
+//  AdaptySDK
+//
+//  Created by Aleksei Valiano on 20.12.2022.
+//
+
+using System.Collections.Generic;
+
+namespace AdaptySDK
+{
+    using AdaptySDK.SimpleJSON;
+
+    public partial class AdaptyProfile
+    {
+        internal AdaptyProfile(JSONObject jsonNode)
+        {
+            ProfileId = jsonNode.GetString("profile_id");
+            SegmentId = jsonNode.GetString("segment_hash");
+            CustomerUserId = jsonNode.GetStringIfPresent("customer_user_id");
+            AppliedAttributionSources =
+                jsonNode.GetStringListIfPresent("applied_attribution_sources")
+                ?? new List<string>();
+            CustomAttributes =
+                jsonNode.GetDictionaryIfPresent("custom_attributes")
+                ?? new Dictionary<string, object>();
+            AccessLevels =
+                jsonNode.GetAccessLevelDictionaryIfPresent("paid_access_levels")
+                ?? new Dictionary<string, AccessLevel>();
+            Subscriptions =
+                jsonNode.GetSubscriptionDictionaryIfPresent("subscriptions")
+                ?? new Dictionary<string, Subscription>();
+            NonSubscriptions =
+                jsonNode.GetNonSubscriptionDictionaryIfPresent("non_subscriptions")
+                ?? new Dictionary<string, IList<NonSubscription>>();
+            Version = jsonNode.GetLong("timestamp");
+            IsTestUser = jsonNode.GetBoolean("is_test_user");
+        }
+    }
+}
+
+namespace AdaptySDK.SimpleJSON
+{
+    internal static partial class JSONNodeExtensions
+    {
+        internal static AdaptyProfile GetAdaptyProfile(this JSONNode node) =>
+            new AdaptyProfile(GetObject(node));
+
+        internal static AdaptyProfile GetAdaptyProfile(this JSONNode node, string aKey) =>
+            new AdaptyProfile(GetObject(node, aKey));
+
+        internal static AdaptyProfile GetAdaptyProfileIfPresent(this JSONNode node, string aKey)
+        {
+            var obj = GetObjectIfPresent(node, aKey);
+            if (obj is null)
+                return null;
+            return new AdaptyProfile(obj);
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "com.adapty.unity-sdk.next",
+  "version": "4.0.0",
+  "displayName": "Adapty Unity SDK (next)",
+  "description": "Work in progress: the Adapty Unity SDK with the JSON layer moved from SimpleJSON to Newtonsoft.Json. Replaces com.adapty.unity-sdk once the migration is complete; not for distribution.",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.2"
+  },
+  "peerDependencies": {
+    "com.google.external-dependency-manager": "1.2.188"
+  },
+  "documentationUrl": "https://adapty.io/docs/unity-sdk-overview",
+  "licensesUrl": "https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/LICENSE",
+  "homepageUrl": "https://github.com/adaptyteam/AdaptySDK-Unity",
+  "keywords": [
+    "adapty",
+    "subscriptions",
+    "in-app purchases",
+    "paywalls",
+    "onboarding"
+  ],
+  "author": {
+    "name": "Adapty",
+    "email": "support@adapty.io",
+    "url": "https://adapty.io"
+  }
+}
