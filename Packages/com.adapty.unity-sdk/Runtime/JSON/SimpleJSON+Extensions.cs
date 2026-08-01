@@ -133,13 +133,13 @@ namespace AdaptySDK.SimpleJSON
 
         internal static int GetInteger(this JSONNode node, string aKey) => (int)node.GetDouble(aKey);
 
-        internal static int? GetIntegerIfPresent(this JSONNode node) => (int)node.GetDoubleIfPresent();
+        internal static int? GetIntegerIfPresent(this JSONNode node) => (int?)node.GetDoubleIfPresent();
 
-        internal static int? GetIntegerIfPresent(this JSONNode node, string aKey) => (int)node.GetDoubleIfPresent(aKey);
+        internal static int? GetIntegerIfPresent(this JSONNode node, string aKey) => (int?)node.GetDoubleIfPresent(aKey);
 
         internal static float GetFloat(this JSONNode node, string aKey) => (float)node.GetDouble(aKey);
 
-        internal static float? GetFloatIfPresent(this JSONNode node, string aKey) => (float)node.GetDoubleIfPresent(aKey);
+        internal static float? GetFloatIfPresent(this JSONNode node, string aKey) => (float?)node.GetDoubleIfPresent(aKey);
 
         internal static long GetLong(this JSONNode node)
         {
