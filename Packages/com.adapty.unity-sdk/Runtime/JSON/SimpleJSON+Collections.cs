@@ -131,6 +131,14 @@ namespace AdaptySDK.SimpleJSON
                 {
                     result.Add(item.Key, new JSONString(item.Value as string));
                 }
+                else if (item.Value is bool boolValue)
+                {
+                    result.Add(item.Key, new JSONBool(boolValue));
+                }
+                else if (item.Value is DateTime dateTimeValue)
+                {
+                    result.Add(item.Key, dateTimeValue.ToJSONNode());
+                }
                 else if (
                     item.Value is int
                     || item.Value is uint
@@ -178,6 +186,14 @@ namespace AdaptySDK.SimpleJSON
                 else if (item is string)
                 {
                     result.Add(new JSONString(item as string));
+                }
+                else if (item is bool boolValue)
+                {
+                    result.Add(new JSONBool(boolValue));
+                }
+                else if (item is DateTime dateTimeValue)
+                {
+                    result.Add(dateTimeValue.ToJSONNode());
                 }
                 else if (
                     item is int
