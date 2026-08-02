@@ -1,0 +1,9 @@
+{
+  "status": "determined",
+  "details": {
+    "install_id": "install-0001",
+    "install_time": "2026-07-30T10:00:00.000Z",
+    "app_launch_count": 7,
+    "payload": "{\"campaign\":\"summer\"}"
+  }
+}

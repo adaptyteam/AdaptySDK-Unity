@@ -5,28 +5,46 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
+using System.Runtime.Serialization;
+
 namespace AdaptySDK
 {
+    [DataContract]
     public partial class AdaptySubscription
     {
+        private AdaptySubscription() { }
+
         /// The identifier of the subscription group to which the subscription belongs.
         ///
         /// [Nullable]
+        #if UNITY_IOS
+        [DataMember(Name = "group_identifier", IsRequired = true)]
+#endif
         public readonly string GroupIdentifier;
 
         /// A ProductSubscriptionPeriodModel object.
         /// The period details for products that are subscriptions.
         ///
+        [DataMember(Name = "period", IsRequired = true)]
         public readonly AdaptySubscriptionPeriod Period;
 
         /// Localized subscription period of the product.
         ///
         /// [Nullable]
+        [DataMember(Name = "localized_period")]
         public readonly string LocalizedPeriod;
 
+        [DataMember(Name = "offer")]
         public readonly AdaptySubscriptionOffer Offer;
 
-        public readonly AdaptySubscriptionRenewalType RenewalType;
+        #if UNITY_ANDROID
+        [DataMember(Name = "renewal_type", IsRequired = true)]
+#endif
+        public readonly AdaptySubscriptionRenewalType RenewalType =
+            AdaptySubscriptionRenewalType.Autorenewable;
+        #if UNITY_ANDROID
+        [DataMember(Name = "base_plan_id", IsRequired = true)]
+#endif
         public readonly string BasePlanId; //nullable
 
 

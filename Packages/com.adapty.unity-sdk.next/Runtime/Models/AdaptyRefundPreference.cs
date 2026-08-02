@@ -6,13 +6,17 @@
 //
 
 using System;
+using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
     public enum AdaptyRefundPreference
     {
+        [EnumMember(Value = "no_preference")]
         NoPreference,
+        [EnumMember(Value = "grant")]
         Grant,
+        [EnumMember(Value = "decline")]
         Decline,
     }
 

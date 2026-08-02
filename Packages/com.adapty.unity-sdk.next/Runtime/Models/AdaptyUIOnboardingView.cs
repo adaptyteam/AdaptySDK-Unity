@@ -5,12 +5,20 @@
 //  Created by Aleksei Valiano on 17.12.2024.
 //
 
+using System.Runtime.Serialization;
+
 namespace AdaptySDK
 {
+    [DataContract]
     public partial class AdaptyUIOnboardingView
     {
+        private AdaptyUIOnboardingView() { }
+
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id;
+        [DataMember(Name = "placement_id", IsRequired = true)]
         public string PlacementId;
+        [DataMember(Name = "variation_id", IsRequired = true)]
         public string PaywallVariationId;
 
         public override string ToString() =>

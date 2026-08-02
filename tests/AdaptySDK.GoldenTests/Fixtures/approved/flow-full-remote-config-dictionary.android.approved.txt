@@ -1,0 +1,22 @@
+{
+  "absent": null,
+  "discount": 30,
+  "enabled": true,
+  "mixed": [
+    1,
+    true,
+    null,
+    {
+      "k": "v"
+    }
+  ],
+  "nested": {
+    "k": "v"
+  },
+  "released_at": "2026-07-30T10:00:00.000Z",
+  "tags": [
+    "a",
+    "b"
+  ],
+  "title": "Go premium"
+}

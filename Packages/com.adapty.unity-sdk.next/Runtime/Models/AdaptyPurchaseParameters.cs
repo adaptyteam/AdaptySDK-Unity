@@ -5,11 +5,16 @@
 //  Created by Alexey Goncharov on 10.09.2025.
 //
 
+using System.Runtime.Serialization;
+
 namespace AdaptySDK
 {
+    [DataContract]
     public partial class AdaptyPurchaseParameters
     {
+        [DataMember(Name = "subscription_update_params")]
         public readonly AdaptySubscriptionUpdateParameters SubscriptionUpdateParams; // Android Only, nullable
+        [DataMember(Name = "is_offer_personalized")]
         public readonly bool? IsOfferPersonalized; // Android Only, nullable
 
         public AdaptyPurchaseParameters(

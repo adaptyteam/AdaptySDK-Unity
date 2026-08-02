@@ -138,35 +138,6 @@ namespace AdaptySDK
             return node;
         }
 
-        /// <summary>
-        /// Color keys and alpha keys are independent in a Unity Gradient: they may differ in count and sit
-        /// at different times. Emit a stop at every key time of either channel and let Gradient.Evaluate
-        /// resolve the RGBA there, so the serialized gradient matches what Unity renders.
-        /// </summary>
-        private List<float> KeyTimes()
-        {
-            var times = new List<float>();
-
-            foreach (var key in Gradient.colorKeys)
-            {
-                if (!times.Contains(key.time))
-                {
-                    times.Add(key.time);
-                }
-            }
-
-            foreach (var key in Gradient.alphaKeys)
-            {
-                if (!times.Contains(key.time))
-                {
-                    times.Add(key.time);
-                }
-            }
-
-            times.Sort();
-            return times;
-        }
-
         private static string ColorToHex(Color color)
         {
             var r = Mathf.RoundToInt(color.r * 255);

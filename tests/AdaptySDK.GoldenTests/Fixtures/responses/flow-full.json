@@ -14,7 +14,7 @@
   "remote_configs": [
     {
       "lang": "en",
-      "data": "{\"title\":\"Go premium\",\"discount\":30,\"enabled\":true,\"nested\":{\"k\":\"v\"},\"released_at\":\"2026-07-30T10:00:00.000Z\"}"
+      "data": "{\"title\": \"Go premium\", \"discount\": 30, \"enabled\": true, \"nested\": {\"k\": \"v\"}, \"released_at\": \"2026-07-30T10:00:00.000Z\", \"tags\": [\"a\", \"b\"], \"mixed\": [1, true, null, {\"k\": \"v\"}], \"absent\": null}"
     },
     {
       "lang": "es",

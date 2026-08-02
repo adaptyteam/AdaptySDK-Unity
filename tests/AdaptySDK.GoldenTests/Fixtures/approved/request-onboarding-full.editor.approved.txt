@@ -1,0 +1,23 @@
+{
+  "onboarding_builder": {
+    "config_url": "https://cdn.adapty.io/onboardings/onboarding-0001.json"
+  },
+  "onboarding_id": "onboarding-0001",
+  "onboarding_name": "Welcome Onboarding",
+  "payload_data": "{\"custom\":\"onboarding payload\"}",
+  "placement": {
+    "ab_test_name": "onboarding_test",
+    "audience_name": "All Users",
+    "developer_id": "welcome",
+    "is_tracking_purchases": false,
+    "placement_audience_version_id": "pav-0002",
+    "revision": 3
+  },
+  "remote_config": {
+    "data": "{\"steps\":3,\"skippable\":false}",
+    "lang": "en"
+  },
+  "request_locale": "en",
+  "response_created_at": 1754006400,
+  "variation_id": "variation-0002"
+}

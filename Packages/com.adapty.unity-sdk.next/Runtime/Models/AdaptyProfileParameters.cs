@@ -8,25 +8,51 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    [DataContract]
     public partial class AdaptyProfileParameters
     {
+        [DataMember(Name = "first_name")]
         public string FirstName;
+        [DataMember(Name = "last_name")]
         public string LastName;
+        [DataMember(Name = "gender")]
         public AdaptyProfileGender? Gender;
         public DateTime? Birthday;
+        [DataMember(Name = "email")]
         public string Email;
+        [DataMember(Name = "phone_number")]
         public string PhoneNumber;
 
 
+        #if UNITY_IOS
+        [DataMember(Name = "att_status")]
+#endif
         public AppTrackingTransparencyStatus? AppTrackingTransparencyStatus;
+        [DataMember(Name = "analytics_disabled")]
         public bool? AnalyticsDisabled;
 
         private Dictionary<string, object> _CustomAttributes = new Dictionary<string, object>();
 
         public Dictionary<string, object> CustomAttributes => _CustomAttributes;
+
+
+        /// <remarks>
+        /// The contract wants a plain calendar date here, not the timestamp format of the other
+        /// dates, so this one is written by hand rather than through the date converter.
+        /// </remarks>
+        [DataMember(Name = "birthday")]
+        private string BirthdayForRequest =>
+            Birthday.HasValue
+                ? $"{Birthday.Value.Year}-{Birthday.Value.Month}-{Birthday.Value.Day}"
+                : null;
+
+        [DataMember(Name = "custom_attributes")]
+        private System.Collections.Generic.Dictionary<string, object> CustomAttributesForRequest =>
+            _CustomAttributes.Count > 0 ? _CustomAttributes : null;
 
         public void SetCustomStringAttribute(string key, string value)
         {

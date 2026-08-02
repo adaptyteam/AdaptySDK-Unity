@@ -5,14 +5,24 @@
 //  Created by Alexey Goncharov on 10.09.2025.
 //
 
+using System.Runtime.Serialization;
+
 namespace AdaptySDK
 {
     /// A lightweight identifier used when addressing a specific product across platforms.
+    [DataContract]
     public partial class AdaptyProductIdentifier
     {
+        private AdaptyProductIdentifier() { }
+
+        [DataMember(Name = "vendor_product_id", IsRequired = true)]
         public readonly string VendorProductId;
+        [DataMember(Name = "adapty_product_id", IsRequired = true)]
         internal readonly string _AdaptyProductId;
+        [DataMember(Name = "base_plan_id")]
         public readonly string BasePlanId; // Android Only, nullable
+
+        private bool ShouldSerializeBasePlanId() => !string.IsNullOrEmpty(BasePlanId);
 
         public AdaptyProductIdentifier(
             string vendorProductId,

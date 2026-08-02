@@ -1,0 +1,32 @@
+{
+  "$type": "AdaptyOnboarding",
+  "Name": "Welcome Onboarding",
+  "OnboardingId": "onboarding-0001",
+  "Placement": {
+    "$type": "AdaptyPlacement",
+    "ABTestName": "onboarding_test",
+    "AudienceName": "All Users",
+    "GetIsTrackingPurchases (property)": false,
+    "Id": "welcome",
+    "IsTrackingPurchases": false,
+    "PlacementAudienceVersionId": "pav-0002",
+    "Revision": 3
+  },
+  "RemoteConfig": {
+    "$type": "AdaptyRemoteConfig",
+    "Data": "{\"steps\":3,\"skippable\":false}",
+    "Dictionary (property)": {
+      "skippable": false,
+      "steps": 3
+    },
+    "Locale": "en"
+  },
+  "VariationId": "variation-0002",
+  "_Builder": {
+    "$type": "OnboardingBuilder",
+    "ConfigUrl": "https://cdn.adapty.io/onboardings/onboarding-0001.json"
+  },
+  "_PayloadData": "{\"custom\":\"onboarding payload\"}",
+  "_RequestLocale": "en",
+  "_ResponseCreatedAt": 1754006400
+}

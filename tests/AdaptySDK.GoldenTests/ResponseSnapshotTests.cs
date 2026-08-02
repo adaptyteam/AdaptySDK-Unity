@@ -26,6 +26,67 @@ namespace AdaptySDK.GoldenTests
             Snapshots.Matches(fixture, ModelSnapshot.Render(flow));
         }
 
+        [TestCase("onboarding-full")]
+        [TestCase("onboarding-minimal")]
+        public void Onboarding(string fixture)
+        {
+            var onboarding = JSONNode.Parse(Snapshots.LoadResponse(fixture)).GetOnboarding();
+            Snapshots.Matches(fixture, ModelSnapshot.Render(onboarding));
+        }
+
+        [TestCase("onboarding-analytics-started")]
+        [TestCase("onboarding-analytics-screen-completed")]
+        [TestCase("onboarding-analytics-screen-completed-bare")]
+        [TestCase("onboarding-analytics-unknown")]
+        public void OnboardingAnalyticsEvent(string fixture)
+        {
+            var node = JSONNode.Parse(Snapshots.LoadResponse(fixture));
+            Snapshots.Matches(
+                fixture,
+                ModelSnapshot.Render(node.GetOnboardingsAnalyticsEvent("event"))
+            );
+        }
+
+        [TestCase("installation-determined")]
+        [TestCase("installation-determined-minimal")]
+        [TestCase("installation-not-determined")]
+        [TestCase("installation-not-available")]
+        public void InstallationStatus(string fixture)
+        {
+            var status = JSONNode.Parse(Snapshots.LoadResponse(fixture)).GetInstallationStatus();
+            Snapshots.Matches(fixture, ModelSnapshot.Render(status));
+        }
+
+        [TestCase("error-full")]
+        [TestCase("error-minimal")]
+        public void Error(string fixture)
+        {
+            var error = JSONNode.Parse(Snapshots.LoadResponse(fixture)).GetAdaptyError("error");
+            Snapshots.Matches(fixture, ModelSnapshot.Render(error));
+        }
+
+        [TestCase("user-action-full")]
+        [TestCase("user-action-minimal")]
+        public void UserAction(string fixture)
+        {
+            var node = JSONNode.Parse(Snapshots.LoadResponse(fixture));
+            Snapshots.Matches(fixture, ModelSnapshot.Render(node.GetAdaptyUIUserAction("action")));
+        }
+
+        /// <summary>
+        /// The remote config's dashboard JSON is parsed lazily by a public property, not by the
+        /// response parser, so it needs its own case.
+        /// </summary>
+        [TestCase("flow-full")]
+        public void RemoteConfigDictionary(string fixture)
+        {
+            var flow = JSONNode.Parse(Snapshots.LoadResponse(fixture)).GetFlow();
+            Snapshots.Matches(
+                fixture + "-remote-config-dictionary",
+                ModelSnapshot.Render(flow.RemoteConfig.Dictionary)
+            );
+        }
+
         [TestCase("products-full")]
         public void PaywallProducts(string fixture)
         {

@@ -1,0 +1,6 @@
+{
+  "content": "You keep access until the end of the period.",
+  "default_action_title": "Keep",
+  "secondary_action_title": "Cancel",
+  "title": "Cancel subscription?"
+}

@@ -1,0 +1,10 @@
+{
+  "$type": "AdaptyInstallationStatusDetermined",
+  "Details": {
+    "$type": "AdaptyInstallationDetails",
+    "AppLaunchCount": 1,
+    "InstallId": null,
+    "InstallTime": { "utc": "2026-07-30T10:00:00.0000000Z", "kind": "Local" },
+    "Payload": null
+  }
+}

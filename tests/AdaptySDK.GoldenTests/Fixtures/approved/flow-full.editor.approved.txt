@@ -92,14 +92,27 @@
   ],
   "RemoteConfig (property)": {
     "$type": "AdaptyRemoteConfig",
-    "Data": "{\"title\":\"Go premium\",\"discount\":30,\"enabled\":true,\"nested\":{\"k\":\"v\"},\"released_at\":\"2026-07-30T10:00:00.000Z\"}",
+    "Data": "{\"title\": \"Go premium\", \"discount\": 30, \"enabled\": true, \"nested\": {\"k\": \"v\"}, \"released_at\": \"2026-07-30T10:00:00.000Z\", \"tags\": [\"a\", \"b\"], \"mixed\": [1, true, null, {\"k\": \"v\"}], \"absent\": null}",
     "Dictionary (property)": {
+      "absent": null,
       "discount": 30,
       "enabled": true,
+      "mixed": [
+        1,
+        true,
+        null,
+        {
+          "k": "v"
+        }
+      ],
       "nested": {
         "k": "v"
       },
       "released_at": "2026-07-30T10:00:00.000Z",
+      "tags": [
+        "a",
+        "b"
+      ],
       "title": "Go premium"
     },
     "Locale": "en"
@@ -107,14 +120,27 @@
   "RemoteConfigs": [
     {
       "$type": "AdaptyRemoteConfig",
-      "Data": "{\"title\":\"Go premium\",\"discount\":30,\"enabled\":true,\"nested\":{\"k\":\"v\"},\"released_at\":\"2026-07-30T10:00:00.000Z\"}",
+      "Data": "{\"title\": \"Go premium\", \"discount\": 30, \"enabled\": true, \"nested\": {\"k\": \"v\"}, \"released_at\": \"2026-07-30T10:00:00.000Z\", \"tags\": [\"a\", \"b\"], \"mixed\": [1, true, null, {\"k\": \"v\"}], \"absent\": null}",
       "Dictionary (property)": {
+        "absent": null,
         "discount": 30,
         "enabled": true,
+        "mixed": [
+          1,
+          true,
+          null,
+          {
+            "k": "v"
+          }
+        ],
         "nested": {
           "k": "v"
         },
         "released_at": "2026-07-30T10:00:00.000Z",
+        "tags": [
+          "a",
+          "b"
+        ],
         "title": "Go premium"
       },
       "Locale": "en"

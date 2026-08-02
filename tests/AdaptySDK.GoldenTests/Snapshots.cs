@@ -31,6 +31,62 @@ namespace AdaptySDK.GoldenTests
         public static string LoadResponse(string name) =>
             File.ReadAllText(Path.Combine(FixturesDirectory, "responses", name + ".json"));
 
+        /// <summary>
+        /// Rewrites a request payload with its keys sorted, so snapshots compare what was sent
+        /// rather than the order it happened to be written in: the manual layer emits keys in the
+        /// order of the Add(..) calls, Newtonsoft in the order of the members.
+        ///
+        /// A whole-numbered float is also folded to an integer. JSON has a single number type, and
+        /// the two writers render the same value differently - SimpleJSON writes 0, Newtonsoft
+        /// writes 0.0 - which is not a difference any reader can observe. Fractional values keep
+        /// their digits, so a real precision drift still shows up.
+        /// </summary>
+        public static string Canonical(string json)
+        {
+            var token = Newtonsoft.Json.Linq.JToken.Parse(json);
+            return Sort(token).ToString(Newtonsoft.Json.Formatting.Indented) + "\n";
+        }
+
+        private static Newtonsoft.Json.Linq.JToken Sort(Newtonsoft.Json.Linq.JToken token)
+        {
+            if (token is Newtonsoft.Json.Linq.JObject map)
+            {
+                var sorted = new Newtonsoft.Json.Linq.JObject();
+                var keys = new System.Collections.Generic.List<string>();
+                foreach (var property in map.Properties())
+                {
+                    keys.Add(property.Name);
+                }
+                keys.Sort(System.StringComparer.Ordinal);
+                foreach (var key in keys)
+                {
+                    sorted.Add(key, Sort(map[key]));
+                }
+                return sorted;
+            }
+
+            if (token is Newtonsoft.Json.Linq.JArray array)
+            {
+                var sorted = new Newtonsoft.Json.Linq.JArray();
+                foreach (var item in array)
+                {
+                    sorted.Add(Sort(item));
+                }
+                return sorted;
+            }
+
+            if (token.Type == Newtonsoft.Json.Linq.JTokenType.Float)
+            {
+                var number = ((Newtonsoft.Json.Linq.JValue)token).ToObject<double>();
+                if (number == Math.Floor(number) && !double.IsInfinity(number))
+                {
+                    return new Newtonsoft.Json.Linq.JValue((long)number);
+                }
+            }
+
+            return token;
+        }
+
         public static void Matches(string name, string actual)
         {
             var approvedDirectory = Path.Combine(FixturesDirectory, "approved");

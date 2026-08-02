@@ -1,0 +1,4 @@
+{
+  "$type": "AdaptyOnboardingsAnalyticsEventUnknown",
+  "Name": "paywall_screen_presented"
+}

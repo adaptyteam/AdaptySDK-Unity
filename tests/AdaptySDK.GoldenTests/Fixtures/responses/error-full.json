@@ -1,0 +1,7 @@
+{
+  "error": {
+    "adapty_code": 2003,
+    "message": "The product was not found",
+    "detail": "AdaptyError.productNotFound(vendorProductId: \"com.adapty.sample.monthly\")"
+  }
+}

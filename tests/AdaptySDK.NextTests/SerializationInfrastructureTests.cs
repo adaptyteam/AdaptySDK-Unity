@@ -7,7 +7,7 @@ using AdaptySDK.SimpleJSON;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace AdaptySDK.GoldenTests
+namespace AdaptySDK.NextTests
 {
     /// <summary>
     /// The Newtonsoft infrastructure of the next package, checked against the behaviour of the

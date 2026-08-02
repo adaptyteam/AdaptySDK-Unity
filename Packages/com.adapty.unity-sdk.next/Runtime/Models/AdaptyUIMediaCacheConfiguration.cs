@@ -5,12 +5,18 @@
 //  Created by Aleksei Valiano on 07.09.2023.
 //
 
+using System.Runtime.Serialization;
+
 namespace AdaptySDK
 {
+    [DataContract]
     public partial class AdaptyUIMediaCacheConfiguration
     {
+        [DataMember(Name = "memory_storage_total_cost_limit")]
         public int? MemoryStorageTotalCostLimit;
+        [DataMember(Name = "memory_storage_count_limit")]
         public int? MemoryStorageCountLimit;
+        [DataMember(Name = "disk_storage_size_limit")]
         public int? DiskStorageSizeLimit;
 
         public AdaptyUIMediaCacheConfiguration(int? memoryStorageTotalCostLimit, int? memoryStorageCountLimit, int? diskStorageSizeLimit)

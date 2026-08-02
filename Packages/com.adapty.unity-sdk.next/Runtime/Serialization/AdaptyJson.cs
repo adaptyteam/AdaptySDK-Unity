@@ -20,15 +20,23 @@ namespace AdaptySDK.Serialization
     {
         private static readonly JsonSerializerSettings Settings = CreateSettings();
 
-        private static readonly JsonSerializer Serializer = JsonSerializer.Create(Settings);
-
         internal static string Serialize(object value) =>
             JsonConvert.SerializeObject(value, Settings);
 
         internal static T Deserialize<T>(string json) =>
             JsonConvert.DeserializeObject<T>(json, Settings);
 
-        internal static JsonSerializer SharedSerializer => Serializer;
+        /// <summary>
+        /// A serializer for the call sites that read a sub-token, such as
+        /// <c>JToken.ToObject&lt;T&gt;(serializer)</c>.
+        /// </summary>
+        /// <remarks>
+        /// Created per call rather than shared: a <see cref="JsonSerializer"/> is not documented as
+        /// thread-safe, and events can arrive off the main thread. The settings and the contract
+        /// resolver behind it are shared, so this stays cheap - the resolver's contract cache is
+        /// what actually costs.
+        /// </remarks>
+        internal static JsonSerializer CreateSerializer() => JsonSerializer.Create(Settings);
 
         private static JsonSerializerSettings CreateSettings() =>
             new JsonSerializerSettings
@@ -47,12 +55,27 @@ namespace AdaptySDK.Serialization
                 TypeNameHandling = TypeNameHandling.None,
                 MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
 
+                // Models expose no public constructor: they are only ever built from a native
+                // response, and a private parameterless one keeps that from becoming public API.
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+
+                // Collections that the contract omits keep the empty instance from their field
+                // initializer, so callers can iterate a profile without null checks - as before.
+                // Replace rather than Auto, so a present collection is not appended to that
+                // initial instance.
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+
                 ContractResolver = AdaptyContractResolver.Instance,
                 Converters = new JsonConverter[]
                 {
                     new AdaptyDateTimeConverter(),
                     new AdaptyEnumConverter(),
                     new AdaptyObjectConverter(),
+                    new AdaptyInstallationStatusConverter(),
+                    new AdaptyOnboardingsStateUpdatedParamsConverter(),
+                    new AdaptyOnboardingsAnalyticsEventConverter(),
+                    new AdaptySubscriptionOfferConverter(),
+                    new AdaptyCustomAssetsConverter(),
                 },
             };
     }

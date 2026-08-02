@@ -9,8 +9,31 @@ using System.Collections.Generic;
 
 namespace AdaptySDK
 {
+    /// <remarks>
+    /// The contract nests the identifier and the type inside <c>offer_identifier</c> while the
+    /// model keeps them flat, so this one is built by
+    /// <c>AdaptySDK.Serialization.AdaptySubscriptionOfferConverter</c> rather than from member
+    /// annotations.
+    /// </remarks>
     public partial class AdaptySubscriptionOffer
     {
+        internal AdaptySubscriptionOffer(
+            string identifier,
+            AdaptySubscriptionOfferType type,
+            IList<AdaptySubscriptionPhase> phases,
+            IList<string> offerTags
+        )
+        {
+            Identifier = identifier;
+            Type = type;
+            Phases = phases;
+#if UNITY_ANDROID
+            OfferTags = offerTags;
+#else
+            OfferTags = null;
+#endif
+        }
+
         public readonly string Identifier;
 
         public readonly AdaptySubscriptionOfferType Type;
