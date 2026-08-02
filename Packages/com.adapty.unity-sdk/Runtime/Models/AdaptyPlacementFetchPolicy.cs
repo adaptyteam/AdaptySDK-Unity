@@ -20,7 +20,6 @@ namespace AdaptySDK
             _MaxAge = maxAge;
         }
 
-        public static AdaptyPlacementFetchPolicy Default = ReloadRevalidatingCacheData;
         public static AdaptyPlacementFetchPolicy ReloadRevalidatingCacheData = new(
             "reload_revalidating_cache_data",
             null
@@ -29,6 +28,10 @@ namespace AdaptySDK
             "return_cache_data_else_load",
             null
         );
+
+        // Declared after the policy it aliases: a static field initializer runs in declaration
+        // order, so the other way round leaves Default null.
+        public static AdaptyPlacementFetchPolicy Default = ReloadRevalidatingCacheData;
 
         public static AdaptyPlacementFetchPolicy ReturnCacheDataIfNotExpiredElseLoad(
             TimeSpan maxAge
