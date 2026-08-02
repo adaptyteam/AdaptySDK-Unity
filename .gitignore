@@ -133,6 +133,10 @@ tests/**/bin/
 tests/**/obj/
 tests/**/*.received.txt
 
+# The *.csproj rule above is for the project files Unity generates at the repo root. The test
+# suites are hand-written .NET projects and have to be tracked, or CI has nothing to restore.
+!tests/**/*.csproj
+
 # Platform build outputs
 /*/outputs/
 

@@ -1,0 +1,34 @@
+- protected AdaptySDK.Mutation.BecomesConcrete.ctor()
+- protected internal AdaptySDK.Mutation.Members.NarrowsFromProtectedInternal : System.String
+- protected internal class AdaptySDK.Mutation.Nested+NarrowsFromProtectedInternal
+- public AdaptySDK.Mutation.Members.Constrained<T : class>(T value) : T
+- public AdaptySDK.Mutation.Members.LosesItsDefault(System.Int32 count = 3) : System.Void
+- public AdaptySDK.Mutation.Members.LosesItsSetter : System.String { get; set; }
+- public AdaptySDK.Mutation.Members.Narrows : System.String
+- public AdaptySDK.Mutation.Members.NarrowsItsSetter : System.String { get; set; }
+- public AdaptySDK.Mutation.Members.TakesAValue(System.Int32 value) : System.Void
+- public abstract class AdaptySDK.Mutation.BecomesConcrete
+- public class AdaptySDK.Mutation.BecomesSealed
+- public class AdaptySDK.Mutation.LosesAnInterface : AdaptySDK.Mutation.IMarker
+- public class AdaptySDK.Mutation.LosesItsBase : AdaptySDK.Mutation.Base
+- public readonly AdaptySDK.Mutation.Members.LosesReadonly : System.String
+- public static AdaptySDK.Mutation.Members.LosesStatic : System.String
+- public static const AdaptySDK.Mutation.Members.Renumbered : System.Int32 = 1
+- public virtual AdaptySDK.Mutation.Members.LosesVirtual() : System.Void
++ protected AdaptySDK.Mutation.Members.Narrows : System.String
++ protected AdaptySDK.Mutation.Members.NarrowsFromProtectedInternal : System.String
++ protected class AdaptySDK.Mutation.Nested+NarrowsFromProtectedInternal
++ public AdaptySDK.Mutation.BecomesConcrete.ctor()
++ public AdaptySDK.Mutation.Members.Constrained<T : struct, System.ValueType, new()>(T value) : T
++ public AdaptySDK.Mutation.Members.LosesItsDefault(System.Int32 count) : System.Void
++ public AdaptySDK.Mutation.Members.LosesItsSetter : System.String { get; }
++ public AdaptySDK.Mutation.Members.LosesReadonly : System.String
++ public AdaptySDK.Mutation.Members.LosesStatic : System.String
++ public AdaptySDK.Mutation.Members.LosesVirtual() : System.Void
++ public AdaptySDK.Mutation.Members.NarrowsItsSetter : System.String { get; protected set; }
++ public AdaptySDK.Mutation.Members.TakesAValue(ref System.Int32 value) : System.Void
++ public class AdaptySDK.Mutation.BecomesConcrete
++ public class AdaptySDK.Mutation.LosesAnInterface
++ public class AdaptySDK.Mutation.LosesItsBase
++ public sealed class AdaptySDK.Mutation.BecomesSealed
++ public static const AdaptySDK.Mutation.Members.Renumbered : System.Int32 = 2

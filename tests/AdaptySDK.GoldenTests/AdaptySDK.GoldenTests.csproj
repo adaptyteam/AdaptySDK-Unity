@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Golden tests for the SDK JSON layer. They link the real SDK sources instead of a built
+    assembly, so they run with plain `dotnet test` and need neither the Unity Editor nor a
+    Unity licence. Only two SDK files depend on UnityEngine; UnityStubs.cs covers them.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- Built against the LTS target, but runs on any newer runtime that happens to be installed. -->
+    <RollForward>LatestMajor</RollForward>
+    <LangVersion>9</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>AdaptySDK.GoldenTests</RootNamespace>
+    <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
+    <!-- The linked SDK sources are not this project's code to lint. -->
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <SdkRuntime>$(MSBuildThisFileDirectory)../../Packages/com.adapty.unity-sdk/Runtime</SdkRuntime>
+  </PropertyGroup>
+
+  <!--
+    The SDK branches on UNITY_IOS / UNITY_ANDROID inside the JSON layer, so a single run would
+    leave those fields untested. Pass -p:AdaptyPlatform=UNITY_IOS (or UNITY_ANDROID) to pin the
+    corresponding behaviour; snapshots are stored per platform.
+  -->
+  <PropertyGroup Condition="'$(AdaptyPlatform)' != ''">
+    <DefineConstants>$(DefineConstants);$(AdaptyPlatform)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <!-- Same version the com.unity.nuget.newtonsoft-json package ships. -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(SdkRuntime)/JSON/*.cs" LinkBase="SdkSources/JSON" />
+    <Compile Include="$(SdkRuntime)/Models/*.cs" LinkBase="SdkSources/Models" />
+    <!--
+      Only the serialization infrastructure of the next package: its models are copies of the
+      ones above and would collide. They join once the JSON layer there is rewritten.
+    -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Fixtures/**/*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

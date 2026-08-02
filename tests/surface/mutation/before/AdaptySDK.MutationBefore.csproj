@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A pair of tiny assemblies differing only by API mutations that are breaking but leave every
+    member name in place. They prove the surface comparison can see each category; without them
+    a descriptor that quietly dropped a modifier would still report "no differences".
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>AdaptySDK.MutationBefore</AssemblyName>
+    <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+  </PropertyGroup>
+
+</Project>

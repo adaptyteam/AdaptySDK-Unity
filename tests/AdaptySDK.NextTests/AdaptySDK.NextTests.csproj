@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Parity tests for the next package: the same fixtures and the same approved snapshots as the
+    golden tests, parsed through Newtonsoft instead of SimpleJSON. A model is done when its
+    snapshot here matches the one the current package produces.
+
+    Runs in CI alongside the golden suite, once per platform - see
+    .github/workflows/json-layer-tests.yml.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>LatestMajor</RollForward>
+    <LangVersion>9</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>AdaptySDK.NextTests</RootNamespace>
+    <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <SdkNextRuntime>$(MSBuildThisFileDirectory)../../Packages/com.adapty.unity-sdk.next/Runtime</SdkNextRuntime>
+    <GoldenTests>$(MSBuildThisFileDirectory)../AdaptySDK.GoldenTests</GoldenTests>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(AdaptyPlatform)' != ''">
+    <DefineConstants>$(DefineConstants);$(AdaptyPlatform)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
+  </ItemGroup>
+
+  <!--
+    Built, not referenced: both assemblies declare the same type names in the same namespace, so
+    they can only be compared from the outside. The surface test reads them off disk for metadata
+    only.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="../surface/current/AdaptySDK.CurrentSurface.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="../surface/next/AdaptySDK.NextSurface.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="../surface/mutation/before/AdaptySDK.MutationBefore.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="../surface/mutation/after/AdaptySDK.MutationAfter.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(SdkNextRuntime)/Models/*.cs" LinkBase="SdkNext/Models" />
+    <Compile Include="$(SdkNextRuntime)/Serialization/*.cs" LinkBase="SdkNext/Serialization" />
+    <Compile Include="$(SdkNextRuntime)/*.cs" LinkBase="SdkNext" />
+    <Compile Include="$(SdkNextRuntime)/Plugins/AdaptyNoop.cs" LinkBase="SdkNext/Plugins" />
+    <Compile Include="$(SdkNextRuntime)/Plugins/iOS/*.cs" LinkBase="SdkNext/Plugins/iOS" />
+    <Compile Include="$(SdkNextRuntime)/Plugins/Android/*.cs" LinkBase="SdkNext/Plugins/Android" />
+    <Compile Include="$(GoldenTests)/ModelSnapshot.cs" LinkBase="Shared" />
+    <Compile Include="$(GoldenTests)/Snapshots.cs" LinkBase="Shared" />
+    <Compile Include="$(GoldenTests)/UnityStubs.cs" LinkBase="Shared" />
+    <Compile Include="$(GoldenTests)/Samples.cs" LinkBase="Shared" />
+  </ItemGroup>
+
+</Project>
