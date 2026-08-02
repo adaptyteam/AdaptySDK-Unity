@@ -1,0 +1,10 @@
+{
+  "configuration": {
+    "content": "You keep access until the end of the period.",
+    "default_action_title": "Keep",
+    "secondary_action_title": "Cancel",
+    "title": "Cancel subscription?"
+  },
+  "id": "view-1",
+  "method": "adapty_ui_show_dialog"
+}

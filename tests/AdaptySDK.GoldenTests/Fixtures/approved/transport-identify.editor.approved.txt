@@ -1,0 +1,7 @@
+{
+  "customer_user_id": "user-1",
+  "method": "identify",
+  "parameters": {
+    "obfuscated_account_id": "obfuscated-1"
+  }
+}

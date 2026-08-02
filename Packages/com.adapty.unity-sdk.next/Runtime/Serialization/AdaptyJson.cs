@@ -27,6 +27,32 @@ namespace AdaptySDK.Serialization
             JsonConvert.DeserializeObject<T>(json, Settings);
 
         /// <summary>
+        /// Serializes one value into the DOM, for a request assembled key by key.
+        /// </summary>
+        internal static Newtonsoft.Json.Linq.JToken ToNode(object value) =>
+            value is null
+                ? Newtonsoft.Json.Linq.JValue.CreateNull()
+                : Newtonsoft.Json.Linq.JToken.FromObject(value, CreateSerializer());
+
+        /// <summary>
+        /// Serializes a request and stamps the method name into it.
+        /// </summary>
+        /// <remarks>
+        /// The method travels as a sibling of the parameters, not as a wrapper around them, so the
+        /// request object is flattened into the same object rather than nested under a key.
+        /// </remarks>
+        internal static string SerializeRequest(string method, object request)
+        {
+            var node =
+                request is null ? new Newtonsoft.Json.Linq.JObject()
+                : request is Newtonsoft.Json.Linq.JObject given ? (Newtonsoft.Json.Linq.JObject)given.DeepClone()
+                : Newtonsoft.Json.Linq.JObject.FromObject(request, CreateSerializer());
+
+            node["method"] = method;
+            return node.ToString(Formatting.None);
+        }
+
+        /// <summary>
         /// A serializer for the call sites that read a sub-token, such as
         /// <c>JToken.ToObject&lt;T&gt;(serializer)</c>.
         /// </summary>

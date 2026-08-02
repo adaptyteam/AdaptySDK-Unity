@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using AdaptySDK.SimpleJSON;
+using AdaptySDK.Serialization;
+using Newtonsoft.Json.Linq;
 #if UNITY_IOS && !UNITY_EDITOR
 using _AdaptyCallbackAction = AdaptySDK.iOS.AdaptyIOSCallbackAction;
 #elif UNITY_ANDROID && !UNITY_EDITOR
@@ -451,46 +452,57 @@ namespace AdaptySDK
             return true;
         }
 
+        /// <summary>
+        /// Entry point for every event the native side pushes.
+        /// </summary>
+        /// <remarks>
+        /// Nothing is allowed to escape. The call arrives from native code - on iOS through a
+        /// reverse-P/Invoke callback with no handler behind it - so an exception here does not
+        /// surface as a C# error, it takes the process down on IL2CPP. A malformed payload or a
+        /// throwing listener is logged and the event is dropped.
+        /// </remarks>
         internal static void OnMessage(string id, string json)
         {
             if (string.IsNullOrEmpty(json))
                 return;
 
-            JSONNode response;
             try
             {
-                response = JSONNode.Parse(json);
+                if (!(JToken.Parse(json) is JObject parameters))
+                {
+                    return;
+                }
+
+                Dispatch(id, parameters);
             }
             catch (Exception e)
             {
                 Debug.LogError(
-                    string.Format(
-                        "[Adapty] Failed to parse event JSON for event '{0}': {1}",
-                        id ?? "(null)",
-                        e.Message
-                    )
+                    string.Format("[Adapty] Event '{0}' failed: {1}", id ?? "(null)", e)
                 );
-                return;
             }
+        }
 
-            if (response == null || response.IsNull)
-            {
-                return;
-            }
+        private static T Required<T>(JObject parameters, string key) =>
+            JsonRequire.Token(parameters, key).ToObject<T>(AdaptyJson.CreateSerializer());
 
-            if (!response.IsObject)
-            {
-                return;
-            }
+        private static T Optional<T>(JObject parameters, string key)
+        {
+            var value = parameters[key];
+            return value is null || value.Type == JTokenType.Null
+                ? default(T)
+                : value.ToObject<T>(AdaptyJson.CreateSerializer());
+        }
 
-            var parameters = response.AsObject;
+        private static void Dispatch(string id, JObject parameters)
+        {
             switch (id)
             {
                 case "did_load_latest_profile":
                     {
                         if (!RequireEventListener(id))
                             return;
-                        var profile = parameters.GetAdaptyProfile("profile");
+                        var profile = Required<AdaptyProfile>(parameters, "profile");
                         try
                         {
                             m_Listener.OnLoadLatestProfile(profile);
@@ -508,7 +520,7 @@ namespace AdaptySDK
                     {
                         if (!RequireEventListener(id))
                             return;
-                        var details = parameters.GetAdaptyInstallationDetails("details");
+                        var details = Required<AdaptyInstallationDetails>(parameters, "details");
                         try
                         {
                             m_Listener.OnInstallationDetailsSuccess(details);
@@ -526,7 +538,7 @@ namespace AdaptySDK
                     {
                         if (!RequireEventListener(id))
                             return;
-                        var error = parameters.GetAdaptyError("error");
+                        var error = Required<AdaptyError>(parameters, "error");
                         try
                         {
                             m_Listener.OnInstallationDetailsFail(error);
@@ -544,8 +556,8 @@ namespace AdaptySDK
                     {
                         if (!RequireOnboardingsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIOnboardingView("view");
-                        var error = parameters.GetAdaptyError("error");
+                        var view = Required<AdaptyUIOnboardingView>(parameters, "view");
+                        var error = Required<AdaptyError>(parameters, "error");
                         try
                         {
                             m_OnboardingsEventsListener.OnboardingViewDidFailWithError(view, error);
@@ -563,9 +575,9 @@ namespace AdaptySDK
                     {
                         if (!RequireOnboardingsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIOnboardingView("view");
-                        var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
-                        var ev = parameters.GetOnboardingsAnalyticsEvent("event");
+                        var view = Required<AdaptyUIOnboardingView>(parameters, "view");
+                        var meta = Required<AdaptyUIOnboardingMeta>(parameters, "meta");
+                        var ev = Required<AdaptyOnboardingsAnalyticsEvent>(parameters, "event");
                         try
                         {
                             m_OnboardingsEventsListener.OnboardingViewOnAnalyticsEvent(view, meta, ev);
@@ -583,8 +595,8 @@ namespace AdaptySDK
                     {
                         if (!RequireOnboardingsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIOnboardingView("view");
-                        var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
+                        var view = Required<AdaptyUIOnboardingView>(parameters, "view");
+                        var meta = Required<AdaptyUIOnboardingMeta>(parameters, "meta");
                         try
                         {
                             m_OnboardingsEventsListener.OnboardingViewDidFinishLoading(view, meta);
@@ -602,9 +614,9 @@ namespace AdaptySDK
                     {
                         if (!RequireOnboardingsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIOnboardingView("view");
-                        var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
-                        var actionId = parameters.GetString("action_id");
+                        var view = Required<AdaptyUIOnboardingView>(parameters, "view");
+                        var meta = Required<AdaptyUIOnboardingMeta>(parameters, "meta");
+                        var actionId = Required<string>(parameters, "action_id");
                         try
                         {
                             m_OnboardingsEventsListener.OnboardingViewOnCloseAction(
@@ -626,9 +638,9 @@ namespace AdaptySDK
                     {
                         if (!RequireOnboardingsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIOnboardingView("view");
-                        var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
-                        var actionId = parameters.GetString("action_id");
+                        var view = Required<AdaptyUIOnboardingView>(parameters, "view");
+                        var meta = Required<AdaptyUIOnboardingMeta>(parameters, "meta");
+                        var actionId = Required<string>(parameters, "action_id");
                         try
                         {
                             m_OnboardingsEventsListener.OnboardingViewOnPaywallAction(
@@ -650,9 +662,9 @@ namespace AdaptySDK
                     {
                         if (!RequireOnboardingsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIOnboardingView("view");
-                        var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
-                        var actionId = parameters.GetString("action_id");
+                        var view = Required<AdaptyUIOnboardingView>(parameters, "view");
+                        var meta = Required<AdaptyUIOnboardingMeta>(parameters, "meta");
+                        var actionId = Required<string>(parameters, "action_id");
                         try
                         {
                             m_OnboardingsEventsListener.OnboardingViewOnCustomAction(
@@ -674,12 +686,13 @@ namespace AdaptySDK
                     {
                         if (!RequireOnboardingsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIOnboardingView("view");
-                        var meta = parameters.GetAdaptyUIOnboardingMeta("meta");
-                        var elementId = JSONNodeExtensions
-                            .GetObject(parameters, "action")
-                            .GetString("element_id");
-                        var @params = parameters.GetOnboardingsStateUpdatedParams("action");
+                        var view = Required<AdaptyUIOnboardingView>(parameters, "view");
+                        var meta = Required<AdaptyUIOnboardingMeta>(parameters, "meta");
+                        var elementId = JsonRequire.String(
+                            JsonRequire.Object(parameters, "action"),
+                            "element_id"
+                        );
+                        var @params = Required<AdaptyOnboardingsStateUpdatedParams>(parameters, "action");
                         try
                         {
                             m_OnboardingsEventsListener.OnboardingViewOnStateUpdatedAction(
@@ -702,7 +715,7 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidAppear(view);
@@ -720,7 +733,7 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidDisappear(view);
@@ -738,8 +751,8 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var action = parameters.GetAdaptyUIUserAction("action");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var action = Required<AdaptyUIUserAction>(parameters, "action");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidPerformAction(view, action);
@@ -757,8 +770,8 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var productId = parameters.GetString("product_id");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var productId = Required<string>(parameters, "product_id");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidSelectProduct(view, productId);
@@ -776,8 +789,8 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var product = parameters.GetAdaptyPaywallProduct("product");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var product = Required<AdaptyPaywallProduct>(parameters, "product");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidStartPurchase(view, product);
@@ -795,9 +808,9 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var product = parameters.GetAdaptyPaywallProduct("product");
-                        var purchaseResult = parameters.GetAdaptyPurchaseResult("purchased_result");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var product = Required<AdaptyPaywallProduct>(parameters, "product");
+                        var purchaseResult = Required<AdaptyPurchaseResult>(parameters, "purchased_result");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidFinishPurchase(
@@ -819,9 +832,9 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var product = parameters.GetAdaptyPaywallProduct("product");
-                        var error = parameters.GetAdaptyError("error");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var product = Required<AdaptyPaywallProduct>(parameters, "product");
+                        var error = Required<AdaptyError>(parameters, "error");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidFailPurchase(view, product, error);
@@ -839,7 +852,7 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidStartRestore(view);
@@ -857,8 +870,8 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var profile = parameters.GetAdaptyProfile("profile");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var profile = Required<AdaptyProfile>(parameters, "profile");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidFinishRestore(view, profile);
@@ -876,8 +889,8 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var error = parameters.GetAdaptyError("error");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var error = Required<AdaptyError>(parameters, "error");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidFailRestore(view, error);
@@ -895,8 +908,8 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var error = parameters.GetAdaptyError("error");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var error = Required<AdaptyError>(parameters, "error");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidReceiveError(view, error);
@@ -914,8 +927,8 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var error = parameters.GetAdaptyError("error");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var error = Required<AdaptyError>(parameters, "error");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidFailLoadingProducts(view, error);
@@ -933,9 +946,9 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var product = parameters.GetAdaptyPaywallProductIfPresent("product");
-                        var error = parameters.GetAdaptyErrorIfPresent("error");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var product = Optional<AdaptyPaywallProduct>(parameters, "product");
+                        var error = Optional<AdaptyError>(parameters, "error");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidFinishWebPaymentNavigation(
@@ -957,9 +970,9 @@ namespace AdaptySDK
                     {
                         if (!RequireFlowsListener(id))
                             return;
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var name = parameters.GetString("name");
-                        var @params = parameters.GetDictionary("params");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var name = Required<string>(parameters, "name");
+                        var @params = Required<System.Collections.Generic.IDictionary<string, object>>(parameters, "params");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidReceiveAnalyticEvent(
@@ -979,23 +992,14 @@ namespace AdaptySDK
                     }
                 case "flow_view_did_ask_permission":
                     {
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var eventId = parameters.GetString("event_id");
-                        var permission = parameters.GetString("permission");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var eventId = Required<string>(parameters, "event_id");
+                        var permission = Required<string>(parameters, "permission");
 
-                        Dictionary<string, string> customArgs = null;
-                        var customArgsObject = JSONNodeExtensions.GetObjectIfPresent(
+                        var customArgs = Optional<Dictionary<string, string>>(
                             parameters,
                             "custom_args"
                         );
-                        if (customArgsObject != null)
-                        {
-                            customArgs = new Dictionary<string, string>();
-                            foreach (KeyValuePair<string, JSONNode> pair in customArgsObject)
-                            {
-                                customArgs[pair.Key] = pair.Value.Value;
-                            }
-                        }
 
                         if (m_SystemRequestsHandler == null)
                         {
@@ -1046,7 +1050,7 @@ namespace AdaptySDK
                     }
                 case "flow_view_did_request_app_review":
                     {
-                        var view = parameters.GetAdaptyUIFlowView("view");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
 
                         if (m_SystemRequestsHandler == null)
                         {
@@ -1069,9 +1073,9 @@ namespace AdaptySDK
                     }
                 case "flow_view_observer_did_initiate_purchase":
                     {
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var eventId = parameters.GetString("event_id");
-                        var product = parameters.GetAdaptyPaywallProduct("product");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var eventId = Required<string>(parameters, "event_id");
+                        var product = Required<AdaptyPaywallProduct>(parameters, "product");
 
                         if (m_ObserverModeResolver == null)
                         {
@@ -1106,8 +1110,8 @@ namespace AdaptySDK
                     }
                 case "flow_view_observer_did_initiate_restore":
                     {
-                        var view = parameters.GetAdaptyUIFlowView("view");
-                        var eventId = parameters.GetString("event_id");
+                        var view = Required<AdaptyUIFlowView>(parameters, "view");
+                        var eventId = Required<string>(parameters, "event_id");
 
                         if (m_ObserverModeResolver == null)
                         {

@@ -10,7 +10,8 @@ using _Adapty = AdaptySDK.Noop.AdaptyNoop;
 
 namespace AdaptySDK
 {
-    using AdaptySDK.SimpleJSON;
+    using AdaptySDK.Serialization;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// The main class for interacting with the Adapty SDK.
@@ -42,13 +43,12 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("configuration", configuration.ToJSONNode());
+            var parameters = new JObject();
+            parameters["configuration"] = AdaptyJson.ToNode(configuration);
 
-            Request.Send(
+            Request.Send<bool>(
                 "activate",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -98,23 +98,22 @@ namespace AdaptySDK
             Action<AdaptyFlow, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("placement_id", placementId);
+            var parameters = new JObject();
+            parameters["placement_id"] = placementId;
 
             if (fetchPolicy != null)
             {
-                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+                parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
             if (loadTimeout.HasValue)
             {
-                parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
+                parameters["load_timeout"] = loadTimeout.Value.TotalSeconds;
             }
 
-            Request.Send(
+            Request.Send<AdaptyFlow>(
                 "get_flow",
                 parameters,
-                JSONNodeExtensions.GetFlow,
                 (value, error) =>
                 {
                     try
@@ -153,29 +152,28 @@ namespace AdaptySDK
             Action<AdaptyOnboarding, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
+            var parameters = new JObject();
 
-            parameters.Add("placement_id", placementId);
+            parameters["placement_id"] = placementId;
 
             if (locale != null)
             {
-                parameters.Add("locale", locale);
+                parameters["locale"] = locale;
             }
 
             if (fetchPolicy != null)
             {
-                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+                parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
             if (loadTimeout.HasValue)
             {
-                parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
+                parameters["load_timeout"] = loadTimeout.Value.TotalSeconds;
             }
 
-            Request.Send(
+            Request.Send<AdaptyOnboarding>(
                 "get_onboarding",
                 parameters,
-                JSONNodeExtensions.GetOnboarding,
                 (value, error) =>
                 {
                     completionHandler?.Invoke(value, error);
@@ -198,18 +196,17 @@ namespace AdaptySDK
             Action<AdaptyFlow, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("placement_id", placementId);
+            var parameters = new JObject();
+            parameters["placement_id"] = placementId;
 
             if (fetchPolicy != null)
             {
-                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+                parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
-            Request.Send(
+            Request.Send<AdaptyFlow>(
                 "get_flow_for_default_audience",
                 parameters,
-                JSONNodeExtensions.GetFlow,
                 (value, error) =>
                 {
                     try
@@ -247,23 +244,22 @@ namespace AdaptySDK
             Action<AdaptyOnboarding, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("placement_id", placementId);
+            var parameters = new JObject();
+            parameters["placement_id"] = placementId;
 
             if (locale != null)
             {
-                parameters.Add("locale", locale);
+                parameters["locale"] = locale;
             }
 
             if (fetchPolicy != null)
             {
-                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+                parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
-            Request.Send(
+            Request.Send<AdaptyOnboarding>(
                 "get_onboarding_for_default_audience",
                 parameters,
-                JSONNodeExtensions.GetOnboarding,
                 (value, error) =>
                 {
                     try
@@ -295,13 +291,12 @@ namespace AdaptySDK
             Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("flow", flow.ToJSONNode());
+            var parameters = new JObject();
+            parameters["flow"] = AdaptyJson.ToNode(flow);
 
-            Request.Send(
+            Request.Send<IList<AdaptyPaywallProduct>>(
                 "get_paywall_products",
                 parameters,
-                JSONNodeExtensions.GetAdaptyPaywallProductList,
                 (value, error) =>
                 {
                     try
@@ -331,10 +326,9 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyProfile"/> object.</param>
         public static void GetProfile(Action<AdaptyProfile, AdaptyError> completionHandler)
         {
-            Request.Send(
+            Request.Send<AdaptyProfile>(
                 "get_profile",
                 null,
-                JSONNodeExtensions.GetAdaptyProfile,
                 (value, error) =>
                 {
                     try
@@ -387,9 +381,9 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
+            var parameters = new JObject();
 
-            parameters.Add("customer_user_id", customerUserId);
+            parameters["customer_user_id"] = customerUserId;
 
             var customerIdentity = new AdaptyCustomerIdentity(
                 iosAppAccountToken,
@@ -398,13 +392,12 @@ namespace AdaptySDK
 
             if (!customerIdentity.IsEmpty)
             {
-                parameters.Add("parameters", customerIdentity.ToJSONNode());
+                parameters["parameters"] = AdaptyJson.ToNode(customerIdentity);
             }
 
-            Request.Send(
+            Request.Send<bool>(
                 "identify",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -428,10 +421,9 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains a boolean value indicating whether the SDK is activated.</param>
         public static void IsActivated(Action<bool, AdaptyError> completionHandler)
         {
-            Request.Send(
+            Request.Send<bool>(
                 "is_activated",
                 null,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -455,10 +447,9 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains the current <see cref="AdaptyLogLevel"/> value.</param>
         public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
         {
-            Request.Send(
+            Request.Send<AdaptyLogLevel>(
                 "get_log_level",
                 null,
-                JSONNodeExtensions.GetAdaptyLogLevel,
                 (value, error) =>
                 {
                     try
@@ -486,13 +477,12 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void SetLogLevel(AdaptyLogLevel level, Action<AdaptyError> completionHandler)
         {
-            var parameters = new JSONObject();
-            parameters.Add("value", level.ToJSONNode());
+            var parameters = new JObject();
+            parameters["value"] = AdaptyJson.ToNode(level);
 
-            Request.Send(
+            Request.Send<bool>(
                 "set_log_level",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -522,10 +512,9 @@ namespace AdaptySDK
             Action<AdaptyInstallationStatus, AdaptyError> completionHandler
         )
         {
-            Request.Send(
+            Request.Send<AdaptyInstallationStatus>(
                 "get_current_installation_status",
                 null,
-                JSONNodeExtensions.GetInstallationStatus,
                 (value, error) =>
                 {
                     try
@@ -553,10 +542,9 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Logout(Action<AdaptyError> completionHandler)
         {
-            Request.Send(
+            Request.Send<bool>(
                 "logout",
                 null,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -588,13 +576,12 @@ namespace AdaptySDK
             Action<string, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("paywall", paywall.ToJSONNode());
+            var parameters = new JObject();
+            parameters["paywall"] = AdaptyJson.ToNode(paywall);
 
-            Request.Send(
+            Request.Send<string>(
                 "create_web_paywall_url",
                 parameters,
-                JSONNodeExtensions.GetString,
                 (value, error) =>
                 {
                     try
@@ -626,13 +613,12 @@ namespace AdaptySDK
             Action<string, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("product", product.ToJSONNode());
+            var parameters = new JObject();
+            parameters["product"] = AdaptyJson.ToNode(new AdaptyPaywallProductRequest(product));
 
-            Request.Send(
+            Request.Send<string>(
                 "create_web_paywall_url",
                 parameters,
-                JSONNodeExtensions.GetString,
                 (value, error) =>
                 {
                     try
@@ -666,14 +652,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("paywall", paywall.ToJSONNode());
-            parameters.Add("open_in", openIn.ToJSONNode());
+            var parameters = new JObject();
+            parameters["paywall"] = AdaptyJson.ToNode(paywall);
+            parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.Send(
+            Request.Send<bool>(
                 "open_web_paywall",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -707,14 +692,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("product", product.ToJSONNode());
-            parameters.Add("open_in", openIn.ToJSONNode());
+            var parameters = new JObject();
+            parameters["product"] = AdaptyJson.ToNode(new AdaptyPaywallProductRequest(product));
+            parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.Send(
+            Request.Send<bool>(
                 "open_web_paywall",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -745,13 +729,12 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void LogShowFlow(AdaptyFlow flow, Action<AdaptyError> completionHandler)
         {
-            var parameters = new JSONObject();
-            parameters.Add("flow", flow.ToJSONNode());
+            var parameters = new JObject();
+            parameters["flow"] = AdaptyJson.ToNode(flow);
 
-            Request.Send(
+            Request.Send<bool>(
                 "log_show_flow",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -784,13 +767,12 @@ namespace AdaptySDK
         )
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            var parameters = new JSONObject();
-            parameters.Add("consent", consent);
+            var parameters = new JObject();
+            parameters["consent"] = consent;
 
-            Request.Send(
+            Request.Send<bool>(
                 "update_collecting_refund_data_consent",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -836,13 +818,12 @@ namespace AdaptySDK
         )
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            var parameters = new JSONObject();
-            parameters.Add("refund_preference", refundPreference.ToJSONNode());
+            var parameters = new JObject();
+            parameters["refund_preference"] = AdaptyJson.ToNode(refundPreference);
 
-            Request.Send(
+            Request.Send<bool>(
                 "update_refund_preference",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -889,17 +870,16 @@ namespace AdaptySDK
             Action<AdaptyPurchaseResult, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("product", product.ToJSONNode());
+            var parameters = new JObject();
+            parameters["product"] = AdaptyJson.ToNode(new AdaptyPaywallProductRequest(product));
             if (purchaseParameters != null)
             {
-                parameters.Add("parameters", purchaseParameters.ToJSONNode());
+                parameters["parameters"] = AdaptyJson.ToNode(purchaseParameters);
             }
 
-            Request.Send(
+            Request.Send<AdaptyPurchaseResult>(
                 "make_purchase",
                 parameters,
-                JSONNodeExtensions.GetAdaptyPurchaseResult,
                 (value, error) =>
                 {
                     try
@@ -928,10 +908,9 @@ namespace AdaptySDK
         public static void PresentCodeRedemptionSheet(Action<AdaptyError> completionHandler)
         {
 #if UNITY_IOS && !UNITY_EDITOR
-            Request.Send(
+            Request.Send<bool>(
                 "present_code_redemption_sheet",
                 null,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -980,17 +959,16 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("transaction_id", transactionId);
+            var parameters = new JObject();
+            parameters["transaction_id"] = transactionId;
             if (variationId != null)
             {
-                parameters.Add("variation_id", variationId);
+                parameters["variation_id"] = variationId;
             }
 
-            Request.Send(
+            Request.Send<bool>(
                 "report_transaction",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1019,10 +997,9 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyProfile"/> object.</param>
         public static void RestorePurchases(Action<AdaptyProfile, AdaptyError> completionHandler)
         {
-            Request.Send(
+            Request.Send<AdaptyProfile>(
                 "restore_purchases",
                 null,
-                JSONNodeExtensions.GetAdaptyProfile,
                 (value, error) =>
                 {
                     try
@@ -1049,10 +1026,9 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains the native SDK version string.</param>
         public static void GetNativeSDKVersion(Action<string, AdaptyError> completionHandler)
         {
-            Request.Send(
+            Request.Send<string>(
                 "get_sdk_version",
                 null,
-                JSONNodeExtensions.GetString,
                 (value, error) =>
                 {
                     try
@@ -1083,21 +1059,17 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void SetFallback(string fileName, Action<AdaptyError> completionHandler)
         {
-            var parameters = new JSONObject();
+            var parameters = new JObject();
 
 #if UNITY_IOS && !UNITY_EDITOR
-            parameters.Add("path", UnityEngine.Application.dataPath + "/Raw/" + fileName);
+            parameters["path"] = UnityEngine.Application.dataPath + "/Raw/" + fileName;
 #elif UNITY_ANDROID && !UNITY_EDITOR
-            parameters.Add(
-                "path",
-                "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + fileName
-            );
+            parameters["path"] = "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + fileName;
 #endif
 
-            Request.Send(
+            Request.Send<bool>(
                 "set_fallback",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1130,15 +1102,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            var identifier = new JSONObject();
-            identifier.Add(key, value);
-            parameters.Add("key_values", identifier);
+            var parameters = new JObject();
+            var identifier = new JObject { [key] = value };
+            parameters["key_values"] = identifier;
 
-            Request.Send(
+            Request.Send<bool>(
                 "set_integration_identifiers",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1172,14 +1142,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("attribution", jsonString);
-            parameters.Add("source", source);
+            var parameters = new JObject();
+            parameters["attribution"] = jsonString;
+            parameters["source"] = source;
 
-            Request.Send(
+            Request.Send<bool>(
                 "update_attribution_data",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1212,13 +1181,12 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("params", param.ToJSONNode());
+            var parameters = new JObject();
+            parameters["params"] = AdaptyJson.ToNode(param);
 
-            Request.Send(
+            Request.Send<bool>(
                 "update_profile",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1255,84 +1223,22 @@ namespace AdaptySDK
             Action<AdaptyUIFlowView, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("flow", flow.ToJSONNode());
+            var parameters = new JObject();
+            parameters["flow"] = AdaptyJson.ToNode(flow);
 
             if (optionalParameters != null)
             {
-                if (optionalParameters.Locale != null)
+                // The optional parameters are contract members of the same request object, not a
+                // nested one, so the serialized form is merged in rather than added under a key.
+                foreach (var entry in (JObject)AdaptyJson.ToNode(optionalParameters))
                 {
-                    parameters.Add("locale", optionalParameters.Locale);
-                }
-
-                if (optionalParameters.LoadTimeout.HasValue)
-                {
-                    parameters.Add(
-                        "load_timeout",
-                        optionalParameters.LoadTimeout.Value.TotalSeconds
-                    );
-                }
-
-                if (optionalParameters.PreloadProducts.HasValue)
-                {
-                    parameters.Add("preload_products", optionalParameters.PreloadProducts.Value);
-                }
-
-                if (optionalParameters.CustomTags != null)
-                {
-                    var node = new JSONObject();
-                    foreach (KeyValuePair<string, string> entry in optionalParameters.CustomTags)
-                    {
-                        node.Add(entry.Key, entry.Value);
-                    }
-                    parameters.Add("custom_tags", node);
-                }
-                if (optionalParameters.CustomTimers != null)
-                {
-                    var node = new JSONObject();
-                    foreach (
-                        KeyValuePair<string, DateTime> entry in optionalParameters.CustomTimers
-                    )
-                    {
-                        node.Add(entry.Key, entry.Value.ToJSONNode());
-                    }
-                    parameters.Add("custom_timers", node);
-                }
-                if (optionalParameters.ProductPurchaseParameters != null)
-                {
-                    var parametersNode = new JSONObject();
-
-                    foreach (
-                        KeyValuePair<
-                            AdaptyProductIdentifier,
-                            AdaptyPurchaseParameters
-                        > entry in optionalParameters.ProductPurchaseParameters
-                    )
-                    {
-                        parametersNode.Add(entry.Key._AdaptyProductId, entry.Value.ToJSONNode());
-                    }
-
-                    parameters.Add("product_purchase_parameters", parametersNode);
-                }
-
-                if (optionalParameters.CustomAssets != null)
-                {
-                    parameters.Add("custom_assets", optionalParameters.CustomAssets.ToJSONNode());
-                }
-
-                if (optionalParameters.EnableSafeAreaPaddings.HasValue)
-                {
-                    parameters.Add(
-                        "enable_safe_area_paddings",
-                        optionalParameters.EnableSafeAreaPaddings.Value
-                    );
+                    parameters[entry.Key] = entry.Value;
                 }
             }
 
-            Request.Send(
+            Request.Send<AdaptyUIFlowView>(
                 "adapty_ui_create_flow_view",
                 parameters,
-                JSONNodeExtensions.GetAdaptyUIFlowView,
                 (value, error) =>
                 {
                     try
@@ -1369,14 +1275,13 @@ namespace AdaptySDK
             Action<AdaptyUIOnboardingView, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("onboarding", onboarding.ToJSONNode());
-            parameters.Add("external_urls_presentation", externalUrlsPresentation.ToJSONNode());
+            var parameters = new JObject();
+            parameters["onboarding"] = AdaptyJson.ToNode(onboarding);
+            parameters["external_urls_presentation"] = AdaptyJson.ToNode(externalUrlsPresentation);
 
-            Request.Send(
+            Request.Send<AdaptyUIOnboardingView>(
                 "adapty_ui_create_onboarding_view",
                 parameters,
-                JSONNodeExtensions.GetAdaptyUIOnboardingView,
                 (value, error) =>
                 {
                     try
@@ -1408,14 +1313,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
-            parameters.Add("destroy", true);
+            var parameters = new JObject();
+            parameters["id"] = view.Id;
+            parameters["destroy"] = true;
 
-            Request.Send(
+            Request.Send<bool>(
                 "adapty_ui_dismiss_flow_view",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1458,14 +1362,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
-            parameters.Add("ios_presentation_style", iosPresentationStyle.ToJSONNode());
+            var parameters = new JObject();
+            parameters["id"] = view.Id;
+            parameters["ios_presentation_style"] = AdaptyJson.ToNode(iosPresentationStyle);
 
-            Request.Send(
+            Request.Send<bool>(
                 "adapty_ui_present_flow_view",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1520,14 +1423,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
-            parameters.Add("ios_presentation_style", iosPresentationStyle.ToJSONNode());
+            var parameters = new JObject();
+            parameters["id"] = view.Id;
+            parameters["ios_presentation_style"] = AdaptyJson.ToNode(iosPresentationStyle);
 
-            Request.Send(
+            Request.Send<bool>(
                 "adapty_ui_present_onboarding_view",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1567,14 +1469,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
-            parameters.Add("destroy", destroy);
+            var parameters = new JObject();
+            parameters["id"] = view.Id;
+            parameters["destroy"] = destroy;
 
-            Request.Send(
+            Request.Send<bool>(
                 "adapty_ui_dismiss_onboarding_view",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1634,14 +1535,13 @@ namespace AdaptySDK
             Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("id", viewId);
-            parameters.Add("configuration", configuration.ToJSONNode());
+            var parameters = new JObject();
+            parameters["id"] = viewId;
+            parameters["configuration"] = AdaptyJson.ToNode(configuration);
 
-            Request.Send(
+            Request.Send<AdaptyUIDialogActionType>(
                 "adapty_ui_show_dialog",
                 parameters,
-                JSONNodeExtensions.GetAdaptyUIDialogActionType,
                 (value, error) =>
                 {
                     try
@@ -1674,14 +1574,13 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("url", url);
-            parameters.Add("open_in", openIn.ToJSONNode());
+            var parameters = new JObject();
+            parameters["url"] = url;
+            parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.Send(
+            Request.Send<bool>(
                 "adapty_ui_open_url",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1708,10 +1607,9 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void RequestAppReview(Action<AdaptyError> completionHandler)
         {
-            Request.Send(
+            Request.Send<bool>(
                 "adapty_ui_request_app_review",
                 null,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) =>
                 {
                     try
@@ -1731,31 +1629,29 @@ namespace AdaptySDK
 
         internal static void FlowViewAnswerPermission(string eventId, bool granted, string detail)
         {
-            var parameters = new JSONObject();
-            parameters.Add("event_id", eventId);
-            parameters.Add("status", granted ? "granted" : "denied");
+            var parameters = new JObject();
+            parameters["event_id"] = eventId;
+            parameters["status"] = granted ? "granted" : "denied";
             if (detail != null)
             {
-                parameters.Add("detail", detail);
+                parameters["detail"] = detail;
             }
 
-            Request.Send(
+            Request.Send<bool>(
                 "flow_view_did_answer_permission",
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) => LogRoundTripError("flow_view_did_answer_permission", error)
             );
         }
 
         internal static void SendObserverEvent(string method, string eventId)
         {
-            var parameters = new JSONObject();
-            parameters.Add("event_id", eventId);
+            var parameters = new JObject();
+            parameters["event_id"] = eventId;
 
-            Request.Send(
+            Request.Send<bool>(
                 method,
                 parameters,
-                JSONNodeExtensions.GetBoolean,
                 (value, error) => LogRoundTripError(method, error)
             );
         }
@@ -1779,40 +1675,44 @@ namespace AdaptySDK
 
     internal static class Request
     {
+        /// <summary>
+        /// Sends one request to the native side and hands the typed reply to
+        /// <paramref name="completionHandler"/>.
+        /// </summary>
+        /// <param name="request">
+        /// The parameters, either a model or a <see cref="JObject"/> built at the call site. Null
+        /// sends the method alone.
+        /// </param>
         internal static void Send<T>(
             string method,
-            JSONObject request,
-            Func<JSONNode, T> mapResponseValue,
+            object request,
             Action<T, AdaptyError> completionHandler
         )
         {
-            string stringJson;
+            string payload;
             try
             {
-                if (request == null)
-                {
-                    request = new JSONObject();
-                }
-                request.Add("method", method);
-                stringJson = request.ToString();
+                payload = AdaptyJson.SerializeRequest(method, request);
             }
             catch (Exception ex)
             {
-                var error = new AdaptyError(
-                    AdaptyErrorCode.EncodingFailed,
-                    $"Failed encoding request: {method}",
-                    $"AdaptyUnityError.EncodingFailed({ex})"
+                completionHandler(
+                    default(T),
+                    new AdaptyError(
+                        AdaptyErrorCode.EncodingFailed,
+                        $"Failed encoding request: {method}",
+                        $"AdaptyUnityError.EncodingFailed({ex})"
+                    )
                 );
-                completionHandler(default(T), error);
                 return;
             }
 
             _Adapty.Invoke(
                 method,
-                stringJson,
+                payload,
                 (json) =>
                 {
-                    var result = json.GetAdaptyResult(mapResponseValue);
+                    var result = AdaptyResponse.Parse<T>(json);
                     completionHandler(result.Value, result.Error);
                 }
             );

@@ -1,0 +1,4 @@
+{
+  "method": "set_log_level",
+  "value": "verbose"
+}

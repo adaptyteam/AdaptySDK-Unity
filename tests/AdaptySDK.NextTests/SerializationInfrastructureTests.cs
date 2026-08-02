@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
 using AdaptySDK.Serialization;
-using AdaptySDK.SimpleJSON;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -88,18 +87,26 @@ namespace AdaptySDK.NextTests
                 () => AdaptyJson.Deserialize<Sample>("{\"required_field\":null}")
             );
 
+        /// <summary>
+        /// The previous layer produced a local DateTime from a UTC instant, and the public models
+        /// expose it directly, so the kind is part of the API.
+        /// </summary>
         [Test]
         public void DatesKeepThePreviousBehaviour()
         {
-            const string json = "{\"required_field\":\"r\",\"activated_at\":\"2026-07-30T10:00:00.000Z\"}";
-
-            var viaNewtonsoft = AdaptyJson.Deserialize<Sample>(json).ActivatedAt.Value;
-            var viaSimpleJson = JSONNode.Parse(json).AsObject.GetDateTime("activated_at");
+            var parsed = AdaptyJson
+                .Deserialize<Sample>(
+                    "{\"required_field\":\"r\",\"activated_at\":\"2026-07-30T10:00:00.000Z\"}"
+                )
+                .ActivatedAt.Value;
 
             Assert.Multiple(() =>
             {
-                Assert.That(viaNewtonsoft, Is.EqualTo(viaSimpleJson));
-                Assert.That(viaNewtonsoft.Kind, Is.EqualTo(DateTimeKind.Local));
+                Assert.That(parsed.Kind, Is.EqualTo(DateTimeKind.Local));
+                Assert.That(
+                    parsed.ToUniversalTime(),
+                    Is.EqualTo(new DateTime(2026, 7, 30, 10, 0, 0, DateTimeKind.Utc))
+                );
             });
         }
 
@@ -110,12 +117,10 @@ namespace AdaptySDK.NextTests
                 "{\"required_field\":\"r\",\"activated_at\":\"2026-07-30T10:00:00.000Z\"}"
             );
 
-            var written = AdaptyJson.Serialize(sample);
-            var expected = new JSONObject();
-            expected.Add("activated_at", sample.ActivatedAt.Value.ToJSONNode());
-
-            Assert.That(written, Does.Contain("\"activated_at\":\"2026-07-30T10:00:00.000Z\""));
-            Assert.That(expected.ToString(), Does.Contain("2026-07-30T10:00:00.000Z"));
+            Assert.That(
+                AdaptyJson.Serialize(sample),
+                Does.Contain("\"activated_at\":\"2026-07-30T10:00:00.000Z\"")
+            );
         }
 
         [Test]
@@ -162,15 +167,15 @@ namespace AdaptySDK.NextTests
         {
             const string json = "{\"n\":42,\"s\":\"x\",\"flag\":true,\"nested\":{\"k\":1},\"list\":[1,2]}";
 
-            var viaNewtonsoft = AdaptyJson.Deserialize<Dictionary<string, object>>(json);
-            var viaSimpleJson = JSONNode.Parse(json).GetDictionary();
+            var parsed = AdaptyJson.Deserialize<Dictionary<string, object>>(json);
 
             Assert.Multiple(() =>
             {
-                Assert.That(viaNewtonsoft["n"], Is.EqualTo(viaSimpleJson["n"]).And.TypeOf<double>());
-                Assert.That(viaNewtonsoft["flag"], Is.EqualTo(viaSimpleJson["flag"]));
-                Assert.That(viaNewtonsoft["nested"], Is.TypeOf<Dictionary<string, object>>());
-                Assert.That(viaNewtonsoft["list"], Is.TypeOf<List<object>>());
+                Assert.That(parsed["n"], Is.EqualTo(42d).And.TypeOf<double>());
+                Assert.That(parsed["s"], Is.EqualTo("x"));
+                Assert.That(parsed["flag"], Is.EqualTo(true));
+                Assert.That(parsed["nested"], Is.TypeOf<Dictionary<string, object>>());
+                Assert.That(parsed["list"], Is.TypeOf<List<object>>());
             });
         }
 

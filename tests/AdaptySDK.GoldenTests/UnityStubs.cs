@@ -137,35 +137,51 @@ namespace UnityEngine
     }
 }
 
-namespace AdaptySDK
+namespace UnityEngine
 {
-    // Adapty.cs and IAdaptyEventListener.cs are not linked (P/Invoke, AndroidJavaClass), but
-    // models reference these members.
-    public static partial class Adapty
+    // The Android bridge is linked by the next-package suite so the transport compiles under
+    // UNITY_ANDROID. Nothing calls into the JVM here - these only have to satisfy the compiler.
+    public class AndroidJavaObject : IDisposable
     {
-        public static readonly string SDKVersion = "4.0.0";
-    }
+        public AndroidJavaObject(string className, params object[] args) { }
 
-    public static class AdaptyUI
-    {
-        public static void PresentFlowView(
-            AdaptyUIFlowView view,
-            AdaptyUIIOSPresentationStyle style,
-            Action<AdaptyError> handler
-        ) => throw new NotSupportedException();
-
-        public static void DismissFlowView(AdaptyUIFlowView view, Action<AdaptyError> handler) =>
+        public T Call<T>(string methodName, params object[] args) =>
             throw new NotSupportedException();
 
-        public static void PresentOnboardingView(
-            AdaptyUIOnboardingView view,
-            AdaptyUIIOSPresentationStyle style,
-            Action<AdaptyError> handler
-        ) => throw new NotSupportedException();
+        public void Call(string methodName, params object[] args) =>
+            throw new NotSupportedException();
 
-        public static void DismissOnboardingView(
-            AdaptyUIOnboardingView view,
-            Action<AdaptyError> handler
-        ) => throw new NotSupportedException();
+        public T CallStatic<T>(string methodName, params object[] args) =>
+            throw new NotSupportedException();
+
+        public void CallStatic(string methodName, params object[] args) =>
+            throw new NotSupportedException();
+
+        public T GetStatic<T>(string fieldName) => throw new NotSupportedException();
+
+        public void Dispose() { }
+    }
+
+    public class AndroidJavaClass : AndroidJavaObject
+    {
+        public AndroidJavaClass(string className)
+            : base(className) { }
+    }
+
+    public class AndroidJavaProxy
+    {
+        protected AndroidJavaProxy(string javaInterface) { }
+    }
+}
+
+namespace AOT
+{
+    // Marks the reverse-P/Invoke entry points on iOS. Attribute only - it changes nothing here,
+    // but the transport's callback boundary is exactly where a thrown exception would be fatal
+    // on IL2CPP, so the file has to compile in the test suite.
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class MonoPInvokeCallbackAttribute : Attribute
+    {
+        public MonoPInvokeCallbackAttribute(Type type) { }
     }
 }
