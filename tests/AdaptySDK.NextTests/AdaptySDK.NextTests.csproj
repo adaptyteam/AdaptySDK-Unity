@@ -1,11 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    Parity tests for the next package: the same fixtures and the same approved snapshots as the
-    golden tests, parsed through Newtonsoft instead of SimpleJSON. A model is done when its
-    snapshot here matches the one the current package produces.
-
-    Runs in CI alongside the golden suite, once per platform - see
+    The SDK's JSON layer against its approved snapshots. Links the package sources into a plain
+    .NET project, so it runs without the Unity Editor. Once per platform in CI - see
     .github/workflows/json-layer-tests.yml.
   -->
 

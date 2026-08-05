@@ -9,8 +9,8 @@ using NUnit.Framework;
 namespace AdaptySDK.NextTests
 {
     /// <summary>
-    /// The Newtonsoft infrastructure of the next package, checked against the behaviour of the
-    /// current layer. Confirmed to behave identically on an IL2CPP player — see tests/aot-probe.
+    /// The Newtonsoft infrastructure: the resolver, the converters and the settings behind
+    /// AdaptyJson. Confirmed to behave identically on an IL2CPP player — see tests/aot-probe.
     /// </summary>
     [TestFixture]
     public class SerializationInfrastructureTests

@@ -1,6 +1,6 @@
 // Minimal UnityEngine stand-ins so the SDK sources link outside the Unity Editor.
-// Only AdaptyCustomAsset.cs and AdaptyCustomAsset+JSON.cs depend on UnityEngine; the rest
-// of Runtime/Models and Runtime/JSON is plain C#.
+// The models need [Preserve], and AdaptyCustomAsset.cs also Color and Gradient; the rest is for
+// the platform bridges in Runtime/Plugins.
 
 using System;
 

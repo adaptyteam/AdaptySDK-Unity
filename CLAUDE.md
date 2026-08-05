@@ -8,7 +8,13 @@ Adapty Unity SDK — a C# wrapper around native [Adapty iOS SDK](https://github.
 
 ## Build & Development
 
-This is a **Unity project** (Unity 6000.x). There is no standalone CLI build or test command — the project is built and tested through the Unity Editor.
+This is a **Unity project** (Unity 6000.x) — the player is built and tested through the Unity Editor. The JSON layer is the exception: `tests/` links the SDK sources into a plain .NET project, so it needs neither the Editor nor a licence.
+
+**Run the JSON layer tests:**
+```bash
+dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj
+```
+The layer branches on `UNITY_IOS` / `UNITY_ANDROID` and each platform has its own approved snapshots, so a change to it has to pass all three: add `-p:AdaptyPlatform=UNITY_IOS` or `-p:AdaptyPlatform=UNITY_ANDROID` for the other two. `ADAPTY_UPDATE_SNAPSHOTS=1` rewrites the approved files instead of failing. CI runs the same matrix in `.github/workflows/json-layer-tests.yml`.
 
 **Build .unitypackage for distribution:**
 ```bash
@@ -36,7 +42,7 @@ All SDK calls follow a single JSON-based bridge:
    - `AdaptySDK.Android.AdaptyAndroid` — `AndroidJavaClass` calling `com.adapty.unity.AdaptyAndroidWrapper`
    - `AdaptySDK.Noop.AdaptyNoop` — no-op for Editor/unsupported platforms
 4. Native side processes the JSON request and returns a JSON response string via callback.
-5. Response is parsed back into C# models via `+JSON.cs` extension methods.
+5. Response is parsed back into C# models by Newtonsoft, through `AdaptySDK.Serialization.AdaptyJson`.
 
 ### Key Directory Layout
 
@@ -45,14 +51,15 @@ All SDK calls follow a single JSON-based bridge:
   - `Runtime/Adapty.Overloads.cs` — Convenience overloads with fewer parameters
   - `Runtime/IAdaptyEventListener.cs` — Event listener interfaces (`IAdaptyEventListener`, `IAdaptyFlowsEventsListener`, `IAdaptyUISystemRequestsHandler`, `IAdaptyUIObserverModeResolver`, `IAdaptyOnboardingsEventsListener`) and the `OnMessage` dispatcher
   - `Runtime/Models/` — C# data models (one file per type, e.g. `AdaptyFlow.cs`)
-  - `Runtime/JSON/` — JSON serialization/deserialization extensions (one `+JSON.cs` per model, plus `SimpleJSON.cs` library)
+  - `Runtime/Serialization/` — the Newtonsoft JSON layer: `AdaptyJson` (the single entry point), `AdaptyContractResolver`, and the converters
   - `Runtime/Plugins/iOS/` — `AdaptyIOS.cs` (P/Invoke bridge) + `Source/` (Swift/ObjC native plugin code)
   - `Runtime/Plugins/Android/` — `AdaptyAndroid.cs` (JNI bridge) + `Local/` (local AAR maven repo) + `AdaptySDKDependencies.androidlib` (Android maven dependencies)
   - `Runtime/Plugins/AdaptyNoop.cs` — Editor/no-op stub
   - `Runtime/Editor/AdaptySDKDependencies.xml` — iOS Swift Package declaration for External Dependency Manager
-  - `Editor/` — Editor-only assembly (iOS build validation)
+  - `Editor/` — Editor-only assembly (iOS build validation, Newtonsoft presence check)
 - **`adaptyandroidwrapper/`** — Standalone Android Gradle project:
   - `unitywrapper/src/main/java/com/adapty/unity/` — `AdaptyAndroidWrapper.java` (entry point), callback handler, message handler
+- **`tests/`** — .NET test projects for the JSON layer: `AdaptySDK.NextTests` (the suite), `shared/` (fixtures and snapshot helpers), `surface/` (the SDK compiled as a library to assert against), `aot-probe/`
 - **`Assets/Scripts/`** — Demo app scripts (not part of distributed SDK)
 - **`cross_platform.yaml`** — Cross-platform API contract schema defining all request/response JSON formats and data types shared across iOS/Android/Unity
 
@@ -60,13 +67,15 @@ All SDK calls follow a single JSON-based bridge:
 
 Native SDKs push events (profile updates, flow view lifecycle, onboarding events) via the same JSON bridge. `Adapty.OnMessage(id, json)` in `IAdaptyEventListener.cs` dispatches by event `id` string to the registered listener interfaces. Two event families are round-trips: flow permission requests are answered via `flow_view_did_answer_permission` (keyed by `event_id`), and Observer-mode purchases/restores report back via `observer_*_did_start/finish`.
 
-### Model + JSON Convention
+### Model Convention
 
-Each model has two files:
-- `Runtime/Models/AdaptyFoo.cs` — C# class/struct definition
-- `Runtime/JSON/AdaptyFoo+JSON.cs` — `ToJSONNode()` serialization and `GetAdaptyFoo()` deserialization extension methods
+One file per model in `Runtime/Models/`. Serialization is declared with attributes, not written by hand:
 
-When adding a new model, create both files following this pattern. The JSON keys must match `cross_platform.yaml` definitions, including which fields are required vs optional (optional fields parse with `*IfPresent` accessors).
+- `[DataContract]` on the type and `[DataMember(Name = "json_key")]` on each member, with `IsRequired = true` where the contract says the key is required. The JSON keys must match `cross_platform.yaml`, including which fields are required vs optional.
+- `[Preserve]` on the type. Managed stripping otherwise removes it, and the failure shows only on a device, the first time a response carries the type. A nested type is covered by its declaring type's attribute; a property getter or a `ShouldSerialize*` method is not, and needs its own.
+- Enums follow one of two contracts, and the choice is part of the wire format. A **string** enum maps every member with `[EnumMember(Value = "...")]`; declare an `Unknown` member on anything the native side can extend, since an unrecognised value reads as `Unknown` where one exists and throws where it does not. A **numeric** enum — `AdaptyErrorCode`, `AppTrackingTransparencyStatus` — carries the native number and declares no `[EnumMember]` at all: `AdaptyEnumConverter.CanConvert` skips it and Newtonsoft's default numeric handling applies. Adding `[EnumMember]` to a numeric enum silently switches it to strings.
+
+`tests/AdaptySDK.NextTests` enforces all of this: a model added without `[Preserve]` fails `StrippingGuardTests`, and one whose output changes fails its approved snapshot.
 
 ## Version Bumping
 

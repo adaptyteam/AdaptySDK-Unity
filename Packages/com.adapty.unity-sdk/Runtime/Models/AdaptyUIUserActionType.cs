@@ -1,5 +1,5 @@
 //
-//  AdaptyUIUserActionType+JSON.cs
+//  AdaptyUIUserActionType.cs
 //  AdaptySDK
 //
 //  Created by Aleksei Valiano on 17.12.2024.

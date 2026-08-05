@@ -5,9 +5,8 @@ using UnityEngine;
 namespace AdaptySDK.TestSupport
 {
     /// <summary>
-    /// The objects both suites serialize. Shared source, so the golden and the parity run feed the
-    /// serializers byte-identical input - and so the file only compiles if both packages still
-    /// expose the same public API.
+    /// The objects the write tests serialize. Built through the package's own public API, so the
+    /// file stops compiling if that API changes shape.
     /// </summary>
     public static class Samples
     {

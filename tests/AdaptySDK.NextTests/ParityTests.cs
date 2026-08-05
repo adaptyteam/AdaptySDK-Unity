@@ -7,8 +7,8 @@ using NUnit.Framework;
 namespace AdaptySDK.NextTests
 {
     /// <summary>
-    /// Parses the golden fixtures through Newtonsoft and compares the model state with the
-    /// snapshots the current package produced. Failures here are migration work still to do.
+    /// Parses the fixtures and compares the full state of each model with its approved snapshot.
+    /// The snapshots were taken from the manual layer, so a diff is a change in what the SDK reads.
     /// </summary>
     [TestFixture]
     public class ParityTests

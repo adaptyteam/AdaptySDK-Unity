@@ -45,15 +45,6 @@ namespace AdaptySDK.NextTests
                     continue;
                 }
 
-                // The bundled serializer is public in the current package and gone from the next
-                // one. That is the point of the migration, not a loss, and its ~180 members would
-                // bury everything else. AdaptySDK.Serialization is the replacement and is internal,
-                // so it never appears here either.
-                if (type.Namespace.StartsWith("AdaptySDK.SimpleJSON", StringComparison.Ordinal))
-                {
-                    continue;
-                }
-
                 members.Add(
                     $"{Access(type)}{Abstractness(type)}{Kind(type)} {type.FullName}{Bases(type)}"
                 );
@@ -305,8 +296,8 @@ namespace AdaptySDK.NextTests
         }
 
         /// <summary>
-        /// Type names without assembly identity - the two packages are different assemblies, so
-        /// their own types would never compare equal by qualified name.
+        /// Type names without assembly identity: the package is read from a second, metadata-only
+        /// assembly, so its types would never compare equal to this project's by qualified name.
         /// </summary>
         private static string Name(Type type)
         {

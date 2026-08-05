@@ -118,9 +118,9 @@ When working on the Unity side, the mapping is:
 |---|---|---|
 | `Adapty.cs` methods | `Sources.AdaptyPlugin/Requests/Request.*.swift` | `Sources/Adapty+*.swift` |
 | `Models/AdaptyFoo.cs` | `Sources.AdaptyPlugin/Codable/` | `Sources/` model files |
-| `JSON/AdaptyFoo+JSON.cs` | `Sources.AdaptyPlugin/Codable/` | N/A |
+| `Serialization/` (Newtonsoft layer) | `Sources.AdaptyPlugin/Codable/` | N/A |
 | `cross_platform.yaml` (Unity root) | `Sources.AdaptyPlugin/cross_platform.yaml` | N/A |
-| `AdaptyEventListener.cs` | `Sources.AdaptyPlugin/Events/` | `Sources/Events/` |
+| `IAdaptyEventListener.cs` | `Sources.AdaptyPlugin/Events/` | `Sources/Events/` |
 
 ## Version Alignment
 
