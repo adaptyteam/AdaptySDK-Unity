@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using AdaptySDK.GoldenTests;
+using AdaptySDK.TestSupport;
 using AdaptySDK.Noop;
 using AdaptySDK.Serialization;
 using NUnit.Framework;

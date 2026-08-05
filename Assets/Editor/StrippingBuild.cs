@@ -50,7 +50,29 @@ public static class StrippingBuild
         Build(BuildTarget.Android, NamedBuildTarget.Android, "android-stripped-build.apk");
     }
 
-    private static void Build(BuildTarget target, NamedBuildTarget named, string output)
+    /// <summary>
+    /// <see cref="Android"/> as a development build: a release player's logs do not reach logcat on
+    /// every device. Stripping stays High.
+    /// </summary>
+    public static void AndroidDevelopment()
+    {
+        PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
+        PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, "com.adaptytest");
+
+        Build(
+            BuildTarget.Android,
+            NamedBuildTarget.Android,
+            "android-dev-build.apk",
+            BuildOptions.Development
+        );
+    }
+
+    private static void Build(
+        BuildTarget target,
+        NamedBuildTarget named,
+        string output,
+        BuildOptions options = BuildOptions.None
+    )
     {
         PlayerSettings.SetManagedStrippingLevel(named, ManagedStrippingLevel.High);
         PlayerSettings.SetScriptingBackend(named, ScriptingImplementation.IL2CPP);
@@ -73,7 +95,7 @@ public static class StrippingBuild
                 scenes = scenes,
                 locationPathName = output,
                 target = target,
-                options = BuildOptions.None,
+                options = options,
             }
         );
 

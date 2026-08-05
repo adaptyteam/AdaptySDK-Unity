@@ -19,8 +19,8 @@
     <RootNamespace>AdaptySDK.NextTests</RootNamespace>
     <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
-    <SdkNextRuntime>$(MSBuildThisFileDirectory)../../Packages/com.adapty.unity-sdk.next/Runtime</SdkNextRuntime>
-    <GoldenTests>$(MSBuildThisFileDirectory)../AdaptySDK.GoldenTests</GoldenTests>
+    <SdkRuntime>$(MSBuildThisFileDirectory)../../Packages/com.adapty.unity-sdk/Runtime</SdkRuntime>
+    <Shared>$(MSBuildThisFileDirectory)../shared</Shared>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(AdaptyPlatform)' != ''">
@@ -36,28 +36,24 @@
   </ItemGroup>
 
   <!--
-    Built, not referenced: both assemblies declare the same type names in the same namespace, so
-    they can only be compared from the outside. The surface test reads them off disk for metadata
-    only.
+    Built, not referenced: the surface assembly declares the same type names in the same namespace
+    as the sources compiled here, so it can only be read from the outside - off disk, metadata only.
   -->
   <ItemGroup>
-    <ProjectReference Include="../surface/current/AdaptySDK.CurrentSurface.csproj" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="../surface/next/AdaptySDK.NextSurface.csproj" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="../surface/mutation/before/AdaptySDK.MutationBefore.csproj" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="../surface/mutation/after/AdaptySDK.MutationAfter.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="../surface/package/AdaptySDK.Surface.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(SdkNextRuntime)/Models/*.cs" LinkBase="SdkNext/Models" />
-    <Compile Include="$(SdkNextRuntime)/Serialization/*.cs" LinkBase="SdkNext/Serialization" />
-    <Compile Include="$(SdkNextRuntime)/*.cs" LinkBase="SdkNext" />
-    <Compile Include="$(SdkNextRuntime)/Plugins/AdaptyNoop.cs" LinkBase="SdkNext/Plugins" />
-    <Compile Include="$(SdkNextRuntime)/Plugins/iOS/*.cs" LinkBase="SdkNext/Plugins/iOS" />
-    <Compile Include="$(SdkNextRuntime)/Plugins/Android/*.cs" LinkBase="SdkNext/Plugins/Android" />
-    <Compile Include="$(GoldenTests)/ModelSnapshot.cs" LinkBase="Shared" />
-    <Compile Include="$(GoldenTests)/Snapshots.cs" LinkBase="Shared" />
-    <Compile Include="$(GoldenTests)/UnityStubs.cs" LinkBase="Shared" />
-    <Compile Include="$(GoldenTests)/Samples.cs" LinkBase="Shared" />
+    <Compile Include="$(SdkRuntime)/Models/*.cs" LinkBase="Sdk/Models" />
+    <Compile Include="$(SdkRuntime)/Serialization/*.cs" LinkBase="Sdk/Serialization" />
+    <Compile Include="$(SdkRuntime)/*.cs" LinkBase="Sdk" />
+    <Compile Include="$(SdkRuntime)/Plugins/AdaptyNoop.cs" LinkBase="Sdk/Plugins" />
+    <Compile Include="$(SdkRuntime)/Plugins/iOS/*.cs" LinkBase="Sdk/Plugins/iOS" />
+    <Compile Include="$(SdkRuntime)/Plugins/Android/*.cs" LinkBase="Sdk/Plugins/Android" />
+    <Compile Include="$(Shared)/ModelSnapshot.cs" LinkBase="Shared" />
+    <Compile Include="$(Shared)/Snapshots.cs" LinkBase="Shared" />
+    <Compile Include="$(Shared)/UnityStubs.cs" LinkBase="Shared" />
+    <Compile Include="$(Shared)/Samples.cs" LinkBase="Shared" />
   </ItemGroup>
 
 </Project>

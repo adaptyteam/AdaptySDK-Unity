@@ -4,7 +4,7 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.0] - 2026-07-29
+## [4.0.0-beta.2] - 2026-08-04
 
 ### Added
 
@@ -29,6 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **The JSON layer now uses Newtonsoft.Json instead of the bundled SimpleJSON.** The package
+  depends on `com.unity.nuget.newtonsoft-json` 3.2.2, which Package Manager installs for you. The SDK
+  reports a clear error in the Editor if Newtonsoft turns out to be missing, or if a second copy in
+  the project makes its types ambiguous.
+  The models, their members and every method signature are unchanged, so calling code is unaffected.
+  **Breaking for anything that used `AdaptySDK.SimpleJSON` directly:** the namespace is gone, and its
+  public types (`JSON`, `JSONNode`, `JSONObject`, `JSONArray` and the rest) went with it.
 - **Breaking:** migrated the paywall API to flows — `AdaptyPaywall` → `AdaptyFlow`,
   `GetPaywall` → `GetFlow`, `CreatePaywallView` → `CreateFlowView`, and the corresponding models,
   events and view controllers. Event listener interfaces now carry the `I` prefix

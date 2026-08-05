@@ -9,9 +9,19 @@ namespace AdaptySDK.Noop
             + (int)AdaptyErrorCode.AdaptyNotInitialized
             + ",\"message\":\"Adapty SDK is not available in the Unity Editor. Build and run the app on an iOS or Android device to use it.\"}}";
 
+        /// <summary>
+        /// Replaces the canned reply, and sees the request that produced it.
+        /// </summary>
+        /// <remarks>
+        /// The only seam into the transport when there is no native side: the request payload is
+        /// assembled inside <c>Request.Send</c>, so this is where a test can read what would have
+        /// gone over the bridge.
+        /// </remarks>
+        internal static Func<string, string, string> Handler;
+
         internal static void Invoke(string method, string request, Action<string> completionHandler)
         {
-            completionHandler(NotAvailableResponse);
+            completionHandler(Handler?.Invoke(method, request) ?? NotAvailableResponse);
         }
     }
 

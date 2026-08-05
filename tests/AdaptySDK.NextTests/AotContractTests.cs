@@ -15,17 +15,9 @@ namespace AdaptySDK.NextTests
     /// stripped IL2CPP player.
     /// </summary>
     /// <remarks>
-    /// When a member's declared type implements neither non-generic <c>IList</c> nor non-generic
-    /// <c>IDictionary</c> - which is every <c>IList&lt;T&gt;</c> and <c>IDictionary&lt;K,V&gt;</c>
-    /// the models expose - Newtonsoft populates it through a <c>CollectionWrapper</c>, and gets at
-    /// that wrapper's constructor by reflection. Managed stripping removes the constructor, the
-    /// lookup returns null, and deserialization dies on "Value cannot be null. Parameter name:
-    /// method".
-    ///
-    /// Measured on the simulator, where it took out the profile - so activation, the access levels
-    /// and every purchase result with it. Desktop cannot reproduce it: nothing is stripped there
-    /// and the wrapper builds happily. So the property under test is the one that holds on both,
-    /// which is that no wrapper is ever asked for.
+    /// Stripping removes the wrapper's constructor, which Newtonsoft looks up by reflection, and
+    /// deserialization then fails outright. Desktop cannot reproduce that - nothing is stripped -
+    /// so what is asserted here is the property that holds on both: no wrapper is ever asked for.
     /// </remarks>
     [TestFixture]
     public class AotContractTests

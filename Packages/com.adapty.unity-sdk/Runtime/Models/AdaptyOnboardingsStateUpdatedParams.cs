@@ -5,12 +5,15 @@
 //  Created by GPT-5 on 17.09.2025.
 //
 
+using UnityEngine.Scripting;
 using System.Collections.Generic;
 
 namespace AdaptySDK
 {
+    [Preserve]
     public abstract class AdaptyOnboardingsStateUpdatedParams { }
 
+    [Preserve]
     public sealed class AdaptyOnboardingsSelectParams : AdaptyOnboardingsStateUpdatedParams
     {
         public readonly string Id;
@@ -28,6 +31,7 @@ namespace AdaptySDK
             $"{nameof(Id)}: {Id}, {nameof(Value)}: {Value}, {nameof(Label)}: {Label}";
     }
 
+    [Preserve]
     public sealed class AdaptyOnboardingsMultiSelectParams : AdaptyOnboardingsStateUpdatedParams
     {
         public readonly IList<AdaptyOnboardingsSelectParams> Params;
@@ -40,8 +44,10 @@ namespace AdaptySDK
         public override string ToString() => $"{nameof(Params)}: {Params}";
     }
 
+    [Preserve]
     public abstract class AdaptyOnboardingsInput { }
 
+    [Preserve]
     public sealed class AdaptyOnboardingsTextInput : AdaptyOnboardingsInput
     {
         public readonly string Value;
@@ -52,6 +58,7 @@ namespace AdaptySDK
         }
     }
 
+    [Preserve]
     public sealed class AdaptyOnboardingsEmailInput : AdaptyOnboardingsInput
     {
         public readonly string Value;
@@ -62,6 +69,7 @@ namespace AdaptySDK
         }
     }
 
+    [Preserve]
     public sealed class AdaptyOnboardingsNumberInput : AdaptyOnboardingsInput
     {
         public readonly double Value;
@@ -72,6 +80,7 @@ namespace AdaptySDK
         }
     }
 
+    [Preserve]
     public sealed class AdaptyOnboardingsInputParams : AdaptyOnboardingsStateUpdatedParams
     {
         public readonly AdaptyOnboardingsInput Input;
@@ -82,6 +91,7 @@ namespace AdaptySDK
         }
     }
 
+    [Preserve]
     public sealed class AdaptyOnboardingsDatePickerParams : AdaptyOnboardingsStateUpdatedParams
     {
         public readonly int? Day;

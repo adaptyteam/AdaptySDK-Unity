@@ -4,12 +4,6 @@
       "version": "file:com.adapty.unity-sdk",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
-    },
-    "com.adapty.unity-sdk.next": {
-      "version": "file:com.adapty.unity-sdk.next",
-      "depth": 0,
-      "source": "embedded",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.2"
       }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AdaptySDK
 {
-    using AdaptySDK.SimpleJSON;
+    using AdaptySDK.Serialization;
 
     public static partial class Adapty
     {
@@ -118,7 +118,7 @@ namespace AdaptySDK
             Dictionary<string, object> attribution,
             string source,
             Action<AdaptyError> completionHandler
-        ) => UpdateAttribution(attribution.ToJSONObject().ToString(), source, completionHandler);
+        ) => UpdateAttribution(AdaptyJson.Serialize(attribution), source, completionHandler);
 
         /// <summary>
         /// Opens the paywall in a web view or browser.

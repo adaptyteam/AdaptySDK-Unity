@@ -4,73 +4,30 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using AdaptySDK.GoldenTests;
+using AdaptySDK.TestSupport;
 using NUnit.Framework;
 
 namespace AdaptySDK.NextTests
 {
     /// <summary>
-    /// Compares the public API of the two packages, member by member.
+    /// Pins the package's public API, member by member, against an approved snapshot: the behaviour
+    /// snapshots only cover what the tests happen to call. Read for metadata only, since this
+    /// project compiles the same type names into itself.
     /// </summary>
-    /// <remarks>
-    /// The main risk of rewriting a package next to the one it replaces is that a field or an
-    /// overload quietly disappears - the snapshots stay green, because they only cover what the
-    /// tests happen to call. Nothing else in the suite can see that.
-    ///
-    /// Both assemblies declare the same type names in the same namespace, so they are read for
-    /// metadata only rather than loaded: two live definitions of <c>AdaptySDK.Adapty</c> could not
-    /// be named from the same code.
-    /// </remarks>
     [TestFixture]
     public class PublicSurfaceTests
     {
         [Test]
-        public void TheNextPackageKeepsThePublicSurface()
+        public void ThePublicSurfaceIsUnchanged()
         {
-            using var context = Open(
-                ("current", "AdaptySDK.CurrentSurface.dll"),
-                ("next", "AdaptySDK.NextSurface.dll"),
-                out var current,
-                out var next
+            using var context = Open(out var package);
+
+            var surface = string.Join(
+                Environment.NewLine,
+                Describe(package, "AdaptySDK").OrderBy(member => member, StringComparer.Ordinal)
             );
 
-            Snapshots.Matches("public-surface-diff", Diff(current, next, "AdaptySDK"));
-        }
-
-        /// <summary>
-        /// Every mutation below keeps each member's name and type and changes only a modifier, an
-        /// accessor, the hierarchy, a default or a parameter's direction. If the descriptor stopped
-        /// recording one of them, this snapshot would lose a line rather than the package diff
-        /// silently going quiet.
-        /// </summary>
-        [Test]
-        public void BreakingMutationsAreVisible()
-        {
-            using var context = Open(
-                ("mutation/before", "AdaptySDK.MutationBefore.dll"),
-                ("mutation/after", "AdaptySDK.MutationAfter.dll"),
-                out var before,
-                out var after
-            );
-
-            Snapshots.Matches("surface-mutations", Diff(before, after, "AdaptySDK.Mutation"));
-        }
-
-        private static string Diff(Assembly left, Assembly right, string root)
-        {
-            var leftMembers = Describe(left, root);
-            var rightMembers = Describe(right, root);
-
-            var report = new System.Text.StringBuilder();
-            foreach (var member in leftMembers.Except(rightMembers).OrderBy(x => x, StringComparer.Ordinal))
-            {
-                report.AppendLine("- " + member);
-            }
-            foreach (var member in rightMembers.Except(leftMembers).OrderBy(x => x, StringComparer.Ordinal))
-            {
-                report.AppendLine("+ " + member);
-            }
-            return report.ToString();
+            Snapshots.Matches("public-surface", surface);
         }
 
         /// <summary>
@@ -382,24 +339,21 @@ namespace AdaptySDK.NextTests
         private static string Built(string project) =>
             Path.Combine(ProjectDirectory(), "..", "surface", project, "bin", "Debug", "net8.0");
 
-        private static MetadataLoadContext Open(
-            (string project, string assembly) left,
-            (string project, string assembly) right,
-            out Assembly first,
-            out Assembly second
-        )
+        private static MetadataLoadContext Open(out Assembly package)
         {
+            var built = Built("package");
+
             var assemblies = Directory
-                .GetFiles(Built(left.project), "*.dll")
-                .Concat(Directory.GetFiles(Built(right.project), "*.dll"))
+                .GetFiles(built, "*.dll")
                 .Concat(
                     Directory.GetFiles(Path.GetDirectoryName(typeof(object).Assembly.Location), "*.dll")
                 )
+                .GroupBy(Path.GetFileName)
+                .Select(group => group.First())
                 .ToList();
 
             var context = new MetadataLoadContext(new PathAssemblyResolver(assemblies));
-            first = context.LoadFromAssemblyPath(Path.Combine(Built(left.project), left.assembly));
-            second = context.LoadFromAssemblyPath(Path.Combine(Built(right.project), right.assembly));
+            package = context.LoadFromAssemblyPath(Path.Combine(built, "AdaptySDK.Surface.dll"));
             return context;
         }
 

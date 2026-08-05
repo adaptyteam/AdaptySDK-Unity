@@ -5,14 +5,28 @@
 //  Created by Aleksei Valiano on 26.12.2023.
 //
 
+using UnityEngine.Scripting;
+
 namespace AdaptySDK
 {
     using System;
+    using System.Runtime.Serialization;
 
+    [DataContract]
+    [Preserve]
     public partial class AdaptyPlacementFetchPolicy
     {
+        [DataMember(Name = "type", IsRequired = true)]
         private readonly string _Type;
+
         private readonly TimeSpan? _MaxAge;
+
+        /// <summary>
+        /// The contract carries the age in seconds, not as a duration literal.
+        /// </summary>
+        [DataMember(Name = "max_age")]
+        [Preserve]
+        private double? MaxAgeInSeconds => _MaxAge?.TotalSeconds;
 
         private AdaptyPlacementFetchPolicy(string type, TimeSpan? maxAge)
         {

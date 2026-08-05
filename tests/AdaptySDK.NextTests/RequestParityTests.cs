@@ -1,4 +1,4 @@
-using AdaptySDK.GoldenTests;
+using AdaptySDK.TestSupport;
 using AdaptySDK.Serialization;
 using NUnit.Framework;
 

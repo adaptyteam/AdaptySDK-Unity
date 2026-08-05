@@ -88,6 +88,9 @@ ExportedObj/
 *.aab
 *.app
 
+# Staging area of build_unitypackage.sh; the released package is kept at the repository root.
+/deploy/output/
+
 # =============================================================================
 # IDEs
 # =============================================================================

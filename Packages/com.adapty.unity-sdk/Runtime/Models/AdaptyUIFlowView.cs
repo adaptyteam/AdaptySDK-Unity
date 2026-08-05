@@ -3,12 +3,22 @@
 //  AdaptySDK
 //
 
+using UnityEngine.Scripting;
+using System.Runtime.Serialization;
+
 namespace AdaptySDK
 {
+    [DataContract]
+    [Preserve]
     public partial class AdaptyUIFlowView
     {
+        private AdaptyUIFlowView() { }
+
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id;
+        [DataMember(Name = "placement_id", IsRequired = true)]
         public string PlacementId;
+        [DataMember(Name = "variation_id", IsRequired = true)]
         public string VariationId;
 
         /// <summary>
@@ -19,6 +29,7 @@ namespace AdaptySDK
         /// localization exists, and the flow's default localization otherwise. It is null when the native SDK is
         /// older than iOS 4.0.2 / Android 4.0.1 and does not report it.
         /// </remarks>
+        [DataMember(Name = "locale")]
         public string Locale;
 
         public override string ToString() =>

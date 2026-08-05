@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The package as an assembly of its own. Its consumers declare the same type names in the same
+    namespace, so they load it off disk for metadata only and never reference it - hence
+    ReferenceOutputAssembly="false" on their side.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>AdaptySDK.Surface</AssemblyName>
+    <RootNamespace>AdaptySDK</RootNamespace>
+    <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <SdkRuntime>$(MSBuildThisFileDirectory)../../../Packages/com.adapty.unity-sdk/Runtime</SdkRuntime>
+    <Shared>$(MSBuildThisFileDirectory)../../shared</Shared>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(AdaptyPlatform)' != ''">
+    <DefineConstants>$(DefineConstants);$(AdaptyPlatform)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(SdkRuntime)/Models/*.cs" LinkBase="Sdk/Models" />
+    <Compile Include="$(SdkRuntime)/Serialization/*.cs" LinkBase="Sdk/Serialization" />
+    <Compile Include="$(SdkRuntime)/*.cs" LinkBase="Sdk" />
+    <Compile Include="$(SdkRuntime)/Plugins/AdaptyNoop.cs" LinkBase="Sdk/Plugins" />
+    <Compile Include="$(SdkRuntime)/Plugins/iOS/*.cs" LinkBase="Sdk/Plugins/iOS" />
+    <Compile Include="$(SdkRuntime)/Plugins/Android/*.cs" LinkBase="Sdk/Plugins/Android" />
+    <Compile Include="$(Shared)/UnityStubs.cs" LinkBase="Shared" />
+  </ItemGroup>
+
+</Project>

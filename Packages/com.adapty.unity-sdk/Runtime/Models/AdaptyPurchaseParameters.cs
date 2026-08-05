@@ -5,11 +5,18 @@
 //  Created by Alexey Goncharov on 10.09.2025.
 //
 
+using UnityEngine.Scripting;
+using System.Runtime.Serialization;
+
 namespace AdaptySDK
 {
+    [DataContract]
+    [Preserve]
     public partial class AdaptyPurchaseParameters
     {
+        [DataMember(Name = "subscription_update_params")]
         public readonly AdaptySubscriptionUpdateParameters SubscriptionUpdateParams; // Android Only, nullable
+        [DataMember(Name = "is_offer_personalized")]
         public readonly bool? IsOfferPersonalized; // Android Only, nullable
 
         public AdaptyPurchaseParameters(
@@ -26,6 +33,7 @@ namespace AdaptySDK
             + $"{nameof(IsOfferPersonalized)}: {IsOfferPersonalized}";
     }
 
+    [Preserve]
     public class AdaptyPurchaseParametersBuilder
     {
         private AdaptyPurchaseParameters _parameters = new AdaptyPurchaseParameters();

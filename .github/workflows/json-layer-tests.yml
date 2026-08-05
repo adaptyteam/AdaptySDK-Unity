@@ -1,24 +1,19 @@
 name: JSON layer tests
 
-# Golden tests for the SDK JSON layer, and the parity tests that hold the next package to the
-# same approved snapshots. They link the SDK sources into a plain .NET project, so they need
-# neither the Unity Editor nor a Unity licence and run on every push.
-#
-# The SDK branches on UNITY_IOS / UNITY_ANDROID inside the JSON layer, so the same suites run
-# once per platform against their own set of approved snapshots.
+# The SDK JSON layer against its approved snapshots. The suite links the SDK sources into a plain
+# .NET project, so it needs neither the Unity Editor nor a licence, and runs once per platform:
+# the layer branches on UNITY_IOS / UNITY_ANDROID and each has its own snapshots.
 
 on:
   push:
     branches: ["**"]
     paths:
       - "Packages/com.adapty.unity-sdk/Runtime/**"
-      - "Packages/com.adapty.unity-sdk.next/Runtime/**"
       - "tests/**"
       - ".github/workflows/json-layer-tests.yml"
   pull_request:
     paths:
       - "Packages/com.adapty.unity-sdk/Runtime/**"
-      - "Packages/com.adapty.unity-sdk.next/Runtime/**"
       - "tests/**"
       - ".github/workflows/json-layer-tests.yml"
   workflow_dispatch:
@@ -30,8 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: ["", "UNITY_IOS", "UNITY_ANDROID"]
-        suite: ["AdaptySDK.GoldenTests", "AdaptySDK.NextTests"]
-    name: ${{ matrix.suite == 'AdaptySDK.GoldenTests' && 'golden' || 'next' }} / ${{ matrix.platform == '' && 'editor' || matrix.platform }}
+    name: ${{ matrix.platform == '' && 'editor' || matrix.platform }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,14 +34,14 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore
-        run: dotnet restore tests/${{ matrix.suite }}/${{ matrix.suite }}.csproj
+        run: dotnet restore tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj
 
       - name: Test
         run: |
           if [ -z "${{ matrix.platform }}" ]; then
-            dotnet test tests/${{ matrix.suite }}/${{ matrix.suite }}.csproj --no-restore
+            dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj --no-restore
           else
-            dotnet test tests/${{ matrix.suite }}/${{ matrix.suite }}.csproj --no-restore \
+            dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj --no-restore \
               -p:AdaptyPlatform=${{ matrix.platform }}
           fi
 
@@ -55,6 +49,6 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: received-${{ matrix.suite }}-${{ matrix.platform == '' && 'editor' || matrix.platform }}
-          path: tests/AdaptySDK.GoldenTests/Fixtures/approved/*.received.txt
+          name: received-${{ matrix.platform == '' && 'editor' || matrix.platform }}
+          path: tests/shared/Fixtures/approved/*.received.txt
           if-no-files-found: ignore

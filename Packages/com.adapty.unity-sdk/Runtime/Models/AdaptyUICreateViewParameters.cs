@@ -5,11 +5,15 @@
 //  Created by Aleksei Valiano on 18.12.2024.
 //
 
+using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    [DataContract]
+    [Preserve]
     public partial class AdaptyUICreateFlowViewParameters
     {
         /// <summary>
@@ -20,12 +24,28 @@ namespace AdaptySDK
         /// A flow is localized when its view is built, not when the flow is fetched — this is the only place
         /// that selects the localization. Requires the native iOS 4.0.2 / Android 4.0.1 SDKs or newer.
         /// </remarks>
+        [DataMember(Name = "locale")]
         public string Locale;
 
         public TimeSpan? LoadTimeout;
+
+        /// <summary>
+        /// The contract carries the timeout in seconds, not as a duration literal.
+        /// </summary>
+        [DataMember(Name = "load_timeout")]
+        [Preserve]
+        private double? LoadTimeoutInSeconds => LoadTimeout?.TotalSeconds;
+
+        [DataMember(Name = "preload_products")]
         public bool? PreloadProducts;
+
+        [DataMember(Name = "custom_tags")]
         public Dictionary<string, string> CustomTags;
+
+        [DataMember(Name = "custom_timers")]
         public Dictionary<string, DateTime> CustomTimers;
+
+        [DataMember(Name = "custom_assets")]
         public Dictionary<string, AdaptyCustomAsset> CustomAssets;
 
         /// <summary>
@@ -37,8 +57,33 @@ namespace AdaptySDK
         > ProductPurchaseParameters;
 
         /// <summary>
+        /// The contract keys these by the product identifier the store knows, not by the composite
+        /// identifier the app passes.
+        /// </summary>
+        [DataMember(Name = "product_purchase_parameters")]
+        [Preserve]
+        private Dictionary<string, AdaptyPurchaseParameters> ProductPurchaseParametersForRequest
+        {
+            get
+            {
+                if (ProductPurchaseParameters is null)
+                {
+                    return null;
+                }
+
+                var result = new Dictionary<string, AdaptyPurchaseParameters>();
+                foreach (var entry in ProductPurchaseParameters)
+                {
+                    result[entry.Key._AdaptyProductId] = entry.Value;
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Android only. When false, the flow view is laid out without safe area paddings. Defaults to true.
         /// </summary>
+        [DataMember(Name = "enable_safe_area_paddings")]
         public bool? EnableSafeAreaPaddings;
 
         public override string ToString() =>

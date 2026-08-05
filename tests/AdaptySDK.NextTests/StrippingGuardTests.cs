@@ -9,19 +9,10 @@ using NUnit.Framework;
 namespace AdaptySDK.NextTests
 {
     /// <summary>
-    /// Every type the serializer reaches by reflection has to carry <c>[Preserve]</c>.
+    /// Every type the serializer reaches by reflection has to carry <c>[Preserve]</c>. Managed
+    /// stripping otherwise removes it, and the failure only shows on a device, the first time a
+    /// response carries the type. Asked of the metadata here, so it runs without a Unity build.
     /// </summary>
-    /// <remarks>
-    /// Managed stripping removes what no code references, and a model is only ever referenced by
-    /// Newtonsoft through reflection. A missing attribute costs nothing at build time and nothing
-    /// in any test that does not happen to touch that model - it surfaces on a user's device, the
-    /// first time a response carries the type, as "Unable to find a constructor to use for type".
-    ///
-    /// This already happened once: the package shipped a link.xml that was never collected, and a
-    /// stripped player was missing AdaptySubscriptionPeriod, AdaptyPaymentMode, AdaptyOnboarding
-    /// and the custom asset types. It was found by counting types in the stripped assembly, which
-    /// needs a Unity build. This test asks the same question of the metadata, so it runs in CI.
-    /// </remarks>
     [TestFixture]
     public class StrippingGuardTests
     {
@@ -62,19 +53,10 @@ namespace AdaptySDK.NextTests
         }
 
         /// <summary>
-        /// A type's <c>[Preserve]</c> does not extend to its methods, so every member the
-        /// serializer reaches through one needs its own.
+        /// A type's <c>[Preserve]</c> does not extend to its methods, so every member the serializer
+        /// reaches through one needs its own. Fields are not listed: they survive on the type
+        /// attribute alone, as measured on a stripped player.
         /// </summary>
-        /// <remarks>
-        /// Measured on a stripped simulator player: <c>[Preserve]</c> on the type kept the type,
-        /// its private readonly fields and its constructors, and dropped every property getter and
-        /// ShouldSerialize method that no managed caller referenced. The package shipped an
-        /// activate request with no cross_platform_sdk_name, which the native side rejects - the
-        /// SDK could not be activated at all on a stripped build, while every desktop test passed.
-        ///
-        /// Only properties are listed here: a [DataMember] field survives on the type attribute
-        /// alone, as measured on the same player.
-        /// </remarks>
         [Test]
         public void EveryReflectedMemberIsPreserved()
         {
@@ -224,7 +206,7 @@ namespace AdaptySDK.NextTests
                 Path.GetDirectoryName(SourcePath()),
                 "..",
                 "surface",
-                "next",
+                "package",
                 "bin",
                 "Debug",
                 "net8.0"
@@ -244,7 +226,7 @@ namespace AdaptySDK.NextTests
 
             var context = new MetadataLoadContext(new PathAssemblyResolver(assemblies));
             package = context.LoadFromAssemblyPath(
-                Path.Combine(directory, "AdaptySDK.NextSurface.dll")
+                Path.Combine(directory, "AdaptySDK.Surface.dll")
             );
             return context;
         }

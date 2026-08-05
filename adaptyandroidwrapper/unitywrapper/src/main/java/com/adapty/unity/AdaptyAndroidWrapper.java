@@ -45,10 +45,24 @@ public class AdaptyAndroidWrapper {
     private static Handler unityMainThreadHandler;
     private static AdaptyAndroidMessageHandler messageHandler;
 
+    /**
+     * Binds to the registering thread's Looper - Unity's, since Adapty.SetEventListener calls this.
+     * Unity's player loop is not the Android UI thread, so Looper.getMainLooper() would deliver
+     * every callback on the wrong one.
+     */
     public static void registerMessageHandler(AdaptyAndroidMessageHandler handler) {
         messageHandler = handler;
-        if(unityMainThreadHandler == null)
-            unityMainThreadHandler = new Handler(Looper.getMainLooper());
+        if(unityMainThreadHandler == null) {
+            Looper looper = Looper.myLooper();
+            if (looper == null) {
+                throw new IllegalStateException(
+                    "Adapty: registerMessageHandler was called from a thread with no Looper, so SDK "
+                        + "callbacks cannot be delivered back to it. It is expected to be called "
+                        + "from Unity's scripting thread, which Adapty.SetEventListener does."
+                );
+            }
+            unityMainThreadHandler = new Handler(looper);
+        }
     }
 
     public static void runOnUnityThread(Runnable runnable) {
