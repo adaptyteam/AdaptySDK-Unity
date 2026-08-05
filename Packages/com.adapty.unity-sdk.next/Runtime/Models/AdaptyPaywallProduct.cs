@@ -5,6 +5,7 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
@@ -17,6 +18,7 @@ namespace AdaptySDK
     /// Read more at <see href="https://adapty.io/docs/product">Adapty Documentation</see>
     /// </remarks>
     [DataContract]
+    [Preserve]
     public partial class AdaptyPaywallProduct
     {
         private AdaptyPaywallProduct() { }

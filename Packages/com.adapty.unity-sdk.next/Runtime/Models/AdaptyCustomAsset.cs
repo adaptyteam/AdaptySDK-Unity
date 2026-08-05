@@ -5,6 +5,7 @@
 //  Created by Assistant on 14.01.2025.
 //
 
+using UnityEngine.Scripting;
 using System;
 using System.Runtime.Serialization;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace AdaptySDK
     /// <summary>
     /// Base class for custom assets that can be used in Adapty UI.
     /// </summary>
+    [Preserve]
     public abstract partial class AdaptyCustomAsset
     {
         /// <summary>
@@ -91,15 +93,18 @@ namespace AdaptySDK
     /// Custom asset representing local image data.
     /// </summary>
     [DataContract]
+    [Preserve]
     public sealed partial class AdaptyCustomAssetLocalImageData : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
         private string Type => "image";
 
         /// <summary>
         /// The image data as byte array.
         /// </summary>
         [DataMember(Name = "value", IsRequired = true)]
+        [Preserve]
         public byte[] Data { get; }
 
         internal AdaptyCustomAssetLocalImageData(byte[] data)
@@ -112,15 +117,18 @@ namespace AdaptySDK
     /// Custom asset representing a local image asset.
     /// </summary>
     [DataContract]
+    [Preserve]
     public sealed partial class AdaptyCustomAssetLocalImageAsset : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
         private string Type => "image";
 
         /// <summary>
         /// The asset ID of the image.
         /// </summary>
         [DataMember(Name = "asset_id", IsRequired = true)]
+        [Preserve]
         public string AssetId { get; }
 
         internal AdaptyCustomAssetLocalImageAsset(string assetId)
@@ -133,9 +141,11 @@ namespace AdaptySDK
     /// Custom asset representing a local image file.
     /// </summary>
     [DataContract]
+    [Preserve]
     public sealed partial class AdaptyCustomAssetLocalImageFile : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
         private string Type => "image";
 
         /// <summary>
@@ -144,6 +154,7 @@ namespace AdaptySDK
         public string Path { get; }
 
         [DataMember(Name = "path", IsRequired = true)]
+        [Preserve]
         private string PathForRequest => AdaptyCustomAssetPath.Resolve(Path);
 
         internal AdaptyCustomAssetLocalImageFile(string path)
@@ -156,15 +167,18 @@ namespace AdaptySDK
     /// Custom asset representing a local video asset.
     /// </summary>
     [DataContract]
+    [Preserve]
     public sealed partial class AdaptyCustomAssetLocalVideoAsset : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
         private string Type => "video";
 
         /// <summary>
         /// The asset ID of the video.
         /// </summary>
         [DataMember(Name = "asset_id", IsRequired = true)]
+        [Preserve]
         public string AssetId { get; }
 
         internal AdaptyCustomAssetLocalVideoAsset(string assetId)
@@ -177,9 +191,11 @@ namespace AdaptySDK
     /// Custom asset representing a local video file.
     /// </summary>
     [DataContract]
+    [Preserve]
     public sealed partial class AdaptyCustomAssetLocalVideoFile : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
         private string Type => "video";
 
         /// <summary>
@@ -188,6 +204,7 @@ namespace AdaptySDK
         public string Path { get; }
 
         [DataMember(Name = "path", IsRequired = true)]
+        [Preserve]
         private string PathForRequest => AdaptyCustomAssetPath.Resolve(Path);
 
         internal AdaptyCustomAssetLocalVideoFile(string path)
@@ -200,9 +217,11 @@ namespace AdaptySDK
     /// Custom asset representing a color.
     /// </summary>
     [DataContract]
+    [Preserve]
     public sealed partial class AdaptyCustomAssetColor : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
         private string Type => "color";
 
         /// <summary>
@@ -211,6 +230,7 @@ namespace AdaptySDK
         public Color ColorValue { get; }
 
         [DataMember(Name = "value", IsRequired = true)]
+        [Preserve]
         private string ValueForRequest => AdaptyCustomAssetPath.ColorToHex(ColorValue);
 
         internal AdaptyCustomAssetColor(Color color)
@@ -223,9 +243,11 @@ namespace AdaptySDK
     /// Custom asset representing a linear gradient.
     /// </summary>
     [DataContract]
+    [Preserve]
     public sealed partial class AdaptyCustomAssetLinearGradient : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
         private string Type => "linear-gradient";
 
         /// <summary>
@@ -234,6 +256,7 @@ namespace AdaptySDK
         public Gradient Gradient { get; }
 
         [DataMember(Name = "values", IsRequired = true)]
+        [Preserve]
         private System.Collections.Generic.List<Stop> ValuesForRequest
         {
             get
@@ -253,6 +276,7 @@ namespace AdaptySDK
         /// A Unity gradient always runs left to right over its full width.
         /// </summary>
         [DataMember(Name = "points", IsRequired = true)]
+        [Preserve]
         private Points PointsForRequest => new Points();
 
         internal AdaptyCustomAssetLinearGradient(Gradient gradient)
@@ -299,9 +323,11 @@ namespace AdaptySDK
             }
 
             [DataMember(Name = "color", IsRequired = true)]
+            [Preserve]
             private string Color { get; }
 
             [DataMember(Name = "p", IsRequired = true)]
+            [Preserve]
             private double Position { get; }
         }
 
@@ -309,15 +335,19 @@ namespace AdaptySDK
         private sealed class Points
         {
             [DataMember(Name = "x0", IsRequired = true)]
+            [Preserve]
             private double X0 => 0.0;
 
             [DataMember(Name = "y0", IsRequired = true)]
+            [Preserve]
             private double Y0 => 0.0;
 
             [DataMember(Name = "x1", IsRequired = true)]
+            [Preserve]
             private double X1 => 1.0;
 
             [DataMember(Name = "y1", IsRequired = true)]
+            [Preserve]
             private double Y1 => 0.0;
         }
     }
@@ -325,6 +355,7 @@ namespace AdaptySDK
     /// <summary>
     /// Shared helpers for the write-only custom asset payloads.
     /// </summary>
+    [Preserve]
     internal static class AdaptyCustomAssetPath
     {
         /// <summary>

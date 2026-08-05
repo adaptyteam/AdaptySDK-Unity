@@ -5,11 +5,13 @@
 //  Created by Alexey Goncharov on 10.09.2025.
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
     [DataContract]
+    [Preserve]
     public partial class AdaptyPurchaseParameters
     {
         [DataMember(Name = "subscription_update_params")]
@@ -31,6 +33,7 @@ namespace AdaptySDK
             + $"{nameof(IsOfferPersonalized)}: {IsOfferPersonalized}";
     }
 
+    [Preserve]
     public class AdaptyPurchaseParametersBuilder
     {
         private AdaptyPurchaseParameters _parameters = new AdaptyPurchaseParameters();

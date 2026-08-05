@@ -5,12 +5,14 @@
 //  Created by Aleksei Valiano on 08.09.2023.
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
 
     [DataContract]
+    [Preserve]
     public partial class AdaptyPrice
     {
         private AdaptyPrice() { }

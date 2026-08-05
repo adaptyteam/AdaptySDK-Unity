@@ -5,11 +5,13 @@
 //  Created by Aleksei Valiano on 07.09.2023.
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
     [DataContract]
+    [Preserve]
     public partial class AdaptyUIMediaCacheConfiguration
     {
         [DataMember(Name = "memory_storage_total_cost_limit")]

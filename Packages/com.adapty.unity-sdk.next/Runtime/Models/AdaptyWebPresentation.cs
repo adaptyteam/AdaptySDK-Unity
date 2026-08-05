@@ -3,6 +3,7 @@
 //  AdaptySDK
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
@@ -10,6 +11,7 @@ namespace AdaptySDK
     /// <summary>
     /// Controls how web content (paywalls, external URLs in onboarding) is presented.
     /// </summary>
+    [Preserve]
     public enum AdaptyWebPresentation
     {
         /// <summary>

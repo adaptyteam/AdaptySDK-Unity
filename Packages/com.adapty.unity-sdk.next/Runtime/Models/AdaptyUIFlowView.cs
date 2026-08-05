@@ -3,11 +3,13 @@
 //  AdaptySDK
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
     [DataContract]
+    [Preserve]
     public partial class AdaptyUIFlowView
     {
         private AdaptyUIFlowView() { }

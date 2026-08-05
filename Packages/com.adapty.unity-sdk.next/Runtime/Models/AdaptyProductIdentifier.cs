@@ -5,12 +5,14 @@
 //  Created by Alexey Goncharov on 10.09.2025.
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
     /// A lightweight identifier used when addressing a specific product across platforms.
     [DataContract]
+    [Preserve]
     public partial class AdaptyProductIdentifier
     {
         private AdaptyProductIdentifier() { }
@@ -22,6 +24,7 @@ namespace AdaptySDK
         [DataMember(Name = "base_plan_id")]
         public readonly string BasePlanId; // Android Only, nullable
 
+        [Preserve]
         private bool ShouldSerializeBasePlanId() => !string.IsNullOrEmpty(BasePlanId);
 
         public AdaptyProductIdentifier(

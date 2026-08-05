@@ -5,6 +5,7 @@
 //  Created by Aleksei Goncharov on 09.09.2025.
 //
 
+using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -19,6 +20,7 @@ namespace AdaptySDK
     /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
     /// </remarks>
     [DataContract]
+    [Preserve]
     public partial class AdaptyOnboarding
     {
         private AdaptyOnboarding() { }

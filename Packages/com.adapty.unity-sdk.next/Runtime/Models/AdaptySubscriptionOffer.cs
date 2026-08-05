@@ -5,6 +5,7 @@
 //  Created by Aleksei Valiano on 12.12.2024.
 //
 
+using UnityEngine.Scripting;
 using System.Collections.Generic;
 
 namespace AdaptySDK
@@ -15,6 +16,7 @@ namespace AdaptySDK
     /// <c>AdaptySDK.Serialization.AdaptySubscriptionOfferConverter</c> rather than from member
     /// annotations.
     /// </remarks>
+    [Preserve]
     public partial class AdaptySubscriptionOffer
     {
         internal AdaptySubscriptionOffer(

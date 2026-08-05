@@ -185,3 +185,22 @@ namespace AOT
         public MonoPInvokeCallbackAttribute(Type type) { }
     }
 }
+
+namespace UnityEngine.Scripting
+{
+    // Unity's marker for "the linker cannot see this is used". Stubbed so the models keep
+    // compiling in the plain .NET suites.
+    [AttributeUsage(
+        AttributeTargets.Class
+            | AttributeTargets.Struct
+            | AttributeTargets.Enum
+            | AttributeTargets.Constructor
+            | AttributeTargets.Method
+            | AttributeTargets.Property
+            | AttributeTargets.Field
+            | AttributeTargets.Event
+            | AttributeTargets.Interface
+            | AttributeTargets.Delegate
+    )]
+    public sealed class PreserveAttribute : Attribute { }
+}

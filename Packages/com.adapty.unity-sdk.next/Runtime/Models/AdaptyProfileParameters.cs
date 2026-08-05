@@ -5,6 +5,7 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
+using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -45,12 +46,14 @@ namespace AdaptySDK
         /// dates, so this one is written by hand rather than through the date converter.
         /// </remarks>
         [DataMember(Name = "birthday")]
+        [Preserve]
         private string BirthdayForRequest =>
             Birthday.HasValue
                 ? $"{Birthday.Value.Year}-{Birthday.Value.Month}-{Birthday.Value.Day}"
                 : null;
 
         [DataMember(Name = "custom_attributes")]
+        [Preserve]
         private System.Collections.Generic.Dictionary<string, object> CustomAttributesForRequest =>
             _CustomAttributes.Count > 0 ? _CustomAttributes : null;
 

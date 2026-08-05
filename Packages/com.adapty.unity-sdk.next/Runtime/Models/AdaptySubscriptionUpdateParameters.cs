@@ -5,12 +5,14 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
+using UnityEngine.Scripting;
 using System;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
     [DataContract]
+    [Preserve]
     public partial class AdaptySubscriptionUpdateParameters
     {
         /// The product id for current subscription to change.

@@ -5,13 +5,17 @@
 //  Created by Alexey Goncharov on 10.09.2025.
 //
 
+using UnityEngine.Scripting;
+
 namespace AdaptySDK
 {
+    [Preserve]
     public abstract class AdaptyInstallationStatus
     {
         internal AdaptyInstallationStatus() { }
     }
 
+    [Preserve]
     public sealed class AdaptyInstallationStatusNotAvailable : AdaptyInstallationStatus
     {
         public AdaptyInstallationStatusNotAvailable() { }
@@ -19,6 +23,7 @@ namespace AdaptySDK
         public override string ToString() => nameof(AdaptyInstallationStatusNotAvailable);
     }
 
+    [Preserve]
     public sealed class AdaptyInstallationStatusNotDetermined : AdaptyInstallationStatus
     {
         public AdaptyInstallationStatusNotDetermined() { }
@@ -26,6 +31,7 @@ namespace AdaptySDK
         public override string ToString() => nameof(AdaptyInstallationStatusNotDetermined);
     }
 
+    [Preserve]
     public sealed class AdaptyInstallationStatusDetermined : AdaptyInstallationStatus
     {
         public readonly AdaptyInstallationDetails Details;

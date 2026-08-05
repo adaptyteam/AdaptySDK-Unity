@@ -5,6 +5,7 @@
 //  Created by AI Assistant on 14.01.2025.
 //
 
+using UnityEngine.Scripting;
 using System;
 using System.Runtime.Serialization;
 
@@ -14,6 +15,7 @@ namespace AdaptySDK
     /// Customer identity parameters for iOS and Android platforms.
     /// </summary>
     [DataContract]
+    [Preserve]
     public partial class AdaptyCustomerIdentity
     {
         /// <summary>
@@ -52,10 +54,12 @@ namespace AdaptySDK
         // Emitted through members of their own: the contract omits an unset token or account id
         // rather than sending an empty value, and NullValueHandling then drops them.
         [DataMember(Name = "app_account_token")]
+        [Preserve]
         private Guid? IosAppAccountTokenForRequest =>
             IosAppAccountToken == Guid.Empty ? (Guid?)null : IosAppAccountToken;
 
         [DataMember(Name = "obfuscated_account_id")]
+        [Preserve]
         private string AndroidObfuscatedAccountIdForRequest =>
             string.IsNullOrEmpty(AndroidObfuscatedAccountId) ? null : AndroidObfuscatedAccountId;
 

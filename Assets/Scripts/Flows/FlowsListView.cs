@@ -11,6 +11,16 @@ namespace AdaptyExample
         public TMP_InputField PlacementIdTextField;
 
         /// <summary>
+        /// Used when the placement field is left empty.
+        /// </summary>
+        /// <remarks>
+        /// The iOS keyboard autocapitalises the first letter, so typing a placement id by hand on
+        /// a device produces one that does not exist and a fetch failure that looks like an SDK
+        /// problem. Leaving the field blank uses this instead.
+        /// </remarks>
+        public const string DefaultPlacementId = "calm10";
+
+        /// <summary>
         /// The localization the flow view is built with. A flow itself is not localized at fetch time,
         /// so this is passed to AdaptyUICreateFlowViewParameters, not to GetFlow.
         /// </summary>
@@ -51,12 +61,9 @@ namespace AdaptyExample
 
         public void AddPlacementPressed()
         {
-            if (string.IsNullOrEmpty(this.PlacementIdTextField.text))
-            {
-                return;
-            }
-
-            var placementId = this.PlacementIdTextField.text;
+            var placementId = string.IsNullOrEmpty(this.PlacementIdTextField.text)
+                ? DefaultPlacementId
+                : this.PlacementIdTextField.text;
             var placementLocale = this.PlacementLocaleTextField.text;
 
             this.AddPlacement(placementId, placementLocale, false);
@@ -67,12 +74,9 @@ namespace AdaptyExample
 
         public void AddPlacementDefaultAudiencePressed()
         {
-            if (string.IsNullOrEmpty(this.PlacementIdTextField.text))
-            {
-                return;
-            }
-
-            var placementId = this.PlacementIdTextField.text;
+            var placementId = string.IsNullOrEmpty(this.PlacementIdTextField.text)
+                ? DefaultPlacementId
+                : this.PlacementIdTextField.text;
             var placementLocale = this.PlacementLocaleTextField.text;
 
             this.AddPlacement(placementId, placementLocale, true);

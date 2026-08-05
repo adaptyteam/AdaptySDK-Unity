@@ -5,6 +5,7 @@
 //  Created by Aleksei Goncharov on 09.09.2025.
 //
 
+using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -12,6 +13,7 @@ namespace AdaptySDK
 {
 
     [DataContract]
+    [Preserve]
     public partial class AdaptyPlacement
     {
         private AdaptyPlacement() { }

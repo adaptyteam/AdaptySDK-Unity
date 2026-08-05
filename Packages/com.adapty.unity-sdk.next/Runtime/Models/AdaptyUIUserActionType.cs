@@ -5,9 +5,11 @@
 //  Created by Aleksei Valiano on 17.12.2024.
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK {
+    [Preserve]
     public enum AdaptyUIUserActionType {
         [EnumMember(Value = "close")]
         Close,

@@ -5,10 +5,12 @@
 //  Created by Aleksei Valiano on 10.12.2024.
 //
 
+using UnityEngine.Scripting;
 using System;
 
 namespace AdaptySDK
 {
+    [Preserve]
     public partial class AdaptyConfiguration
     {
         internal AdaptyConfiguration(Builder builder)

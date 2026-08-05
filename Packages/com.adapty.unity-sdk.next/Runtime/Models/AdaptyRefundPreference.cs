@@ -5,11 +5,13 @@
 //  Created by Aleksei Valiano on 19.03.2025.
 //
 
+using UnityEngine.Scripting;
 using System;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    [Preserve]
     public enum AdaptyRefundPreference
     {
         [EnumMember(Value = "no_preference")]
@@ -20,6 +22,7 @@ namespace AdaptySDK
         Decline,
     }
 
+    [Preserve]
     public static partial class AdaptyRefundPreferenceExtensions
     {
         public static string ToJSONNode(this AdaptyRefundPreference value) =>

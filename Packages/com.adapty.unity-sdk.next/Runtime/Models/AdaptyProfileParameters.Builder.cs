@@ -5,11 +5,13 @@
 //  Created by Aleksei Valiano on 20.12.2022.
 //
 
+using UnityEngine.Scripting;
 using System;
 
 namespace AdaptySDK
 {
 
+    [Preserve]
     public partial class AdaptyProfileParameters
     {
         public class Builder

@@ -5,11 +5,13 @@
 //  Created by GPT-5 on 17.09.2025.
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
     [DataContract]
+    [Preserve]
     public sealed class AdaptyUIOnboardingMeta
     {
         private AdaptyUIOnboardingMeta() { }

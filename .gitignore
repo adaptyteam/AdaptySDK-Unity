@@ -142,3 +142,4 @@ tests/**/*.received.txt
 
 # iOS player output of the demo build scripts
 ios-sim-build/
+ios-stripped-build/

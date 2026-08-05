@@ -3,6 +3,7 @@
 //  AdaptySDK
 //
 
+using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -16,6 +17,7 @@ namespace AdaptySDK
     /// Read more at <see href="https://adapty.io/docs/unity-quickstart-paywalls">Adapty Documentation</see>
     /// </remarks>
     [DataContract]
+    [Preserve]
     public partial class AdaptyFlow
     {
         private AdaptyFlow() { }
@@ -59,6 +61,7 @@ namespace AdaptySDK
         [DataMember(Name = "remote_configs")]
         public readonly IList<AdaptyRemoteConfig> RemoteConfigs = new List<AdaptyRemoteConfig>();
 
+        [Preserve]
         private bool ShouldSerializeRemoteConfigs() => RemoteConfigs.Count > 0;
 
         /// <summary>

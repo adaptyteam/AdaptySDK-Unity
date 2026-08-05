@@ -5,6 +5,7 @@
 //  Created by Aleksei Valiano on 18.12.2024.
 //
 
+using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -12,6 +13,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     [DataContract]
+    [Preserve]
     public partial class AdaptyUICreateFlowViewParameters
     {
         /// <summary>
@@ -31,6 +33,7 @@ namespace AdaptySDK
         /// The contract carries the timeout in seconds, not as a duration literal.
         /// </summary>
         [DataMember(Name = "load_timeout")]
+        [Preserve]
         private double? LoadTimeoutInSeconds => LoadTimeout?.TotalSeconds;
 
         [DataMember(Name = "preload_products")]
@@ -58,6 +61,7 @@ namespace AdaptySDK
         /// identifier the app passes.
         /// </summary>
         [DataMember(Name = "product_purchase_parameters")]
+        [Preserve]
         private Dictionary<string, AdaptyPurchaseParameters> ProductPurchaseParametersForRequest
         {
             get

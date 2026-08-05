@@ -3,10 +3,12 @@
 //  AdaptySDK
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    [Preserve]
     public partial class AdaptyFlowPaywall
     {
         [DataContract]

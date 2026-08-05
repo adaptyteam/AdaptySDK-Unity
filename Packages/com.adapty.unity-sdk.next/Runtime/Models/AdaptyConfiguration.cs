@@ -5,6 +5,7 @@
 //  Created by Aleksei Valiano on 10.12.2024.
 //
 
+using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
@@ -49,6 +50,7 @@ namespace AdaptySDK
         /// The KidsMode trait compiles IDFA out of the binary; keep the request in sync.
         /// </remarks>
         [DataMember(Name = "apple_idfa_collection_disabled")]
+        [Preserve]
         private bool? AppleIdfaCollectionDisabledForRequest =>
 #if ADAPTY_KIDS_MODE && UNITY_IOS
             true;
@@ -57,11 +59,14 @@ namespace AdaptySDK
 #endif
 
         [DataMember(Name = "cross_platform_sdk_name")]
+        [Preserve]
         private string CrossPlatformSdkName => "unity";
 
         [DataMember(Name = "cross_platform_sdk_version")]
+        [Preserve]
         private string CrossPlatformSdkVersion => Adapty.SDKVersion;
 
+        [Preserve]
         private bool ShouldSerializeCustomerIdentity() =>
             CustomerIdentity != null && !CustomerIdentity.IsEmpty;
 
