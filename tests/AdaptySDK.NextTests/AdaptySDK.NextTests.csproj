@@ -17,6 +17,7 @@
     <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
     <SdkRuntime>$(MSBuildThisFileDirectory)../../Packages/com.adapty.unity-sdk/Runtime</SdkRuntime>
+    <SdkEditor>$(MSBuildThisFileDirectory)../../Packages/com.adapty.unity-sdk/Editor</SdkEditor>
     <Shared>$(MSBuildThisFileDirectory)../shared</Shared>
   </PropertyGroup>
 
@@ -47,6 +48,7 @@
     <Compile Include="$(SdkRuntime)/Plugins/AdaptyNoop.cs" LinkBase="Sdk/Plugins" />
     <Compile Include="$(SdkRuntime)/Plugins/iOS/*.cs" LinkBase="Sdk/Plugins/iOS" />
     <Compile Include="$(SdkRuntime)/Plugins/Android/*.cs" LinkBase="Sdk/Plugins/Android" />
+    <Compile Include="$(SdkEditor)/AdaptyManifest.cs" LinkBase="Sdk/Editor" />
     <Compile Include="$(Shared)/ModelSnapshot.cs" LinkBase="Shared" />
     <Compile Include="$(Shared)/Snapshots.cs" LinkBase="Shared" />
     <Compile Include="$(Shared)/UnityStubs.cs" LinkBase="Shared" />

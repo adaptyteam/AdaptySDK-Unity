@@ -13,15 +13,16 @@ using UnityEngine;
 namespace AdaptySDK.Editor
 {
     /// <summary>
-    /// Reports a missing or duplicated Newtonsoft.Json, since either one otherwise surfaces as a
-    /// compile error that does not name the cause. Runs on Editor load, not at build time, because
-    /// both break compilation and a build hook would never run.
+    /// Reports every state in which Newtonsoft.Json is present but the SDK still will not build.
+    /// The SDK assembly is gated on the package, so a copy from anywhere else silently drops it,
+    /// as does no copy at all; two copies make its types ambiguous. Runs on Editor load, not at
+    /// build time, since none of these should reach a build.
     /// </summary>
     [InitializeOnLoad]
     internal static class AdaptyNewtonsoftValidator
     {
-        private const string AssemblyName = "Newtonsoft.Json";
-        private const string PackageId = "com.unity.nuget.newtonsoft-json";
+        private const string AssemblyName = AdaptyDependencies.NewtonsoftAssembly;
+        private const string PackageId = AdaptyDependencies.NewtonsoftId;
 
         static AdaptyNewtonsoftValidator()
         {
@@ -31,7 +32,8 @@ namespace AdaptySDK.Editor
             {
                 Debug.LogError(
                     $"[Adapty] {AssemblyName} is required by the Adapty SDK but is not loaded in this "
-                        + $"project. Add the \"{PackageId}\" package to restore it."
+                        + $"project, so the SDK is not compiled. Run \"{AdaptyDependencies.MenuPath}\" "
+                        + $"to install the \"{PackageId}\" package."
                 );
                 return;
             }
@@ -44,14 +46,17 @@ namespace AdaptySDK.Editor
                         + $"Keep one - preferably the \"{PackageId}\" package - and remove the "
                         + "others:\n  " + string.Join("\n  ", Describe(found))
                 );
+                return;
+            }
+
+            if (AdaptyDependencies.PackageOf(found[0]) != PackageId)
+            {
+                Debug.LogError(AdaptyDependencies.StandaloneMessage(found[0]));
             }
         }
 
         private static List<Assembly> Loaded() =>
-            AppDomain
-                .CurrentDomain.GetAssemblies()
-                .Where(assembly => assembly.GetName().Name == AssemblyName)
-                .ToList();
+            AdaptyDependencies.Copies(AssemblyName).ToList();
 
         /// <summary>
         /// Where each copy came from, since the name alone does not distinguish them.
