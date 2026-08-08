@@ -10,7 +10,7 @@
 
 <p align="center">
 <a href="https://discord.com/invite/subscriptions-hub"><img src="https://img.shields.io/badge/Adapty-discord-purple"></a>
-<a href="https://github.com/adaptyteam/AdaptySDK-Unity/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg"></a>
+<a href="https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg"></a>
 </p>
 
 <p align="center">
@@ -21,7 +21,9 @@
 
 ![Adapty: CRM for mobile apps with subscriptions](https://adapty-portal-media-production.s3.amazonaws.com/github/adapty-schema.png)
 
-Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/adaptyteam/AdaptySDK-iOS) and [Adapty Android SDK](https://github.com/adaptyteam/AdaptySDK-Android). Both SDKs are written in pure Swift/Kotlin and support iOS 9+, Android 4.1+ which fit for 99.9% users all wrapped into C# lib.
+Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/adaptyteam/AdaptySDK-iOS) and [Adapty Android SDK](https://github.com/adaptyteam/AdaptySDK-Android). Both SDKs are written in pure Swift/Kotlin, all wrapped into a C# lib.
+
+Requires Unity 2022.3 or newer, an iOS deployment target of 15.0 or newer, and Android API 21 or newer.
 
 ## Why Adapty?
 
@@ -80,7 +82,19 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 
 Follow our [quickstart guide](https://adapty.io/docs/unity-sdk-overview#get-started?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
 
-Already on 3.x? [MIGRATION.md](MIGRATION.md) covers the move to 4.0 — the renamed paywall API, the new Newtonsoft.Json dependency, and the order to install things in.
+The SDK depends on `com.unity.nuget.newtonsoft-json`, and on External Dependency Manager to resolve
+the native SDKs. Package Manager installs the first for you when you add the package by Git URL;
+neither can arrive with a `.unitypackage`, which carries assets only.
+
+**Installing from a `.unitypackage`:** add `com.unity.nuget.newtonsoft-json` **before** importing.
+Until it is there the SDK assembly is skipped by a define constraint, so your calls into Adapty will
+not compile — and **Adapty SDK > Install Dependencies**, the menu item that installs both
+dependencies, is unavailable for the same reason. With Newtonsoft in place, that menu item adds
+whatever else is missing, including the OpenUPM scoped registry External Dependency Manager is
+published on.
+
+Already on 3.x? [MIGRATION.md](MIGRATION.md) covers the move to 4.0 — the renamed paywall API, the
+new Newtonsoft.Json dependency, and the order to install things in.
 
 ## Kids Mode on iOS
 
@@ -118,4 +132,4 @@ So do we! Feel free to star the repo ⭐️⭐️⭐️ and make our developers 
 
 ## License
 
-Adapty is available under the MIT license. [Click here](https://github.com/adaptyteam/AdaptySDK-Unity/blob/master/LICENSE) for details.
+Adapty is available under the MIT license. [Click here](https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/LICENSE) for details.

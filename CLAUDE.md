@@ -79,7 +79,9 @@ Editor code therefore cannot reference Runtime types, and the Editor asmdef's em
 
 ### Event System
 
-Native SDKs push events (profile updates, flow view lifecycle, onboarding events) via the same JSON bridge. `Adapty.OnMessage(id, json)` in `IAdaptyEventListener.cs` dispatches by event `id` string to the registered listener interfaces. Two event families are round-trips: flow permission requests are answered via `flow_view_did_answer_permission` (keyed by `event_id`), and Observer-mode purchases/restores report back via `observer_*_did_start/finish`.
+Native SDKs push events (profile updates, flow view lifecycle, onboarding events) via the same JSON bridge. `Adapty.OnMessage(id, json)` in `IAdaptyEventListener.cs` parses the payload and hands it to `Dispatch`, which switches on the event `id` and calls the registered listener interfaces. Nothing may escape `OnMessage`: the call arrives from native code with no handler behind it, so an exception takes the process down on IL2CPP rather than surfacing as a C# error. Two event families are round-trips: flow permission requests are answered via `flow_view_did_answer_permission` (keyed by `event_id`), and Observer-mode purchases/restores report back via `observer_*_did_start/finish`.
+
+The seven `onboarding_*` ids are the exception to the one-switch rule: they leave `Dispatch` through `OnLegacyOnboardingMessage`, which is `[Obsolete]`. That is what keeps the deprecation of the legacy onboarding API from raising `CS0618` on every case of the main switch — folding them back multiplies the warnings by about thirty. `LegacyOnboardingDispatchTests` pins the routing of all seven.
 
 ### Model Convention
 
@@ -90,6 +92,14 @@ One file per model in `Runtime/Models/`. Serialization is declared with attribut
 - Enums follow one of two contracts, and the choice is part of the wire format. A **string** enum maps every member with `[EnumMember(Value = "...")]`; declare an `Unknown` member on anything the native side can extend, since an unrecognised value reads as `Unknown` where one exists and throws where it does not. A **numeric** enum — `AdaptyErrorCode`, `AppTrackingTransparencyStatus` — carries the native number and declares no `[EnumMember]` at all: `AdaptyEnumConverter.CanConvert` skips it and Newtonsoft's default numeric handling applies. Adding `[EnumMember]` to a numeric enum silently switches it to strings.
 
 `tests/AdaptySDK.NextTests` enforces all of this: a model added without `[Preserve]` fails `StrippingGuardTests`, and one whose output changes fails its approved snapshot.
+
+### Deprecation
+
+Deprecating one entry point is not enough — mark everything the deprecated API hands back or takes, or the warning only reaches the caller at the registration call and never at the type they wrote. The attribute is written `[System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]`, with the same sentence everywhere.
+
+Marking a public type deprecates it for the SDK's own code too, so expect `CS0618` inside the package. Never silence it — `#pragma warning disable` is not used in this repository. Mark the internal parts that serve the deprecated API instead (private fields, helpers, converters): a reference from obsolete code to obsolete code raises nothing, which pushes the warnings back to the boundary where live code really does touch the deprecated API. Those remaining warnings are the point, not a problem to solve.
+
+The public surface snapshots record signatures without attributes, so nothing fails if `[Obsolete]` is dropped from a member.
 
 ## Version Bumping
 
