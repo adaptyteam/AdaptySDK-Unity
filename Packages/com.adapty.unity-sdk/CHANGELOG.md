@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.0-beta.2] - 2026-08-04
 
+Upgrading from 3.x: see [MIGRATION.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/MIGRATION.md).
+If you install from a `.unitypackage`, add `com.unity.nuget.newtonsoft-json` **before** importing —
+until it is there the SDK assembly is skipped, so code that calls Adapty will not compile, and the
+Editor menu that installs it is unavailable for the same reason.
+
 ### Added
 
 - **iOS Kids Mode** for the App Store Kids Category / COPPA. Setting the `ADAPTY_KIDS_MODE` scripting
@@ -26,13 +31,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   that does not report it.
 - `AdaptyUICreateFlowViewParameters.EnableSafeAreaPaddings` (Android only) — lays the flow view out
   without safe area paddings when set to `false`.
+- **Adapty SDK > Install Dependencies** — installs whichever of the SDK's package dependencies are
+  missing: Newtonsoft.Json, and External Dependency Manager along with the OpenUPM scoped registry it
+  is published on. A `.unitypackage` carries assets only and can bring neither, and External
+  Dependency Manager has always had to be installed by hand even alongside Package Manager. Packages
+  already in the project are left as they are.
 
 ### Changed
 
-- **The JSON layer now uses Newtonsoft.Json instead of the bundled SimpleJSON.** The package
-  depends on `com.unity.nuget.newtonsoft-json` 3.2.2, which Package Manager installs for you. The SDK
-  reports a clear error in the Editor if Newtonsoft turns out to be missing, or if a second copy in
-  the project makes its types ambiguous.
+- **The minimum supported Unity version is now declared: 2022.3.** It was never stated before, in
+  `package.json` or anywhere else. Nothing was dropped — Package Manager now states the floor
+  instead of letting an older Editor install a package it cannot compile.
+- **The JSON layer now uses Newtonsoft.Json instead of the bundled SimpleJSON.** The package depends
+  on `com.unity.nuget.newtonsoft-json` 3.2.2, which Package Manager installs for you and
+  **Adapty SDK > Install Dependencies** installs for everyone else. While Newtonsoft is absent the
+  SDK assembly is skipped by a define constraint instead of failing to compile. The SDK reports the
+  reason in the Editor console — as long as its Editor assembly loads, which it does not while your
+  own scripts fail to compile. A second copy of Newtonsoft is reported the same way, since it makes
+  its types ambiguous.
   The models, their members and every method signature are unchanged, so calling code is unaffected.
   **Breaking for anything that used `AdaptySDK.SimpleJSON` directly:** the namespace is gone, and its
   public types (`JSON`, `JSONNode`, `JSONObject`, `JSONArray` and the rest) went with it.

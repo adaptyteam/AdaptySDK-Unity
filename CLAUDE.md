@@ -10,6 +10,8 @@ Adapty Unity SDK — a C# wrapper around native [Adapty iOS SDK](https://github.
 
 This is a **Unity project** (Unity 6000.x) — the player is built and tested through the Unity Editor. The JSON layer is the exception: `tests/` links the SDK sources into a plain .NET project, so it needs neither the Editor nor a licence.
 
+The package supports **Unity 2022.3 and newer**, declared as `unity` in `package.json`. That floor is what Editor-facing code may assume: `AdaptyDependencies` uses `Client.AddAndRemove` and `PackageInfo.FindForAssembly`, neither of which exists all the way back (`AddAndRemove` arrived after 2020.3). The demo project runs on a much newer Editor, so the floor is not exercised by simply opening it.
+
 **Run the JSON layer tests:**
 ```bash
 dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj
@@ -44,6 +46,16 @@ All SDK calls follow a single JSON-based bridge:
 4. Native side processes the JSON request and returns a JSON response string via callback.
 5. Response is parsed back into C# models by Newtonsoft, through `AdaptySDK.Serialization.AdaptyJson`.
 
+### Newtonsoft Dependency
+
+`com.unity.nuget.newtonsoft-json` is a UPM dependency of the package, and it is not part of any stock Unity template — a `.unitypackage` carries assets only, so it cannot bring it along. Three rules follow, and all are load-bearing:
+
+- The **Runtime** assembly declares `ADAPTY_NEWTONSOFT` in `versionDefines` and requires it in `defineConstraints`. Without the package the assembly is skipped rather than failing to compile, which is what keeps a fresh import from spilling hundreds of `CS0246`.
+- The **Editor** assembly must compile in every state, so it carries no constraint and no define of its own: it is what reports the problem (`AdaptyNewtonsoftValidator`) and installs the fix (`AdaptyDependencies`, the `Adapty SDK > Install Dependencies` menu item, which also installs External Dependency Manager and writes the OpenUPM registry it comes from into `Packages/manifest.json` — scoped registries have no public API).
+- Presence is judged against the **package**, not the assembly, everywhere — `PackageInfo.FindForAssembly`. A `Newtonsoft.Json.dll` sitting in `Assets/` does not set the version define, so the SDK would silently not compile; the installer refuses to add a second copy on top of it and the validator names that state instead. EDM carries no define constraint, so for it any copy counts.
+
+Editor code therefore cannot reference Runtime types, and the Editor asmdef's empty `references` is what enforces that.
+
 ### Key Directory Layout
 
 - **`Packages/com.adapty.unity-sdk/`** — The SDK package distributed to users (UPM layout):
@@ -56,7 +68,7 @@ All SDK calls follow a single JSON-based bridge:
   - `Runtime/Plugins/Android/` — `AdaptyAndroid.cs` (JNI bridge) + `Local/` (local AAR maven repo) + `AdaptySDKDependencies.androidlib` (Android maven dependencies)
   - `Runtime/Plugins/AdaptyNoop.cs` — Editor/no-op stub
   - `Runtime/Editor/AdaptySDKDependencies.xml` — iOS Swift Package declaration for External Dependency Manager
-  - `Editor/` — Editor-only assembly (iOS build validation, Newtonsoft presence check)
+  - `Editor/` — Editor-only assembly (iOS build validation, Newtonsoft presence check, the `Adapty SDK > Install Dependencies` menu item)
 - **`adaptyandroidwrapper/`** — Standalone Android Gradle project:
   - `unitywrapper/src/main/java/com/adapty/unity/` — `AdaptyAndroidWrapper.java` (entry point), callback handler, message handler
 - **`tests/`** — .NET test projects for the JSON layer: `AdaptySDK.NextTests` (the suite), `shared/` (fixtures and snapshot helpers), `surface/` (the SDK compiled as a library to assert against), `aot-probe/`
@@ -85,3 +97,4 @@ When releasing a new version, update:
 3. Native dependency versions: iOS in `Runtime/Editor/AdaptySDKDependencies.xml`, Android in `Runtime/Plugins/Android/AdaptySDKDependencies.androidlib/build.gradle` and `adaptyandroidwrapper/unitywrapper/build.gradle` (then rebuild the AAR into `Runtime/Plugins/Android/Local/io/adapty/internal/unity-wrapper/<version>/`)
 4. `cross_platform.yaml` schema `$id` version — must match the canonical contract in AdaptySDK-iOS (`Sources.AdaptyPlugin/cross_platform.yaml`); diff the two files, not just the version
 5. `CHANGELOG.md` and the `_upm.changelog` string in `package.json` — keep both in sync, the latter is what Package Manager shows after an update
+6. Managed dependency versions, when they move: `dependencies` and `peerDependencies` in `package.json` **and** the constants in `Editor/AdaptyDependencies.cs`, which is what installs them for `.unitypackage` users
