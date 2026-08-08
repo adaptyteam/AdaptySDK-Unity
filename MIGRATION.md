@@ -254,9 +254,17 @@ replacements for them — use what the v3 warnings pointed at:
 The `AdaptySDK.SimpleJSON` namespace went with the parser it belonged to, together with its public
 types — `JSON`, `JSONNode`, `JSONObject`, `JSONArray` and the rest — and with the `ToJSONNode`
 extension classes that came with them, `AdaptyUIIOSPresentationStyleExtensions`,
-`AdaptyUIOnboardingMetaExtensions` and `AdaptyWebPresentationExtensions`. Code that only calls the
+`AdaptyUIOnboardingMetaExtensions`, `AdaptyWebPresentationExtensions` and
+`AdaptyRefundPreferenceExtensions`. Code that only calls the
 SDK is unaffected; code that used those types directly can move to Newtonsoft.Json, which is now a
 dependency of the package and available to your assemblies too.
+
+Two members that only forwarded to another one are gone:
+
+| Removed | Use instead |
+|---|---|
+| `AdaptyProfile.NonSubscription.IsOneTime` | `IsConsumable`, which it returned unchanged |
+| `AdaptyPlacement.GetIsTrackingPurchases` | `IsTrackingPurchases`, the field it wrapped. It is a `bool?`, but never arrives null: a missing key leaves the declared `false` |
 
 ## Move off the legacy onboarding API
 
@@ -264,6 +272,13 @@ dependency of the package and available to your assemblies too.
 `AdaptyUI.PresentOnboardingView`, `AdaptyUI.DismissOnboardingView` and
 `Adapty.SetOnboardingsEventsListener` still work and now warn at compile time. Build onboardings as
 flows instead.
+
+The warning now covers the whole API, not only its entry points: `IAdaptyOnboardingsEventsListener`,
+`AdaptyOnboarding`, `AdaptyUIOnboardingView`, `AdaptyUIOnboardingMeta`, the
+`AdaptyOnboardingsAnalyticsEvent` hierarchy, the `AdaptyOnboardingsStateUpdatedParams` and
+`AdaptyOnboardingsInput` hierarchies, and the `AdaptyUI.ShowDialog` overload that takes an
+`AdaptyUIOnboardingView`. Naming any of them in your own code — a listener implementation, a field,
+a method signature — now warns where before only the call did.
 
 ## Check the behavior changes
 

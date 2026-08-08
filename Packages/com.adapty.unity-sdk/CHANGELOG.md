@@ -76,13 +76,33 @@ Editor menu that installs it is unavailable for the same reason.
   events and view controllers. Event listener interfaces now carry the `I` prefix
   (`IAdaptyEventListener`, `IAdaptyFlowsEventsListener`, `IAdaptyUISystemRequestsHandler`,
   `IAdaptyUIObserverModeResolver`, `IAdaptyOnboardingsEventsListener`).
-- The legacy onboarding API is deprecated in favor of flows.
+- The legacy onboarding API is deprecated in favor of flows, and `[Obsolete]` now covers the whole
+  of it rather than only its entry points: `IAdaptyOnboardingsEventsListener`, `AdaptyOnboarding`,
+  `AdaptyUIOnboardingView`, `AdaptyUIOnboardingMeta`, the `AdaptyOnboardingsAnalyticsEvent`,
+  `AdaptyOnboardingsStateUpdatedParams` and `AdaptyOnboardingsInput` hierarchies, and the
+  `AdaptyUI.ShowDialog` overload taking an `AdaptyUIOnboardingView`. Naming any of them warns now,
+  where before only calling one of the six entry points did.
+- **Breaking:** removed two members that only forwarded to another one —
+  `AdaptyProfile.NonSubscription.IsOneTime` (returned `IsConsumable` unchanged; its summary had
+  called it deprecated for several versions without an attribute to back that up) and
+  `AdaptyPlacement.GetIsTrackingPurchases` (wrapped the public `IsTrackingPurchases` field, whose
+  `null` case cannot occur).
 - Updated the cross-platform contract to 4.0.2 and the native SDK dependencies to
   iOS 4.0.2 and Android 4.0.1. `MakePurchase`'s purchase parameters and
   `AdaptyUICreateFlowViewParameters.ProductPurchaseParameters` are now documented as Android only,
   matching what the native SDKs actually do with them.
 - Errors returned by `flow_view_did_answer_permission` and by the observer-mode round trips are now
   logged instead of being swallowed.
+- **Breaking:** removed what the old JSON layer left behind.
+  `AdaptyRefundPreferenceExtensions.ToJSONNode` was the last of the `ToJSONNode` extension classes —
+  the other three went with `AdaptySDK.SimpleJSON`, while this one survived because it sat in
+  `Models/`. The SDK does not call it: the refund preference is serialized through its
+  `[EnumMember]` mapping like every other enum. Two constructors that only the hand-written parser
+  ever called are gone too, though those were never public.
+- **Breaking:** `AdaptyFlowPaywall.ProductReference` is now `internal`. Its constructor was private
+  and every one of its members was already `internal`, so no instance of it could be obtained or
+  read from outside the SDK; the type was public only because in 3.x it was the top-level
+  `AdaptyProductReference`.
 
 ### Fixed
 
