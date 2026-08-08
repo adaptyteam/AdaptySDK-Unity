@@ -94,7 +94,7 @@ One file per model in `Runtime/Models/`. Serialization is declared with attribut
 When releasing a new version, update:
 1. `Adapty.SDKVersion` in `Packages/com.adapty.unity-sdk/Runtime/Adapty.cs`
 2. `version` in `Packages/com.adapty.unity-sdk/package.json`
-3. Native dependency versions: iOS in `Runtime/Editor/AdaptySDKDependencies.xml`, Android in `Runtime/Plugins/Android/AdaptySDKDependencies.androidlib/build.gradle` and `adaptyandroidwrapper/unitywrapper/build.gradle` (then rebuild the AAR into `Runtime/Plugins/Android/Local/io/adapty/internal/unity-wrapper/<version>/`)
+3. Native dependency versions: iOS in `Runtime/Editor/AdaptySDKDependencies.xml`, Android in `Runtime/Plugins/Android/AdaptySDKDependencies.androidlib/build.gradle` and `adaptyandroidwrapper/unitywrapper/build.gradle` (then rebuild the AAR into `Runtime/Plugins/Android/Local/io/adapty/internal/unity-wrapper/<version>/`, and **delete the previous one** — no `build.gradle` in the package references the artifact, Unity picks up any `.aar` under `Plugins/Android` as a plugin, so two versions side by side both reach the player)
 4. `cross_platform.yaml` schema `$id` version — must match the canonical contract in AdaptySDK-iOS (`Sources.AdaptyPlugin/cross_platform.yaml`); diff the two files, not just the version
 5. `CHANGELOG.md` and the `_upm.changelog` string in `package.json` — keep both in sync, the latter is what Package Manager shows after an update
 6. Managed dependency versions, when they move: `dependencies` and `peerDependencies` in `package.json` **and** the constants in `Editor/AdaptyDependencies.cs`, which is what installs them for `.unitypackage` users

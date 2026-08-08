@@ -10,9 +10,10 @@ using UnityEngine;
 /// </summary>
 /// <remarks>
 /// High is the setting the serialization layer has to survive: it is what removes the constructors
-/// and members a reflection-based serializer reaches for, and the reason the package ships a
-/// link.xml. The project's own setting is Low, so it is raised here rather than in ProjectSettings
-/// - the migration has to prove the strict case, not change what the demo ships with.
+/// and members a reflection-based serializer reaches for, and the reason the package annotates its
+/// models with [Preserve]. The project's own setting is Low, so it is raised here rather than in
+/// ProjectSettings - the migration has to prove the strict case, not change what the demo ships
+/// with.
 /// </remarks>
 public static class StrippingBuild
 {
