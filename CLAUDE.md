@@ -10,7 +10,9 @@ Adapty Unity SDK — a C# wrapper around native [Adapty iOS SDK](https://github.
 
 This is a **Unity project** (Unity 6000.x) — the player is built and tested through the Unity Editor. The JSON layer is the exception: `tests/` links the SDK sources into a plain .NET project, so it needs neither the Editor nor a licence.
 
-The package supports **Unity 2022.3 and newer**, declared as `unity` in `package.json`. That floor is what Editor-facing code may assume: `AdaptyDependencies` uses `Client.AddAndRemove` and `PackageInfo.FindForAssembly`, neither of which exists all the way back (`AddAndRemove` arrived after 2020.3). The demo project runs on a much newer Editor, so the floor is not exercised by simply opening it.
+The package declares **Unity 2022.3 and newer** as `unity` in `package.json`, and that floor is what Editor-facing code may assume: `AdaptyDependencies` uses `Client.AddAndRemove` and `PackageInfo.FindForAssembly`, neither of which exists all the way back (`AddAndRemove` arrived after 2020.3).
+
+The install path is verified on the floor — `.unitypackage` import into a clean project, then `Adapty SDK > Install Dependencies`, then a compile, all on 2022.3.62f3. Everything else runs on Unity 6. Keep the changelog and `MIGRATION.md` wording matching that split; do not widen it to claim device or build coverage on 2022.3. One trap when re-verifying: recent 2022.3 builds are Extended LTS and refuse to launch without an Industry or Enterprise licence, so pick a build below that cutoff (62f3 works).
 
 **Run the JSON layer tests:**
 ```bash

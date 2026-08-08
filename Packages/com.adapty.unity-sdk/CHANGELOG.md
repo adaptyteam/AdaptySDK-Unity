@@ -54,8 +54,13 @@ Editor menu that installs it is unavailable for the same reason.
 ### Changed
 
 - **The minimum supported Unity version is now declared: 2022.3.** It was never stated before, in
-  `package.json` or anywhere else. Nothing was dropped — Package Manager now states the floor
-  instead of letting an older Editor install a package it cannot compile.
+  `package.json` or anywhere else, so Package Manager let any Editor install a package it might not
+  be able to compile. Nothing was dropped — the floor is now stated.
+
+  Installing on the floor is verified: a clean `.unitypackage` import and
+  **Adapty SDK > Install Dependencies** were run end to end on 2022.3, and the SDK compiles
+  afterwards. Player builds, device runs and the rest of the acceptance matrix were done on Unity 6,
+  which is what the SDK is developed against.
 - **The JSON layer now uses Newtonsoft.Json instead of the bundled SimpleJSON.** The package depends
   on `com.unity.nuget.newtonsoft-json` 3.2.2, which Package Manager installs for you and
   **Adapty SDK > Install Dependencies** installs for everyone else. While Newtonsoft is absent the

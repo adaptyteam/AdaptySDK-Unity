@@ -33,6 +33,15 @@ that External Dependency Manager is published on:
 
 > **Adapty SDK > Install Dependencies**
 
+### Which Unity versions this was verified on
+
+The steps above were run end to end on **2022.3**, the declared floor: a clean `.unitypackage` import
+into a project with no Newtonsoft, then **Adapty SDK > Install Dependencies**, then a compile. No
+errors at any stage.
+
+Everything else behind v4.0 — player builds, device runs, the full acceptance matrix — was done on
+**Unity 6**, which is what the SDK is developed against.
+
 ### If you install from a `.unitypackage`
 
 **Install `com.unity.nuget.newtonsoft-json` before you import the package.**
