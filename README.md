@@ -80,6 +80,8 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 
 Follow our [quickstart guide](https://adapty.io/docs/unity-sdk-overview#get-started?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
 
+Already on 3.x? [MIGRATION.md](MIGRATION.md) covers the move to 4.0 — the renamed paywall API, the new Newtonsoft.Json dependency, and the order to install things in.
+
 ## Kids Mode on iOS
 
 Apps in the App Store Kids Category must not link the advertising identifier. Add the
