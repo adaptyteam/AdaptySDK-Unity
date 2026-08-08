@@ -584,6 +584,7 @@ public static const AdaptySDK.AdaptyErrorCode.ItemNotOwned : AdaptySDK.AdaptyErr
 public static const AdaptySDK.AdaptyErrorCode.MissingOfferParams : AdaptySDK.AdaptyErrorCode = 13
 public static const AdaptySDK.AdaptyErrorCode.NetworkFailed : AdaptySDK.AdaptyErrorCode = 2005
 public static const AdaptySDK.AdaptyErrorCode.NoProductIDsFound : AdaptySDK.AdaptyErrorCode = 1000
+public static const AdaptySDK.AdaptyErrorCode.NoPurchasesToRestore : AdaptySDK.AdaptyErrorCode = 1004
 public static const AdaptySDK.AdaptyErrorCode.NotActivated : AdaptySDK.AdaptyErrorCode = 2002
 public static const AdaptySDK.AdaptyErrorCode.OperationInterrupted : AdaptySDK.AdaptyErrorCode = 9000
 public static const AdaptySDK.AdaptyErrorCode.PaymentCancelled : AdaptySDK.AdaptyErrorCode = 2

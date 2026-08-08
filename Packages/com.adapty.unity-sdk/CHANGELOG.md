@@ -36,6 +36,10 @@ Editor menu that installs it is unavailable for the same reason.
   is published on. A `.unitypackage` carries assets only and can bring neither, and External
   Dependency Manager has always had to be installed by hand even alongside Package Manager. Packages
   already in the project are left as they are.
+- `AdaptyErrorCode.NoPurchasesToRestore` (1004) — restored. The member was commented out in December
+  2024 while the native SDKs kept sending the code, so `RestorePurchases` on a profile with nothing
+  to restore returned an error that could only be matched against a literal `1004`. Nothing about the
+  error changes; it now has its name back.
 
 ### Changed
 

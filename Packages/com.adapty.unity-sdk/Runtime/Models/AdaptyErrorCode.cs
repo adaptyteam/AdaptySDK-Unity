@@ -47,7 +47,7 @@ namespace AdaptySDK {
         NoProductIDsFound = 1000, // No In-App Purchase product identifiers were found
         ProductRequestFailed = 1002, // Unable to fetch available In-App Purchase products at the moment
         CantMakePayments = 1003, // In-App Purchases are not allowed on this device
-                                 // NoPurchasesToRestore = 1004, // No purchases to restore
+        NoPurchasesToRestore = 1004, // No purchases to restore
         CantReadReceipt = 1005, // Can't find a valid receipt
         ProductPurchaseFailed = 1006, // Product purchase failed
         RefreshReceiptFailed = 1010,
