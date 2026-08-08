@@ -41,8 +41,6 @@ namespace AdaptySDK
         [DataMember(Name = "is_tracking_purchases")]
         public readonly bool? IsTrackingPurchases = false;
 
-        public bool GetIsTrackingPurchases => IsTrackingPurchases ?? false;
-
         public override string ToString() =>
             $"{nameof(Id)}: {Id}, "
             + $"{nameof(AudienceName)}: {AudienceName}, "

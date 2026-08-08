@@ -8,7 +8,6 @@
     "$type": "AdaptyPlacement",
     "ABTestName": "default",
     "AudienceName": "All Users",
-    "GetIsTrackingPurchases (property)": false,
     "Id": "onboarding",
     "IsTrackingPurchases": false,
     "PlacementAudienceVersionId": "pav-0002",

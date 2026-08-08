@@ -39,7 +39,6 @@
       {
         "$type": "NonSubscription",
         "IsConsumable": true,
-        "IsOneTime (property)": true,
         "IsRefund": false,
         "IsSandbox": true,
         "PurchaseId": "a1b2c3d4-0000-4444-8888-999900001111",

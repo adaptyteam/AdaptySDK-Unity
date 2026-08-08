@@ -47,7 +47,6 @@ public AdaptySDK.AdaptyErrorCode.value__ : System.Int32
 public AdaptySDK.AdaptyFlow.ProductIdentifiers : System.Collections.Generic.IList<AdaptySDK.AdaptyProductIdentifier> { get; }
 public AdaptySDK.AdaptyFlow.RemoteConfig : AdaptySDK.AdaptyRemoteConfig { get; }
 public AdaptySDK.AdaptyFlow.VendorProductIds : System.Collections.Generic.IList<System.String> { get; }
-public AdaptySDK.AdaptyFlowPaywall+ProductReference.ToAdaptyProductIdentifier() : AdaptySDK.AdaptyProductIdentifier
 public AdaptySDK.AdaptyFlowPaywall.ProductIdentifiers : System.Collections.Generic.IList<AdaptySDK.AdaptyProductIdentifier> { get; }
 public AdaptySDK.AdaptyFlowPaywall.VendorProductIds : System.Collections.Generic.IList<System.String> { get; }
 public AdaptySDK.AdaptyInstallationStatusDetermined.ctor(AdaptySDK.AdaptyInstallationDetails details)
@@ -71,9 +70,7 @@ public AdaptySDK.AdaptyOnboardingsNumberInput.ctor(System.Double value)
 public AdaptySDK.AdaptyOnboardingsSelectParams.ctor(System.String id, System.String value, System.String label)
 public AdaptySDK.AdaptyOnboardingsTextInput.ctor(System.String value)
 public AdaptySDK.AdaptyPaymentMode.value__ : System.Int32
-public AdaptySDK.AdaptyPlacement.GetIsTrackingPurchases : System.Boolean { get; }
 public AdaptySDK.AdaptyProductIdentifier.ctor(System.String vendorProductId, System.String adaptyProductId, System.String basePlanId)
-public AdaptySDK.AdaptyProfile+NonSubscription.IsOneTime : System.Boolean { get; }
 public AdaptySDK.AdaptyProfileGender.value__ : System.Int32
 public AdaptySDK.AdaptyProfileParameters+Builder.Build() : AdaptySDK.AdaptyProfileParameters
 public AdaptySDK.AdaptyProfileParameters+Builder.RemoveCustomAttribute(System.String key) : AdaptySDK.Builder
@@ -207,7 +204,6 @@ public class AdaptySDK.AdaptyCustomerIdentity
 public class AdaptySDK.AdaptyError
 public class AdaptySDK.AdaptyFlow
 public class AdaptySDK.AdaptyFlowPaywall
-public class AdaptySDK.AdaptyFlowPaywall+ProductReference
 public class AdaptySDK.AdaptyInstallationDetails
 public class AdaptySDK.AdaptyOnboarding
 public class AdaptySDK.AdaptyPaywallProduct
@@ -262,7 +258,6 @@ public override AdaptySDK.AdaptyConfiguration.ToString() : System.String
 public override AdaptySDK.AdaptyCustomerIdentity.ToString() : System.String
 public override AdaptySDK.AdaptyError.ToString() : System.String
 public override AdaptySDK.AdaptyFlow.ToString() : System.String
-public override AdaptySDK.AdaptyFlowPaywall+ProductReference.ToString() : System.String
 public override AdaptySDK.AdaptyFlowPaywall.ToString() : System.String
 public override AdaptySDK.AdaptyInstallationDetails.ToString() : System.String
 public override AdaptySDK.AdaptyInstallationStatusDetermined.ToString() : System.String
@@ -535,7 +530,6 @@ public static AdaptySDK.AdaptyPlacementFetchPolicy.Default : AdaptySDK.AdaptyPla
 public static AdaptySDK.AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData : AdaptySDK.AdaptyPlacementFetchPolicy
 public static AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataElseLoad : AdaptySDK.AdaptyPlacementFetchPolicy
 public static AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(System.TimeSpan maxAge) : AdaptySDK.AdaptyPlacementFetchPolicy
-public static AdaptySDK.AdaptyRefundPreferenceExtensions.ToJSONNode(AdaptySDK.AdaptyRefundPreference value) : System.String
 public static AdaptySDK.AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow flow, AdaptySDK.AdaptyUICreateFlowViewParameters optionalParameters, System.Action<AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow flow, System.Action<AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.CreateOnboardingView(AdaptySDK.AdaptyOnboarding onboarding, AdaptySDK.AdaptyWebPresentation externalUrlsPresentation, System.Action<AdaptySDK.AdaptyUIOnboardingView, AdaptySDK.AdaptyError> completionHandler) : System.Void
@@ -551,7 +545,6 @@ public static AdaptySDK.AdaptyUI.RequestAppReview(System.Action<AdaptySDK.Adapty
 public static AdaptySDK.AdaptyUI.ShowDialog(AdaptySDK.AdaptyUIFlowView view, AdaptySDK.AdaptyUIDialogConfiguration configuration, System.Action<AdaptySDK.AdaptyUIDialogActionType, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.ShowDialog(AdaptySDK.AdaptyUIOnboardingView view, AdaptySDK.AdaptyUIDialogConfiguration configuration, System.Action<AdaptySDK.AdaptyUIDialogActionType, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static class AdaptySDK.Adapty
-public static class AdaptySDK.AdaptyRefundPreferenceExtensions
 public static class AdaptySDK.AdaptyUI
 public static const AdaptySDK.AdaptyErrorCode.ActivateOnceError : AdaptySDK.AdaptyErrorCode = 3005
 public static const AdaptySDK.AdaptyErrorCode.AdaptyNotInitialized : AdaptySDK.AdaptyErrorCode = 20

@@ -6,7 +6,6 @@
 //
 
 using UnityEngine.Scripting;
-using System;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
@@ -20,18 +19,5 @@ namespace AdaptySDK
         Grant,
         [EnumMember(Value = "decline")]
         Decline,
-    }
-
-    [Preserve]
-    public static partial class AdaptyRefundPreferenceExtensions
-    {
-        public static string ToJSONNode(this AdaptyRefundPreference value) =>
-            value switch
-            {
-                AdaptyRefundPreference.NoPreference => "no_preference",
-                AdaptyRefundPreference.Grant => "grant",
-                AdaptyRefundPreference.Decline => "decline",
-                _ => throw new Exception($"AdaptyRefundPreference unknown value: {value}"),
-            };
     }
 }

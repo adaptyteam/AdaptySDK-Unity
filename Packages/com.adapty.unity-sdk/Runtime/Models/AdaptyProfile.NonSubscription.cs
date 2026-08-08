@@ -68,11 +68,6 @@ namespace AdaptySDK
             public readonly bool IsRefund;
 
             /// <summary>
-            /// Deprecated, use 'IsConsumable'.
-            /// </summary>
-            public bool IsOneTime => IsConsumable;
-
-            /// <summary>
             /// Whether the product should only be processed once.
             /// </summary>
             /// <remarks>

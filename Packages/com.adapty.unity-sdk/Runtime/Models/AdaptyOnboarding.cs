@@ -89,11 +89,6 @@ namespace AdaptySDK
             [DataMember(Name = "config_url", IsRequired = true)]
             public readonly string ConfigUrl;
 
-            internal OnboardingBuilder(string configUrl)
-            {
-                ConfigUrl = configUrl;
-            }
-
             public override string ToString() => $"{nameof(ConfigUrl)}: {ConfigUrl}";
         }
     }

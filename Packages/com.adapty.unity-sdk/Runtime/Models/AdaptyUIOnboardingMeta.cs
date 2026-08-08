@@ -25,19 +25,6 @@ namespace AdaptySDK
         [DataMember(Name = "total_screens", IsRequired = true)]
         public readonly int ScreensTotal;
 
-        internal AdaptyUIOnboardingMeta(
-            string onboardingId,
-            string screenClientId,
-            int screenIndex,
-            int screensTotal
-        )
-        {
-            OnboardingId = onboardingId;
-            ScreenClientId = screenClientId;
-            ScreenIndex = screenIndex;
-            ScreensTotal = screensTotal;
-        }
-
         public override string ToString() =>
             $"{nameof(OnboardingId)}: {OnboardingId}, "
             + $"{nameof(ScreenClientId)}: {ScreenClientId}, "

@@ -12,7 +12,7 @@ namespace AdaptySDK
     public partial class AdaptyFlowPaywall
     {
         [DataContract]
-        public partial class ProductReference
+        internal partial class ProductReference
         {
             private ProductReference() { }
 
@@ -43,7 +43,7 @@ namespace AdaptySDK
 #endif
             internal readonly string AndroidOfferId; //nullable
 
-            public AdaptyProductIdentifier ToAdaptyProductIdentifier()
+            internal AdaptyProductIdentifier ToAdaptyProductIdentifier()
             {
                 return new AdaptyProductIdentifier(
                     vendorProductId: VendorProductId,

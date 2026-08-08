@@ -6,7 +6,6 @@
     "$type": "AdaptyPlacement",
     "ABTestName": "onboarding_test",
     "AudienceName": "All Users",
-    "GetIsTrackingPurchases (property)": false,
     "Id": "welcome",
     "IsTrackingPurchases": false,
     "PlacementAudienceVersionId": "pav-0003",
