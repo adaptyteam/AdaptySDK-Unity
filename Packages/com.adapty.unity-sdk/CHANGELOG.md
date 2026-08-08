@@ -37,9 +37,19 @@ Editor menu that installs it is unavailable for the same reason.
   Dependency Manager has always had to be installed by hand even alongside Package Manager. Packages
   already in the project are left as they are.
 - `AdaptyErrorCode.NoPurchasesToRestore` (1004) — restored. The member was commented out in December
-  2024 while the native SDKs kept sending the code, so `RestorePurchases` on a profile with nothing
-  to restore returned an error that could only be matched against a literal `1004`. Nothing about the
-  error changes; it now has its name back.
+  2024 while the native Android SDK kept sending the code, so `RestorePurchases` on a profile with
+  nothing to restore returned an error that could only be matched against a literal `1004`. Nothing
+  about the error changes; it now has its name back. The code is Android-only — iOS does not define
+  it.
+- Seven more `AdaptyErrorCode` members the native SDKs emit but this enum never named:
+  `UnidentifiedUserLogout` (3020, both platforms, from `Logout` on an unidentified profile),
+  `PaymentPendingError` (1050, iOS, from `ReportTransaction`), `BillingNetworkError` (112, Android),
+  and `WrongAssetType` (4104), `JsException` (4105), `NavigatorNotFound` (4106),
+  `InvalidActionUrl` (4107) — the four the Android flow renderer reports through
+  `FlowViewDidReceiveError`. `AdaptyErrorCode` carries the native number, so these codes always
+  arrived; they simply had no constant to match against. Each one was traced in the iOS 4.0.2 and
+  Android 4.0.1 sources to the place the native SDK produces it — a throw site for all but 112, which
+  comes out of the `fromBilling` mapping.
 
 ### Changed
 

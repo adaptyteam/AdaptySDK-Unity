@@ -558,6 +558,7 @@ public static const AdaptySDK.AdaptyErrorCode.AdaptyNotInitialized : AdaptySDK.A
 public static const AdaptySDK.AdaptyErrorCode.AnalyticsDisabled : AdaptySDK.AdaptyErrorCode = 3000
 public static const AdaptySDK.AdaptyErrorCode.BadRequest : AdaptySDK.AdaptyErrorCode = 2003
 public static const AdaptySDK.AdaptyErrorCode.BillingError : AdaptySDK.AdaptyErrorCode = 106
+public static const AdaptySDK.AdaptyErrorCode.BillingNetworkError : AdaptySDK.AdaptyErrorCode = 112
 public static const AdaptySDK.AdaptyErrorCode.BillingServiceDisconnected : AdaptySDK.AdaptyErrorCode = 99
 public static const AdaptySDK.AdaptyErrorCode.BillingServiceTimeout : AdaptySDK.AdaptyErrorCode = 97
 public static const AdaptySDK.AdaptyErrorCode.BillingServiceUnavailable : AdaptySDK.AdaptyErrorCode = 102
@@ -575,13 +576,16 @@ public static const AdaptySDK.AdaptyErrorCode.EncodingFailed : AdaptySDK.AdaptyE
 public static const AdaptySDK.AdaptyErrorCode.FeatureNotSupported : AdaptySDK.AdaptyErrorCode = 98
 public static const AdaptySDK.AdaptyErrorCode.FetchSubscriptionStatusFailed : AdaptySDK.AdaptyErrorCode = 1020
 public static const AdaptySDK.AdaptyErrorCode.FetchTimeoutError : AdaptySDK.AdaptyErrorCode = 3101
+public static const AdaptySDK.AdaptyErrorCode.InvalidActionUrl : AdaptySDK.AdaptyErrorCode = 4107
 public static const AdaptySDK.AdaptyErrorCode.InvalidJson : AdaptySDK.AdaptyErrorCode = 23
 public static const AdaptySDK.AdaptyErrorCode.InvalidOfferIdentifier : AdaptySDK.AdaptyErrorCode = 11
 public static const AdaptySDK.AdaptyErrorCode.InvalidOfferPrice : AdaptySDK.AdaptyErrorCode = 14
 public static const AdaptySDK.AdaptyErrorCode.InvalidSignature : AdaptySDK.AdaptyErrorCode = 12
 public static const AdaptySDK.AdaptyErrorCode.ItemAlreadyOwned : AdaptySDK.AdaptyErrorCode = 107
 public static const AdaptySDK.AdaptyErrorCode.ItemNotOwned : AdaptySDK.AdaptyErrorCode = 108
+public static const AdaptySDK.AdaptyErrorCode.JsException : AdaptySDK.AdaptyErrorCode = 4105
 public static const AdaptySDK.AdaptyErrorCode.MissingOfferParams : AdaptySDK.AdaptyErrorCode = 13
+public static const AdaptySDK.AdaptyErrorCode.NavigatorNotFound : AdaptySDK.AdaptyErrorCode = 4106
 public static const AdaptySDK.AdaptyErrorCode.NetworkFailed : AdaptySDK.AdaptyErrorCode = 2005
 public static const AdaptySDK.AdaptyErrorCode.NoProductIDsFound : AdaptySDK.AdaptyErrorCode = 1000
 public static const AdaptySDK.AdaptyErrorCode.NoPurchasesToRestore : AdaptySDK.AdaptyErrorCode = 1004
@@ -590,6 +594,7 @@ public static const AdaptySDK.AdaptyErrorCode.OperationInterrupted : AdaptySDK.A
 public static const AdaptySDK.AdaptyErrorCode.PaymentCancelled : AdaptySDK.AdaptyErrorCode = 2
 public static const AdaptySDK.AdaptyErrorCode.PaymentInvalid : AdaptySDK.AdaptyErrorCode = 3
 public static const AdaptySDK.AdaptyErrorCode.PaymentNotAllowed : AdaptySDK.AdaptyErrorCode = 4
+public static const AdaptySDK.AdaptyErrorCode.PaymentPendingError : AdaptySDK.AdaptyErrorCode = 1050
 public static const AdaptySDK.AdaptyErrorCode.PendingPurchase : AdaptySDK.AdaptyErrorCode = 25
 public static const AdaptySDK.AdaptyErrorCode.PrivacyAcknowledgementRequired : AdaptySDK.AdaptyErrorCode = 9
 public static const AdaptySDK.AdaptyErrorCode.ProductNotFound : AdaptySDK.AdaptyErrorCode = 22
@@ -600,8 +605,10 @@ public static const AdaptySDK.AdaptyErrorCode.RefreshReceiptFailed : AdaptySDK.A
 public static const AdaptySDK.AdaptyErrorCode.ServerError : AdaptySDK.AdaptyErrorCode = 2004
 public static const AdaptySDK.AdaptyErrorCode.StoreProductNotAvailable : AdaptySDK.AdaptyErrorCode = 5
 public static const AdaptySDK.AdaptyErrorCode.UnauthorizedRequestData : AdaptySDK.AdaptyErrorCode = 10
+public static const AdaptySDK.AdaptyErrorCode.UnidentifiedUserLogout : AdaptySDK.AdaptyErrorCode = 3020
 public static const AdaptySDK.AdaptyErrorCode.Unknown : AdaptySDK.AdaptyErrorCode = 0
 public static const AdaptySDK.AdaptyErrorCode.UnsupportedData : AdaptySDK.AdaptyErrorCode = 3007
+public static const AdaptySDK.AdaptyErrorCode.WrongAssetType : AdaptySDK.AdaptyErrorCode = 4104
 public static const AdaptySDK.AdaptyErrorCode.WrongParam : AdaptySDK.AdaptyErrorCode = 3001
 public static const AdaptySDK.AdaptyLogLevel.Debug : AdaptySDK.AdaptyLogLevel = 4
 public static const AdaptySDK.AdaptyLogLevel.Error : AdaptySDK.AdaptyLogLevel = 0

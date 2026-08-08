@@ -42,6 +42,7 @@ namespace AdaptySDK {
         BillingError = 106,
         ItemAlreadyOwned = 107,
         ItemNotOwned = 108,
+        BillingNetworkError = 112,
 
         // custom storekit codes
         NoProductIDsFound = 1000, // No In-App Purchase product identifiers were found
@@ -52,6 +53,7 @@ namespace AdaptySDK {
         ProductPurchaseFailed = 1006, // Product purchase failed
         RefreshReceiptFailed = 1010,
         FetchSubscriptionStatusFailed = 1020,
+        PaymentPendingError = 1050, // The purchase is pending confirmation
 
         // custom network codes
         NotActivated = 2002, // You need to be authenticated first
@@ -71,11 +73,18 @@ namespace AdaptySDK {
         /// The user profile was changed during the operation.
         ProfileWasChanged = 3006,
         UnsupportedData = 3007,
-        FetchTimeoutError = 3101,
-        OperationInterrupted = 9000
 
-        /// Plugin errors
-        // WrongCallParameter = 10001
+        /// Logout cannot be called for an unidentified user.
+        UnidentifiedUserLogout = 3020,
+        FetchTimeoutError = 3101,
+
+        // flow rendering codes
+        WrongAssetType = 4104,
+        JsException = 4105,
+        NavigatorNotFound = 4106,
+        InvalidActionUrl = 4107,
+
+        OperationInterrupted = 9000
     }
 
 }
