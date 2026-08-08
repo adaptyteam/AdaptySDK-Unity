@@ -1463,6 +1463,7 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         ) => DismissOnboardingView(view, false, completionHandler);
 
+        [Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
         private static void DismissOnboardingView(
             AdaptyUIOnboardingView view,
             bool destroy,
@@ -1520,6 +1521,9 @@ namespace AdaptySDK
         /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view on which to show the dialog.</param>
         /// <param name="configuration">An <see cref="AdaptyUIDialogConfiguration"/> object that contains the dialog configuration.</param>
         /// <param name="completionHandler">The action that will be called with the result. The result contains the <see cref="AdaptyUIDialogActionType"/> indicating which action was taken.</param>
+        [Obsolete(
+            "The legacy onboarding API is deprecated in favor of Flows. Use the AdaptyUIFlowView overload instead."
+        )]
         public static void ShowDialog(
             AdaptyUIOnboardingView view,
             AdaptyUIDialogConfiguration configuration,

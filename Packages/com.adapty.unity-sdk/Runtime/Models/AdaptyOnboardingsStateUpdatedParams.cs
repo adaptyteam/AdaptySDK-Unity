@@ -11,9 +11,11 @@ using System.Collections.Generic;
 namespace AdaptySDK
 {
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public abstract class AdaptyOnboardingsStateUpdatedParams { }
 
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public sealed class AdaptyOnboardingsSelectParams : AdaptyOnboardingsStateUpdatedParams
     {
         public readonly string Id;
@@ -32,6 +34,7 @@ namespace AdaptySDK
     }
 
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public sealed class AdaptyOnboardingsMultiSelectParams : AdaptyOnboardingsStateUpdatedParams
     {
         public readonly IList<AdaptyOnboardingsSelectParams> Params;
@@ -45,9 +48,11 @@ namespace AdaptySDK
     }
 
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public abstract class AdaptyOnboardingsInput { }
 
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public sealed class AdaptyOnboardingsTextInput : AdaptyOnboardingsInput
     {
         public readonly string Value;
@@ -59,6 +64,7 @@ namespace AdaptySDK
     }
 
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public sealed class AdaptyOnboardingsEmailInput : AdaptyOnboardingsInput
     {
         public readonly string Value;
@@ -70,6 +76,7 @@ namespace AdaptySDK
     }
 
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public sealed class AdaptyOnboardingsNumberInput : AdaptyOnboardingsInput
     {
         public readonly double Value;
@@ -81,6 +88,7 @@ namespace AdaptySDK
     }
 
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public sealed class AdaptyOnboardingsInputParams : AdaptyOnboardingsStateUpdatedParams
     {
         public readonly AdaptyOnboardingsInput Input;
@@ -92,6 +100,7 @@ namespace AdaptySDK
     }
 
     [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public sealed class AdaptyOnboardingsDatePickerParams : AdaptyOnboardingsStateUpdatedParams
     {
         public readonly int? Day;

@@ -68,6 +68,7 @@ namespace AdaptySDK.Serialization
     /// Unknown element types return null, as the previous parser did — an onboarding built with a
     /// newer element must not fail the event.
     /// </remarks>
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     internal sealed class AdaptyOnboardingsStateUpdatedParamsConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType) =>
@@ -162,6 +163,7 @@ namespace AdaptySDK.Serialization
     /// An event the SDK does not know becomes <see cref="AdaptyOnboardingsAnalyticsEventUnknown"/>
     /// carrying the raw name, so a newer native SDK can emit events without breaking the listener.
     /// </remarks>
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     internal sealed class AdaptyOnboardingsAnalyticsEventConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType) =>

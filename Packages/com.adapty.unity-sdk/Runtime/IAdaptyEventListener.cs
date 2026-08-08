@@ -263,7 +263,9 @@ namespace AdaptySDK
     /// <remarks>
     /// Implement this interface to receive notifications about onboarding view lifecycle, user actions, and analytics events.
     /// Use <see cref="Adapty.SetOnboardingsEventsListener(IAdaptyOnboardingsEventsListener)"/> to register your listener.
+    /// Part of the legacy onboarding API, which is deprecated in favor of flows — see <see cref="IAdaptyFlowsEventsListener"/>.
     /// </remarks>
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
     public interface IAdaptyOnboardingsEventsListener
     {
         /// <summary>
@@ -350,6 +352,7 @@ namespace AdaptySDK
     {
         private static IAdaptyEventListener m_Listener;
         private static IAdaptyFlowsEventsListener m_FlowsEventsListener;
+        [Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
         private static IAdaptyOnboardingsEventsListener m_OnboardingsEventsListener;
         private static IAdaptyUISystemRequestsHandler m_SystemRequestsHandler;
         private static IAdaptyUIObserverModeResolver m_ObserverModeResolver;
@@ -437,6 +440,7 @@ namespace AdaptySDK
             return true;
         }
 
+        [Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
         private static bool RequireOnboardingsListener(string eventId)
         {
             if (m_OnboardingsEventsListener == null)
@@ -453,105 +457,17 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Entry point for every event the native side pushes.
+        /// Dispatches the events of the legacy onboarding API.
         /// </summary>
         /// <remarks>
-        /// Nothing is allowed to escape. The call arrives from native code - on iOS through a
-        /// reverse-P/Invoke callback with no handler behind it - so an exception here does not
-        /// surface as a C# error, it takes the process down on IL2CPP. A malformed payload or a
-        /// throwing listener is logged and the event is dropped.
+        /// Split out of <see cref="Dispatch"/> so that the deprecation warnings it raises stay on
+        /// this one method instead of on every case of the main switch.
         /// </remarks>
-        internal static void OnMessage(string id, string json)
-        {
-            if (string.IsNullOrEmpty(json))
-                return;
-
-            try
-            {
-                if (!(JToken.Parse(json) is JObject parameters))
-                {
-                    return;
-                }
-
-                Dispatch(id, parameters);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(
-                    string.Format("[Adapty] Event '{0}' failed: {1}", id ?? "(null)", e)
-                );
-            }
-        }
-
-        private static T Required<T>(JObject parameters, string key) =>
-            JsonRequire.Token(parameters, key).ToObject<T>(AdaptyJson.CreateSerializer());
-
-        private static T Optional<T>(JObject parameters, string key)
-        {
-            var value = parameters[key];
-            return value is null || value.Type == JTokenType.Null
-                ? default(T)
-                : value.ToObject<T>(AdaptyJson.CreateSerializer());
-        }
-
-        private static void Dispatch(string id, JObject parameters)
+        [Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+        private static void OnLegacyOnboardingMessage(string id, JObject parameters)
         {
             switch (id)
             {
-                case "did_load_latest_profile":
-                    {
-                        if (!RequireEventListener(id))
-                            return;
-                        var profile = Required<AdaptyProfile>(parameters, "profile");
-                        try
-                        {
-                            m_Listener.OnLoadLatestProfile(profile);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyEventListener.OnLoadLatestProfile(..)",
-                                e
-                            );
-                        }
-                        return;
-                    }
-                case "on_installation_details_success":
-                    {
-                        if (!RequireEventListener(id))
-                            return;
-                        var details = Required<AdaptyInstallationDetails>(parameters, "details");
-                        try
-                        {
-                            m_Listener.OnInstallationDetailsSuccess(details);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyEventListener.OnInstallationDetailsSuccess(..)",
-                                e
-                            );
-                        }
-                        return;
-                    }
-                case "on_installation_details_fail":
-                    {
-                        if (!RequireEventListener(id))
-                            return;
-                        var error = Required<AdaptyError>(parameters, "error");
-                        try
-                        {
-                            m_Listener.OnInstallationDetailsFail(error);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyEventListener.OnInstallationDetailsFail(..)",
-                                e
-                            );
-                        }
-                        return;
-                    }
                 case "onboarding_did_fail_with_error":
                     {
                         if (!RequireOnboardingsListener(id))
@@ -711,6 +627,118 @@ namespace AdaptySDK
                         }
                         return;
                     }
+            }
+        }
+
+        /// <summary>
+        /// Entry point for every event the native side pushes.
+        /// </summary>
+        /// <remarks>
+        /// Nothing is allowed to escape. The call arrives from native code - on iOS through a
+        /// reverse-P/Invoke callback with no handler behind it - so an exception here does not
+        /// surface as a C# error, it takes the process down on IL2CPP. A malformed payload or a
+        /// throwing listener is logged and the event is dropped.
+        /// </remarks>
+        internal static void OnMessage(string id, string json)
+        {
+            if (string.IsNullOrEmpty(json))
+                return;
+
+            try
+            {
+                if (!(JToken.Parse(json) is JObject parameters))
+                {
+                    return;
+                }
+
+                Dispatch(id, parameters);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(
+                    string.Format("[Adapty] Event '{0}' failed: {1}", id ?? "(null)", e)
+                );
+            }
+        }
+
+        private static T Required<T>(JObject parameters, string key) =>
+            JsonRequire.Token(parameters, key).ToObject<T>(AdaptyJson.CreateSerializer());
+
+        private static T Optional<T>(JObject parameters, string key)
+        {
+            var value = parameters[key];
+            return value is null || value.Type == JTokenType.Null
+                ? default(T)
+                : value.ToObject<T>(AdaptyJson.CreateSerializer());
+        }
+
+        private static void Dispatch(string id, JObject parameters)
+        {
+            switch (id)
+            {
+                case "did_load_latest_profile":
+                    {
+                        if (!RequireEventListener(id))
+                            return;
+                        var profile = Required<AdaptyProfile>(parameters, "profile");
+                        try
+                        {
+                            m_Listener.OnLoadLatestProfile(profile);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception(
+                                "Failed to invoke IAdaptyEventListener.OnLoadLatestProfile(..)",
+                                e
+                            );
+                        }
+                        return;
+                    }
+                case "on_installation_details_success":
+                    {
+                        if (!RequireEventListener(id))
+                            return;
+                        var details = Required<AdaptyInstallationDetails>(parameters, "details");
+                        try
+                        {
+                            m_Listener.OnInstallationDetailsSuccess(details);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception(
+                                "Failed to invoke IAdaptyEventListener.OnInstallationDetailsSuccess(..)",
+                                e
+                            );
+                        }
+                        return;
+                    }
+                case "on_installation_details_fail":
+                    {
+                        if (!RequireEventListener(id))
+                            return;
+                        var error = Required<AdaptyError>(parameters, "error");
+                        try
+                        {
+                            m_Listener.OnInstallationDetailsFail(error);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception(
+                                "Failed to invoke IAdaptyEventListener.OnInstallationDetailsFail(..)",
+                                e
+                            );
+                        }
+                        return;
+                    }
+                case "onboarding_did_fail_with_error":
+                case "onboarding_on_analytics_action":
+                case "onboarding_did_finish_loading":
+                case "onboarding_on_close_action":
+                case "onboarding_on_paywall_action":
+                case "onboarding_on_custom_action":
+                case "onboarding_on_state_updated_action":
+                    OnLegacyOnboardingMessage(id, parameters);
+                    return;
                 case "flow_view_did_appear":
                     {
                         if (!RequireFlowsListener(id))
