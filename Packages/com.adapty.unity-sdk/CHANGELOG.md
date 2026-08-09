@@ -106,6 +106,25 @@ Editor menu that installs it is unavailable for the same reason.
 
 ### Fixed
 
+- `AdaptyProfileParameters.SetBirthday` now sends the date the contract asks for. The key is
+  declared `YYYY-MM-dd` and was built by hand from the parts, without padding, so 7 March 1990 went
+  out as `1990-3-7` rather than `1990-03-07`. Every birthday whose month or day is below the tenth
+  was affected, on every platform, since 3.x. No test caught it because the only date in the
+  fixtures is 10 December 1815, whose month and day are both two digits.
+- An offer whose branch of the contract requires an `id` is now rejected without one, at the point
+  it is read: promotional and win-back everywhere, and introductory on Android. The converter read
+  the identifier leniently for every branch, so a missing one became a null that `NullValueHandling`
+  then dropped from the purchase request — leaving the native side to fail the decode instead. The
+  error now names the missing key where it went missing.
+- A subscription offer without `phases` is now rejected instead of being handed over half built.
+  The contract requires the key, and the converter that reads it enforced `offer_identifier` and
+  `type` but not this one, so a payload without it produced an offer whose phases were null — an
+  object that looks valid and has no prices in it. Neither native SDK can currently send such a
+  payload: iOS always encodes the key, and Android builds the offer only when its phases are not
+  empty.
+- `AdaptyPurchaseResult.ToString()` no longer throws. The contract carries `profile` in the success
+  branch only, and the method dereferenced it unconditionally, so describing a pending or cancelled
+  purchase — logging one, for instance — raised a `NullReferenceException`.
 - `ReportTransaction` no longer reports `DecodingFailed`. It decoded the response as a profile,
   while the native side returns `{"success": true}`, so the completion handler always received a
   decoding error even though the transaction had been reported successfully.
