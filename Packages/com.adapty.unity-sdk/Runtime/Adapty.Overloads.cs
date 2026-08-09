@@ -21,60 +21,6 @@ namespace AdaptySDK
         ) => GetFlowForDefaultAudience(placementId, null, completionHandler);
 
         /// <summary>
-        /// This method enables you to retrieve the onboarding from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the onboarding localization.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
-        )]
-        public static void GetOnboardingForDefaultAudience(
-            string placementId,
-            string locale,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        ) => GetOnboardingForDefaultAudience(placementId, locale, null, completionHandler);
-
-        /// <summary>
-        /// This method enables you to retrieve the onboarding from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
-        )]
-        public static void GetOnboardingForDefaultAudience(
-            string placementId,
-            AdaptyPlacementFetchPolicy fetchPolicy,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        ) => GetOnboardingForDefaultAudience(placementId, null, fetchPolicy, completionHandler);
-
-        /// <summary>
-        /// This method enables you to retrieve the onboarding from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
-        )]
-        public static void GetOnboardingForDefaultAudience(
-            string placementId,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        ) => GetOnboardingForDefaultAudience(placementId, null, null, completionHandler);
-
-        /// <summary>
-        /// Adapty allows you remotely configure onboarding screens that will be displayed in your app.
-        /// </summary>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete("The legacy onboarding API is deprecated in favor of Flows. Use GetFlow instead.")]
-        public static void GetOnboarding(
-            string placementId,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        ) => GetOnboarding(placementId, null, null, null, completionHandler);
-
-        /// <summary>
         /// Makes a purchase for the specified product.
         /// </summary>
         /// <remarks>
@@ -157,22 +103,5 @@ namespace AdaptySDK
             Action<AdaptyUIFlowView, AdaptyError> completionHandler
         ) => CreateFlowView(flow, null, completionHandler);
 
-        /// <summary>
-        /// Creates an onboarding view from an AdaptyOnboarding object.
-        /// </summary>
-        /// <param name="onboarding">An <see cref="AdaptyOnboarding"/> object for which you are trying to create a view.</param>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIOnboardingView"/> object.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use CreateFlowView instead."
-        )]
-        public static void CreateOnboardingView(
-            AdaptyOnboarding onboarding,
-            Action<AdaptyUIOnboardingView, AdaptyError> completionHandler
-        ) =>
-            CreateOnboardingView(
-                onboarding,
-                AdaptyWebPresentation.ExternalBrowser,
-                completionHandler
-            );
     }
 }

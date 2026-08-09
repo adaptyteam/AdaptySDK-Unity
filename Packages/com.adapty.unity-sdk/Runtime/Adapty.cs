@@ -132,56 +132,6 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Adapty allows you remotely configure onboarding screens that will be displayed in your app.
-        /// This way you don't have to hardcode the onboarding content and can dynamically change it or run A/B tests without app releases.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the onboarding <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
-        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="loadTimeout">The timeout for the onboarding loading.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete("The legacy onboarding API is deprecated in favor of Flows. Use GetFlow instead.")]
-        public static void GetOnboarding(
-            string placementId,
-            string locale,
-            AdaptyPlacementFetchPolicy fetchPolicy,
-            TimeSpan? loadTimeout,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JObject();
-
-            parameters["placement_id"] = placementId;
-
-            if (locale != null)
-            {
-                parameters["locale"] = locale;
-            }
-
-            if (fetchPolicy != null)
-            {
-                parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
-            }
-
-            if (loadTimeout.HasValue)
-            {
-                parameters["load_timeout"] = loadTimeout.Value.TotalSeconds;
-            }
-
-            Request.Send<AdaptyOnboarding>(
-                "get_onboarding",
-                parameters,
-                (value, error) =>
-                {
-                    completionHandler?.Invoke(value, error);
-                }
-            );
-        }
-
-        /// <summary>
         /// This method enables you to retrieve the flow from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
         /// </summary>
         /// <remarks>
@@ -217,59 +167,6 @@ namespace AdaptySDK
                     {
                         throw new Exception(
                             "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlowForDefaultAudience(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
-        /// This method enables you to retrieve the onboarding from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the onboarding <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
-        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
-        )]
-        public static void GetOnboardingForDefaultAudience(
-            string placementId,
-            string locale,
-            AdaptyPlacementFetchPolicy fetchPolicy,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JObject();
-            parameters["placement_id"] = placementId;
-
-            if (locale != null)
-            {
-                parameters["locale"] = locale;
-            }
-
-            if (fetchPolicy != null)
-            {
-                parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
-            }
-
-            Request.Send<AdaptyOnboarding>(
-                "get_onboarding_for_default_audience",
-                parameters,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyOnboarding,AdaptyError> completionHandler in Adapty.GetOnboardingForDefaultAudience(..)",
                             e
                         );
                     }
@@ -1257,49 +1154,6 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Creates an onboarding view from an AdaptyOnboarding object.
-        /// </summary>
-        /// <remarks>
-        /// Right after receiving an <see cref="AdaptyOnboarding"/>, you can create the corresponding <see cref="AdaptyUIOnboardingView"/> to present it afterwards.
-        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="onboarding">An <see cref="AdaptyOnboarding"/> object for which you are trying to create a view.</param>
-        /// <param name="externalUrlsPresentation">Controls how external URLs are presented in the onboarding (in-app browser vs external browser). Default is <see cref="AdaptyWebPresentation.ExternalBrowser"/>.</param>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIOnboardingView"/> object.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use CreateFlowView instead."
-        )]
-        public static void CreateOnboardingView(
-            AdaptyOnboarding onboarding,
-            AdaptyWebPresentation externalUrlsPresentation,
-            Action<AdaptyUIOnboardingView, AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JObject();
-            parameters["onboarding"] = AdaptyJson.ToNode(onboarding);
-            parameters["external_urls_presentation"] = AdaptyJson.ToNode(externalUrlsPresentation);
-
-            Request.Send<AdaptyUIOnboardingView>(
-                "adapty_ui_create_onboarding_view",
-                parameters,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyUIOnboardingView, AdaptyError> completionHandler in Adapty.CreateOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
         /// Dismisses the flow view.
         /// </summary>
         /// <remarks>
@@ -1387,114 +1241,6 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Presents the onboarding view to the user.
-        /// </summary>
-        /// <remarks>
-        /// This method presents the onboarding view using the default full-screen presentation style.
-        /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to present.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use PresentFlowView instead."
-        )]
-        public static void PresentOnboardingView(
-            AdaptyUIOnboardingView view,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            PresentOnboardingView(view, AdaptyUIIOSPresentationStyle.FullScreen, completionHandler);
-        }
-
-        /// <summary>
-        /// Presents the onboarding view to the user with a specified presentation style.
-        /// </summary>
-        /// <remarks>
-        /// This method presents the onboarding view using the specified iOS presentation style (iOS only).
-        /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to present.</param>
-        /// <param name="iosPresentationStyle">An <see cref="AdaptyUIIOSPresentationStyle"/> object representing the iOS presentation style (iOS only).</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use PresentFlowView instead."
-        )]
-        public static void PresentOnboardingView(
-            AdaptyUIOnboardingView view,
-            AdaptyUIIOSPresentationStyle iosPresentationStyle,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JObject();
-            parameters["id"] = view.Id;
-            parameters["ios_presentation_style"] = AdaptyJson.ToNode(iosPresentationStyle);
-
-            Request.Send<bool>(
-                "adapty_ui_present_onboarding_view",
-                parameters,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
-        /// Dismisses the onboarding view.
-        /// </summary>
-        /// <remarks>
-        /// Call this method when you want to dismiss the onboarding view from the screen.
-        /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to dismiss.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use DismissFlowView instead."
-        )]
-        public static void DismissOnboardingView(
-            AdaptyUIOnboardingView view,
-            Action<AdaptyError> completionHandler
-        ) => DismissOnboardingView(view, false, completionHandler);
-
-        [Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
-        private static void DismissOnboardingView(
-            AdaptyUIOnboardingView view,
-            bool destroy,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JObject();
-            parameters["id"] = view.Id;
-            parameters["destroy"] = destroy;
-
-            Request.Send<bool>(
-                "adapty_ui_dismiss_onboarding_view",
-                parameters,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
         /// Presents a dialog on the flow view.
         /// </summary>
         /// <remarks>
@@ -1505,27 +1251,6 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains the <see cref="AdaptyUIDialogActionType"/> indicating which action was taken.</param>
         public static void ShowDialog(
             AdaptyUIFlowView view,
-            AdaptyUIDialogConfiguration configuration,
-            Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
-        )
-        {
-            ShowDialog(view.Id, configuration, completionHandler);
-        }
-
-        /// <summary>
-        /// Presents a dialog on the onboarding view.
-        /// </summary>
-        /// <remarks>
-        /// This method shows a dialog with custom configuration on the onboarding view. The dialog can be used for various purposes like showing terms, privacy policy, or custom messages.
-        /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view on which to show the dialog.</param>
-        /// <param name="configuration">An <see cref="AdaptyUIDialogConfiguration"/> object that contains the dialog configuration.</param>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains the <see cref="AdaptyUIDialogActionType"/> indicating which action was taken.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use the AdaptyUIFlowView overload instead."
-        )]
-        public static void ShowDialog(
-            AdaptyUIOnboardingView view,
             AdaptyUIDialogConfiguration configuration,
             Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
         )

@@ -33,6 +33,9 @@
     <Compile Include="$(SdkRuntime)/Serialization/*.cs" LinkBase="Sdk/Serialization" />
     <Compile Include="$(SdkRuntime)/Serialization/Converters/*.cs" LinkBase="Sdk/Serialization/Converters" />
     <Compile Include="$(SdkRuntime)/*.cs" LinkBase="Sdk" />
+    <Compile Include="$(SdkRuntime)/Obsolete/*.cs" LinkBase="Sdk/Obsolete" />
+    <Compile Include="$(SdkRuntime)/Obsolete/Models/*.cs" LinkBase="Sdk/Obsolete/Models" />
+    <Compile Include="$(SdkRuntime)/Obsolete/Serialization/Converters/*.cs" LinkBase="Sdk/Obsolete/Serialization/Converters" />
     <Compile Include="$(SdkRuntime)/Plugins/AdaptyNoop.cs" LinkBase="Sdk/Plugins" />
     <Compile Include="$(SdkRuntime)/Plugins/iOS/*.cs" LinkBase="Sdk/Plugins/iOS" />
     <Compile Include="$(SdkRuntime)/Plugins/Android/*.cs" LinkBase="Sdk/Plugins/Android" />
