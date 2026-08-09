@@ -52,12 +52,30 @@ namespace AdaptySDK.Serialization
             IList<string> offerTags = null;
 #endif
 
+            // Read before the id: the contract requires the id in two of the type's branches only,
+            // so which rule applies is not known until the type is.
+            var type = JsonRequire
+                .Token(identity, "type")
+                .ToObject<AdaptySubscriptionOfferType>(serializer);
+
+            var idIsRequired =
+                type == AdaptySubscriptionOfferType.Promotional
+                || type == AdaptySubscriptionOfferType.WinBack;
+#if UNITY_ANDROID
+            // The contract marks the id required on the introductory branch for Android as well.
+            idIsRequired = idIsRequired || type == AdaptySubscriptionOfferType.Introductory;
+#endif
+
+            var identifier = idIsRequired
+                ? JsonRequire.String(identity, "id")
+                : identity.Value<string>("id");
+
             return new AdaptySubscriptionOffer(
-                identity.Value<string>("id"),
+                identifier,
+                type,
                 JsonRequire
-                    .Token(identity, "type")
-                    .ToObject<AdaptySubscriptionOfferType>(serializer),
-                node["phases"]?.ToObject<IList<AdaptySubscriptionPhase>>(serializer),
+                    .Array(node, "phases")
+                    .ToObject<IList<AdaptySubscriptionPhase>>(serializer),
                 offerTags
             );
         }

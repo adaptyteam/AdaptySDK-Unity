@@ -122,6 +122,13 @@ namespace AdaptySDK.NextTests
 
         [TestCase("{\"phases\":[]}", "offer_identifier")]
         [TestCase("{\"offer_identifier\":{\"id\":\"x\"}}", "type")]
+        [TestCase("{\"offer_identifier\":{\"id\":\"x\",\"type\":\"promotional\"}}", "phases")]
+        [TestCase("{\"offer_identifier\":{\"type\":\"promotional\"},\"phases\":[]}", "id")]
+        [TestCase("{\"offer_identifier\":{\"type\":\"win_back\"},\"phases\":[]}", "id")]
+#if UNITY_ANDROID
+        // The contract marks the id required on the introductory branch for Android as well.
+        [TestCase("{\"offer_identifier\":{\"type\":\"introductory\"},\"phases\":[]}", "id")]
+#endif
         public void SubscriptionOfferRequiresKey(string json, string missing) =>
             Assert.That(
                 () => AdaptyJson.Deserialize<AdaptySubscriptionOffer>(json),
@@ -138,7 +145,7 @@ namespace AdaptySDK.NextTests
         public void UnknownEnumValueDegrades()
         {
             var offer = AdaptyJson.Deserialize<AdaptySubscriptionOffer>(
-                "{\"offer_identifier\":{\"id\":\"x\",\"type\":\"loyalty_reward\"}}"
+                "{\"offer_identifier\":{\"id\":\"x\",\"type\":\"loyalty_reward\"},\"phases\":[]}"
             );
             Assert.That(offer.Type, Is.EqualTo(AdaptySubscriptionOfferType.Unknown));
 
@@ -152,6 +159,24 @@ namespace AdaptySDK.NextTests
                 "{\"type\":\"deferred_to_the_afterlife\"}"
             );
             Assert.That(result.Type, Is.EqualTo(AdaptyPurchaseResultType.Unknown));
+        }
+
+        /// <summary>
+        /// The other half of the same rule: outside the branches that require an offer id, one has
+        /// to keep reading without it. The introductory branch is in this half everywhere except
+        /// Android, where the contract requires the id too.
+        /// </summary>
+        [TestCase("code")]
+#if !UNITY_ANDROID
+        [TestCase("introductory")]
+#endif
+        public void OfferIdIsOptionalOutsideItsRequiredBranches(string type)
+        {
+            var offer = AdaptyJson.Deserialize<AdaptySubscriptionOffer>(
+                "{\"offer_identifier\":{\"type\":\"" + type + "\"},\"phases\":[]}"
+            );
+
+            Assert.That(offer.Identifier, Is.Null);
         }
 
         /// <summary>
