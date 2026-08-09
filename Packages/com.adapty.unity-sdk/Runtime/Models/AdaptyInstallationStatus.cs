@@ -6,42 +6,46 @@
 //
 
 using UnityEngine.Scripting;
+using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    [DataContract]
     [Preserve]
-    public abstract class AdaptyInstallationStatus
+    public sealed class AdaptyInstallationStatus
     {
-        internal AdaptyInstallationStatus() { }
-    }
+        private AdaptyInstallationStatus() { }
 
-    [Preserve]
-    public sealed class AdaptyInstallationStatusNotAvailable : AdaptyInstallationStatus
-    {
-        public AdaptyInstallationStatusNotAvailable() { }
+        [DataMember(Name = "status", IsRequired = true)]
+        public readonly AdaptyInstallationStatusType Status;
 
-        public override string ToString() => nameof(AdaptyInstallationStatusNotAvailable);
-    }
+        /// <summary>
+        /// The installation, present when <see cref="Status"/> is
+        /// <see cref="AdaptyInstallationStatusType.Determined"/> and null otherwise.
+        /// </summary>
+        [DataMember(Name = "details")]
+        [Preserve]
+        public AdaptyInstallationDetails Details { get; private set; } // nullable
 
-    [Preserve]
-    public sealed class AdaptyInstallationStatusNotDetermined : AdaptyInstallationStatus
-    {
-        public AdaptyInstallationStatusNotDetermined() { }
-
-        public override string ToString() => nameof(AdaptyInstallationStatusNotDetermined);
-    }
-
-    [Preserve]
-    public sealed class AdaptyInstallationStatusDetermined : AdaptyInstallationStatus
-    {
-        public readonly AdaptyInstallationDetails Details;
-
-        public AdaptyInstallationStatusDetermined(AdaptyInstallationDetails details)
+        // The contract carries details on the determined branch only, which no attribute can say.
+        // Dropping it elsewhere rather than failing is what the branch-per-subclass model did.
+        // [Preserve] because a type's attribute does not cover its methods.
+        [Preserve]
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
         {
-            Details = details;
+            if (Status != AdaptyInstallationStatusType.Determined)
+            {
+                Details = null;
+            }
+            else if (Details is null)
+            {
+                throw Serialization.JsonRequire.Missing("details");
+            }
         }
 
         public override string ToString() =>
-            $"{nameof(AdaptyInstallationStatusDetermined)}({Details})";
+            $"{nameof(Status)}: {Status}, "
+            + $"{nameof(Details)}: {(Details == null ? "null" : Details.ToString())}";
     }
 }

@@ -70,7 +70,11 @@ namespace AdaptySDK.Serialization
             return value.Value<double>();
         }
 
-        private static JsonSerializationException Missing(string key) =>
+        /// <summary>
+        /// The same failure for a key a model can only require conditionally, on the branch its
+        /// discriminator selects.
+        /// </summary>
+        internal static JsonSerializationException Missing(string key) =>
             new JsonSerializationException($"Required property '{key}' not found in JSON.");
     }
 }

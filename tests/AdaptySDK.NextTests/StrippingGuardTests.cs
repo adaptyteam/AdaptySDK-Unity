@@ -19,6 +19,8 @@ namespace AdaptySDK.NextTests
         private const string Preserve = "UnityEngine.Scripting.PreserveAttribute";
         private const string DataContract = "System.Runtime.Serialization.DataContractAttribute";
         private const string DataMember = "System.Runtime.Serialization.DataMemberAttribute";
+        private const string OnDeserialized =
+            "System.Runtime.Serialization.OnDeserializedAttribute";
 
         /// <summary>
         /// Bases whose subclasses a converter constructs by name. They carry no contract attribute
@@ -27,7 +29,6 @@ namespace AdaptySDK.NextTests
         private static readonly string[] PolymorphicRoots =
         {
             "AdaptyCustomAsset",
-            "AdaptyInstallationStatus",
             "AdaptyOnboardingsAnalyticsEvent",
             "AdaptyOnboardingsStateUpdatedParams",
             "AdaptyOnboardingsInput",
@@ -79,7 +80,8 @@ namespace AdaptySDK.NextTests
 
         /// <summary>
         /// The members a serializer invokes rather than reads directly: a contract property is read
-        /// through its getter, and conditional emission is asked for by calling ShouldSerialize.
+        /// through its getter, conditional emission is asked for by calling ShouldSerialize, and a
+        /// deserialization callback is what enforces a requirement no attribute can state.
         /// </summary>
         private static IEnumerable<MemberInfo> ReflectedMembers(Type type)
         {
@@ -100,7 +102,8 @@ namespace AdaptySDK.NextTests
 
             foreach (var method in type.GetMethods(Declared))
             {
-                if (method.Name.StartsWith("ShouldSerialize", StringComparison.Ordinal))
+                if (method.Name.StartsWith("ShouldSerialize", StringComparison.Ordinal)
+                    || Has(method, OnDeserialized))
                 {
                     yield return method;
                 }
@@ -129,6 +132,12 @@ namespace AdaptySDK.NextTests
                     "the member rules no longer match the contract properties they are meant to guard"
                 );
 
+                Assert.That(
+                    reflected.SelectMany(ReflectedMembers).Any(member => Has(member, OnDeserialized)),
+                    Is.True,
+                    "the deserialization-callback rule no longer matches any method"
+                );
+
                 foreach (var name in new[]
                 {
                     "AdaptyProfile",
@@ -138,7 +147,7 @@ namespace AdaptySDK.NextTests
                     "AdaptyPaymentMode",
                     "AdaptyOnboarding",
                     "AdaptyCustomAssetLocalImageFile",
-                    "AdaptyInstallationStatusDetermined",
+                    "AdaptyInstallationStatus",
                     "AdaptyOnboardingsSelectParams",
                     // A numeric-contract enum: it carries no [EnumMember], so an enum rule written
                     // in terms of that attribute would stop seeing it.

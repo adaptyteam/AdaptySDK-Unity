@@ -112,6 +112,15 @@ Editor menu that installs it is unavailable for the same reason.
   `Models/`. The SDK does not call it: the refund preference is serialized through its
   `[EnumMember]` mapping like every other enum. Two constructors that only the hand-written parser
   ever called are gone too, though those were never public.
+- **Breaking:** `AdaptyInstallationStatus` is one sealed type carrying a `Status` and a `Details`,
+  instead of a base class and the three subclasses `AdaptyInstallationStatusNotAvailable`,
+  `AdaptyInstallationStatusNotDetermined` and `AdaptyInstallationStatusDetermined`, which are gone
+  along with their public constructors — the type is a response, and only the SDK builds one. The
+  new `AdaptyInstallationStatusType` names the same three states the contract lists, so a caller
+  switches on a value rather than testing for a type. `Details` is non-null exactly when `Status` is
+  `Determined`: the determined branch is rejected without it, and on the other two branches a stray
+  one is dropped, which is what the removed subclasses did with it. Nothing about the wire format
+  changes, and the polymorphic converter the hierarchy needed is gone with it.
 - **Breaking:** `AdaptyFlowPaywall.ProductReference` is now `internal`. Its constructor was private
   and every one of its members was already `internal`, so no instance of it could be obtained or
   read from outside the SDK; the type was public only because in 3.x it was the top-level

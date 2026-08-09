@@ -535,7 +535,7 @@ namespace AdaptyExample
                     + details.ToString()
             );
 
-            this.Router.SetInstallation(new AdaptyInstallationStatusDetermined(details));
+            this.Router.SetInstallationDetails(details);
         }
 
         public void OnInstallationDetailsFail(AdaptyError error)

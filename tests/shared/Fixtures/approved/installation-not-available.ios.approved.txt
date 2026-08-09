@@ -1,1 +1,5 @@
-"AdaptyInstallationStatusNotAvailable"
+{
+  "$type": "AdaptyInstallationStatus",
+  "Details (property)": null,
+  "Status": "NotAvailable (0)"
+}

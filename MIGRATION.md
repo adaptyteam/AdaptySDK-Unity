@@ -259,6 +259,25 @@ extension classes that came with them, `AdaptyUIIOSPresentationStyleExtensions`,
 SDK is unaffected; code that used those types directly can move to Newtonsoft.Json, which is now a
 dependency of the package and available to your assemblies too.
 
+`AdaptyInstallationStatus` is one sealed type instead of a base class and three subclasses.
+`GetCurrentInstallationStatus` still hands back an `AdaptyInstallationStatus`; what you switch on is
+now its `Status`, and `Details` is on the same object:
+
+```csharp
+- if (status is AdaptyInstallationStatusDetermined determined)
+- {
+-     Debug.Log(determined.Details.InstallId);
+- }
++ if (status.Status == AdaptyInstallationStatusType.Determined)
++ {
++     Debug.Log(status.Details.InstallId);
++ }
+```
+
+`AdaptyInstallationStatusNotAvailable`, `AdaptyInstallationStatusNotDetermined` and
+`AdaptyInstallationStatusDetermined` are gone, public constructors included — the type is a
+response, and only the SDK builds one. `Details` is non-null exactly when `Status` is `Determined`.
+
 Two members that only forwarded to another one are gone:
 
 | Removed | Use instead |

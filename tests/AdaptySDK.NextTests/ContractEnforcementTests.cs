@@ -109,7 +109,6 @@ namespace AdaptySDK.NextTests
             );
 
         [TestCase("{}", "status")]
-        [TestCase("{\"status\":\"determined\"}", "details")]
         [TestCase("{\"status\":\"determined\",\"details\":{\"app_launch_count\":1}}", "install_time")]
         [TestCase(
             "{\"status\":\"determined\",\"details\":{\"install_time\":\"2026-07-30T10:00:00.000Z\"}}",
@@ -122,6 +121,41 @@ namespace AdaptySDK.NextTests
                     .InstanceOf<JsonSerializationException>()
                     .With.Message.Contains($"'{missing}'")
             );
+
+        /// <summary>
+        /// The one key the contract requires on a branch rather than always, which no attribute can
+        /// state. A deserialization callback enforces it, and Newtonsoft invokes one through
+        /// <c>MethodInfo.Invoke</c> — so the model's complaint arrives wrapped. Both boundaries a
+        /// reply crosses catch <c>Exception</c> and print it, inner exception included.
+        /// </summary>
+        [Test]
+        public void DeterminedInstallationStatusRequiresDetails() =>
+            Assert.That(
+                () => AdaptyJson.Deserialize<AdaptyInstallationStatus>("{\"status\":\"determined\"}"),
+                Throws
+                    .InstanceOf<System.Reflection.TargetInvocationException>()
+                    .With.InnerException.InstanceOf<JsonSerializationException>()
+                    .And.InnerException.Message.Contains("'details'")
+            );
+
+        /// <summary>
+        /// The other half of the same invariant: details belong to the determined branch, so a stray
+        /// one does not reach the app. The branch-per-subclass model this replaced never carried it
+        /// either.
+        /// </summary>
+        [TestCase("not_available")]
+        [TestCase("not_determined")]
+        public void InstallationDetailsOutsideTheDeterminedBranchAreDropped(string status)
+        {
+            var parsed = AdaptyJson.Deserialize<AdaptyInstallationStatus>(
+                "{\"status\":\""
+                    + status
+                    + "\",\"details\":{\"install_time\":\"2026-07-30T10:00:00.000Z\","
+                    + "\"app_launch_count\":1}}"
+            );
+
+            Assert.That(parsed.Details, Is.Null);
+        }
 
         [TestCase("{\"phases\":[]}", "offer_identifier")]
         [TestCase("{\"offer_identifier\":{\"id\":\"x\"}}", "type")]

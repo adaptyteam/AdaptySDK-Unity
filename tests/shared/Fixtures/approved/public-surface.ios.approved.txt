@@ -49,9 +49,8 @@ public AdaptySDK.AdaptyFlow.RemoteConfig : AdaptySDK.AdaptyRemoteConfig { get; }
 public AdaptySDK.AdaptyFlow.VendorProductIds : System.Collections.Generic.IList<System.String> { get; }
 public AdaptySDK.AdaptyFlowPaywall.ProductIdentifiers : System.Collections.Generic.IList<AdaptySDK.AdaptyProductIdentifier> { get; }
 public AdaptySDK.AdaptyFlowPaywall.VendorProductIds : System.Collections.Generic.IList<System.String> { get; }
-public AdaptySDK.AdaptyInstallationStatusDetermined.ctor(AdaptySDK.AdaptyInstallationDetails details)
-public AdaptySDK.AdaptyInstallationStatusNotAvailable.ctor()
-public AdaptySDK.AdaptyInstallationStatusNotDetermined.ctor()
+public AdaptySDK.AdaptyInstallationStatus.Details : AdaptySDK.AdaptyInstallationDetails { get; }
+public AdaptySDK.AdaptyInstallationStatusType.value__ : System.Int32
 public AdaptySDK.AdaptyLogLevel.value__ : System.Int32
 public AdaptySDK.AdaptyOnboardingsAnalyticsEventOnboardingCompleted.ctor()
 public AdaptySDK.AdaptyOnboardingsAnalyticsEventOnboardingStarted.ctor()
@@ -194,7 +193,6 @@ public abstract AdaptySDK.IAdaptyUIObserverModeResolver.FlowViewDidInitiateResto
 public abstract AdaptySDK.IAdaptyUISystemRequestsHandler.FlowViewDidAskPermission(AdaptySDK.AdaptyUIFlowView view, System.String permission, System.Collections.Generic.IDictionary<System.String, System.String> customArgs, System.Action<System.Boolean, System.String> respond) : System.Void
 public abstract AdaptySDK.IAdaptyUISystemRequestsHandler.FlowViewDidRequestAppReview(AdaptySDK.AdaptyUIFlowView view) : System.Void
 public abstract class AdaptySDK.AdaptyCustomAsset
-public abstract class AdaptySDK.AdaptyInstallationStatus
 public abstract class AdaptySDK.AdaptyOnboardingsAnalyticsEvent
 public abstract class AdaptySDK.AdaptyOnboardingsInput
 public abstract class AdaptySDK.AdaptyOnboardingsStateUpdatedParams
@@ -233,6 +231,7 @@ public class AdaptySDK.AdaptyUIMediaCacheConfiguration
 public class AdaptySDK.AdaptyUIOnboardingView
 public class AdaptySDK.AdaptyUIUserAction
 public enum AdaptySDK.AdaptyErrorCode : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
+public enum AdaptySDK.AdaptyInstallationStatusType : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptyLogLevel : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptyPaymentMode : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptyProfileGender : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
@@ -260,9 +259,7 @@ public override AdaptySDK.AdaptyError.ToString() : System.String
 public override AdaptySDK.AdaptyFlow.ToString() : System.String
 public override AdaptySDK.AdaptyFlowPaywall.ToString() : System.String
 public override AdaptySDK.AdaptyInstallationDetails.ToString() : System.String
-public override AdaptySDK.AdaptyInstallationStatusDetermined.ToString() : System.String
-public override AdaptySDK.AdaptyInstallationStatusNotAvailable.ToString() : System.String
-public override AdaptySDK.AdaptyInstallationStatusNotDetermined.ToString() : System.String
+public override AdaptySDK.AdaptyInstallationStatus.ToString() : System.String
 public override AdaptySDK.AdaptyOnboarding.ToString() : System.String
 public override AdaptySDK.AdaptyOnboardingsDatePickerParams.ToString() : System.String
 public override AdaptySDK.AdaptyOnboardingsMultiSelectParams.ToString() : System.String
@@ -313,7 +310,7 @@ public readonly AdaptySDK.AdaptyInstallationDetails.AppLaunchCount : System.Int3
 public readonly AdaptySDK.AdaptyInstallationDetails.InstallId : System.String
 public readonly AdaptySDK.AdaptyInstallationDetails.InstallTime : System.DateTime
 public readonly AdaptySDK.AdaptyInstallationDetails.Payload : System.String
-public readonly AdaptySDK.AdaptyInstallationStatusDetermined.Details : AdaptySDK.AdaptyInstallationDetails
+public readonly AdaptySDK.AdaptyInstallationStatus.Status : AdaptySDK.AdaptyInstallationStatusType
 public readonly AdaptySDK.AdaptyOnboarding.Name : System.String
 public readonly AdaptySDK.AdaptyOnboarding.OnboardingId : System.String
 public readonly AdaptySDK.AdaptyOnboarding.Placement : AdaptySDK.AdaptyPlacement
@@ -452,9 +449,7 @@ public sealed class AdaptySDK.AdaptyCustomAssetLocalImageData : AdaptySDK.Adapty
 public sealed class AdaptySDK.AdaptyCustomAssetLocalImageFile : AdaptySDK.AdaptyCustomAsset
 public sealed class AdaptySDK.AdaptyCustomAssetLocalVideoAsset : AdaptySDK.AdaptyCustomAsset
 public sealed class AdaptySDK.AdaptyCustomAssetLocalVideoFile : AdaptySDK.AdaptyCustomAsset
-public sealed class AdaptySDK.AdaptyInstallationStatusDetermined : AdaptySDK.AdaptyInstallationStatus
-public sealed class AdaptySDK.AdaptyInstallationStatusNotAvailable : AdaptySDK.AdaptyInstallationStatus
-public sealed class AdaptySDK.AdaptyInstallationStatusNotDetermined : AdaptySDK.AdaptyInstallationStatus
+public sealed class AdaptySDK.AdaptyInstallationStatus
 public sealed class AdaptySDK.AdaptyOnboardingsAnalyticsEventOnboardingCompleted : AdaptySDK.AdaptyOnboardingsAnalyticsEvent
 public sealed class AdaptySDK.AdaptyOnboardingsAnalyticsEventOnboardingStarted : AdaptySDK.AdaptyOnboardingsAnalyticsEvent
 public sealed class AdaptySDK.AdaptyOnboardingsAnalyticsEventProductsScreenPresented : AdaptySDK.AdaptyOnboardingsAnalyticsEvent
@@ -603,6 +598,9 @@ public static const AdaptySDK.AdaptyErrorCode.Unknown : AdaptySDK.AdaptyErrorCod
 public static const AdaptySDK.AdaptyErrorCode.UnsupportedData : AdaptySDK.AdaptyErrorCode = 3007
 public static const AdaptySDK.AdaptyErrorCode.WrongAssetType : AdaptySDK.AdaptyErrorCode = 4104
 public static const AdaptySDK.AdaptyErrorCode.WrongParam : AdaptySDK.AdaptyErrorCode = 3001
+public static const AdaptySDK.AdaptyInstallationStatusType.Determined : AdaptySDK.AdaptyInstallationStatusType = 2
+public static const AdaptySDK.AdaptyInstallationStatusType.NotAvailable : AdaptySDK.AdaptyInstallationStatusType = 0
+public static const AdaptySDK.AdaptyInstallationStatusType.NotDetermined : AdaptySDK.AdaptyInstallationStatusType = 1
 public static const AdaptySDK.AdaptyLogLevel.Debug : AdaptySDK.AdaptyLogLevel = 4
 public static const AdaptySDK.AdaptyLogLevel.Error : AdaptySDK.AdaptyLogLevel = 0
 public static const AdaptySDK.AdaptyLogLevel.Info : AdaptySDK.AdaptyLogLevel = 2

@@ -157,7 +157,6 @@ namespace AdaptySDK.Serialization
                 {
                     new AdaptyConverterDateTime(),
                     new AdaptyConverterStringEnum(),
-                    new AdaptyConverterInstallationStatus(),
                     new AdaptyConverterOnboardingsStateUpdatedParams(),
                     new AdaptyConverterOnboardingsAnalyticsEvent(),
                     new AdaptyConverterSubscriptionOffer(),
