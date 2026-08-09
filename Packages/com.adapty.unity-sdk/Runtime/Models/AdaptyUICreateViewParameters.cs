@@ -122,6 +122,12 @@ namespace AdaptySDK
             return this;
         }
 
+        /// <param name="customTimers">
+        /// When each timer ends. A <see cref="DateTime"/> with no <see cref="DateTimeKind"/> of its
+        /// own is read as the user's local clock, so
+        /// <c>new DateTime(2026, 7, 30, 22, 0, 0)</c> means 22:00 where the user is; pass a
+        /// <see cref="DateTimeKind.Utc"/> value to mean 22:00 UTC.
+        /// </param>
         public AdaptyUICreateFlowViewParameters SetCustomTimers(
             Dictionary<string, DateTime> customTimers
         )

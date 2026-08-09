@@ -23,7 +23,7 @@ namespace AdaptySDK.Serialization
         {
             try
             {
-                if (!(JToken.Parse(json) is JObject response))
+                if (!(AdaptyJson.ParseDocument(json) is JObject response))
                 {
                     throw new JsonSerializationException("The reply is not an object.");
                 }

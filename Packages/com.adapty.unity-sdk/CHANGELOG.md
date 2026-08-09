@@ -135,6 +135,15 @@ Editor menu that installs it is unavailable for the same reason.
   object that looks valid and has no prices in it. Neither native SDK can currently send such a
   payload: iOS always encodes the key, and Android builds the offer only when its phases are not
   empty.
+- Dates reach your code as local time again, as they did in 3.x. The wire is UTC and the public API
+  is local — a subscription's expiry compares against `DateTime.Now` — but the payload from the
+  native side was being turned into a document by a reader that recognises dates while it builds the
+  tree, so it settled their kind before anything else had a say and every date arrived as
+  `DateTimeKind.Utc`. Both the event callbacks and the reply to every method were affected; only
+  4.0.0-beta.1 ever behaved that way. Call `ToUniversalTime()` where you need the instant.
+- A date-looking string inside an untyped payload survives as it was sent. The same reader turned
+  `params` of `FlowViewDidReceiveAnalyticEvent` into dates and back into strings, so
+  `"2026-07-30T10:00:00.000Z"` reached the listener as `"07/30/2026 10:00:00"`.
 - `AdaptyPurchaseResult.ToString()` no longer throws. The contract carries `profile` in the success
   branch only, and the method dereferenced it unconditionally, so describing a pending or cancelled
   purchase — logging one, for instance — raised a `NullReferenceException`.

@@ -47,6 +47,44 @@ namespace AdaptySDK.Serialization
         }
 
         /// <summary>
+        /// Builds the DOM for a payload arriving from native code.
+        /// </summary>
+        /// <remarks>
+        /// Not <c>JToken.Parse</c>. Its reader defaults to <c>DateParseHandling.DateTime</c> with
+        /// <c>RoundtripKind</c>, so every ISO string becomes a <see cref="DateTime"/> while the tree
+        /// is being built - before a converter or a setting has any say. Typed dates would then
+        /// reach the app as UTC rather than local, and a date-looking string in an untyped payload
+        /// would come back reformatted instead of as it was sent.
+        /// </remarks>
+        internal static Newtonsoft.Json.Linq.JToken ParseDocument(string json)
+        {
+            using (var reader = new JsonTextReader(new System.IO.StringReader(json))
+            {
+                DateParseHandling = DateParseHandling.None,
+                FloatParseHandling = FloatParseHandling.Double,
+            })
+            {
+                var document = Newtonsoft.Json.Linq.JToken.Load(reader);
+
+                // What JToken.Parse does after loading, and the reason a truncated payload cannot
+                // pass for a whole one. Read to the end rather than once: a comment between two
+                // documents would otherwise hide the second, and "{}/* c */{...}" would be taken
+                // for "{}".
+                while (reader.Read())
+                {
+                    if (reader.TokenType != JsonToken.Comment)
+                    {
+                        throw new JsonReaderException(
+                            "Additional text found after the JSON document."
+                        );
+                    }
+                }
+
+                return document;
+            }
+        }
+
+        /// <summary>
         /// Reads a remote config's <c>data</c>, which is JSON the contract does not describe.
         /// </summary>
         internal static System.Collections.Generic.IDictionary<string, object>

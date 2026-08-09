@@ -57,6 +57,17 @@ namespace AdaptySDK.NextTests
             public readonly StrictEnum Value;
         }
 
+        /// <summary>
+        /// Stands in for <c>AdaptyUICreateFlowViewParameters.CustomTimers</c>, the one place an app
+        /// hands the SDK a date of its own.
+        /// </summary>
+        [DataContract]
+        private class Timers
+        {
+            [DataMember(Name = "at")]
+            public DateTime At;
+        }
+
         [Test]
         public void ReadonlyFieldsAreAssigned()
         {
@@ -89,11 +100,12 @@ namespace AdaptySDK.NextTests
             );
 
         /// <summary>
-        /// The previous layer produced a local DateTime from a UTC instant, and the public models
-        /// expose it directly, so the kind is part of the API.
+        /// The wire is UTC and the public API is local: a date read from a response is the same
+        /// instant, expressed on the machine's clock, so an app compares it against
+        /// <c>DateTime.Now</c>.
         /// </summary>
         [Test]
-        public void DatesKeepThePreviousBehaviour()
+        public void DatesReachTheAppAsLocalTime()
         {
             var parsed = AdaptyJson
                 .Deserialize<Sample>(
@@ -107,6 +119,132 @@ namespace AdaptySDK.NextTests
                 Assert.That(
                     parsed.ToUniversalTime(),
                     Is.EqualTo(new DateTime(2026, 7, 30, 10, 0, 0, DateTimeKind.Utc))
+                );
+            });
+        }
+
+        /// <summary>
+        /// The same invariant on the path production actually uses. A reply from native code is a
+        /// document parsed before anything typed is built, and a reader that parses dates while
+        /// building the tree would settle their kind before any converter is consulted.
+        /// </summary>
+        [Test]
+        public void DatesReachTheAppAsLocalTimeThroughAResponse()
+        {
+            var reply = AdaptyResponse.Parse<AdaptyProfile>(
+                "{\"success\":" + Snapshots.LoadResponse("profile-full") + "}"
+            );
+
+            Assert.That(reply.Error, Is.Null);
+
+            var premium = reply.Value.AccessLevels["premium"];
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(
+                    premium.ActivatedAt.Kind,
+                    Is.EqualTo(DateTimeKind.Local),
+                    "a date came out of the reply envelope in the wrong zone"
+                );
+                Assert.That(
+                    premium.ActivatedAt.ToUniversalTime(),
+                    Is.EqualTo(new DateTime(2026, 1, 15, 9, 30, 0, DateTimeKind.Utc)),
+                    "the zone was right and the instant was not"
+                );
+            });
+        }
+
+        /// <summary>
+        /// A payload with anything after it is not a payload. The reply from native code is checked
+        /// here and nowhere else, so a second document must not be able to hide behind a comment
+        /// and leave the first one standing in for the whole thing.
+        /// </summary>
+        [TestCase("{} {\"a\":1}", TestName = "a second document")]
+        [TestCase("{}/* c */{\"a\":1}", TestName = "a second document behind a comment")]
+        [TestCase("{} nonsense", TestName = "trailing text")]
+        public void ADocumentWithAnythingAfterItIsRejected(string json) =>
+            Assert.That(
+                () => AdaptyJson.ParseDocument(json),
+                Throws.InstanceOf<JsonReaderException>()
+            );
+
+        [TestCase("{\"a\":1}", TestName = "well formed")]
+        [TestCase("{}/* c */", TestName = "a trailing comment and nothing else")]
+        public void ADocumentWithNothingAfterItIsAccepted(string json) =>
+            Assert.That(() => AdaptyJson.ParseDocument(json), Throws.Nothing);
+
+        /// <summary>
+        /// The converter's belt, tested on its own because nothing else can reach it.
+        /// </summary>
+        /// <remarks>
+        /// <c>AdaptyJson.ParseDocument</c> keeps a reader from settling a date's kind before the
+        /// converter sees it, so on the SDK's own paths this branch never runs - which also means
+        /// the two tests above stay green whether or not the belt is there, and this one is what
+        /// holds it. <c>JToken.Parse</c> is used deliberately: its reader is the one that parses
+        /// dates while building the tree.
+        /// </remarks>
+        [Test]
+        public void APreParsedDateIsBroughtBackToTheContract()
+        {
+            var preParsed = Newtonsoft.Json.Linq.JToken.Parse(
+                "{\"required_field\":\"r\",\"activated_at\":\"2026-07-30T10:00:00.000Z\"}"
+            );
+
+            Assert.That(
+                preParsed["activated_at"].Type,
+                Is.EqualTo(Newtonsoft.Json.Linq.JTokenType.Date),
+                "sanity: this reader is supposed to have parsed the date already"
+            );
+
+            var parsed = preParsed.ToObject<Sample>(AdaptyJson.CreateSerializer()).ActivatedAt.Value;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parsed.Kind, Is.EqualTo(DateTimeKind.Local));
+                Assert.That(
+                    parsed.ToUniversalTime(),
+                    Is.EqualTo(new DateTime(2026, 7, 30, 10, 0, 0, DateTimeKind.Utc))
+                );
+            });
+        }
+
+        /// <summary>
+        /// The other half of the same convention: whatever the app hands over goes out as UTC.
+        /// </summary>
+        /// <remarks>
+        /// The unspecified case is the one that matters and the one no other test reaches - it is
+        /// how an app writes a custom timer, <c>new DateTime(2026, 7, 30, 22, 0, 0)</c>, and it has
+        /// to mean 22:00 on the user's clock rather than 22:00 UTC. A value the SDK itself read is
+        /// already local, so it cannot show the difference.
+        /// </remarks>
+        [Test]
+        public void DatesTheAppSuppliesAreWrittenAsUtc()
+        {
+            var wall = new DateTime(2026, 7, 30, 22, 0, 0);
+            var offset = TimeZoneInfo.Local.GetUtcOffset(wall);
+
+            if (offset == TimeSpan.Zero)
+            {
+                Assert.Ignore(
+                    "the host is on UTC, where converting and relabelling agree - "
+                        + "run with TZ set to a zone with an offset, as CI does"
+                );
+            }
+
+            // Not through ToUniversalTime: that is the very call under test, and comparing a value
+            // against itself would pass either way.
+            var expected = (wall - offset).ToString(
+                "yyyy-MM-ddTHH:mm:ss.fffZ",
+                CultureInfo.InvariantCulture
+            );
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(wall.Kind, Is.EqualTo(DateTimeKind.Unspecified), "sanity");
+                Assert.That(
+                    AdaptyJson.Serialize(new Timers { At = wall }),
+                    Does.Contain("\"at\":\"" + expected + "\""),
+                    "an unspecified date was not read as the user's local clock"
                 );
             });
         }

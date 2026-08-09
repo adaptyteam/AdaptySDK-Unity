@@ -646,7 +646,7 @@ namespace AdaptySDK
 
             try
             {
-                if (!(JToken.Parse(json) is JObject parameters))
+                if (!(AdaptyJson.ParseDocument(json) is JObject parameters))
                 {
                     return;
                 }

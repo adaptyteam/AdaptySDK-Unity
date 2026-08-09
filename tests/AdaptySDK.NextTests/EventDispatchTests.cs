@@ -45,6 +45,37 @@ namespace AdaptySDK.NextTests
         }
 
         /// <summary>
+        /// The wire is UTC and the public API is local, on this path too: an event is a document
+        /// parsed before anything typed is built out of it.
+        /// </summary>
+        [Test]
+        public void ProfileDatesReachTheListenerAsLocalTime()
+        {
+            Adapty.OnMessage(
+                "did_load_latest_profile",
+                "{\"profile\":" + Snapshots.LoadResponse("profile-full") + "}"
+            );
+
+            Assert.That(_listener.Profile, Is.Not.Null);
+
+            var premium = _listener.Profile.AccessLevels["premium"];
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(
+                    premium.ActivatedAt.Kind,
+                    Is.EqualTo(DateTimeKind.Local),
+                    "a date reached the listener in the wrong zone"
+                );
+                Assert.That(
+                    premium.ActivatedAt.ToUniversalTime(),
+                    Is.EqualTo(new DateTime(2026, 1, 15, 9, 30, 0, DateTimeKind.Utc)),
+                    "the zone was right and the instant was not"
+                );
+            });
+        }
+
+        /// <summary>
         /// Every way a payload can be wrong, none of which may reach the caller as an exception.
         /// </summary>
         [TestCase("not json at all", TestName = "malformed json")]
@@ -108,7 +139,8 @@ namespace AdaptySDK.NextTests
                     "flow_view_did_receive_analytic_event",
                     "{\"view\":{\"id\":\"v\",\"placement_id\":\"p\",\"variation_id\":\"var\"},"
                         + "\"name\":\"purchase_started\","
-                        + "\"params\":{\"count\":7,\"nested\":{\"k\":1},\"list\":[1,2]}}"
+                        + "\"params\":{\"count\":7,\"nested\":{\"k\":1},\"list\":[1,2],"
+                        + "\"released_at\":\"2026-07-30T10:00:00.000Z\"}}"
                 );
 
                 Assert.That(flows.Params, Is.Not.Null, "the event never reached the listener");
@@ -117,6 +149,13 @@ namespace AdaptySDK.NextTests
                     Assert.That(flows.Params["count"], Is.EqualTo(7d).And.TypeOf<double>());
                     Assert.That(flows.Params["nested"], Is.TypeOf<Dictionary<string, object>>());
                     Assert.That(flows.Params["list"], Is.TypeOf<List<object>>());
+
+                    // An untyped payload is not the place to recognise dates: the app gets back
+                    // what was sent, character for character.
+                    Assert.That(
+                        flows.Params["released_at"],
+                        Is.EqualTo("2026-07-30T10:00:00.000Z").And.TypeOf<string>()
+                    );
                 });
             }
             finally

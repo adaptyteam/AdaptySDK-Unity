@@ -21,6 +21,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # The runners are UTC, where converting a date to UTC and relabelling it as UTC produce the
+    # same string - so DatesTheAppSuppliesAreWrittenAsUtc could not tell the two apart and would
+    # ignore itself. Any zone with a non-zero offset makes it discriminate again.
+    env:
+      TZ: Europe/Berlin
     strategy:
       fail-fast: false
       matrix:
