@@ -73,6 +73,15 @@ namespace AdaptySDK.Serialization
 
             property.ShouldSerialize ??= ShouldSerializeTest(member);
 
+            // A member the contract leaves untyped reads as a CLR graph rather than as Newtonsoft's
+            // JObject. Today that is AdaptyProfile.CustomAttributes; the other two untyped payloads
+            // are not members and reach the converter through AdaptyJson.
+            if (property.Converter is null
+                && AdaptyConverterLooseJson.Instance.CanConvert(property.PropertyType))
+            {
+                property.Converter = AdaptyConverterLooseJson.Instance;
+            }
+
             return property;
         }
 

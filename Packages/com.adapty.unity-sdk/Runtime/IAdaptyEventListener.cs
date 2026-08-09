@@ -662,14 +662,14 @@ namespace AdaptySDK
         }
 
         private static T Required<T>(JObject parameters, string key) =>
-            JsonRequire.Token(parameters, key).ToObject<T>(AdaptyJson.CreateSerializer());
+            JsonRequire.Token(parameters, key).ToObject<T>(AdaptyJson.CreateSerializerFor(typeof(T)));
 
         private static T Optional<T>(JObject parameters, string key)
         {
             var value = parameters[key];
             return value is null || value.Type == JTokenType.Null
                 ? default(T)
-                : value.ToObject<T>(AdaptyJson.CreateSerializer());
+                : value.ToObject<T>(AdaptyJson.CreateSerializerFor(typeof(T)));
         }
 
         private static void Dispatch(string id, JObject parameters)

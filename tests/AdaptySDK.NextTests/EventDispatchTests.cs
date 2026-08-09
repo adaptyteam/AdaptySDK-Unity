@@ -90,6 +90,93 @@ namespace AdaptySDK.NextTests
         public void EmptyPayloadsAreIgnored(string json) =>
             Assert.That(() => Adapty.OnMessage("did_load_latest_profile", json), Throws.Nothing);
 
+        /// <summary>
+        /// The analytic event's params are the third payload the contract leaves untyped, and the
+        /// only one that reaches the app through the dispatcher rather than through a model. It has
+        /// to arrive as the CLR graph of doubles that 3.x handed over, not as Newtonsoft's own
+        /// shapes.
+        /// </summary>
+        [Test]
+        public void AnalyticEventParamsArriveAsALooseGraph()
+        {
+            var flows = new FlowsListener();
+            Adapty.SetFlowsEventsListener(flows);
+
+            try
+            {
+                Adapty.OnMessage(
+                    "flow_view_did_receive_analytic_event",
+                    "{\"view\":{\"id\":\"v\",\"placement_id\":\"p\",\"variation_id\":\"var\"},"
+                        + "\"name\":\"purchase_started\","
+                        + "\"params\":{\"count\":7,\"nested\":{\"k\":1},\"list\":[1,2]}}"
+                );
+
+                Assert.That(flows.Params, Is.Not.Null, "the event never reached the listener");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(flows.Params["count"], Is.EqualTo(7d).And.TypeOf<double>());
+                    Assert.That(flows.Params["nested"], Is.TypeOf<Dictionary<string, object>>());
+                    Assert.That(flows.Params["list"], Is.TypeOf<List<object>>());
+                });
+            }
+            finally
+            {
+                Adapty.SetFlowsEventsListener(null);
+            }
+        }
+
+        private sealed class FlowsListener : IAdaptyFlowsEventsListener
+        {
+            internal IDictionary<string, object> Params;
+
+            public void FlowViewDidReceiveAnalyticEvent(
+                AdaptyUIFlowView view,
+                string name,
+                IDictionary<string, object> @params
+            ) => Params = @params;
+
+            public void FlowViewDidAppear(AdaptyUIFlowView view) { }
+
+            public void FlowViewDidDisappear(AdaptyUIFlowView view) { }
+
+            public void FlowViewDidPerformAction(AdaptyUIFlowView view, AdaptyUIUserAction action) { }
+
+            public void FlowViewDidSelectProduct(AdaptyUIFlowView view, string productId) { }
+
+            public void FlowViewDidStartPurchase(
+                AdaptyUIFlowView view,
+                AdaptyPaywallProduct product
+            ) { }
+
+            public void FlowViewDidFinishPurchase(
+                AdaptyUIFlowView view,
+                AdaptyPaywallProduct product,
+                AdaptyPurchaseResult purchasedResult
+            ) { }
+
+            public void FlowViewDidFailPurchase(
+                AdaptyUIFlowView view,
+                AdaptyPaywallProduct product,
+                AdaptyError error
+            ) { }
+
+            public void FlowViewDidStartRestore(AdaptyUIFlowView view) { }
+
+            public void FlowViewDidFinishRestore(AdaptyUIFlowView view, AdaptyProfile profile) { }
+
+            public void FlowViewDidFailRestore(AdaptyUIFlowView view, AdaptyError error) { }
+
+            public void FlowViewDidReceiveError(AdaptyUIFlowView view, AdaptyError error) { }
+
+            public void FlowViewDidFailLoadingProducts(AdaptyUIFlowView view, AdaptyError error) { }
+
+            public void FlowViewDidFinishWebPaymentNavigation(
+                AdaptyUIFlowView view,
+                AdaptyPaywallProduct product,
+                AdaptyError error
+            ) { }
+        }
+
         private sealed class Listener : IAdaptyEventListener
         {
             internal AdaptyProfile Profile;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
 using AdaptySDK.Serialization;
+using AdaptySDK.TestSupport;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -184,7 +185,7 @@ namespace AdaptySDK.NextTests
         {
             const string json = "{\"n\":42,\"s\":\"x\",\"flag\":true,\"nested\":{\"k\":1},\"list\":[1,2]}";
 
-            var parsed = AdaptyJson.Deserialize<Dictionary<string, object>>(json);
+            var parsed = AdaptyJson.DeserializeRemoteConfigDictionary(json);
 
             Assert.Multiple(() =>
             {
@@ -197,12 +198,55 @@ namespace AdaptySDK.NextTests
         }
 
         /// <summary>
+        /// The other side of that border. The loose converter is not in the shared settings, so a
+        /// dictionary read through the ordinary path gets Newtonsoft's own shapes.
+        /// </summary>
+        [Test]
+        public void LooseObjectsOutsideTheirMembersKeepNewtonsoftShapes()
+        {
+            var parsed = AdaptyJson.Deserialize<Dictionary<string, object>>(
+                "{\"n\":42,\"nested\":{\"k\":1},\"list\":[1,2]}"
+            );
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parsed["n"], Is.TypeOf<long>());
+                Assert.That(parsed["nested"], Is.TypeOf<Newtonsoft.Json.Linq.JObject>());
+                Assert.That(parsed["list"], Is.TypeOf<Newtonsoft.Json.Linq.JArray>());
+            });
+        }
+
+        /// <summary>
+        /// The second member the converter serves, and the one no fixture can cover: the only
+        /// number among the profile fixture's custom attributes is 12.5, which is a double whether
+        /// or not the converter runs, and the snapshot prints an integral double and a long alike.
+        /// </summary>
+        [Test]
+        public void ProfileCustomAttributesKeepTheirDoubles()
+        {
+            var payload = Newtonsoft.Json.Linq.JObject.Parse(
+                Snapshots.LoadResponse("profile-minimal")
+            );
+            payload["custom_attributes"] = Newtonsoft.Json.Linq.JObject.Parse(
+                "{\"score\":12,\"name\":\"x\"}"
+            );
+
+            var profile = AdaptyJson.Deserialize<AdaptyProfile>(payload.ToString());
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(profile.CustomAttributes["score"], Is.EqualTo(12d).And.TypeOf<double>());
+                Assert.That(profile.CustomAttributes["name"], Is.EqualTo("x"));
+            });
+        }
+
+        /// <summary>
         /// Date-looking strings inside loose payloads must survive as strings.
         /// </summary>
         [Test]
         public void DateLikeStringsInLoosePayloadsStayStrings()
         {
-            var parsed = AdaptyJson.Deserialize<Dictionary<string, object>>(
+            var parsed = AdaptyJson.DeserializeRemoteConfigDictionary(
                 "{\"released_at\":\"2026-07-30T10:00:00.000Z\"}"
             );
 

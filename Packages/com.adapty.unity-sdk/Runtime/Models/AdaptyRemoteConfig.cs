@@ -32,7 +32,7 @@ namespace AdaptySDK
                     return null;
                 }
 
-                return AdaptyJson.Deserialize<IDictionary<string, object>>(Data);
+                return AdaptyJson.DeserializeRemoteConfigDictionary(Data);
             }
         }
     }

@@ -47,6 +47,44 @@ namespace AdaptySDK.Serialization
         }
 
         /// <summary>
+        /// Reads a remote config's <c>data</c>, which is JSON the contract does not describe.
+        /// </summary>
+        internal static System.Collections.Generic.IDictionary<string, object>
+            DeserializeRemoteConfigDictionary(string json)
+        {
+            var type = typeof(System.Collections.Generic.IDictionary<string, object>);
+
+            using (var reader = new JsonTextReader(new System.IO.StringReader(json)))
+            {
+                return (System.Collections.Generic.IDictionary<string, object>)
+                    CreateSerializerFor(type).Deserialize(reader, type);
+            }
+        }
+
+        /// <summary>
+        /// A serializer for reading one value of a known type, carrying the loose converter when
+        /// that type is one the contract leaves untyped.
+        /// </summary>
+        /// <remarks>
+        /// The loose converter is deliberately absent from the shared settings, so an ordinary
+        /// <c>Dictionary&lt;string, object&gt;</c> keeps Newtonsoft's own shapes. What must not
+        /// happen is a public payload the contract types as a bare object losing the CLR graph it
+        /// gave in 3.x - so the decision is made here, once, from the type being asked for, rather
+        /// than restated at each call site.
+        /// </remarks>
+        internal static JsonSerializer CreateSerializerFor(Type type)
+        {
+            var serializer = CreateSerializer();
+
+            if (AdaptyConverterLooseJson.Instance.CanConvert(type))
+            {
+                serializer.Converters.Add(AdaptyConverterLooseJson.Instance);
+            }
+
+            return serializer;
+        }
+
+        /// <summary>
         /// A serializer for call sites that read a sub-token. Created per call, since
         /// <see cref="JsonSerializer"/> is not documented as thread-safe; the settings and the
         /// resolver's contract cache behind it are shared, so it stays cheap.
@@ -81,7 +119,6 @@ namespace AdaptySDK.Serialization
                 {
                     new AdaptyConverterDateTime(),
                     new AdaptyConverterStringEnum(),
-                    new AdaptyConverterObject(),
                     new AdaptyConverterInstallationStatus(),
                     new AdaptyConverterOnboardingsStateUpdatedParams(),
                     new AdaptyConverterOnboardingsAnalyticsEvent(),
