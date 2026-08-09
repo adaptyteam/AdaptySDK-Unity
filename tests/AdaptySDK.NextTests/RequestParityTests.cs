@@ -169,6 +169,19 @@ namespace AdaptySDK.NextTests
                 )
             );
 
+        /// <summary>
+        /// The same request, from an empty base plan rather than none — the identifier normalizes it
+        /// at construction, so the two share an approved file.
+        /// </summary>
+        [Test]
+        public void ProductIdentifierWithEmptyBasePlan() =>
+            Snapshots.Matches(
+                "request-product-identifier-no-base-plan",
+                Snapshots.Canonical(
+                    AdaptyJson.Serialize(Samples.ProductIdentifierWithEmptyBasePlan())
+                )
+            );
+
         [TestCase("flow-full")]
         [TestCase("flow-minimal")]
         public void FlowRoundTrip(string fixture)

@@ -66,10 +66,6 @@ namespace AdaptySDK
         [Preserve]
         private string CrossPlatformSdkVersion => Adapty.SDKVersion;
 
-        [Preserve]
-        private bool ShouldSerializeCustomerIdentity() =>
-            CustomerIdentity != null && !CustomerIdentity.IsEmpty;
-
         public override string ToString() =>
             $"{nameof(ApiKey)}: {ApiKey}, "
             + $"{nameof(CustomerUserId)}: {CustomerUserId}, "

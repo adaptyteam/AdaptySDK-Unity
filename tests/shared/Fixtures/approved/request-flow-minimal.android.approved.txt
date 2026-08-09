@@ -9,6 +9,7 @@
     "placement_audience_version_id": "pav-0002",
     "revision": 1
   },
+  "remote_configs": [],
   "response_created_at": 1753876800000,
   "variation_id": "variation-0002",
   "variations": []

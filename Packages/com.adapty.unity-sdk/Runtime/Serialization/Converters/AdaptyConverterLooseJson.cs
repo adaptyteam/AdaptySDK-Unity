@@ -20,8 +20,9 @@ namespace AdaptySDK.Serialization
     /// payloads this serves are public API that gave a CLR graph of doubles in 3.x. Each reaches it
     /// a different way, because each arrives a different way:
     /// <list type="bullet">
-    /// <item><c>AdaptyProfile.CustomAttributes</c> is a member, so
-    /// <c>AdaptyContractResolver</c> attaches this converter to it;</item>
+    /// <item><c>AdaptyProfile.CustomAttributes</c> is a member and names this converter in a
+    /// <c>[JsonConverter]</c> of its own - which is why the type needs <c>[Preserve]</c>, since
+    /// Newtonsoft then constructs it by reflection;</item>
     /// <item><c>AdaptyRemoteConfig.Dictionary</c> is a string parsed on demand, through
     /// <c>AdaptyJson.DeserializeRemoteConfigDictionary</c>;</item>
     /// <item>the analytic event's <c>params</c> is a sub-token the dispatcher reads, through
@@ -32,6 +33,7 @@ namespace AdaptySDK.Serialization
     /// shapes. All three ask <see cref="CanConvert"/> what counts as loose - it is the only place
     /// the type list is written down. Verified to behave the same way on IL2CPP.
     /// </remarks>
+    [UnityEngine.Scripting.Preserve]
     internal sealed class AdaptyConverterLooseJson : JsonConverter
     {
         /// <summary>

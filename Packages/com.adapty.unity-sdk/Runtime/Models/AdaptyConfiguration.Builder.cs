@@ -31,6 +31,12 @@ namespace AdaptySDK
             LogLevel = builder.LogLevel;
             ActivateUI = builder.ActivateUI;
             AdaptyUIMediaCache = builder.AdaptyUIMediaCache;
+
+            // Not sent when it carries neither value, as Identify does not send it either.
+            if (CustomerIdentity != null && CustomerIdentity.IsEmpty)
+            {
+                CustomerIdentity = null;
+            }
         }
 
         public class Builder

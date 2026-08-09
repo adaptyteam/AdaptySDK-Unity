@@ -80,8 +80,8 @@ namespace AdaptySDK.NextTests
 
         /// <summary>
         /// The members a serializer invokes rather than reads directly: a contract property is read
-        /// through its getter, conditional emission is asked for by calling ShouldSerialize, and a
-        /// deserialization callback is what enforces a requirement no attribute can state.
+        /// through its getter, and a deserialization callback is what enforces a requirement no
+        /// attribute can state.
         /// </summary>
         private static IEnumerable<MemberInfo> ReflectedMembers(Type type)
         {
@@ -102,8 +102,7 @@ namespace AdaptySDK.NextTests
 
             foreach (var method in type.GetMethods(Declared))
             {
-                if (method.Name.StartsWith("ShouldSerialize", StringComparison.Ordinal)
-                    || Has(method, OnDeserialized))
+                if (Has(method, OnDeserialized))
                 {
                     yield return method;
                 }

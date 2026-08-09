@@ -12,17 +12,19 @@ using Newtonsoft.Json.Serialization;
 namespace AdaptySDK.Serialization
 {
     /// <summary>
-    /// Reads the models' <c>System.Runtime.Serialization</c> attributes, with three corrections:
-    /// <c>IsRequired</c> means present and non-null, not <see cref="Required.AllowNull"/>;
-    /// <c>ShouldSerializeX</c> is honoured for non-public members and for fields, which Newtonsoft
-    /// skips; and interface-typed collections are contracted as concrete ones, see
-    /// <see cref="Concrete"/>.
+    /// Reads the models' <c>System.Runtime.Serialization</c> attributes, with two corrections:
+    /// <c>IsRequired</c> means present and non-null, not <see cref="Required.AllowNull"/>; and
+    /// interface-typed collections are contracted as concrete ones, see <see cref="Concrete"/>.
     /// </summary>
+    /// <remarks>
+    /// Both are contract rules that cannot be stated per member without repeating them across the
+    /// 128 required members the models declare, or without a backing collection per interface-typed
+    /// one. Anything a model can say about itself belongs in the model — this is not the place for a
+    /// convention of the SDK's own.
+    /// </remarks>
     internal sealed class AdaptyContractResolver : DefaultContractResolver
     {
         internal static readonly AdaptyContractResolver Instance = new AdaptyContractResolver();
-
-        private const string ShouldSerializePrefix = "ShouldSerialize";
 
         protected override JsonContract CreateContract(Type objectType) =>
             base.CreateContract(Concrete(objectType));
@@ -71,36 +73,7 @@ namespace AdaptySDK.Serialization
                 property.Required = Required.Always;
             }
 
-            property.ShouldSerialize ??= ShouldSerializeTest(member);
-
-            // A member the contract leaves untyped reads as a CLR graph rather than as Newtonsoft's
-            // JObject. Today that is AdaptyProfile.CustomAttributes; the other two untyped payloads
-            // are not members and reach the converter through AdaptyJson.
-            if (property.Converter is null
-                && AdaptyConverterLooseJson.Instance.CanConvert(property.PropertyType))
-            {
-                property.Converter = AdaptyConverterLooseJson.Instance;
-            }
-
             return property;
-        }
-
-        private static Predicate<object> ShouldSerializeTest(MemberInfo member)
-        {
-            var method = member.DeclaringType.GetMethod(
-                ShouldSerializePrefix + member.Name,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                null,
-                Type.EmptyTypes,
-                null
-            );
-
-            if (method is null || method.ReturnType != typeof(bool))
-            {
-                return null;
-            }
-
-            return instance => (bool)method.Invoke(instance, null);
         }
     }
 }

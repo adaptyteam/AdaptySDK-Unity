@@ -61,9 +61,6 @@ namespace AdaptySDK
         [DataMember(Name = "remote_configs")]
         public readonly IList<AdaptyRemoteConfig> RemoteConfigs = new List<AdaptyRemoteConfig>();
 
-        [Preserve]
-        private bool ShouldSerializeRemoteConfigs() => RemoteConfigs.Count > 0;
-
         /// <summary>
         /// The first custom JSON formatted data configured in the Adapty Dashboard.
         /// </summary>

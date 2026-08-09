@@ -169,7 +169,10 @@ Editor menu that installs it is unavailable for the same reason.
 - `AdaptyProductIdentifier` now implements value equality, so identifiers built from a flow work as
   keys in the dictionary passed to
   `AdaptyUICreateFlowViewParameters.SetProductPurchaseParameters`; previously they were compared by
-  reference and the parameters silently applied to nothing.
+  reference and the parameters silently applied to nothing. An empty base plan id is now the same as
+  none, at construction, so two identifiers that always went on the wire identically are equal and
+  hash alike — a base plan read out of an empty text field no longer produces a key that matches
+  nothing.
 - `AdaptyFlow.VendorProductIds` and `AdaptyFlow.ProductIdentifiers` no longer return duplicates when
   several paywall variations of the flow offer the same product.
 

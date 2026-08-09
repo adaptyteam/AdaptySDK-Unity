@@ -67,6 +67,14 @@ namespace AdaptySDK.TestSupport
         public static AdaptyProductIdentifier ProductIdentifierWithoutBasePlan() =>
             new AdaptyProductIdentifier("com.adapty.sample.lifetime", "adapty-product-2", null);
 
+        /// <summary>
+        /// The same identifier built with an empty base plan rather than none. It has to reach the
+        /// wire as the one above: null is what NullValueHandling drops, and an app that read the id
+        /// out of a text field has an empty string, not a null.
+        /// </summary>
+        public static AdaptyProductIdentifier ProductIdentifierWithEmptyBasePlan() =>
+            new AdaptyProductIdentifier("com.adapty.sample.lifetime", "adapty-product-2", "");
+
         public static AdaptyUIDialogConfiguration DialogConfiguration() =>
             new AdaptyUIDialogConfiguration()
                 .SetTitle("Cancel subscription?")

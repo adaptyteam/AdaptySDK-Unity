@@ -56,6 +56,7 @@ namespace AdaptySDK
         /// Previously set user custom attributes with <see cref="Adapty.UpdateProfile(AdaptyProfileParameters, Action{AdaptyError})"/> method.
         /// </summary>
         [DataMember(Name = "custom_attributes")]
+        [Newtonsoft.Json.JsonConverter(typeof(Serialization.AdaptyConverterLooseJson))]
         public readonly IDictionary<string, object> CustomAttributes = new Dictionary<string, object>();
 
         /// <summary>

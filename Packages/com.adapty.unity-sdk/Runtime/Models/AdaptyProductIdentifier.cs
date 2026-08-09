@@ -21,11 +21,12 @@ namespace AdaptySDK
         public readonly string VendorProductId;
         [DataMember(Name = "adapty_product_id", IsRequired = true)]
         internal readonly string _AdaptyProductId;
+        /// <remarks>
+        /// Empty is the same as none: the contract leaves the key out rather than sending it empty,
+        /// so the constructor normalizes it and <c>NullValueHandling</c> drops it.
+        /// </remarks>
         [DataMember(Name = "base_plan_id")]
         public readonly string BasePlanId; // Android Only, nullable
-
-        [Preserve]
-        private bool ShouldSerializeBasePlanId() => !string.IsNullOrEmpty(BasePlanId);
 
         public AdaptyProductIdentifier(
             string vendorProductId,
@@ -35,7 +36,7 @@ namespace AdaptySDK
         {
             VendorProductId = vendorProductId;
             _AdaptyProductId = adaptyProductId;
-            BasePlanId = basePlanId;
+            BasePlanId = string.IsNullOrEmpty(basePlanId) ? null : basePlanId;
         }
 
         /// <remarks>
