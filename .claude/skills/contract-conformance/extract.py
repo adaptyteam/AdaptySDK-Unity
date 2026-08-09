@@ -48,10 +48,10 @@ MAPPING = {
 # Contract objects that deliberately have no [DataMember] type behind them. The reason is the
 # point: it is what a reviewer checks. Anything here is still worth a look by hand.
 NO_MODEL = {
-    "AdaptySubscriptionOffer": "built by AdaptySubscriptionOfferConverter - check the converter",
+    "AdaptySubscriptionOffer": "built by AdaptyConverterSubscriptionOffer - check the converter",
     "AdaptySubscriptionOffer.Identifier": "flattened into AdaptySubscriptionOffer by the converter",
-    "AdaptyInstallationStatus": "polymorphic, built by AdaptyInstallationStatusConverter",
-    "AdaptyUI.OnboardingsStateParams": "polymorphic, built by AdaptyPolymorphicConverters",
+    "AdaptyInstallationStatus": "polymorphic, built by AdaptyConverterInstallationStatus",
+    "AdaptyUI.OnboardingsStateParams": "polymorphic, built by AdaptyConverterOnboardingsStateUpdatedParams",
     "AdaptyProfile.CustomAttributes": "free-form map, not a type",
     "AdaptyUI.CustomTagsValues": "free-form map",
     "AdaptyUI.CustomTimersValues": "free-form map",

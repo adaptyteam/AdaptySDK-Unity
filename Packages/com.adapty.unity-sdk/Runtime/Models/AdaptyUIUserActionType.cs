@@ -12,22 +12,12 @@ namespace AdaptySDK {
     [Preserve]
     public enum AdaptyUIUserActionType {
         [EnumMember(Value = "close")]
-        Close,
+        Close = 0,
         [EnumMember(Value = "system_back")]
-        SystemBack,
+        SystemBack = 1,
         [EnumMember(Value = "open_url")]
-        OpenUrl,
+        OpenUrl = 2,
         [EnumMember(Value = "custom")]
-        Custom,
-
-        /// <summary>
-        /// The action is not one this SDK version knows.
-        /// </summary>
-        /// <remarks>
-        /// Appended last on purpose: the members above keep the numeric values they had,
-        /// and no member of this type is both non-nullable and optional, so this can never
-        /// become the value of a missing field.
-        /// </remarks>
-        Unknown,
+        Custom = 3,
     }
 }

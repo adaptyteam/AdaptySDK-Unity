@@ -1,5 +1,5 @@
 //
-//  AdaptySubscriptionOfferConverter.cs
+//  AdaptyConverterSubscriptionOffer.cs
 //  AdaptySDK
 //
 
@@ -19,7 +19,7 @@ namespace AdaptySDK.Serialization
     /// <c>System.Runtime.Serialization</c> annotations only, which is what makes a later move to
     /// another serializer a matter of replacing converters.
     /// </remarks>
-    internal sealed class AdaptySubscriptionOfferConverter : JsonConverter
+    internal sealed class AdaptyConverterSubscriptionOffer : JsonConverter
     {
         public override bool CanConvert(Type objectType) =>
             objectType == typeof(AdaptySubscriptionOffer);

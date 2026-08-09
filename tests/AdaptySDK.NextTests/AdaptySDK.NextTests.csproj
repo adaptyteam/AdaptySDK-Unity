@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="$(SdkRuntime)/Models/*.cs" LinkBase="Sdk/Models" />
     <Compile Include="$(SdkRuntime)/Serialization/*.cs" LinkBase="Sdk/Serialization" />
+    <Compile Include="$(SdkRuntime)/Serialization/Converters/*.cs" LinkBase="Sdk/Serialization/Converters" />
     <Compile Include="$(SdkRuntime)/*.cs" LinkBase="Sdk" />
     <Compile Include="$(SdkRuntime)/Plugins/AdaptyNoop.cs" LinkBase="Sdk/Plugins" />
     <Compile Include="$(SdkRuntime)/Plugins/iOS/*.cs" LinkBase="Sdk/Plugins/iOS" />

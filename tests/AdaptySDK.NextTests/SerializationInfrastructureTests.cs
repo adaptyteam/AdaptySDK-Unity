@@ -134,20 +134,37 @@ namespace AdaptySDK.NextTests
             Assert.That(AdaptyJson.Serialize(sample), Does.Contain("\"offer_type\":\"win_back\""));
         }
 
+        /// <summary>
+        /// A declared "unknown" catches nothing: where the contract lists the string it is a value
+        /// like any other, and a value outside the contract throws whether or not the enum has one.
+        /// </summary>
         [Test]
-        public void UnknownEnumValueFallsBackWhenTheEnumDeclaresUnknown()
+        public void UnknownEnumValueThrowsWhateverTheEnumDeclares()
         {
-            var sample = AdaptyJson.Deserialize<Sample>(
-                "{\"required_field\":\"r\",\"offer_type\":\"brand_new_from_native\"}"
+            var declared = AdaptyJson.Deserialize<Sample>(
+                "{\"required_field\":\"r\",\"offer_type\":\"unknown\"}"
+            );
+            Assert.That(declared.OfferType, Is.EqualTo(SampleOfferType.Unknown));
+
+            Assert.Throws<JsonSerializationException>(
+                () =>
+                    AdaptyJson.Deserialize<Sample>(
+                        "{\"required_field\":\"r\",\"offer_type\":\"brand_new_from_native\"}"
+                    )
             );
 
-            Assert.That(sample.OfferType, Is.EqualTo(SampleOfferType.Unknown));
-        }
-
-        [Test]
-        public void UnknownEnumValueStillThrowsWithoutAnUnknownMember() =>
             Assert.Throws<JsonSerializationException>(
                 () => AdaptyJson.Deserialize<StrictHolder>("{\"value\":\"brand_new\"}")
+            );
+        }
+
+        /// <summary>
+        /// A number is not a value of a string enum, whatever it would map to.
+        /// </summary>
+        [Test]
+        public void NumberInAStringEnumThrows() =>
+            Assert.Throws<JsonSerializationException>(
+                () => AdaptyJson.Deserialize<StrictHolder>("{\"value\":0}")
             );
 
         [Test]

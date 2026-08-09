@@ -14,14 +14,14 @@ namespace AdaptySDK
     public enum AdaptySubscriptionPeriodUnit
     {
         [EnumMember(Value = "day")]
-        Day,
+        Day = 0,
         [EnumMember(Value = "week")]
-        Week,
+        Week = 1,
         [EnumMember(Value = "month")]
-        Month,
+        Month = 2,
         [EnumMember(Value = "year")]
-        Year,
+        Year = 3,
         [EnumMember(Value = "unknown")]
-        Unknown
+        Unknown = 4
     }
 }

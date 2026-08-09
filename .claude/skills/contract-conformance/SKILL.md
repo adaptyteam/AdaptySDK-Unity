@@ -76,9 +76,11 @@ not failing.
   the reverse. **Before calling this a defect, grep `CHANGELOG.md`, the surrounding comments and the
   tests.** Some of these are deliberate: request-side parameter objects are intentionally ungated so
   one call site compiles for every target.
-- **STRING ENUMS** — a value in C# that the contract does not list is usually the project's `Unknown`
-  fallback, which is by design on the read path. Whether it is by design on the *write* path is
-  step 5.
+- **STRING ENUMS** — a member in C# that the contract does not list is a defect. There is no
+  fallback: an unlisted string fails the read, and the only `Unknown` members left are the two the
+  contract spells out itself, on `AdaptyPaymentMode` and `AdaptySubscriptionPeriodUnit`. The reverse
+  is a defect too — a contract value with no member — and so is a member with no
+  `[EnumMember]`, which would be sent under its C# name.
 - **WIRE NAMES** — every `method`/`id` constant in the contract, and whether that literal occurs in
   `Runtime/`. An absent one is a request the SDK cannot make or an event it cannot receive.
 
@@ -101,9 +103,8 @@ This is where the findings are.
 
 - **The write path is not the read path.** For every value C# can produce, ask: can it be serialized
   into a request, and does the contract allow it *there*? Requests often have their own contract
-  object, distinct from the response object of the same name. Fallback members added for forward
-  compatibility are the usual suspects: reading an unknown value is right, sending one back may not
-  be.
+  object, distinct from the response object of the same name — an enum listed in a response may have
+  fewer values allowed in the request that carries it back.
 - **Optional keys the C# side cannot express.** A contract key that is optional and absent from C#
   breaks nothing, and is still a capability the SDK does not offer.
 - **Enforcement, not just presence.** A required key that is read leniently is a conformance gap even

@@ -14,10 +14,10 @@ namespace AdaptySDK
     public enum AdaptyRefundPreference
     {
         [EnumMember(Value = "no_preference")]
-        NoPreference,
+        NoPreference = 0,
         [EnumMember(Value = "grant")]
-        Grant,
+        Grant = 1,
         [EnumMember(Value = "decline")]
-        Decline,
+        Decline = 2,
     }
 }

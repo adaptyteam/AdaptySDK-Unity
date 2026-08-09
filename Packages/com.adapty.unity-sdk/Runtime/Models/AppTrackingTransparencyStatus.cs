@@ -11,10 +11,10 @@ namespace AdaptySDK {
 
     [Preserve]
     public enum AppTrackingTransparencyStatus {
-        NotDetermined,
-        Restricted,
-        Denied,
-        Authorized
+        NotDetermined = 0,
+        Restricted = 1,
+        Denied = 2,
+        Authorized = 3
     }
 
 }

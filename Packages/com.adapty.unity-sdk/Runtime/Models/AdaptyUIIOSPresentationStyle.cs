@@ -14,8 +14,8 @@ namespace AdaptySDK
     public enum AdaptyUIIOSPresentationStyle
     {
         [EnumMember(Value = "full_screen")]
-        FullScreen,
+        FullScreen = 0,
         [EnumMember(Value = "page_sheet")]
-        PageSheet,
+        PageSheet = 1,
     }
 }

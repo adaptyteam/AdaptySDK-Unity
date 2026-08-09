@@ -1,5 +1,5 @@
 //
-//  AdaptyDateTimeConverter.cs
+//  AdaptyConverterDateTime.cs
 //  AdaptySDK
 //
 
@@ -17,7 +17,7 @@ namespace AdaptySDK.Serialization
     /// Both directions live here rather than in <c>DateTimeZoneHandling</c>, which would also
     /// affect writing and would send local offsets to the native side.
     /// </remarks>
-    internal sealed class AdaptyDateTimeConverter : JsonConverter
+    internal sealed class AdaptyConverterDateTime : JsonConverter
     {
         private const string Format = "yyyy-MM-ddTHH:mm:ss.fffZ";
 

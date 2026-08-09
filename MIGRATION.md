@@ -297,12 +297,9 @@ out:
 - **`AdaptyProductIdentifier` now compares by value.** Identifiers built from a flow work as
   dictionary keys, which is what `AdaptyUICreateFlowViewParameters.SetProductPurchaseParameters`
   expects; in v3 they were compared by reference and the parameters silently applied to nothing.
-- **Several enums gained an `Unknown` member**, so a value the native side adds later reads as
-  `Unknown` instead of throwing: `AdaptyPurchaseResultType`, `AdaptySubscriptionOfferType`,
-  `AdaptySubscriptionRenewalType`, `AdaptyUIDialogActionType`, `AdaptyUIUserActionType` and
-  `AdaptyWebPresentation`. `AdaptySubscriptionOfferType` also gained `Code`. The existing members
-  keep their values, but a `switch` that was exhaustive in v3 is not exhaustive now — give it a
-  default branch.
+- **`AdaptySubscriptionOfferType` gained `Code`** (iOS only). The existing members keep their
+  values, but a `switch` that was exhaustive in v3 is not exhaustive now — give it a default branch.
+  A string the contract does not list still fails the read, exactly as in v3.
 
 ## Update the native dependencies
 

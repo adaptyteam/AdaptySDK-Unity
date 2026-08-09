@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
 using AdaptySDK.TestSupport;
 using AdaptySDK.Serialization;
 using Newtonsoft.Json;
@@ -8,8 +11,8 @@ using NUnit.Framework;
 namespace AdaptySDK.NextTests
 {
     /// <summary>
-    /// The negative half of the contract: a payload that omits a required key has to fail, and a
-    /// value the SDK does not know yet has to degrade instead of failing.
+    /// The negative half of the contract: a payload that omits a required key has to fail, and so
+    /// does one carrying a value the contract does not list.
     /// </summary>
     /// <remarks>
     /// A green snapshot matrix cannot show either of these - both need a payload no fixture
@@ -138,27 +141,49 @@ namespace AdaptySDK.NextTests
             );
 
         /// <summary>
-        /// A newer native SDK sending a value this one has never heard of must degrade to Unknown,
-        /// not fail the response around it.
+        /// A string the contract does not list has to fail the read.
+        /// </summary>
+        /// <remarks>
+        /// The SDK ships with the native SDKs it is pinned to, so an unlisted value is a broken
+        /// payload rather than one from the future. Where the contract does want an open set it
+        /// says so - a flow permission and an onboarding event name are strings, not enums - and
+        /// where it lists "unknown" itself the value is a member like any other, see
+        /// <see cref="ContractsOwnUnknownIsRead"/>.
+        /// </remarks>
+        [TestCase(
+            "{\"offer_identifier\":{\"id\":\"x\",\"type\":\"loyalty_reward\"},\"phases\":[]}",
+            typeof(AdaptySubscriptionOffer)
+        )]
+        [TestCase("{\"type\":\"teleport\"}", typeof(AdaptyUIUserAction))]
+        [TestCase("{\"type\":\"close\",\"open_in\":\"holodeck\"}", typeof(AdaptyUIUserAction))]
+        [TestCase("{\"type\":\"deferred_to_the_afterlife\"}", typeof(AdaptyPurchaseResult))]
+        // A near miss is not a value either: the C# member name, another casing of the contract
+        // value, and the value with whitespace around it are all outside the contract.
+        [TestCase("{\"type\":\"UserCancelled\"}", typeof(AdaptyPurchaseResult))]
+        [TestCase("{\"type\":\"Close\"}", typeof(AdaptyUIUserAction))]
+        [TestCase("{\"type\":\"USER_CANCELLED\"}", typeof(AdaptyPurchaseResult))]
+        [TestCase("{\"type\":\" user_cancelled \"}", typeof(AdaptyPurchaseResult))]
+        [TestCase("{\"type\":\"SystemBack\"}", typeof(AdaptyUIUserAction))]
+        public void UnknownEnumValueIsRejected(string json, System.Type type) =>
+            Assert.That(
+                () => JsonConvert.DeserializeObject(json, type, Settings()),
+                Throws.InstanceOf<JsonSerializationException>()
+            );
+
+        /// <summary>
+        /// The two enums whose contract lists "unknown" among its values keep reading it.
         /// </summary>
         [Test]
-        public void UnknownEnumValueDegrades()
+        public void ContractsOwnUnknownIsRead()
         {
-            var offer = AdaptyJson.Deserialize<AdaptySubscriptionOffer>(
-                "{\"offer_identifier\":{\"id\":\"x\",\"type\":\"loyalty_reward\"},\"phases\":[]}"
+            Assert.That(
+                AdaptyJson.Deserialize<AdaptyPaymentMode>("\"unknown\""),
+                Is.EqualTo(AdaptyPaymentMode.Unknown)
             );
-            Assert.That(offer.Type, Is.EqualTo(AdaptySubscriptionOfferType.Unknown));
-
-            var action = AdaptyJson.Deserialize<AdaptyUIUserAction>(
-                "{\"type\":\"teleport\",\"open_in\":\"holodeck\"}"
+            Assert.That(
+                AdaptyJson.Deserialize<AdaptySubscriptionPeriodUnit>("\"unknown\""),
+                Is.EqualTo(AdaptySubscriptionPeriodUnit.Unknown)
             );
-            Assert.That(action.Type, Is.EqualTo(AdaptyUIUserActionType.Unknown));
-            Assert.That(action.OpenIn, Is.EqualTo(AdaptyWebPresentation.Unknown));
-
-            var result = AdaptyJson.Deserialize<AdaptyPurchaseResult>(
-                "{\"type\":\"deferred_to_the_afterlife\"}"
-            );
-            Assert.That(result.Type, Is.EqualTo(AdaptyPurchaseResultType.Unknown));
         }
 
         /// <summary>
@@ -180,49 +205,176 @@ namespace AdaptySDK.NextTests
         }
 
         /// <summary>
-        /// A member the contract has no name for can come out of a read but must never go into a
-        /// request: the native side would receive a value it has never heard of, and the
-        /// SimpleJSON writer threw rather than send one.
+        /// Every member of a string enum carries exactly one contract name, and no two members share
+        /// it.
         /// </summary>
+        /// <remarks>
+        /// Asked of the metadata, because neither half of the converter can report it. Writing is
+        /// stock <c>StringEnumConverter</c>, which falls back to the C# member name instead of
+        /// failing, so a member that lost its <c>[EnumMember]</c> would quietly send "Unknown".
+        /// Reading is the ordinal map built from the same attributes, where a duplicate name means
+        /// one of the two members can never be read and which one is decided by field order.
+        /// </remarks>
         [Test]
-        public void ReadFallbackEnumsCannotBeSent()
+        public void EveryMemberOfAContractNamedEnumHasItsName()
         {
-            Assert.That(
-                () =>
-                    AdaptyJson.Serialize(
-                        new AdaptyUIDialogConfiguration().SetDefaultActionTitle("OK")
-                    ),
-                Throws.Nothing,
-                "sanity: a payload with no fallback member still serializes"
-            );
+            var broken = new List<string>();
 
-            foreach (var value in new object[]
+            foreach (var type in typeof(AdaptyFlow).Assembly.GetTypes())
             {
-                AdaptyWebPresentation.Unknown,
-                AdaptyUIUserActionType.Unknown,
-                AdaptyPurchaseResultType.Unknown,
-                AdaptySubscriptionRenewalType.Unknown,
-                AdaptyUIDialogActionType.Unknown,
-            })
-            {
-                Assert.That(
-                    () => AdaptyJson.Serialize(value),
-                    Throws.InstanceOf<JsonSerializationException>(),
-                    $"{value.GetType().Name}.Unknown was accepted on the write path"
-                );
+                if (!type.IsEnum || type.Namespace != "AdaptySDK")
+                {
+                    continue;
+                }
+
+                var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+
+                // No name anywhere means the contract spells this one as a number.
+                if (!System.Array.Exists(fields, HasContractName))
+                {
+                    continue;
+                }
+
+                var seen = new Dictionary<string, string>();
+
+                foreach (var field in fields)
+                {
+                    var name = field.GetCustomAttribute<EnumMemberAttribute>()?.Value;
+
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        broken.Add($"{type.Name}.{field.Name} - no contract name");
+                        continue;
+                    }
+
+                    if (seen.TryGetValue(name, out var owner))
+                    {
+                        broken.Add($"{type.Name}.{field.Name} - shares \"{name}\" with {owner}");
+                        continue;
+                    }
+
+                    seen[name] = field.Name;
+                }
             }
+
+            Assert.That(
+                broken,
+                Is.Empty,
+                "these break the mapping to the contract:\n  " + string.Join("\n  ", broken)
+            );
         }
 
         /// <summary>
-        /// The one fallback member that is writable: the SimpleJSON writer mapped anything it did
-        /// not recognise to "unknown", and a product carries its offer type back to the native side.
+        /// The other half of the same rule: an enum the contract spells as a number must not be
+        /// caught by the string converter. Stock <c>StringEnumConverter</c> claims every enum, so
+        /// what keeps error codes numeric is the gate in front of it.
         /// </summary>
         [Test]
-        public void OfferTypeFallbackKeepsItsContractName() =>
+        public void NumericEnumsStayNumeric()
+        {
             Assert.That(
-                AdaptyJson.Serialize(AdaptySubscriptionOfferType.Unknown),
-                Is.EqualTo("\"unknown\"")
+                AdaptyJson.Serialize(AdaptyErrorCode.NoPurchasesToRestore),
+                Is.EqualTo("1004")
             );
+            Assert.That(
+                AdaptyJson.Deserialize<AdaptyErrorCode>("1004"),
+                Is.EqualTo(AdaptyErrorCode.NoPurchasesToRestore)
+            );
+            Assert.That(
+                AdaptyJson.Serialize(AppTrackingTransparencyStatus.Authorized),
+                Is.EqualTo("3")
+            );
+            Assert.That(
+                AdaptyJson.Deserialize<AppTrackingTransparencyStatus>("3"),
+                Is.EqualTo(AppTrackingTransparencyStatus.Authorized)
+            );
+        }
+
+        private static bool HasContractName(FieldInfo field) =>
+            field.GetCustomAttribute<EnumMemberAttribute>() != null;
+
+        /// <summary>
+        /// Every public enum member states its number. An inserted member otherwise renumbers every
+        /// member below it, and the numbers are public API even where the wire format is a string.
+        /// </summary>
+        /// <remarks>
+        /// Read from the sources, because metadata cannot tell an explicit value from one the
+        /// compiler counted out. The approved public surface is what catches a number that moves;
+        /// this is what catches a number that was never written down.
+        /// </remarks>
+        [Test]
+        public void EveryPublicEnumMemberStatesItsValue()
+        {
+            var models = System.IO.Path.Combine(
+                ProjectDirectory(),
+                "..",
+                "..",
+                "Packages",
+                "com.adapty.unity-sdk",
+                "Runtime",
+                "Models"
+            );
+
+            var implicitly_ = new List<string>();
+
+            foreach (var file in System.IO.Directory.GetFiles(models, "*.cs"))
+            {
+                string enumeration = null;
+                var depth = 0;
+
+                foreach (var line in System.IO.File.ReadAllLines(file))
+                {
+                    var declaration = Regex.Match(line, @"public enum (\w+)");
+                    if (declaration.Success)
+                    {
+                        enumeration = declaration.Groups[1].Value;
+                        depth = 0;
+                    }
+
+                    if (enumeration is null)
+                    {
+                        continue;
+                    }
+
+                    depth += Count(line, '{') - Count(line, '}');
+
+                    var member = Regex.Match(line, @"^[ \t]+([A-Za-z_]\w*)[ \t]*(,?)[ \t]*(//.*)?$");
+                    if (member.Success)
+                    {
+                        implicitly_.Add($"{enumeration}.{member.Groups[1].Value}");
+                    }
+
+                    if (depth == 0 && line.Contains("}"))
+                    {
+                        enumeration = null;
+                    }
+                }
+            }
+
+            Assert.That(
+                implicitly_,
+                Is.Empty,
+                "these take their number from the member above them:\n  "
+                    + string.Join("\n  ", implicitly_)
+            );
+        }
+
+        private static int Count(string line, char character)
+        {
+            var found = 0;
+            foreach (var c in line)
+            {
+                if (c == character)
+                {
+                    found += 1;
+                }
+            }
+            return found;
+        }
+
+        private static string ProjectDirectory(
+            [System.Runtime.CompilerServices.CallerFilePath] string callerPath = null
+        ) => System.IO.Path.GetDirectoryName(callerPath);
 
         /// <summary>
         /// An unknown discriminator is forward compatibility; a missing one is a broken payload.

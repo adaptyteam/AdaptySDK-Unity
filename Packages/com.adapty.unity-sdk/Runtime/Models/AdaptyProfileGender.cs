@@ -14,10 +14,10 @@ namespace AdaptySDK
     public enum AdaptyProfileGender
     {
         [EnumMember(Value = "f")]
-        Female,
+        Female = 0,
         [EnumMember(Value = "m")]
-        Male,
+        Male = 1,
         [EnumMember(Value = "o")]
-        Other,
+        Other = 2,
     }
 }

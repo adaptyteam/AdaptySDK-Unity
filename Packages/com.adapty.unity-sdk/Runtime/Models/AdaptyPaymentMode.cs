@@ -14,12 +14,12 @@ namespace AdaptySDK
     public enum AdaptyPaymentMode
     {
         [EnumMember(Value = "pay_as_you_go")]
-        PayAsYouGo,
+        PayAsYouGo = 0,
         [EnumMember(Value = "pay_up_front")]
-        PayUpFront,
+        PayUpFront = 1,
         [EnumMember(Value = "free_trial")]
-        FreeTrial,
+        FreeTrial = 2,
         [EnumMember(Value = "unknown")]
-        Unknown,
+        Unknown = 3,
     }
 }

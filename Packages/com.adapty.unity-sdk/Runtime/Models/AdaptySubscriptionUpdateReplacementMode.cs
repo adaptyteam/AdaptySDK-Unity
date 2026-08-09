@@ -14,14 +14,14 @@ namespace AdaptySDK
     public enum AdaptySubscriptionUpdateReplacementMode
     {
         [EnumMember(Value = "with_time_proration")]
-        WithTimeProration,
+        WithTimeProration = 0,
         [EnumMember(Value = "charge_prorated_price")]
-        ChargeProratedPrice,
+        ChargeProratedPrice = 1,
         [EnumMember(Value = "without_proration")]
-        WithoutProration,
+        WithoutProration = 2,
         [EnumMember(Value = "deferred")]
-        Deferred,
+        Deferred = 3,
         [EnumMember(Value = "charge_full_price")]
-        ChargeFullPrice,
+        ChargeFullPrice = 4,
     }
 }

@@ -1,5 +1,5 @@
 //
-//  AdaptyObjectConverter.cs
+//  AdaptyConverterObject.cs
 //  AdaptySDK
 //
 
@@ -19,7 +19,7 @@ namespace AdaptySDK.Serialization
     /// change what <c>AdaptyRemoteConfig.Dictionary</c> and profile custom attributes give the
     /// caller. Verified to behave the same way on IL2CPP.
     /// </remarks>
-    internal sealed class AdaptyObjectConverter : JsonConverter
+    internal sealed class AdaptyConverterObject : JsonConverter
     {
         public override bool CanConvert(Type objectType) =>
             objectType == typeof(object)

@@ -87,6 +87,19 @@ Editor menu that installs it is unavailable for the same reason.
   called it deprecated for several versions without an attribute to back that up) and
   `AdaptyPlacement.GetIsTrackingPurchases` (wrapped the public `IsTrackingPurchases` field, whose
   `null` case cannot occur).
+- **Breaking:** a string the contract does not list now fails the read instead of degrading to
+  `Unknown`, and the six members that existed only to catch one are gone —
+  `AdaptyPurchaseResultType.Unknown`, `AdaptySubscriptionOfferType.Unknown`,
+  `AdaptySubscriptionRenewalType.Unknown`, `AdaptyUIDialogActionType.Unknown`,
+  `AdaptyUIUserActionType.Unknown` and `AdaptyWebPresentation.Unknown`. The SDK ships pinned to the
+  native SDKs it is built against, so an unlisted value is a broken payload rather than one from the
+  future, which is what v3 did too; the fallback was carried over from the beta and the contract
+  never allowed an arbitrary string in these positions. `AdaptyPaymentMode.Unknown` and
+  `AdaptySubscriptionPeriodUnit.Unknown` stay, because the contract lists `"unknown"` among their
+  values. No surviving member changed its numeric value. `AdaptySubscriptionOfferType.Unknown` was
+  also the one fallback that could be sent — as `"unknown"`, which no branch of the contract's offer
+  identifier accepts — so a purchase of such an offer failed on the native side instead of here.
+  A JSON number is no longer accepted for a string enum either; it used to read as `Unknown`.
 - Updated the cross-platform contract to 4.0.2 and the native SDK dependencies to
   iOS 4.0.2 and Android 4.0.1. `MakePurchase`'s purchase parameters and
   `AdaptyUICreateFlowViewParameters.ProductPurchaseParameters` are now documented as Android only,

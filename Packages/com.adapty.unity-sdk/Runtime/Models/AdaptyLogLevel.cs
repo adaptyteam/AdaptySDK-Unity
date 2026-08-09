@@ -14,14 +14,14 @@ namespace AdaptySDK
     public enum AdaptyLogLevel
     {
         [EnumMember(Value = "error")]
-        Error,
+        Error = 0,
         [EnumMember(Value = "warn")]
-        Warn,
+        Warn = 1,
         [EnumMember(Value = "info")]
-        Info,
+        Info = 2,
         [EnumMember(Value = "verbose")]
-        Verbose,
+        Verbose = 3,
         [EnumMember(Value = "debug")]
-        Debug
+        Debug = 4
     }
 }

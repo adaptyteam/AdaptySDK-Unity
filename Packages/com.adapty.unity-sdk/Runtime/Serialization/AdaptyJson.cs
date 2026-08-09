@@ -79,14 +79,14 @@ namespace AdaptySDK.Serialization
                 ContractResolver = AdaptyContractResolver.Instance,
                 Converters = new JsonConverter[]
                 {
-                    new AdaptyDateTimeConverter(),
-                    new AdaptyEnumConverter(),
-                    new AdaptyObjectConverter(),
-                    new AdaptyInstallationStatusConverter(),
-                    new AdaptyOnboardingsStateUpdatedParamsConverter(),
-                    new AdaptyOnboardingsAnalyticsEventConverter(),
-                    new AdaptySubscriptionOfferConverter(),
-                    new AdaptyCustomAssetsConverter(),
+                    new AdaptyConverterDateTime(),
+                    new AdaptyConverterStringEnum(),
+                    new AdaptyConverterObject(),
+                    new AdaptyConverterInstallationStatus(),
+                    new AdaptyConverterOnboardingsStateUpdatedParams(),
+                    new AdaptyConverterOnboardingsAnalyticsEvent(),
+                    new AdaptyConverterSubscriptionOffer(),
+                    new AdaptyConverterCustomAssets(),
                 },
             };
     }

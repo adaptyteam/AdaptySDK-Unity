@@ -13,7 +13,7 @@ namespace AdaptySDK
     /// <remarks>
     /// The contract nests the identifier and the type inside <c>offer_identifier</c> while the
     /// model keeps them flat, so this one is built by
-    /// <c>AdaptySDK.Serialization.AdaptySubscriptionOfferConverter</c> rather than from member
+    /// <c>AdaptySDK.Serialization.AdaptyConverterSubscriptionOffer</c> rather than from member
     /// annotations.
     /// </remarks>
     [Preserve]

@@ -14,10 +14,10 @@ namespace AdaptySDK
     public enum AdaptyServerCluster
     {
         [EnumMember(Value = "default")]
-        Default,
+        Default = 0,
         [EnumMember(Value = "eu")]
-        EU,
+        EU = 1,
         [EnumMember(Value = "cn")]
-        CN,
+        CN = 2,
     }
 }
