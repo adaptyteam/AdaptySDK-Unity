@@ -11,6 +11,28 @@ namespace AdaptySDK.NextTests
     [TestFixture]
     public class RequestParityTests
     {
+        /// <summary>
+        /// The contract declares a format for this one - <c>YYYY-MM-dd</c> - and it is built by
+        /// hand rather than through the date converter, which is where padding gets lost.
+        /// </summary>
+        /// <remarks>
+        /// The sample the snapshots use is Ada Lovelace's birthday, whose month and day are both
+        /// two digits, so no snapshot can tell a padded writer from an unpadded one. This picks a
+        /// date where it shows.
+        /// </remarks>
+        [Test]
+        public void BirthdayCarriesTheContractFormat()
+        {
+            var parameters = new AdaptyProfileParameters.Builder()
+                .SetBirthday(new System.DateTime(1990, 3, 7))
+                .Build();
+
+            Assert.That(
+                AdaptyJson.Serialize(parameters),
+                Does.Contain("\"birthday\":\"1990-03-07\"")
+            );
+        }
+
         [Test]
         public void SubscriptionUpdateParameters()
         {

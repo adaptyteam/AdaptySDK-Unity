@@ -13,6 +13,23 @@ namespace AdaptySDK.NextTests
     [TestFixture]
     public class ParityTests
     {
+        /// <summary>
+        /// The contract puts <c>profile</c> in the success branch only, so the other two results
+        /// carry a null one. ToString has to survive that: an app logging a cancelled purchase is
+        /// not on an error path.
+        /// </summary>
+        [TestCase("purchase-result-success")]
+        [TestCase("purchase-result-pending")]
+        [TestCase("purchase-result-cancelled")]
+        public void PurchaseResultDescribesEveryVariant(string fixture) =>
+            Assert.That(
+                () =>
+                    AdaptyJson
+                        .Deserialize<AdaptyPurchaseResult>(Snapshots.LoadResponse(fixture))
+                        .ToString(),
+                Throws.Nothing
+            );
+
         [TestCase("profile-full")]
         [TestCase("profile-minimal")]
         public void Profile(string fixture) =>

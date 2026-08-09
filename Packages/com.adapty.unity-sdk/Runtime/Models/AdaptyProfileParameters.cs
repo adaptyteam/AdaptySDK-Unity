@@ -48,9 +48,7 @@ namespace AdaptySDK
         [DataMember(Name = "birthday")]
         [Preserve]
         private string BirthdayForRequest =>
-            Birthday.HasValue
-                ? $"{Birthday.Value.Year}-{Birthday.Value.Month}-{Birthday.Value.Day}"
-                : null;
+            Birthday?.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
 
         [DataMember(Name = "custom_attributes")]
         [Preserve]
