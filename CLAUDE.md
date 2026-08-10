@@ -100,6 +100,12 @@ One file per model in `Runtime/Models/`, and no `partial` unless the type really
 
 `tests/AdaptySDK.NextTests` enforces all of this: a model added without `[Preserve]` fails `StrippingGuardTests`, and one whose output changes fails its approved snapshot.
 
+### Overloads
+
+The completion handler is the last parameter of every public method, is never optional, and never has a default — the SDK does not offer a fire-and-forget call, so there is no `= null` anywhere in the public API. That is what forces the convenience forms to be **overloads** rather than trailing defaults: in every group the optional-looking argument (`fetchPolicy`, `purchaseParameters`, `variationId`, a presentation style) sits *before* the callback, and C# has no required parameter after an optional one. Collapsing them would mean making the callback optional or moving it, and neither is on the table.
+
+Each short form is a one-line forward to the canonical method — audited, none carries logic of its own. Four groups instead overload by the *type* of the first argument (`Activate`, `OpenWebPaywall`, `CreateWebPaywallUrl`, `ShowDialog`); passing a literal `null` there is ambiguous and fails as `CS0121`, which is loud and acceptable.
+
 ### Deprecation
 
 Deprecating one entry point is not enough — mark everything the deprecated API hands back or takes, or the warning only reaches the caller at the registration call and never at the type they wrote. The attribute is written `[System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]`, with the same sentence everywhere. Marking a member is also what decides where it lives: it moves to `Runtime/Obsolete/`, and the two travel together.
