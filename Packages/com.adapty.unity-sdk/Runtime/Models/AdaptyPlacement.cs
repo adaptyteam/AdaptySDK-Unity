@@ -14,7 +14,7 @@ namespace AdaptySDK
 
     [DataContract]
     [Preserve]
-    public partial class AdaptyPlacement
+    public class AdaptyPlacement
     {
         private AdaptyPlacement() { }
 

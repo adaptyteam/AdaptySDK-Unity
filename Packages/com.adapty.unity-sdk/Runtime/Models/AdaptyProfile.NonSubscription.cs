@@ -15,7 +15,7 @@ namespace AdaptySDK
     public partial class AdaptyProfile
     {
         [DataContract]
-        public partial class NonSubscription
+        public class NonSubscription
         {
             private NonSubscription() { }
 

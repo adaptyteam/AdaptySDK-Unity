@@ -22,7 +22,7 @@ namespace AdaptySDK
     [DataContract]
     [Preserve]
     [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
-    public partial class AdaptyOnboarding
+    public class AdaptyOnboarding
     {
         private AdaptyOnboarding() { }
 

@@ -12,7 +12,7 @@ namespace AdaptySDK {
 
     [DataContract]
     [Preserve]
-    public partial class AdaptyUIUserAction {
+    public class AdaptyUIUserAction {
         private AdaptyUIUserAction() { }
 
         [DataMember(Name = "type", IsRequired = true)]

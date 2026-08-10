@@ -13,7 +13,7 @@ namespace AdaptySDK
     public  partial class AdaptyProfile
     {
         [DataContract]
-        public partial class AccessLevel
+        public class AccessLevel
         {
             private AccessLevel() { }
 

@@ -16,7 +16,7 @@ namespace AdaptySDK
     /// </summary>
     [DataContract]
     [Preserve]
-    public partial class AdaptyCustomerIdentity
+    public class AdaptyCustomerIdentity
     {
         /// <summary>
         /// The UUID that you generate to associate a customer's In-App Purchase with its resulting App Store transaction. (iOS Only). Nullable.

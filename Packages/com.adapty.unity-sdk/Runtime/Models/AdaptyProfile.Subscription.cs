@@ -14,7 +14,7 @@ namespace AdaptySDK
     public partial class AdaptyProfile
     {
         [DataContract]
-        public partial class Subscription
+        public class Subscription
         {
             private Subscription() { }
 

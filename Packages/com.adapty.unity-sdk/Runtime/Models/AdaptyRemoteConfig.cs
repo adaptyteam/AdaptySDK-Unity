@@ -13,7 +13,7 @@ namespace AdaptySDK
 
     [DataContract]
     [Preserve]
-    public partial class AdaptyRemoteConfig
+    public class AdaptyRemoteConfig
     {
         private AdaptyRemoteConfig() { }
 

@@ -12,7 +12,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public partial class AdaptyPurchaseResult
+    public class AdaptyPurchaseResult
     {
         private AdaptyPurchaseResult() { }
 

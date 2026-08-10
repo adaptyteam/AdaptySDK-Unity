@@ -14,7 +14,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public partial class AdaptyUICreateFlowViewParameters
+    public class AdaptyUICreateFlowViewParameters
     {
         /// <summary>
         /// The identifier of the localization to render the flow with, e.g. "en", "es", "fr".

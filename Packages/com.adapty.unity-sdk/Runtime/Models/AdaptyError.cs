@@ -11,7 +11,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK {
     [DataContract]
     [Preserve]
-    public partial class AdaptyError {
+    public class AdaptyError {
         private AdaptyError() { }
 
         [DataMember(Name = "adapty_code", IsRequired = true)]

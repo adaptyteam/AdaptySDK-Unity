@@ -13,7 +13,7 @@ namespace AdaptySDK
 
     [DataContract]
     [Preserve]
-    public partial class AdaptyPrice
+    public class AdaptyPrice
     {
         private AdaptyPrice() { }
 

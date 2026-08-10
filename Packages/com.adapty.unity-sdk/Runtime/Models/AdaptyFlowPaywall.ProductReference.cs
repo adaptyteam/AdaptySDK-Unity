@@ -12,7 +12,7 @@ namespace AdaptySDK
     public partial class AdaptyFlowPaywall
     {
         [DataContract]
-        internal partial class ProductReference
+        internal class ProductReference
         {
             private ProductReference() { }
 

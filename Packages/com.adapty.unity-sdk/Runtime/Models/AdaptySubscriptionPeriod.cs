@@ -12,7 +12,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public partial class AdaptySubscriptionPeriod
+    public class AdaptySubscriptionPeriod
     {
         private AdaptySubscriptionPeriod() { }
 

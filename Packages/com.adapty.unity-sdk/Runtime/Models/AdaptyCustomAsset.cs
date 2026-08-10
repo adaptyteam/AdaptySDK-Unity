@@ -16,7 +16,7 @@ namespace AdaptySDK
     /// Base class for custom assets that can be used in Adapty UI.
     /// </summary>
     [Preserve]
-    public abstract partial class AdaptyCustomAsset
+    public abstract class AdaptyCustomAsset
     {
         /// <summary>
         /// Creates a custom asset from local image data.
@@ -94,7 +94,7 @@ namespace AdaptySDK
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed partial class AdaptyCustomAssetLocalImageData : AdaptyCustomAsset
+    public sealed class AdaptyCustomAssetLocalImageData : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
@@ -118,7 +118,7 @@ namespace AdaptySDK
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed partial class AdaptyCustomAssetLocalImageAsset : AdaptyCustomAsset
+    public sealed class AdaptyCustomAssetLocalImageAsset : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
@@ -142,7 +142,7 @@ namespace AdaptySDK
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed partial class AdaptyCustomAssetLocalImageFile : AdaptyCustomAsset
+    public sealed class AdaptyCustomAssetLocalImageFile : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
@@ -168,7 +168,7 @@ namespace AdaptySDK
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed partial class AdaptyCustomAssetLocalVideoAsset : AdaptyCustomAsset
+    public sealed class AdaptyCustomAssetLocalVideoAsset : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
@@ -192,7 +192,7 @@ namespace AdaptySDK
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed partial class AdaptyCustomAssetLocalVideoFile : AdaptyCustomAsset
+    public sealed class AdaptyCustomAssetLocalVideoFile : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
@@ -218,7 +218,7 @@ namespace AdaptySDK
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed partial class AdaptyCustomAssetColor : AdaptyCustomAsset
+    public sealed class AdaptyCustomAssetColor : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
@@ -244,7 +244,7 @@ namespace AdaptySDK
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed partial class AdaptyCustomAssetLinearGradient : AdaptyCustomAsset
+    public sealed class AdaptyCustomAssetLinearGradient : AdaptyCustomAsset
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]

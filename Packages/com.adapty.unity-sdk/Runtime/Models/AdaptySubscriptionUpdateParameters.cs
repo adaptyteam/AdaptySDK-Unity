@@ -13,7 +13,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public partial class AdaptySubscriptionUpdateParameters
+    public class AdaptySubscriptionUpdateParameters
     {
         /// The product id for current subscription to change.
         [DataMember(Name = "old_sub_vendor_product_id", IsRequired = true)]

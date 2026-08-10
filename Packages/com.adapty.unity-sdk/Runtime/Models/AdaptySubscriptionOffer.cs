@@ -17,7 +17,7 @@ namespace AdaptySDK
     /// annotations.
     /// </remarks>
     [Preserve]
-    public partial class AdaptySubscriptionOffer
+    public class AdaptySubscriptionOffer
     {
         internal AdaptySubscriptionOffer(
             string identifier,
