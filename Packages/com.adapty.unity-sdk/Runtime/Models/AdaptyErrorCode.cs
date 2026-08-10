@@ -1,83 +1,330 @@
 using UnityEngine.Scripting;
 
-namespace AdaptySDK {
+namespace AdaptySDK
+{
+    /// <summary>
+    /// The numeric code carried by <see cref="AdaptyError.Code"/>.
+    /// </summary>
+    /// <remarks>
+    /// The value is the native SDK's own, so a code always arrives whether or not this enum names
+    /// it. Most codes are produced by one platform only, and each member says which; where both
+    /// produce a number, both meanings are given, because they are not always the same one.
+    /// Verified against AdaptySDK-iOS 4.0.2 and AdaptySDK-Android 4.0.1, the pinned dependencies.
+    /// </remarks>
     [Preserve]
-    public enum AdaptyErrorCode {
-        // system storekit codes
+    public enum AdaptyErrorCode
+    {
+        /// <summary>
+        /// A failure the native SDK could not classify.
+        /// </summary>
         Unknown = 0,
-        ClientInvalid = 1, // client is not allowed to issue the request, etc.
-        PaymentCancelled = 2, // user cancelled the request, etc.
-        PaymentInvalid = 3, // purchase identifier was invalid, etc.
-        PaymentNotAllowed = 4, // this device is not allowed to make the payment
-        StoreProductNotAvailable = 5, // Product is not available in the current storefront
-        CloudServicePermissionDenied = 6, // user has not allowed access to cloud service information
-        CloudServiceNetworkConnectionFailed = 7, // the device could not connect to the nework
-        CloudServiceRevoked = 8, // user has revoked permission to use this cloud service
-        PrivacyAcknowledgementRequired = 9, // The user needs to acknowledge Apple's privacy policy
-        UnauthorizedRequestData = 10, // The app is attempting to use SKPayment's requestData property, but does not have the appropriate entitlement
-        InvalidOfferIdentifier = 11, // The specified subscription offer identifier is not valid
-        InvalidSignature = 12, // The cryptographic signature provided is not valid
-        MissingOfferParams = 13, // One or more parameters from SKPaymentDiscount is missing
+
+        /// <summary>
+        /// iOS only. The client is not allowed to make the request.
+        /// </summary>
+        ClientInvalid = 1,
+
+        /// <summary>
+        /// iOS only. The user cancelled the request. Not a failure to report to them.
+        /// </summary>
+        PaymentCancelled = 2,
+
+        /// <summary>
+        /// iOS only. The purchase identifier was invalid.
+        /// </summary>
+        PaymentInvalid = 3,
+
+        /// <summary>
+        /// iOS only. This device is not allowed to make the payment — parental controls, for
+        /// example.
+        /// </summary>
+        PaymentNotAllowed = 4,
+
+        /// <summary>
+        /// The product is not available in the current storefront. On Android this is Google
+        /// Play's <c>ITEM_UNAVAILABLE</c>, which the native SDK maps to this code by name rather
+        /// than by the offset the other billing codes use.
+        /// </summary>
+        StoreProductNotAvailable = 5,
+
+        /// <summary>
+        /// iOS only. The user has not allowed access to cloud service information.
+        /// </summary>
+        CloudServicePermissionDenied = 6,
+
+        /// <summary>
+        /// iOS only. The device could not connect to the network.
+        /// </summary>
+        CloudServiceNetworkConnectionFailed = 7,
+
+        /// <summary>
+        /// iOS only. The user has revoked permission to use this cloud service.
+        /// </summary>
+        CloudServiceRevoked = 8,
+
+        /// <summary>
+        /// iOS only. The user needs to acknowledge Apple's privacy policy.
+        /// </summary>
+        PrivacyAcknowledgementRequired = 9,
+
+        /// <summary>
+        /// iOS only. The app is using <c>SKPayment.requestData</c> without the entitlement for it.
+        /// </summary>
+        UnauthorizedRequestData = 10,
+
+        /// <summary>
+        /// iOS only. The subscription offer identifier is not valid.
+        /// </summary>
+        InvalidOfferIdentifier = 11,
+
+        /// <summary>
+        /// iOS only. The cryptographic signature of a promotional offer is not valid.
+        /// </summary>
+        InvalidSignature = 12,
+
+        /// <summary>
+        /// iOS only. One or more parameters of <c>SKPaymentDiscount</c> is missing.
+        /// </summary>
+        MissingOfferParams = 13,
+
+        /// <summary>
+        /// iOS only. The price of the offer is not valid.
+        /// </summary>
         InvalidOfferPrice = 14,
 
-        //custom android codes
+        /// <summary>
+        /// Android only. The SDK was called before <see cref="Adapty.Activate"/>.
+        /// </summary>
         AdaptyNotInitialized = 20,
+
+        /// <summary>
+        /// Android only. The product was not found in Google Play for this application.
+        /// </summary>
         ProductNotFound = 22,
+
+        /// <summary>
+        /// Neither pinned native SDK produces this code. It is kept so a number that reached an
+        /// older app still has a name.
+        /// </summary>
         InvalidJson = 23,
+
+        /// <summary>
+        /// Android only. The subscription being replaced was not found in the purchase history.
+        /// </summary>
         CurrentSubscriptionToUpdateNotFoundInHistory = 24,
+
+        /// <summary>
+        /// Neither pinned native SDK produces this code. It is kept so a number that reached an
+        /// older app still has a name; a pending purchase now arrives as
+        /// <see cref="AdaptyPurchaseResultType.Pending"/>.
+        /// </summary>
         PendingPurchase = 25,
+
+        /// <summary>
+        /// Android only. Google Play's <c>SERVICE_TIMEOUT</c>: the billing service did not answer
+        /// in time. Worth retrying.
+        /// </summary>
         BillingServiceTimeout = 97,
+
+        /// <summary>
+        /// Android only. Google Play's <c>FEATURE_NOT_SUPPORTED</c>: the Play Store version on the
+        /// device does not support what was asked for.
+        /// </summary>
         FeatureNotSupported = 98,
+
+        /// <summary>
+        /// Android only. Google Play's <c>SERVICE_DISCONNECTED</c>: the connection to the billing
+        /// service was lost. Worth retrying.
+        /// </summary>
         BillingServiceDisconnected = 99,
+
+        /// <summary>
+        /// Android only. Google Play's <c>SERVICE_UNAVAILABLE</c>: the billing service is not
+        /// reachable, usually a network problem. Worth retrying.
+        /// </summary>
         BillingServiceUnavailable = 102,
+
+        /// <summary>
+        /// Android only. Google Play's <c>BILLING_UNAVAILABLE</c>: billing is unavailable for this
+        /// user or this API version — an unsupported Play Store, or a user who cannot transact.
+        /// </summary>
         BillingUnavailable = 103,
+
+        /// <summary>
+        /// Android only. Google Play's <c>DEVELOPER_ERROR</c>: the request was malformed. A
+        /// configuration problem in the app or the Play Console, not something the user can act on.
+        /// </summary>
         DeveloperError = 105,
+
+        /// <summary>
+        /// Android only. Google Play's <c>ERROR</c>, and the fallback for any billing response the
+        /// native SDK does not name.
+        /// </summary>
         BillingError = 106,
+
+        /// <summary>
+        /// Android only. Google Play's <c>ITEM_ALREADY_OWNED</c>: the user already owns this
+        /// product. Restore rather than buy.
+        /// </summary>
         ItemAlreadyOwned = 107,
+
+        /// <summary>
+        /// Android only. Google Play's <c>ITEM_NOT_OWNED</c>: the product being consumed or
+        /// replaced is not owned by the user.
+        /// </summary>
         ItemNotOwned = 108,
+
+        /// <summary>
+        /// Android only. Google Play's <c>NETWORK_ERROR</c>: the request to the billing service
+        /// failed on the network. Worth retrying.
+        /// </summary>
         BillingNetworkError = 112,
 
-        // custom storekit codes
-        NoProductIDsFound = 1000, // No In-App Purchase product identifiers were found
-        ProductRequestFailed = 1002, // Unable to fetch available In-App Purchase products at the moment
-        CantMakePayments = 1003, // In-App Purchases are not allowed on this device
-        NoPurchasesToRestore = 1004, // No purchases to restore
-        CantReadReceipt = 1005, // Can't find a valid receipt
-        ProductPurchaseFailed = 1006, // Product purchase failed
+        /// <summary>
+        /// No products were found for the placement. Usually a Dashboard or store configuration
+        /// that has not propagated yet.
+        /// </summary>
+        NoProductIDsFound = 1000,
+
+        /// <summary>
+        /// iOS only. The App Store could not be asked for the products.
+        /// </summary>
+        ProductRequestFailed = 1002,
+
+        /// <summary>
+        /// iOS only. In-app purchases are not allowed on this device.
+        /// </summary>
+        CantMakePayments = 1003,
+
+        /// <summary>
+        /// Android only. <see cref="Adapty.RestorePurchases"/> found nothing to restore. iOS does
+        /// not produce this code.
+        /// </summary>
+        NoPurchasesToRestore = 1004,
+
+        /// <summary>
+        /// iOS only. No valid App Store receipt was found on the device.
+        /// </summary>
+        CantReadReceipt = 1005,
+
+        /// <summary>
+        /// iOS only. The purchase failed in StoreKit.
+        /// </summary>
+        ProductPurchaseFailed = 1006,
+
+        /// <summary>
+        /// iOS only. Refreshing the App Store receipt failed.
+        /// </summary>
         RefreshReceiptFailed = 1010,
+
+        /// <summary>
+        /// iOS only. The subscription status could not be fetched from the App Store.
+        /// </summary>
         FetchSubscriptionStatusFailed = 1020,
-        PaymentPendingError = 1050, // The purchase is pending confirmation
 
-        // custom network codes
-        NotActivated = 2002, // You need to be authenticated first
-        BadRequest = 2003, // Bad request
-        ServerError = 2004, // Response code is 429 or 500s
-        NetworkFailed = 2005, // Network request failed
-        DecodingFailed = 2006, // We could not decode the response
-        EncodingFailed = 2009, // Parameters encoding failed
-        AnalyticsDisabled = 3000, // Request url is nil
+        /// <summary>
+        /// iOS only. Reported by <see cref="Adapty.ReportTransaction"/> when the purchase is
+        /// waiting for confirmation — Ask to Buy, or a pending payment method. The profile updates
+        /// when the store resolves it, so wait for it rather than retrying.
+        /// </summary>
+        PaymentPendingError = 1050,
 
-        /// Wrong parameter was passed.
+        /// <summary>
+        /// The two platforms mean different things by this number. On iOS the SDK was called
+        /// before <see cref="Adapty.Activate"/>; on Android the Adapty backend answered 401 or 403,
+        /// which points at the API key.
+        /// </summary>
+        NotActivated = 2002,
+
+        /// <summary>
+        /// The Adapty backend answered with a 4xx other than 401 and 403.
+        /// </summary>
+        BadRequest = 2003,
+
+        /// <summary>
+        /// The Adapty backend answered 429, 499 or a 5xx. Worth retrying.
+        /// </summary>
+        ServerError = 2004,
+
+        /// <summary>
+        /// The request to the Adapty backend failed on the network.
+        /// </summary>
+        NetworkFailed = 2005,
+
+        /// <summary>
+        /// A response could not be decoded. If it arrives from a call this SDK makes, the versions
+        /// of the Unity and native SDKs may not match.
+        /// </summary>
+        DecodingFailed = 2006,
+
+        /// <summary>
+        /// iOS only. The parameters of a request could not be encoded.
+        /// </summary>
+        EncodingFailed = 2009,
+
+        /// <summary>
+        /// The call needs analytics, which the profile has switched off.
+        /// </summary>
+        AnalyticsDisabled = 3000,
+
+        /// <summary>
+        /// A parameter of the call was not valid.
+        /// </summary>
         WrongParam = 3001,
 
-        /// It is not possible to call `.activate` method more than once.
+        /// <summary>
+        /// iOS only. <see cref="Adapty.Activate"/> was called more than once.
+        /// </summary>
         ActivateOnceError = 3005,
 
-        /// The user profile was changed during the operation.
+        /// <summary>
+        /// The profile changed while the operation was running — an <see cref="Adapty.Identify"/>
+        /// or <see cref="Adapty.Logout"/> in between. Repeat the operation on the new profile.
+        /// </summary>
         ProfileWasChanged = 3006,
+
+        /// <summary>
+        /// iOS only. The data handed to the SDK is of a shape it does not support.
+        /// </summary>
         UnsupportedData = 3007,
 
-        /// Logout cannot be called for an unidentified user.
+        /// <summary>
+        /// <see cref="Adapty.Logout"/> was called for a profile that was never identified.
+        /// </summary>
         UnidentifiedUserLogout = 3020,
+
+        /// <summary>
+        /// iOS only. The fetch did not finish within the timeout the call was given.
+        /// </summary>
         FetchTimeoutError = 3101,
 
-        // flow rendering codes
+        /// <summary>
+        /// Android only. Reported through <c>FlowViewDidReceiveError</c> when an asset in the flow
+        /// is not of the type the layout expects.
+        /// </summary>
         WrongAssetType = 4104,
+
+        /// <summary>
+        /// Android only. Reported through <c>FlowViewDidReceiveError</c> when the flow's web view
+        /// raised a JavaScript exception.
+        /// </summary>
         JsException = 4105,
+
+        /// <summary>
+        /// Android only. Reported through <c>FlowViewDidReceiveError</c> when the flow asked to
+        /// navigate somewhere the renderer has no navigator for.
+        /// </summary>
         NavigatorNotFound = 4106,
+
+        /// <summary>
+        /// Android only. Reported through <c>FlowViewDidReceiveError</c> when an action in the flow
+        /// carries a URL that cannot be opened.
+        /// </summary>
         InvalidActionUrl = 4107,
 
-        OperationInterrupted = 9000
+        /// <summary>
+        /// iOS only. The operation was interrupted before it could finish.
+        /// </summary>
+        OperationInterrupted = 9000,
     }
-
 }
