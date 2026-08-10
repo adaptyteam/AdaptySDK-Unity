@@ -4,8 +4,9 @@ using NUnit.Framework;
 namespace AdaptySDK.NextTests
 {
     /// <summary>
-    /// The one policy behind every call back into the app. It replaced 57 hand-written copies, so
-    /// what it does is now stated once here rather than implied by each of them.
+    /// The one policy behind every call back into the app from the live API — the deprecated
+    /// onboarding API keeps its own copies. It replaced 57 hand-written ones, so what it does is
+    /// stated once here rather than implied by each of them.
     /// </summary>
     [TestFixture]
     public class CallbackTests
