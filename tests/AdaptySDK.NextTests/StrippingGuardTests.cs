@@ -168,6 +168,10 @@ namespace AdaptySDK.NextTests
         private static IEnumerable<Type> Reflected(Assembly package) =>
             package
                 .GetTypes()
+                // The surface assembly compiles the Unity stubs in so the package can build without
+                // an Editor. They stand in for types Unity ships and the serializer never sees, so
+                // a rule about what stripping would remove does not apply to them.
+                .Where(type => type.Namespace?.StartsWith("UnityEngine") != true)
                 .Where(type =>
                     Has(type, DataContract)
                     || type.IsEnum

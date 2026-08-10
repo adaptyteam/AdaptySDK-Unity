@@ -17,6 +17,12 @@ namespace AdaptySDK
         [Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
         private static IAdaptyOnboardingsEventsListener m_OnboardingsEventsListener;
 
+        // Its own callback rather than a line in the live one: a reference from live code to an
+        // obsolete member would raise CS0618 where there is nothing for the caller to act on.
+        [Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        internal static void ResetOnboardingsListener() => m_OnboardingsEventsListener = null;
+
         /// <summary>
         /// Sets the event listener for onboarding view events.
         /// </summary>

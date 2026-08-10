@@ -521,9 +521,6 @@ public static AdaptySDK.AdaptyCustomAsset.LocalImageData(System.Byte[] data) : A
 public static AdaptySDK.AdaptyCustomAsset.LocalImageFile(System.String path) : AdaptySDK.AdaptyCustomAsset
 public static AdaptySDK.AdaptyCustomAsset.LocalVideoAsset(System.String assetId) : AdaptySDK.AdaptyCustomAsset
 public static AdaptySDK.AdaptyCustomAsset.LocalVideoFile(System.String path) : AdaptySDK.AdaptyCustomAsset
-public static AdaptySDK.AdaptyPlacementFetchPolicy.Default : AdaptySDK.AdaptyPlacementFetchPolicy
-public static AdaptySDK.AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData : AdaptySDK.AdaptyPlacementFetchPolicy
-public static AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataElseLoad : AdaptySDK.AdaptyPlacementFetchPolicy
 public static AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(System.TimeSpan maxAge) : AdaptySDK.AdaptyPlacementFetchPolicy
 public static AdaptySDK.AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow flow, AdaptySDK.AdaptyUICreateFlowViewParameters optionalParameters, System.Action<AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow flow, System.Action<AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError> completionHandler) : System.Void
@@ -653,3 +650,6 @@ public static const AdaptySDK.AppTrackingTransparencyStatus.Denied : AdaptySDK.A
 public static const AdaptySDK.AppTrackingTransparencyStatus.NotDetermined : AdaptySDK.AppTrackingTransparencyStatus = 0
 public static const AdaptySDK.AppTrackingTransparencyStatus.Restricted : AdaptySDK.AppTrackingTransparencyStatus = 1
 public static readonly AdaptySDK.Adapty.SDKVersion : System.String
+public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.Default : AdaptySDK.AdaptyPlacementFetchPolicy
+public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData : AdaptySDK.AdaptyPlacementFetchPolicy
+public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataElseLoad : AdaptySDK.AdaptyPlacementFetchPolicy

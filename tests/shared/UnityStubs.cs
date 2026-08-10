@@ -204,3 +204,25 @@ namespace UnityEngine.Scripting
     )]
     public sealed class PreserveAttribute : Attribute { }
 }
+
+namespace UnityEngine
+{
+    // Where Unity calls back into a static class before the first scene loads. Stubbed as an
+    // attribute only: the suites invoke the reset directly, which is the point of testing it.
+    public enum RuntimeInitializeLoadType
+    {
+        AfterSceneLoad = 0,
+        BeforeSceneLoad = 1,
+        AfterAssembliesLoaded = 2,
+        BeforeSplashScreen = 3,
+        SubsystemRegistration = 4,
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class RuntimeInitializeOnLoadMethodAttribute : Attribute
+    {
+        public RuntimeInitializeOnLoadMethodAttribute() { }
+
+        public RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType loadType) { }
+    }
+}

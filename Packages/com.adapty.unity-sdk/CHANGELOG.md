@@ -139,6 +139,17 @@ Editor menu that installs it is unavailable for the same reason.
 - **Breaking:** `IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent` and
   `IAdaptyUISystemRequestsHandler.FlowViewDidAskPermission` receive `IReadOnlyDictionary` instead of
   `IDictionary`. Implementations need the signature updated; nothing else about them changes.
+- **Breaking:** `AdaptyPlacementFetchPolicy.Default`, `.ReloadRevalidatingCacheData` and
+  `.ReturnCacheDataElseLoad` are `readonly`. They were public mutable statics, so any code could
+  repoint the SDK's shared defaults for every other caller — and with Domain Reload disabled the
+  change outlived Play Mode.
+- Registered listeners no longer survive Play Mode. With Domain Reload disabled — the default for
+  fast iteration — Unity keeps static fields between runs, so the event listener, flows listener,
+  system request handler and observer-mode resolver a previous run registered were still there for
+  the next one, which then delivered its events to objects belonging to a session that had ended.
+  The SDK now clears them, and the no-op bridge's test hook with them, at
+  `RuntimeInitializeLoadType.SubsystemRegistration`. Call `SetEventListener` and friends on start as
+  you always should; nothing changes when Domain Reload is on.
 - **Breaking:** every concrete public class is now `sealed`; the four abstract roots the wire
   contract needs — `AdaptyCustomAsset` and the three legacy onboarding hierarchies — stay open. For
   most of them this states what was already true: a response model has no constructor reachable from

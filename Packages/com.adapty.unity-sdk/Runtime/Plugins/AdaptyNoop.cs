@@ -19,6 +19,13 @@ namespace AdaptySDK.Noop
         /// </remarks>
         internal static Func<string, string, string> Handler;
 
+        // Reset for the same reason as the listeners: a hook a previous Play Mode run installed
+        // must not answer this one.
+        [UnityEngine.RuntimeInitializeOnLoadMethod(
+            UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration
+        )]
+        internal static void ResetHandler() => Handler = null;
+
         internal static void Invoke(string method, string request, Action<string> completionHandler)
         {
             completionHandler(Handler?.Invoke(method, request) ?? NotAvailableResponse);

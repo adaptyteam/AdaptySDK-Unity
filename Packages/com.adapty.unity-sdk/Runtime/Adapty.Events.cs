@@ -23,6 +23,20 @@ namespace AdaptySDK
         private static IAdaptyUIObserverModeResolver m_ObserverModeResolver;
 
         /// <summary>
+        /// With Domain Reload disabled, statics survive leaving Play Mode, so the listeners a
+        /// previous run registered would still be here - and would receive the next run's events.
+        /// Unity calls this before the first scene of every run.
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        internal static void ResetListeners()
+        {
+            m_Listener = null;
+            m_FlowsEventsListener = null;
+            m_SystemRequestsHandler = null;
+            m_ObserverModeResolver = null;
+        }
+
+        /// <summary>
         /// Sets the event listener for Adapty SDK events.
         /// </summary>
         /// <param name="listener">The <see cref="IAdaptyEventListener"/> implementation to receive events, or null to detach the previous one.</param>

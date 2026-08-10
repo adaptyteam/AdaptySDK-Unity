@@ -106,6 +106,14 @@ The completion handler is the last parameter of every public method, is never op
 
 Each short form is a one-line forward to the canonical method — audited, none carries logic of its own. Five groups instead overload by the *type* of the first argument (`Activate`, `OpenWebPaywall`, `CreateWebPaywallUrl`, `ShowDialog`, `UpdateAttribution`); passing a literal `null` there is ambiguous and fails as `CS0121` — measured on two of them — which is loud and acceptable.
 
+### Static state and Play Mode
+
+With Domain Reload disabled — the default for fast iteration — Unity keeps static fields between Play Mode runs. Anything the SDK holds **on the developer's behalf** has to be cleared at `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]`, which runs before the first scene of every run: today the four listeners and the no-op bridge's test hook. The legacy onboarding listener is cleared from its own part under `Obsolete/`, marked `[Obsolete]` itself, so a live method does not reference a deprecated field and raise `CS0618` where the caller has nothing to act on.
+
+Infrastructure is **not** reset — the contract resolver, the settings, the converters' type caches. It is derived from the assembly, identical every run, and rebuilding it would only cost startup time. Nor is the native bridge's registration flag: clearing it separately from the native side would register a callback twice.
+
+`EveryResetIsRegisteredWithUnity` is the guard — a `Reset*` method without the attribute is state Unity never clears. What no desktop test can show is that Unity calls it at all; that is two consecutive Play Mode runs in the acceptance pass, on the 2022.3 floor and on Unity 6.
+
 ### Platform conditionals
 
 There are 26 `#if` in the package, and each belongs to one of three kinds. **Compilation boundary** — a native symbol exists only there: the `_Adapty` and `_AdaptyCallbackAction` aliases, everything under `Plugins/iOS` and `Plugins/Android`, the Kids Mode post-processor. **Wire contract** — the contract itself differs: a `[DataMember]` the schema marks platform-only, `offer_tags` read on Android alone, the offer id required on one more branch there. **Public API behaviour** — three iOS-only methods that off iOS report `null`, meaning success.
