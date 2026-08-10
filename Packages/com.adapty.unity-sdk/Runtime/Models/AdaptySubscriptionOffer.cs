@@ -23,11 +23,10 @@ namespace AdaptySDK
             Identifier = identifier;
             Type = type;
             Phases = new ReadOnlyCollection<AdaptySubscriptionPhase>(phases);
-#if UNITY_ANDROID
+
+            // No platform check: the converter is the only caller and already reads offer_tags on
+            // Android alone, so off it this is null on the way in.
             OfferTags = offerTags is null ? null : new ReadOnlyCollection<string>(offerTags);
-#else
-            OfferTags = null;
-#endif
         }
 
         public readonly string Identifier;

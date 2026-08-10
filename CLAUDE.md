@@ -106,6 +106,16 @@ The completion handler is the last parameter of every public method, is never op
 
 Each short form is a one-line forward to the canonical method — audited, none carries logic of its own. Five groups instead overload by the *type* of the first argument (`Activate`, `OpenWebPaywall`, `CreateWebPaywallUrl`, `ShowDialog`, `UpdateAttribution`); passing a literal `null` there is ambiguous and fails as `CS0121` — measured on two of them — which is loud and acceptable.
 
+### Platform conditionals
+
+There are 26 `#if` in the package, and each belongs to one of three kinds. **Compilation boundary** — a native symbol exists only there: the `_Adapty` and `_AdaptyCallbackAction` aliases, everything under `Plugins/iOS` and `Plugins/Android`, the Kids Mode post-processor. **Wire contract** — the contract itself differs: a `[DataMember]` the schema marks platform-only, `offer_tags` read on Android alone, the offer id required on one more branch there. **Public API behaviour** — three iOS-only methods that off iOS report `null`, meaning success.
+
+Nothing else qualifies. A constructor must not re-decide by define what the layer above already decided: `AdaptySubscriptionOffer` used to null `OfferTags` off Android although its only caller, the converter, passes null there anyway — the approved snapshots did not move when it went, which is what redundant means.
+
+The public surface is byte-identical on all three platforms; the conditionals change what is read and written, never what is declared. Keep it that way — `diff`ing the three approved surface files is the check.
+
+**Open decision, deliberately not taken here:** off iOS, `UpdateAppStoreCollectingRefundDataConsent`, `UpdateAppStoreRefundPreference` and `PresentCodeRedemptionSheet` report `null` — indistinguishable from success. On Android that is a silent no-op, not an unsupported-platform error, and unlike the Editor path it never reaches the no-op bridge that would say so. Changing it is a behaviour change for callers and belongs in a release that expects one.
+
 ### Deprecation
 
 Deprecating one entry point is not enough — mark everything the deprecated API hands back or takes, or the warning only reaches the caller at the registration call and never at the type they wrote. The attribute is written `[System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]`, with the same sentence everywhere. Marking a member is also what decides where it lives: it moves to `Runtime/Obsolete/`, and the two travel together.
