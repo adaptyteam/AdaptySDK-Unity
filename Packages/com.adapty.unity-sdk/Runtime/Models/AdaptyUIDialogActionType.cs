@@ -1,10 +1,3 @@
-//
-//  AdaptyUIDialogActionType.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 20.12.2024.
-//
-
 using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 

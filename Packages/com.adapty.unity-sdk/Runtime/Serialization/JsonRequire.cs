@@ -1,8 +1,3 @@
-//
-//  JsonRequire.cs
-//  AdaptySDK
-//
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

@@ -1,8 +1,3 @@
-// AdaptyRemoteConfig.cs
-// AdaptySDK
-//
-// Created by Aleksei Goncharov on 09.09.2025.
-
 using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

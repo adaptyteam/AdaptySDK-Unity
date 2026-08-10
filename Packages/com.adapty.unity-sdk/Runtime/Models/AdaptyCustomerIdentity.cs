@@ -1,10 +1,3 @@
-//
-//  AdaptyCustomerIdentity.cs
-//  AdaptySDK
-//
-//  Created by AI Assistant on 14.01.2025.
-//
-
 using UnityEngine.Scripting;
 using System;
 using System.Runtime.Serialization;

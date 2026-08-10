@@ -1,10 +1,3 @@
-﻿//
-//  AdaptyPrice.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 08.09.2023.
-//
-
 using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 

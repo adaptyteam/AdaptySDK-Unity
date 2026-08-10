@@ -1,8 +1,3 @@
-//
-//  IAdaptyUIObserverModeResolver.cs
-//  AdaptySDK
-//
-
 using System;
 
 namespace AdaptySDK

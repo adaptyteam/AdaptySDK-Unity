@@ -1,10 +1,3 @@
-//
-//  AdaptyServerCluster.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 10.12.2024.
-//
-
 using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 

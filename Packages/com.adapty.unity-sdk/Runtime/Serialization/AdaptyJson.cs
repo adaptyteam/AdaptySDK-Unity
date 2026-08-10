@@ -1,8 +1,3 @@
-//
-//  AdaptyJson.cs
-//  AdaptySDK
-//
-
 using System;
 using System.Globalization;
 using Newtonsoft.Json;

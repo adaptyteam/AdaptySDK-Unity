@@ -1,10 +1,3 @@
-//
-//  AdaptyUIDialogConfiguration.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 07.09.2023.
-//
-
 using UnityEngine.Scripting;
 
 namespace AdaptySDK

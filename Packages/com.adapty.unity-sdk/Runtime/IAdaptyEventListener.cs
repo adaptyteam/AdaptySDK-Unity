@@ -1,8 +1,3 @@
-//
-//  IAdaptyEventListener.cs
-//  AdaptySDK
-//
-
 namespace AdaptySDK
 {
     /// <summary>

@@ -1,10 +1,3 @@
-﻿//
-//  AdaptyResult.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 14.01.2022.
-//
-
 using UnityEngine.Scripting;
 
 namespace AdaptySDK

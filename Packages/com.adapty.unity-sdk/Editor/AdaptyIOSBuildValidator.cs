@@ -1,8 +1,3 @@
-//
-//  AdaptyIOSBuildValidator.cs
-//  AdaptySDK
-//
-
 using System;
 using UnityEditor;
 using UnityEditor.Build;

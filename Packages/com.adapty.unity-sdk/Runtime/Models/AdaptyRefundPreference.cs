@@ -1,10 +1,3 @@
-//
-//  AdaptyRefundPreference.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 19.03.2025.
-//
-
 using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 

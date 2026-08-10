@@ -1,10 +1,3 @@
-//
-//  AdaptyUIUserAction.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 17.12.2024.
-//
-
 using UnityEngine.Scripting;
 
 namespace AdaptySDK {

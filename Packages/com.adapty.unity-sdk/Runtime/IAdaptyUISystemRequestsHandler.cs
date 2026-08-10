@@ -1,8 +1,3 @@
-//
-//  IAdaptyUISystemRequestsHandler.cs
-//  AdaptySDK
-//
-
 using System;
 using System.Collections.Generic;
 

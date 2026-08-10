@@ -1,10 +1,3 @@
-//
-//  AdaptySubscriptionOfferType.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 20.12.2022.
-//
-
 using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 

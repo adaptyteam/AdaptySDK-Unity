@@ -1,10 +1,3 @@
-//
-//  AdaptyOnboardingsStateUpdatedParams.cs
-//  AdaptySDK
-//
-//  Created by GPT-5 on 17.09.2025.
-//
-
 using UnityEngine.Scripting;
 using System.Collections.Generic;
 

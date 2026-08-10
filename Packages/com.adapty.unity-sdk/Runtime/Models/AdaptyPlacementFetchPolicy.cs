@@ -1,10 +1,3 @@
-﻿//
-//  AdaptyPlacementFetchPolicy.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 26.12.2023.
-//
-
 using UnityEngine.Scripting;
 
 namespace AdaptySDK

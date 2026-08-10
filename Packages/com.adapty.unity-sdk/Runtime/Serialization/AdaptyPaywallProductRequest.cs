@@ -1,8 +1,3 @@
-//
-//  AdaptyPaywallProductRequest.cs
-//  AdaptySDK
-//
-
 using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 

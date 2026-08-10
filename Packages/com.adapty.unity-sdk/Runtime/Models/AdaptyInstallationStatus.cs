@@ -1,10 +1,3 @@
-//
-//  AdaptyInstallationStatus.cs
-//  AdaptySDK
-//
-//  Created by Alexey Goncharov on 10.09.2025.
-//
-
 using UnityEngine.Scripting;
 using System.Runtime.Serialization;
 

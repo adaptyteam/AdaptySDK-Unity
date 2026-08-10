@@ -1,8 +1,3 @@
-//
-//  AdaptyNewtonsoftValidator.cs
-//  AdaptySDK
-//
-
 using System;
 using System.Collections.Generic;
 using System.Linq;

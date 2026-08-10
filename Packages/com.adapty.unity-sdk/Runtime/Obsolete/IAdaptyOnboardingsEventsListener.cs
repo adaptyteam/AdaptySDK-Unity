@@ -1,8 +1,3 @@
-//
-//  IAdaptyOnboardingsEventsListener.cs
-//  AdaptySDK
-//
-
 using System;
 
 namespace AdaptySDK

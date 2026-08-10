@@ -1,8 +1,3 @@
-//
-//  Adapty.Events.cs
-//  AdaptySDK
-//
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

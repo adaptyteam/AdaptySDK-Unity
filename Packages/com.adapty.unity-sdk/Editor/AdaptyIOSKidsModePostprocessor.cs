@@ -1,8 +1,3 @@
-//
-//  AdaptyIOSKidsModePostprocessor.cs
-//  AdaptySDK
-//
-
 #if UNITY_IOS && ADAPTY_KIDS_MODE
 using System;
 using System.IO;

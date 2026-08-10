@@ -1,10 +1,3 @@
-﻿//
-//  AdaptyProfile.AccessLevel.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 20.12.2022.
-//
-
 using System;
 using System.Runtime.Serialization;
 

@@ -1,8 +1,3 @@
-//
-//  AdaptyFlowPaywall.cs
-//  AdaptySDK
-//
-
 using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -1,8 +1,3 @@
-//
-//  Adapty.Events.Obsolete.cs
-//  AdaptySDK
-//
-
 using System;
 using UnityEngine;
 using AdaptySDK.Serialization;

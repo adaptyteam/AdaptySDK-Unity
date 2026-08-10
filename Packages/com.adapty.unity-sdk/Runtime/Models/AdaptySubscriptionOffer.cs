@@ -1,10 +1,3 @@
-//
-//  AdaptySubscriptionOffer.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 12.12.2024.
-//
-
 using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

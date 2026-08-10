@@ -1,8 +1,3 @@
-//
-//  AdaptyUI.Obsolete.cs
-//  AdaptySDK
-//
-
 using System;
 using System.Collections.Generic;
 using AdaptySDK.Serialization;

@@ -1,8 +1,3 @@
-//
-//  AdaptyManifest.cs
-//  AdaptySDK
-//
-
 using System;
 
 namespace AdaptySDK.Editor

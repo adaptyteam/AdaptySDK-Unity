@@ -1,10 +1,3 @@
-//
-//  AdaptyUICreateFlowViewParameters.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 18.12.2024.
-//
-
 using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
