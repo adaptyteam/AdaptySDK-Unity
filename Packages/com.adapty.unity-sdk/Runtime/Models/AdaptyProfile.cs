@@ -21,7 +21,7 @@ namespace AdaptySDK
     /// Read more at <see href="https://adapty.io/docs/unity-check-subscription-status">Adapty Documentation</see>
     /// </remarks>
     [DataContract]
-    public partial class AdaptyProfile
+    public sealed partial class AdaptyProfile
     {
         private AdaptyProfile() { }
 

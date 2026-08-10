@@ -112,6 +112,17 @@ Editor menu that installs it is unavailable for the same reason.
   `Models/`. The SDK does not call it: the refund preference is serialized through its
   `[EnumMember]` mapping like every other enum. Two constructors that only the hand-written parser
   ever called are gone too, though those were never public.
+- **Breaking:** every concrete public class is now `sealed`; the four abstract roots the wire
+  contract needs — `AdaptyCustomAsset` and the three legacy onboarding hierarchies — stay open. For
+  most of them this states what was already true: a response model has no constructor reachable from
+  outside the SDK — private, or `internal` as on `AdaptySubscriptionOffer` — so no type of yours
+  could derive from one in the first place. Eleven could, all of them inputs rather than responses —
+  the parameter objects, the two identity types, the three builders — and for those this is a real
+  restriction. Nothing was designed for extension: no model declares a
+  `virtual` or `protected` member, and a subclass of a parameter object would have been a trap,
+  since the SDK serializes the declared contract and silently drops whatever the subclass added.
+  `AdaptyProductIdentifier` is the one where it also fixes something: it compares by value and is
+  used as a dictionary key, and a subclass would have broken the symmetry of `Equals`.
 - **Breaking:** `AdaptyInstallationStatus` is one sealed type carrying a `Status` and a `Details`,
   instead of a base class and the three subclasses `AdaptyInstallationStatusNotAvailable`,
   `AdaptyInstallationStatusNotDetermined` and `AdaptyInstallationStatusDetermined`, which are gone

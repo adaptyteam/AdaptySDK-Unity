@@ -12,7 +12,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public class AdaptyUIMediaCacheConfiguration
+    public sealed class AdaptyUIMediaCacheConfiguration
     {
         [DataMember(Name = "memory_storage_total_cost_limit")]
         public int? MemoryStorageTotalCostLimit;

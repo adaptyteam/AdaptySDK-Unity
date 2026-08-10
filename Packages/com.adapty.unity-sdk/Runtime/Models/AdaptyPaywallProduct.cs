@@ -19,7 +19,7 @@ namespace AdaptySDK
     /// </remarks>
     [DataContract]
     [Preserve]
-    public class AdaptyPaywallProduct
+    public sealed class AdaptyPaywallProduct
     {
         private AdaptyPaywallProduct() { }
 

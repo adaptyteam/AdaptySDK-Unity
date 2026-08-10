@@ -12,7 +12,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public class AdaptySubscriptionPhase
+    public sealed class AdaptySubscriptionPhase
     {
         private AdaptySubscriptionPhase() { }
 

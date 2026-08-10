@@ -12,9 +12,9 @@ namespace AdaptySDK
 {
 
     [Preserve]
-    public partial class AdaptyProfileParameters
+    public sealed partial class AdaptyProfileParameters
     {
-        public class Builder
+        public sealed class Builder
         {
             private AdaptyProfileParameters _Parameters = new AdaptyProfileParameters();
 

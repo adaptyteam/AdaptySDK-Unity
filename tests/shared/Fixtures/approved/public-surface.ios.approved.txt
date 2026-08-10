@@ -196,40 +196,6 @@ public abstract class AdaptySDK.AdaptyCustomAsset
 public abstract class AdaptySDK.AdaptyOnboardingsAnalyticsEvent
 public abstract class AdaptySDK.AdaptyOnboardingsInput
 public abstract class AdaptySDK.AdaptyOnboardingsStateUpdatedParams
-public class AdaptySDK.AdaptyConfiguration
-public class AdaptySDK.AdaptyConfiguration+Builder
-public class AdaptySDK.AdaptyCustomerIdentity
-public class AdaptySDK.AdaptyError
-public class AdaptySDK.AdaptyFlow
-public class AdaptySDK.AdaptyFlowPaywall
-public class AdaptySDK.AdaptyInstallationDetails
-public class AdaptySDK.AdaptyOnboarding
-public class AdaptySDK.AdaptyPaywallProduct
-public class AdaptySDK.AdaptyPlacement
-public class AdaptySDK.AdaptyPlacementFetchPolicy
-public class AdaptySDK.AdaptyPrice
-public class AdaptySDK.AdaptyProductIdentifier
-public class AdaptySDK.AdaptyProfile
-public class AdaptySDK.AdaptyProfile+AccessLevel
-public class AdaptySDK.AdaptyProfile+NonSubscription
-public class AdaptySDK.AdaptyProfile+Subscription
-public class AdaptySDK.AdaptyProfileParameters
-public class AdaptySDK.AdaptyProfileParameters+Builder
-public class AdaptySDK.AdaptyPurchaseParameters
-public class AdaptySDK.AdaptyPurchaseParametersBuilder
-public class AdaptySDK.AdaptyPurchaseResult
-public class AdaptySDK.AdaptyRemoteConfig
-public class AdaptySDK.AdaptySubscription
-public class AdaptySDK.AdaptySubscriptionOffer
-public class AdaptySDK.AdaptySubscriptionPeriod
-public class AdaptySDK.AdaptySubscriptionPhase
-public class AdaptySDK.AdaptySubscriptionUpdateParameters
-public class AdaptySDK.AdaptyUICreateFlowViewParameters
-public class AdaptySDK.AdaptyUIDialogConfiguration
-public class AdaptySDK.AdaptyUIFlowView
-public class AdaptySDK.AdaptyUIMediaCacheConfiguration
-public class AdaptySDK.AdaptyUIOnboardingView
-public class AdaptySDK.AdaptyUIUserAction
 public enum AdaptySDK.AdaptyErrorCode : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptyInstallationStatusType : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptyLogLevel : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
@@ -442,6 +408,8 @@ public readonly AdaptySDK.AdaptyUIOnboardingMeta.OnboardingId : System.String
 public readonly AdaptySDK.AdaptyUIOnboardingMeta.ScreenClientId : System.String
 public readonly AdaptySDK.AdaptyUIOnboardingMeta.ScreenIndex : System.Int32
 public readonly AdaptySDK.AdaptyUIOnboardingMeta.ScreensTotal : System.Int32
+public sealed class AdaptySDK.AdaptyConfiguration
+public sealed class AdaptySDK.AdaptyConfiguration+Builder
 public sealed class AdaptySDK.AdaptyCustomAssetColor : AdaptySDK.AdaptyCustomAsset
 public sealed class AdaptySDK.AdaptyCustomAssetLinearGradient : AdaptySDK.AdaptyCustomAsset
 public sealed class AdaptySDK.AdaptyCustomAssetLocalImageAsset : AdaptySDK.AdaptyCustomAsset
@@ -449,7 +417,13 @@ public sealed class AdaptySDK.AdaptyCustomAssetLocalImageData : AdaptySDK.Adapty
 public sealed class AdaptySDK.AdaptyCustomAssetLocalImageFile : AdaptySDK.AdaptyCustomAsset
 public sealed class AdaptySDK.AdaptyCustomAssetLocalVideoAsset : AdaptySDK.AdaptyCustomAsset
 public sealed class AdaptySDK.AdaptyCustomAssetLocalVideoFile : AdaptySDK.AdaptyCustomAsset
+public sealed class AdaptySDK.AdaptyCustomerIdentity
+public sealed class AdaptySDK.AdaptyError
+public sealed class AdaptySDK.AdaptyFlow
+public sealed class AdaptySDK.AdaptyFlowPaywall
+public sealed class AdaptySDK.AdaptyInstallationDetails
 public sealed class AdaptySDK.AdaptyInstallationStatus
+public sealed class AdaptySDK.AdaptyOnboarding
 public sealed class AdaptySDK.AdaptyOnboardingsAnalyticsEventOnboardingCompleted : AdaptySDK.AdaptyOnboardingsAnalyticsEvent
 public sealed class AdaptySDK.AdaptyOnboardingsAnalyticsEventOnboardingStarted : AdaptySDK.AdaptyOnboardingsAnalyticsEvent
 public sealed class AdaptySDK.AdaptyOnboardingsAnalyticsEventProductsScreenPresented : AdaptySDK.AdaptyOnboardingsAnalyticsEvent
@@ -466,7 +440,33 @@ public sealed class AdaptySDK.AdaptyOnboardingsMultiSelectParams : AdaptySDK.Ada
 public sealed class AdaptySDK.AdaptyOnboardingsNumberInput : AdaptySDK.AdaptyOnboardingsInput
 public sealed class AdaptySDK.AdaptyOnboardingsSelectParams : AdaptySDK.AdaptyOnboardingsStateUpdatedParams
 public sealed class AdaptySDK.AdaptyOnboardingsTextInput : AdaptySDK.AdaptyOnboardingsInput
+public sealed class AdaptySDK.AdaptyPaywallProduct
+public sealed class AdaptySDK.AdaptyPlacement
+public sealed class AdaptySDK.AdaptyPlacementFetchPolicy
+public sealed class AdaptySDK.AdaptyPrice
+public sealed class AdaptySDK.AdaptyProductIdentifier
+public sealed class AdaptySDK.AdaptyProfile
+public sealed class AdaptySDK.AdaptyProfile+AccessLevel
+public sealed class AdaptySDK.AdaptyProfile+NonSubscription
+public sealed class AdaptySDK.AdaptyProfile+Subscription
+public sealed class AdaptySDK.AdaptyProfileParameters
+public sealed class AdaptySDK.AdaptyProfileParameters+Builder
+public sealed class AdaptySDK.AdaptyPurchaseParameters
+public sealed class AdaptySDK.AdaptyPurchaseParametersBuilder
+public sealed class AdaptySDK.AdaptyPurchaseResult
+public sealed class AdaptySDK.AdaptyRemoteConfig
+public sealed class AdaptySDK.AdaptySubscription
+public sealed class AdaptySDK.AdaptySubscriptionOffer
+public sealed class AdaptySDK.AdaptySubscriptionPeriod
+public sealed class AdaptySDK.AdaptySubscriptionPhase
+public sealed class AdaptySDK.AdaptySubscriptionUpdateParameters
+public sealed class AdaptySDK.AdaptyUICreateFlowViewParameters
+public sealed class AdaptySDK.AdaptyUIDialogConfiguration
+public sealed class AdaptySDK.AdaptyUIFlowView
+public sealed class AdaptySDK.AdaptyUIMediaCacheConfiguration
 public sealed class AdaptySDK.AdaptyUIOnboardingMeta
+public sealed class AdaptySDK.AdaptyUIOnboardingView
+public sealed class AdaptySDK.AdaptyUIUserAction
 public static AdaptySDK.Adapty.Activate(AdaptySDK.AdaptyConfiguration configuration, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.Activate(AdaptySDK.Builder configurationBuilder, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.CreateWebPaywallUrl(AdaptySDK.AdaptyFlowPaywall paywall, System.Action<System.String, AdaptySDK.AdaptyError> completionHandler) : System.Void

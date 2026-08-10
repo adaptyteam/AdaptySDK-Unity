@@ -13,7 +13,7 @@ namespace AdaptySDK
 
     [DataContract]
     [Preserve]
-    public class AdaptyUIDialogConfiguration
+    public sealed class AdaptyUIDialogConfiguration
     {
         /// <summary>
         /// The title of the dialog.

@@ -12,7 +12,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public class AdaptyPurchaseParameters
+    public sealed class AdaptyPurchaseParameters
     {
         [DataMember(Name = "subscription_update_params")]
         public readonly AdaptySubscriptionUpdateParameters SubscriptionUpdateParams; // Android Only, nullable
@@ -34,7 +34,7 @@ namespace AdaptySDK
     }
 
     [Preserve]
-    public class AdaptyPurchaseParametersBuilder
+    public sealed class AdaptyPurchaseParametersBuilder
     {
         private AdaptyPurchaseParameters _parameters = new AdaptyPurchaseParameters();
 

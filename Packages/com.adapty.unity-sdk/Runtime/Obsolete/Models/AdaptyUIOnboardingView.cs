@@ -13,7 +13,7 @@ namespace AdaptySDK
     [DataContract]
     [Preserve]
     [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
-    public class AdaptyUIOnboardingView
+    public sealed class AdaptyUIOnboardingView
     {
         private AdaptyUIOnboardingView() { }
 

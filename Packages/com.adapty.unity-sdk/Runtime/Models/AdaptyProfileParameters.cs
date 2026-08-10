@@ -14,7 +14,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     [DataContract]
-    public partial class AdaptyProfileParameters
+    public sealed partial class AdaptyProfileParameters
     {
         [DataMember(Name = "first_name")]
         public string FirstName;

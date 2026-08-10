@@ -10,10 +10,10 @@ using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
-    public  partial class AdaptyProfile
+    public sealed partial class AdaptyProfile
     {
         [DataContract]
-        public class AccessLevel
+        public sealed class AccessLevel
         {
             private AccessLevel() { }
 

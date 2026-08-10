@@ -10,7 +10,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public class AdaptyUIFlowView
+    public sealed class AdaptyUIFlowView
     {
         private AdaptyUIFlowView() { }
 

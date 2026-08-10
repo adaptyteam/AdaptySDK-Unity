@@ -17,7 +17,7 @@ namespace AdaptySDK
     /// Read more at <see href="https://adapty.io/docs/unity-quickstart-paywalls">Adapty Documentation</see>
     /// </remarks>
     [DataContract]
-    public partial class AdaptyFlowPaywall
+    public sealed partial class AdaptyFlowPaywall
     {
         private AdaptyFlowPaywall() { }
 

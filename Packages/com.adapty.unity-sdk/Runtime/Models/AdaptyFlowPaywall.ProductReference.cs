@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     [Preserve]
-    public partial class AdaptyFlowPaywall
+    public sealed partial class AdaptyFlowPaywall
     {
         [DataContract]
         internal class ProductReference

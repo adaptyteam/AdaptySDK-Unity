@@ -259,6 +259,16 @@ extension classes that came with them, `AdaptyUIIOSPresentationStyleExtensions`,
 SDK is unaffected; code that used those types directly can move to Newtonsoft.Json, which is now a
 dependency of the package and available to your assemblies too.
 
+The models are `sealed`. If you derived from one, you cannot any more — but for a response model you
+already could not: it has no constructor your code can reach, private or `internal`, so a subclass
+never compiled. What changes in practice is the eleven input types, where a public constructor did
+allow it: the parameter objects, the three builders, `AdaptyCustomerIdentity` and
+`AdaptyProductIdentifier`. There is no replacement seam,
+because there was never anything to extend — no model declares a `virtual` or `protected` member,
+and a subclass reaching the SDK was serialized by the declared contract, so whatever it added was
+dropped on the way out. `AdaptyCustomAsset` and the three legacy onboarding hierarchies keep their
+abstract roots, since the wire contract picks between their branches.
+
 `AdaptyInstallationStatus` is one sealed type instead of a base class and three subclasses.
 `GetCurrentInstallationStatus` still hands back an `AdaptyInstallationStatus`; what you switch on is
 now its `Status`, and `Details` is on the same object:

@@ -13,7 +13,7 @@ namespace AdaptySDK
     /// A lightweight identifier used when addressing a specific product across platforms.
     [DataContract]
     [Preserve]
-    public class AdaptyProductIdentifier
+    public sealed class AdaptyProductIdentifier
     {
         private AdaptyProductIdentifier() { }
 

@@ -18,7 +18,7 @@ namespace AdaptySDK
     /// </remarks>
     [DataContract]
     [Preserve]
-    public class AdaptyFlow
+    public sealed class AdaptyFlow
     {
         private AdaptyFlow() { }
 

@@ -11,7 +11,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     [DataContract]
-    public partial class AdaptyConfiguration
+    public sealed partial class AdaptyConfiguration
     {
         [DataMember(Name = "api_key", IsRequired = true)]
         private readonly string ApiKey;

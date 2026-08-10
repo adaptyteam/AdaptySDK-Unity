@@ -14,7 +14,7 @@ namespace AdaptySDK
 
     [DataContract]
     [Preserve]
-    public class AdaptyPlacementFetchPolicy
+    public sealed class AdaptyPlacementFetchPolicy
     {
         [DataMember(Name = "type", IsRequired = true)]
         private readonly string _Type;

@@ -87,7 +87,7 @@ The seven `onboarding_*` ids are the exception to the one-switch rule: they leav
 
 ### Model Convention
 
-One file per model in `Runtime/Models/`, and no `partial` unless the type really is split — six are, each for a nested part or for its deprecated half under `Obsolete/`. Serialization is declared with attributes, not written by hand:
+One file per model in `Runtime/Models/`, and no `partial` unless the type really is split — six are, each for a nested part or for its deprecated half under `Obsolete/`. Every concrete public class is `sealed`; the only open ones are the four abstract roots a converter picks between, and the approved public surface is what catches a new class that forgets. Serialization is declared with attributes, not written by hand:
 
 - `[DataContract]` on the type and `[DataMember(Name = "json_key")]` on each member, with `IsRequired = true` where the contract says the key is required. The JSON keys must match `cross_platform.yaml`, including which fields are required vs optional.
 - `[Preserve]` on the type. Managed stripping otherwise removes it, and the failure shows only on a device, the first time a response carries the type. A nested type is covered by its declaring type's attribute; a member the serializer reaches through a method is not — a `[DataMember]` property, read through its getter, and an `[OnDeserialized]` callback — and needs its own. `StrippingGuardTests` asks the metadata for both.

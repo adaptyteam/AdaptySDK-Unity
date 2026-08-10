@@ -13,7 +13,7 @@ namespace AdaptySDK
 {
     [DataContract]
     [Preserve]
-    public class AdaptyInstallationDetails
+    public sealed class AdaptyInstallationDetails
     {
         private AdaptyInstallationDetails() { }
 

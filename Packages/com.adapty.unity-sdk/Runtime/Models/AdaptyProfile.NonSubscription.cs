@@ -12,10 +12,10 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     [Preserve]
-    public partial class AdaptyProfile
+    public sealed partial class AdaptyProfile
     {
         [DataContract]
-        public class NonSubscription
+        public sealed class NonSubscription
         {
             private NonSubscription() { }
 

@@ -11,7 +11,7 @@ using System;
 namespace AdaptySDK
 {
     [Preserve]
-    public partial class AdaptyConfiguration
+    public sealed partial class AdaptyConfiguration
     {
         internal AdaptyConfiguration(Builder builder)
         {
@@ -39,7 +39,7 @@ namespace AdaptySDK
             }
         }
 
-        public class Builder
+        public sealed class Builder
         {
             public string ApiKey;
             public string CustomerUserId; //nullable
