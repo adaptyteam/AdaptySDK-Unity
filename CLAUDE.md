@@ -112,7 +112,7 @@ With Domain Reload disabled — the default for fast iteration — Unity keeps s
 
 Infrastructure is **not** reset — the contract resolver, the settings, the converters' type caches. It is derived from the assembly, identical every run, and rebuilding it would only cost startup time. Nor is the native bridge's registration flag: clearing it separately from the native side would register a callback twice.
 
-`EveryResetIsRegisteredWithUnity` is the guard — a `Reset*` method without the attribute is state Unity never clears. What no desktop test can show is that Unity calls it at all; that is two consecutive Play Mode runs in the acceptance pass, on the 2022.3 floor and on Unity 6.
+`EveryResetIsRegisteredWithUnity` is the guard — it checks the load type too, not just the attribute: `AfterSceneLoad` runs once a scene has already had the chance to register a listener, so a reset there would clear the new run's own. The Editor assembly is out of reach of all this, and keeps its own `[InitializeOnEnterPlayMode]` in `AdaptyDependencies` for the one subscription that does not clean itself up — a Package Manager request left in flight. What no desktop test can show is that Unity calls it at all; that is two consecutive Play Mode runs in the acceptance pass, on the 2022.3 floor and on Unity 6.
 
 ### Platform conditionals
 

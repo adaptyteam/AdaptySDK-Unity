@@ -31,6 +31,32 @@ namespace AdaptySDK.Editor
 
         private static AddAndRemoveRequest m_Request;
 
+        /// <summary>
+        /// The Editor assembly is out of reach of the runtime resets, and with Domain Reload
+        /// disabled a subscription outlives entering Play Mode. `Poll` drops its own once the
+        /// request completes, so the state this clears is the one that never does — a Package
+        /// Manager request left in flight keeps `Poll` subscribed for the rest of the session.
+        /// </summary>
+        /// <remarks>
+        /// Package Manager finishes the install either way; what is given up by clearing here is
+        /// the line in the console reporting how it went.
+        /// </remarks>
+        [InitializeOnEnterPlayMode]
+        private static void ResetInstallState()
+        {
+            EditorApplication.update -= Poll;
+
+            if (m_Request != null && !m_Request.IsCompleted)
+            {
+                Debug.Log(
+                    "[Adapty] Entering Play Mode while Package Manager was still installing; "
+                        + "the install continues, its result will not be reported."
+                );
+            }
+
+            m_Request = null;
+        }
+
         [MenuItem(MenuPath)]
         private static void Install()
         {

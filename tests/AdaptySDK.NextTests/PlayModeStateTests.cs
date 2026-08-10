@@ -51,7 +51,9 @@ namespace AdaptySDK.NextTests
 
         /// <summary>
         /// Every reset has to be one Unity actually calls, and it only calls the ones carrying the
-        /// attribute. A method renamed or added without it would leave its state behind silently.
+        /// attribute. A method renamed or added without it would leave its state behind silently —
+        /// and so would one registered for a later moment, since `AfterSceneLoad` runs once a scene
+        /// has had the chance to hand the SDK a listener.
         /// </summary>
         [Test]
         public void EveryResetIsRegisteredWithUnity()
@@ -66,7 +68,8 @@ namespace AdaptySDK.NextTests
 
             var unregistered = resets
                 .Where(method =>
-                    method.GetCustomAttribute<RuntimeInitializeOnLoadMethodAttribute>() is null
+                    method.GetCustomAttribute<RuntimeInitializeOnLoadMethodAttribute>()?.LoadType
+                    != RuntimeInitializeLoadType.SubsystemRegistration
                 )
                 .Select(method => $"{method.DeclaringType.Name}.{method.Name}")
                 .ToList();
@@ -77,7 +80,7 @@ namespace AdaptySDK.NextTests
                 Assert.That(
                     unregistered,
                     Is.Empty,
-                    "these reset static state but Unity never calls them:\n  "
+                    "these reset static state but are not registered for SubsystemRegistration:\n  "
                         + string.Join("\n  ", unregistered)
                 );
             });

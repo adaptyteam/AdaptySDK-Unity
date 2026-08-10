@@ -221,8 +221,14 @@ namespace UnityEngine
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class RuntimeInitializeOnLoadMethodAttribute : Attribute
     {
-        public RuntimeInitializeOnLoadMethodAttribute() { }
+        // Unity's own attribute keeps the load type; the stub does too, because which one a reset
+        // is registered for is the whole point of registering it.
+        public RuntimeInitializeOnLoadMethodAttribute() =>
+            LoadType = RuntimeInitializeLoadType.AfterSceneLoad;
 
-        public RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType loadType) { }
+        public RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType loadType) =>
+            LoadType = loadType;
+
+        public RuntimeInitializeLoadType LoadType { get; }
     }
 }
