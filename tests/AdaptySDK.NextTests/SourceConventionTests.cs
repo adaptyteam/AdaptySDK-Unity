@@ -99,6 +99,74 @@ namespace AdaptySDK.NextTests
         }
 
         /// <summary>
+        /// The conventions swept in one pass, kept in one test because each is a single line and
+        /// they fail the same way: a file that reintroduces the habit.
+        /// </summary>
+        /// <remarks>
+        /// Deliberately not a rule about <c>== null</c>. That reads as the same tidiness, and it is
+        /// not: <c>UnityEngine.Object</c> overloads the operator to answer true for a destroyed
+        /// native object, and <c>is null</c> bypasses the overload - so a blanket ban would push
+        /// correct Unity code into being wrong.
+        /// </summary>
+        [Test]
+        public void TheSourcesKeepTheirShape()
+        {
+            var headers = new List<string>();
+            var boms = new List<string>();
+            var scopedUsings = new List<string>();
+            var negatedPatterns = new List<string>();
+
+            foreach (var file in Sources())
+            {
+                var name = Path.GetFileName(file);
+                var text = File.ReadAllText(file);
+
+                // Read as bytes: File.ReadAllText strips the mark while decoding, and
+                // StartsWith("\uFEFF") is culture-sensitive, where a zero-weight character matches
+                // the start of every string - both would report the opposite of the truth.
+                var head = new byte[3];
+                using (var stream = File.OpenRead(file))
+                {
+                    if (stream.Read(head, 0, 3) == 3
+                        && head[0] == 0xEF && head[1] == 0xBB && head[2] == 0xBF)
+                    {
+                        boms.Add(name);
+                    }
+                }
+
+                if (Regex.IsMatch(text, @"^//\s*\r?\n//\s+[\w.]+\.cs\r?\n"))
+                {
+                    headers.Add(name);
+                }
+
+                foreach (var line in Code(file))
+                {
+                    if (Regex.IsMatch(line, @"^\s+using [\w.= ]+;\s*$"))
+                    {
+                        scopedUsings.Add($"{name}: {line.Trim()}");
+                    }
+
+                    if (Regex.IsMatch(line, @"!\([^()]*\bis\b"))
+                    {
+                        negatedPatterns.Add($"{name}: {line.Trim()}");
+                    }
+                }
+            }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(headers, Is.Empty, "these carry the old file header block");
+                Assert.That(boms, Is.Empty, "these start with a byte order mark");
+                Assert.That(scopedUsings, Is.Empty, "these declare a using inside the namespace");
+                Assert.That(
+                    negatedPatterns,
+                    Is.Empty,
+                    "these negate a type pattern with ! instead of writing `is not`"
+                );
+            });
+        }
+
+        /// <summary>
         /// A sweep that stops finding what it sweeps passes silently.
         /// </summary>
         [Test]
@@ -123,17 +191,16 @@ namespace AdaptySDK.NextTests
         }
 
         private static IEnumerable<string> Sources() =>
-            Directory.EnumerateFiles(Runtime(), "*.cs", SearchOption.AllDirectories);
+            Directory.EnumerateFiles(Package(), "*.cs", SearchOption.AllDirectories);
 
-        private static string Runtime() =>
-            Path.Combine(
-                ProjectDirectory(),
-                "..",
-                "..",
-                "Packages",
-                "com.adapty.unity-sdk",
-                "Runtime"
-            );
+        /// <summary>
+        /// Lines that are not a comment, so a rule about code does not trip over prose.
+        /// </summary>
+        private static IEnumerable<string> Code(string file) =>
+            File.ReadAllLines(file).Where(line => !line.TrimStart().StartsWith("//"));
+
+        private static string Package() =>
+            Path.Combine(ProjectDirectory(), "..", "..", "Packages", "com.adapty.unity-sdk");
 
         private static string ProjectDirectory([CallerFilePath] string callerPath = null) =>
             Path.GetDirectoryName(callerPath);

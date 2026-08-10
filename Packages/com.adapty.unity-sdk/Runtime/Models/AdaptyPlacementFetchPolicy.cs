@@ -1,10 +1,9 @@
 using UnityEngine.Scripting;
+using System;
+using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
-    using System;
-    using System.Runtime.Serialization;
-
     [DataContract]
     [Preserve]
     public sealed class AdaptyPlacementFetchPolicy

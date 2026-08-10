@@ -19,7 +19,7 @@ namespace AdaptySDK.Serialization
     {
         internal static JObject Object(JToken node, string key)
         {
-            if (!(node?[key] is JObject value))
+            if (node?[key] is not JObject value)
             {
                 throw Missing(key);
             }
@@ -28,7 +28,7 @@ namespace AdaptySDK.Serialization
 
         internal static JArray Array(JToken node, string key)
         {
-            if (!(node?[key] is JArray value))
+            if (node?[key] is not JArray value)
             {
                 throw Missing(key);
             }

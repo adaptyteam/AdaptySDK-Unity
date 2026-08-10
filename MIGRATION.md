@@ -281,7 +281,8 @@ matching members are read-only properties instead of public fields, so assign th
 
 If you implement `IAdaptyFlowsEventsListener` or `IAdaptyUISystemRequestsHandler`, two signatures
 need `IReadOnlyDictionary` where they said `IDictionary` — `FlowViewDidReceiveAnalyticEvent` and
-`FlowViewDidAskPermission`.
+`FlowViewDidAskPermission`. The third parameter of the first is also renamed from `@params`
+to `parameters`, which matters only if you passed it as a named argument.
 
 The deprecated onboarding API keeps the collection types it had — it is maintained until it is
 removed, not brought in line.

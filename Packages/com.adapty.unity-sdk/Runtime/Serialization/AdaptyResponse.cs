@@ -18,7 +18,7 @@ namespace AdaptySDK.Serialization
         {
             try
             {
-                if (!(AdaptyJson.ParseDocument(json) is JObject response))
+                if (AdaptyJson.ParseDocument(json) is not JObject response)
                 {
                     throw new JsonSerializationException("The reply is not an object.");
                 }

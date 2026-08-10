@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
+#if UNITY_ANDROID
+using AdaptyAndroidCallback = AdaptySDK.Android.AdaptyAndroidCallbackAction;
+#endif
+
 namespace AdaptySDK.Android
 {
 #if UNITY_ANDROID
-    using AdaptyAndroidCallback = AdaptyAndroidCallbackAction;
-
     internal static class AdaptyAndroid
     {
         private static AndroidJavaClass AdaptyAndroidClass = new AndroidJavaClass("com.adapty.unity.AdaptyAndroidWrapper");

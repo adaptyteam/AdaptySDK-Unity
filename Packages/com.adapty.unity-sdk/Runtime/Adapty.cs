@@ -8,12 +8,11 @@ using _Adapty = AdaptySDK.Android.AdaptyAndroid;
 #else
 using _Adapty = AdaptySDK.Noop.AdaptyNoop;
 #endif
+using AdaptySDK.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace AdaptySDK
 {
-    using AdaptySDK.Serialization;
-    using Newtonsoft.Json.Linq;
-
     /// <summary>
     /// The main class for interacting with the Adapty SDK.
     /// </summary>

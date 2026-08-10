@@ -183,7 +183,7 @@ public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidFinishPurchase(A
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidFinishRestore(AdaptySDK.AdaptyUIFlowView view, AdaptySDK.AdaptyProfile profile) : System.Void
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidFinishWebPaymentNavigation(AdaptySDK.AdaptyUIFlowView view, AdaptySDK.AdaptyPaywallProduct product, AdaptySDK.AdaptyError error) : System.Void
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidPerformAction(AdaptySDK.AdaptyUIFlowView view, AdaptySDK.AdaptyUIUserAction action) : System.Void
-public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent(AdaptySDK.AdaptyUIFlowView view, System.String name, System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> params) : System.Void
+public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent(AdaptySDK.AdaptyUIFlowView view, System.String name, System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> parameters) : System.Void
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidReceiveError(AdaptySDK.AdaptyUIFlowView view, AdaptySDK.AdaptyError error) : System.Void
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidSelectProduct(AdaptySDK.AdaptyUIFlowView view, System.String productId) : System.Void
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidStartPurchase(AdaptySDK.AdaptyUIFlowView view, AdaptySDK.AdaptyPaywallProduct product) : System.Void

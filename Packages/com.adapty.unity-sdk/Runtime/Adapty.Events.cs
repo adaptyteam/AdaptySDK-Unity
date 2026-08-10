@@ -108,7 +108,7 @@ namespace AdaptySDK
 
             try
             {
-                if (!(AdaptyJson.ParseDocument(json) is JObject parameters))
+                if (AdaptyJson.ParseDocument(json) is not JObject parameters)
                 {
                     return;
                 }
@@ -352,13 +352,13 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var name = Required<string>(parameters, "name");
-                        var @params = Required<Dictionary<string, object>>(parameters, "params");
+                        var analyticParameters = Required<Dictionary<string, object>>(parameters, "params");
                         Callbacks.InvokeSafe(
                             () =>
                                 m_FlowsEventsListener.FlowViewDidReceiveAnalyticEvent(
                                     view,
                                     name,
-                                    new ReadOnlyDictionary<string, object>(@params)
+                                    new ReadOnlyDictionary<string, object>(analyticParameters)
                                 ),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent(..)"
                         );

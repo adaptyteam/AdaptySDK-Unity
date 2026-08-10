@@ -1,8 +1,7 @@
 using UnityEngine.Scripting;
+using System.Runtime.Serialization;
 
 namespace AdaptySDK {
-    using System.Runtime.Serialization;
-
     [DataContract]
     [Preserve]
     public sealed class AdaptyUIUserAction {

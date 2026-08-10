@@ -2,11 +2,10 @@ using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using AdaptySDK.Serialization;
 
 namespace AdaptySDK
 {
-    using AdaptySDK.Serialization;
-
     [DataContract]
     [Preserve]
     public sealed class AdaptyRemoteConfig

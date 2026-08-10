@@ -865,7 +865,7 @@ namespace AdaptyExample
         public void FlowViewDidReceiveAnalyticEvent(
             AdaptyUIFlowView view,
             string name,
-            IReadOnlyDictionary<string, object> @params
+            IReadOnlyDictionary<string, object> parameters
         )
         {
             LogIncomingCall_AdaptyUIFlowView("FlowViewDidReceiveAnalyticEvent", view, name);

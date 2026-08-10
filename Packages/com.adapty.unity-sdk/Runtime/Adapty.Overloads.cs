@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using AdaptySDK.Serialization;
 
 namespace AdaptySDK
 {
-    using AdaptySDK.Serialization;
-
     public static partial class Adapty
     {
         /// <summary>

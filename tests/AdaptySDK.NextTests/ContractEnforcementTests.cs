@@ -580,7 +580,7 @@ namespace AdaptySDK.NextTests
                 return;
             }
 
-            if (!(node is JObject map))
+            if (node is not JObject map)
             {
                 return;
             }
@@ -616,7 +616,7 @@ namespace AdaptySDK.NextTests
                 return;
             }
 
-            if (!(resolved is Newtonsoft.Json.Serialization.JsonObjectContract contract))
+            if (resolved is not Newtonsoft.Json.Serialization.JsonObjectContract contract)
             {
                 return;
             }

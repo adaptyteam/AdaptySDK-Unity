@@ -131,11 +131,11 @@ namespace AdaptySDK
         /// </summary>
         /// <param name="view">The <see cref="AdaptyUIFlowView"/> where the event occurred.</param>
         /// <param name="name">The name of the analytics event.</param>
-        /// <param name="params">The parameters of the analytics event.</param>
+        /// <param name="parameters">The parameters of the analytics event.</param>
         void FlowViewDidReceiveAnalyticEvent(
             AdaptyUIFlowView view,
             string name,
-            IReadOnlyDictionary<string, object> @params
+            IReadOnlyDictionary<string, object> parameters
         );
     }
 }

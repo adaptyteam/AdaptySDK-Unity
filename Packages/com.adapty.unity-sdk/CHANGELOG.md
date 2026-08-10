@@ -131,6 +131,11 @@ Editor menu that installs it is unavailable for the same reason.
   matching members are now read-only properties rather than public fields. `UpdateAttribution` takes
   an `IReadOnlyDictionary<string, object>`, and `AdaptyProfileParameters.CustomAttributes` exposes a
   view rather than the dictionary the builder writes into.
+- **Breaking, at the call site only:** the analytics-event parameter of
+  `IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent` is named `parameters` rather than
+  `@params`. The CLR signature is unchanged, so an implementation keeps compiling and only a call
+  passing it as a named argument — `@params:` — has to be renamed. The deprecated onboarding
+  listener keeps its own `@params`.
 - **Breaking:** `IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent` and
   `IAdaptyUISystemRequestsHandler.FlowViewDidAskPermission` receive `IReadOnlyDictionary` instead of
   `IDictionary`. Implementations need the signature updated; nothing else about them changes.
