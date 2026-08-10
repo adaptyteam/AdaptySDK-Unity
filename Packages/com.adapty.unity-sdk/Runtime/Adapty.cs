@@ -52,17 +52,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Activate(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Activate(..)"
+                    );
                 }
             );
         }
@@ -117,17 +110,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlow(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlow(..)"
+                    );
                 }
             );
         }
@@ -160,17 +146,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlowForDefaultAudience(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlowForDefaultAudience(..)"
+                    );
                 }
             );
         }
@@ -197,22 +176,16 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(
-                            value is null
-                                ? null
-                                : new ReadOnlyCollection<AdaptyPaywallProduct>(value),
-                            error
-                        );
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<IReadOnlyList<AdaptyPaywallProduct>,AdaptyError> completionHandler in Adapty.GetPaywallProducts(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () =>
+                            completionHandler?.Invoke(
+                                value is null
+                                    ? null
+                                    : new ReadOnlyCollection<AdaptyPaywallProduct>(value),
+                                error
+                            ),
+                        "Failed to invoke Action<IReadOnlyList<AdaptyPaywallProduct>,AdaptyError> completionHandler in Adapty.GetPaywallProducts(..)"
+                    );
                 }
             );
         }
@@ -234,17 +207,10 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyProfile,AdaptyError> completionHandler in Adapty.GetProfile(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyProfile,AdaptyError> completionHandler in Adapty.GetProfile(..)"
+                    );
                 }
             );
         }
@@ -303,17 +269,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Identify(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Identify(..)"
+                    );
                 }
             );
         }
@@ -329,17 +288,10 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<bool,AdaptyError> completionHandler in Adapty.IsActivated(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<bool,AdaptyError> completionHandler in Adapty.IsActivated(..)"
+                    );
                 }
             );
         }
@@ -355,17 +307,10 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyLogLevel,AdaptyError> completionHandler in Adapty.GetLoglevel(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyLogLevel,AdaptyError> completionHandler in Adapty.GetLoglevel(..)"
+                    );
                 }
             );
         }
@@ -388,17 +333,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetLogLevel(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetLogLevel(..)"
+                    );
                 }
             );
         }
@@ -420,17 +358,10 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyInstallationDetails,AdaptyError> completionHandler in Adapty.GetCurrentInstallationStatus(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyInstallationDetails,AdaptyError> completionHandler in Adapty.GetCurrentInstallationStatus(..)"
+                    );
                 }
             );
         }
@@ -450,17 +381,10 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Logout(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Logout(..)"
+                    );
                 }
             );
         }
@@ -487,17 +411,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.CreateWebPaywallUrl(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.CreateWebPaywallUrl(..)"
+                    );
                 }
             );
         }
@@ -524,17 +441,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.CreateWebPaywallUrl(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.CreateWebPaywallUrl(..)"
+                    );
                 }
             );
         }
@@ -564,17 +474,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.OpenWebPaywall(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.OpenWebPaywall(..)"
+                    );
                 }
             );
         }
@@ -604,17 +507,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.OpenWebPaywall(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.OpenWebPaywall(..)"
+                    );
                 }
             );
         }
@@ -640,17 +536,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowFlow(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowFlow(..)"
+                    );
                 }
             );
         }
@@ -678,31 +567,17 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)"
+                    );
                 }
             );
 #else
-            try
-            {
-                completionHandler?.Invoke(null);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(
-                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)",
-                    e
-                );
-            }
+            Callbacks.InvokeSafe(
+                () => completionHandler?.Invoke(null),
+                "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)"
+            );
 #endif
         }
 
@@ -729,31 +604,17 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)"
+                    );
                 }
             );
 #else
-            try
-            {
-                completionHandler?.Invoke(null);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(
-                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)",
-                    e
-                );
-            }
+            Callbacks.InvokeSafe(
+                () => completionHandler?.Invoke(null),
+                "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)"
+            );
 #endif
         }
 
@@ -785,17 +646,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyPurchaseResult, AdaptyError> completionHandler in Adapty.MakePurchase(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyPurchaseResult, AdaptyError> completionHandler in Adapty.MakePurchase(..)"
+                    );
                 }
             );
         }
@@ -816,31 +670,17 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)"
+                    );
                 }
             );
 #else
-            try
-            {
-                completionHandler?.Invoke(null);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(
-                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)",
-                    e
-                );
-            }
+            Callbacks.InvokeSafe(
+                () => completionHandler?.Invoke(null),
+                "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)"
+            );
 #endif
         }
 
@@ -874,17 +714,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.ReportTransaction(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.ReportTransaction(..)"
+                    );
                 }
             );
         }
@@ -905,17 +738,10 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.RestorePurchases(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.RestorePurchases(..)"
+                    );
                 }
             );
         }
@@ -934,17 +760,10 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<string, AdaptyError> completionHandler in Adapty.GetNativeSDKVersion(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<string, AdaptyError> completionHandler in Adapty.GetNativeSDKVersion(..)"
+                    );
                 }
             );
         }
@@ -975,17 +794,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetFallback(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetFallback(..)"
+                    );
                 }
             );
         }
@@ -1014,17 +826,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetIntegrationIdentifier(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetIntegrationIdentifier(..)"
+                    );
                 }
             );
         }
@@ -1054,17 +859,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAttribution(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAttribution(..)"
+                    );
                 }
             );
         }
@@ -1092,17 +890,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateProfile(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateProfile(..)"
+                    );
                 }
             );
         }
@@ -1144,17 +935,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyUIFlowView, AdaptyError> completionHandler in Adapty.CreateFlowView(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyUIFlowView, AdaptyError> completionHandler in Adapty.CreateFlowView(..)"
+                    );
                 }
             );
         }
@@ -1182,17 +966,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissFlowView(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissFlowView(..)"
+                    );
                 }
             );
         }
@@ -1231,17 +1008,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentFlowView(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentFlowView(..)"
+                    );
                 }
             );
         }
@@ -1279,17 +1049,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyUIDialogActionType, AdaptyError> completionHandler in Adapty.ShowDialog(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(value, error),
+                        "Failed to invoke Action<AdaptyUIDialogActionType, AdaptyError> completionHandler in Adapty.ShowDialog(..)"
+                    );
                 }
             );
         }
@@ -1318,17 +1081,10 @@ namespace AdaptySDK
                 parameters,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in AdaptyUI.OpenUrl(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in AdaptyUI.OpenUrl(..)"
+                    );
                 }
             );
         }
@@ -1347,17 +1103,10 @@ namespace AdaptySDK
                 null,
                 (value, error) =>
                 {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in AdaptyUI.RequestAppReview(..)",
-                            e
-                        );
-                    }
+                    Callbacks.InvokeSafe(
+                        () => completionHandler?.Invoke(error),
+                        "Failed to invoke Action<AdaptyError> completionHandler in AdaptyUI.RequestAppReview(..)"
+                    );
                 }
             );
         }

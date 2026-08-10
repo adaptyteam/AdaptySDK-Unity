@@ -148,17 +148,10 @@ namespace AdaptySDK
                         if (!RequireEventListener(id))
                             return;
                         var profile = Required<AdaptyProfile>(parameters, "profile");
-                        try
-                        {
-                            m_Listener.OnLoadLatestProfile(profile);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyEventListener.OnLoadLatestProfile(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_Listener.OnLoadLatestProfile(profile),
+                            "Failed to invoke IAdaptyEventListener.OnLoadLatestProfile(..)"
+                        );
                         return;
                     }
                 case "on_installation_details_success":
@@ -166,17 +159,10 @@ namespace AdaptySDK
                         if (!RequireEventListener(id))
                             return;
                         var details = Required<AdaptyInstallationDetails>(parameters, "details");
-                        try
-                        {
-                            m_Listener.OnInstallationDetailsSuccess(details);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyEventListener.OnInstallationDetailsSuccess(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_Listener.OnInstallationDetailsSuccess(details),
+                            "Failed to invoke IAdaptyEventListener.OnInstallationDetailsSuccess(..)"
+                        );
                         return;
                     }
                 case "on_installation_details_fail":
@@ -184,17 +170,10 @@ namespace AdaptySDK
                         if (!RequireEventListener(id))
                             return;
                         var error = Required<AdaptyError>(parameters, "error");
-                        try
-                        {
-                            m_Listener.OnInstallationDetailsFail(error);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyEventListener.OnInstallationDetailsFail(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_Listener.OnInstallationDetailsFail(error),
+                            "Failed to invoke IAdaptyEventListener.OnInstallationDetailsFail(..)"
+                        );
                         return;
                     }
                 case "onboarding_did_fail_with_error":
@@ -211,17 +190,10 @@ namespace AdaptySDK
                         if (!RequireFlowsListener(id))
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidAppear(view);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidAppear(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidAppear(view),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidAppear(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_disappear":
@@ -229,17 +201,10 @@ namespace AdaptySDK
                         if (!RequireFlowsListener(id))
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidDisappear(view);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidDisappear(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidDisappear(view),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidDisappear(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_perform_action":
@@ -248,17 +213,10 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var action = Required<AdaptyUIUserAction>(parameters, "action");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidPerformAction(view, action);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidPerformAction(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidPerformAction(view, action),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidPerformAction(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_select_product":
@@ -267,17 +225,10 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var productId = Required<string>(parameters, "product_id");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidSelectProduct(view, productId);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidSelectProduct(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidSelectProduct(view, productId),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidSelectProduct(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_start_purchase":
@@ -286,17 +237,10 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var product = Required<AdaptyPaywallProduct>(parameters, "product");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidStartPurchase(view, product);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidStartPurchase(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidStartPurchase(view, product),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidStartPurchase(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_finish_purchase":
@@ -306,21 +250,15 @@ namespace AdaptySDK
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var product = Required<AdaptyPaywallProduct>(parameters, "product");
                         var purchaseResult = Required<AdaptyPurchaseResult>(parameters, "purchased_result");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidFinishPurchase(
-                                view,
-                                product,
-                                purchaseResult
-                            );
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFinishPurchase(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () =>
+                                m_FlowsEventsListener.FlowViewDidFinishPurchase(
+                                    view,
+                                    product,
+                                    purchaseResult
+                                ),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFinishPurchase(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_fail_purchase":
@@ -330,17 +268,10 @@ namespace AdaptySDK
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var product = Required<AdaptyPaywallProduct>(parameters, "product");
                         var error = Required<AdaptyError>(parameters, "error");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidFailPurchase(view, product, error);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailPurchase(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidFailPurchase(view, product, error),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailPurchase(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_start_restore":
@@ -348,17 +279,10 @@ namespace AdaptySDK
                         if (!RequireFlowsListener(id))
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidStartRestore(view);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidStartRestore(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidStartRestore(view),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidStartRestore(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_finish_restore":
@@ -367,17 +291,10 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var profile = Required<AdaptyProfile>(parameters, "profile");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidFinishRestore(view, profile);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFinishRestore(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidFinishRestore(view, profile),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFinishRestore(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_fail_restore":
@@ -386,17 +303,10 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var error = Required<AdaptyError>(parameters, "error");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidFailRestore(view, error);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailRestore(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidFailRestore(view, error),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailRestore(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_receive_error":
@@ -405,17 +315,10 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var error = Required<AdaptyError>(parameters, "error");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidReceiveError(view, error);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidReceiveError(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidReceiveError(view, error),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidReceiveError(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_fail_loading_products":
@@ -424,17 +327,10 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var error = Required<AdaptyError>(parameters, "error");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidFailLoadingProducts(view, error);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailLoadingProducts(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_FlowsEventsListener.FlowViewDidFailLoadingProducts(view, error),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailLoadingProducts(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_finish_web_payment_navigation":
@@ -444,21 +340,15 @@ namespace AdaptySDK
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var product = Optional<AdaptyPaywallProduct>(parameters, "product");
                         var error = Optional<AdaptyError>(parameters, "error");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidFinishWebPaymentNavigation(
-                                view,
-                                product,
-                                error
-                            );
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFinishWebPaymentNavigation(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () =>
+                                m_FlowsEventsListener.FlowViewDidFinishWebPaymentNavigation(
+                                    view,
+                                    product,
+                                    error
+                                ),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFinishWebPaymentNavigation(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_receive_analytic_event":
@@ -468,21 +358,15 @@ namespace AdaptySDK
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var name = Required<string>(parameters, "name");
                         var @params = Required<Dictionary<string, object>>(parameters, "params");
-                        try
-                        {
-                            m_FlowsEventsListener.FlowViewDidReceiveAnalyticEvent(
-                                view,
-                                name,
-                                new ReadOnlyDictionary<string, object>(@params)
-                            );
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () =>
+                                m_FlowsEventsListener.FlowViewDidReceiveAnalyticEvent(
+                                    view,
+                                    name,
+                                    new ReadOnlyDictionary<string, object>(@params)
+                                ),
+                            "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_ask_permission":
@@ -525,24 +409,18 @@ namespace AdaptySDK
                             AdaptyUI.FlowViewAnswerPermission(eventId, granted, detail);
                         };
 
-                        try
-                        {
-                            m_SystemRequestsHandler.FlowViewDidAskPermission(
-                                view,
-                                permission,
-                                customArgs is null
-                                    ? null
-                                    : new ReadOnlyDictionary<string, string>(customArgs),
-                                respond
-                            );
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyUISystemRequestsHandler.FlowViewDidAskPermission(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () =>
+                                m_SystemRequestsHandler.FlowViewDidAskPermission(
+                                    view,
+                                    permission,
+                                    customArgs is null
+                                        ? null
+                                        : new ReadOnlyDictionary<string, string>(customArgs),
+                                    respond
+                                ),
+                            "Failed to invoke IAdaptyUISystemRequestsHandler.FlowViewDidAskPermission(..)"
+                        );
                         return;
                     }
                 case "flow_view_did_request_app_review":
@@ -555,17 +433,10 @@ namespace AdaptySDK
                             return;
                         }
 
-                        try
-                        {
-                            m_SystemRequestsHandler.FlowViewDidRequestAppReview(view);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyUISystemRequestsHandler.FlowViewDidRequestAppReview(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () => m_SystemRequestsHandler.FlowViewDidRequestAppReview(view),
+                            "Failed to invoke IAdaptyUISystemRequestsHandler.FlowViewDidRequestAppReview(..)"
+                        );
                         return;
                     }
                 case "flow_view_observer_did_initiate_purchase":
@@ -587,22 +458,16 @@ namespace AdaptySDK
                         Action onFinishPurchase = () =>
                             AdaptyUI.SendObserverEvent("observer_purchase_did_finish", eventId);
 
-                        try
-                        {
-                            m_ObserverModeResolver.FlowViewDidInitiatePurchase(
-                                view,
-                                product,
-                                onStartPurchase,
-                                onFinishPurchase
-                            );
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyUIObserverModeResolver.FlowViewDidInitiatePurchase(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () =>
+                                m_ObserverModeResolver.FlowViewDidInitiatePurchase(
+                                    view,
+                                    product,
+                                    onStartPurchase,
+                                    onFinishPurchase
+                                ),
+                            "Failed to invoke IAdaptyUIObserverModeResolver.FlowViewDidInitiatePurchase(..)"
+                        );
                         return;
                     }
                 case "flow_view_observer_did_initiate_restore":
@@ -623,21 +488,15 @@ namespace AdaptySDK
                         Action onFinishRestore = () =>
                             AdaptyUI.SendObserverEvent("observer_restore_did_finish", eventId);
 
-                        try
-                        {
-                            m_ObserverModeResolver.FlowViewDidInitiateRestore(
-                                view,
-                                onStartRestore,
-                                onFinishRestore
-                            );
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(
-                                "Failed to invoke IAdaptyUIObserverModeResolver.FlowViewDidInitiateRestore(..)",
-                                e
-                            );
-                        }
+                        Callbacks.InvokeSafe(
+                            () =>
+                                m_ObserverModeResolver.FlowViewDidInitiateRestore(
+                                    view,
+                                    onStartRestore,
+                                    onFinishRestore
+                                ),
+                            "Failed to invoke IAdaptyUIObserverModeResolver.FlowViewDidInitiateRestore(..)"
+                        );
                         return;
                     }
                 default:
