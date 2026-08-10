@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 #if UNITY_IOS && !UNITY_EDITOR
 using _Adapty = AdaptySDK.iOS.AdaptyIOS;
 #elif UNITY_ANDROID && !UNITY_EDITOR
@@ -185,25 +186,30 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains a list of <see cref="AdaptyPaywallProduct"/> objects.</param>
         public static void GetPaywallProducts(
             AdaptyFlow flow,
-            Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler
+            Action<IReadOnlyList<AdaptyPaywallProduct>, AdaptyError> completionHandler
         )
         {
             var parameters = new JObject();
             parameters["flow"] = AdaptyJson.ToNode(flow);
 
-            Request.Send<IList<AdaptyPaywallProduct>>(
+            Request.Send<List<AdaptyPaywallProduct>>(
                 "get_paywall_products",
                 parameters,
                 (value, error) =>
                 {
                     try
                     {
-                        completionHandler?.Invoke(value, error);
+                        completionHandler?.Invoke(
+                            value is null
+                                ? null
+                                : new ReadOnlyCollection<AdaptyPaywallProduct>(value),
+                            error
+                        );
                     }
                     catch (Exception e)
                     {
                         throw new Exception(
-                            "Failed to invoke Action<IList<AdaptyPaywallProduct>,AdaptyError> completionHandler in Adapty.GetPaywallProducts(..)",
+                            "Failed to invoke Action<IReadOnlyList<AdaptyPaywallProduct>,AdaptyError> completionHandler in Adapty.GetPaywallProducts(..)",
                             e
                         );
                     }

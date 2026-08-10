@@ -100,16 +100,28 @@ namespace AdaptySDK
         [Preserve]
         private string Type => "image";
 
+        [DataMember(Name = "value", IsRequired = true)]
+        [Preserve]
+        private byte[] _Data { get; }
+
         /// <summary>
         /// The image data as byte array.
         /// </summary>
-        [DataMember(Name = "value", IsRequired = true)]
-        [Preserve]
-        public byte[] Data { get; }
+        /// <remarks>
+        /// A copy, as is the array the asset was built from: the request must not change because
+        /// the caller kept writing into the array it handed over, or into this one. For a large
+        /// image that is a real copy each way - hold the result if you need it twice.
+        /// </remarks>
+        public byte[] Data => (byte[])_Data.Clone();
 
         internal AdaptyCustomAssetLocalImageData(byte[] data)
         {
-            Data = data ?? throw new ArgumentNullException(nameof(data));
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            _Data = (byte[])data.Clone();
         }
     }
 

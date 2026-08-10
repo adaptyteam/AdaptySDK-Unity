@@ -166,12 +166,12 @@ namespace AdaptySDK.NextTests
 
         private sealed class FlowsListener : IAdaptyFlowsEventsListener
         {
-            internal IDictionary<string, object> Params;
+            internal IReadOnlyDictionary<string, object> Params;
 
             public void FlowViewDidReceiveAnalyticEvent(
                 AdaptyUIFlowView view,
                 string name,
-                IDictionary<string, object> @params
+                IReadOnlyDictionary<string, object> @params
             ) => Params = @params;
 
             public void FlowViewDidAppear(AdaptyUIFlowView view) { }

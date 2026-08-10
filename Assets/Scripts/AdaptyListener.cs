@@ -156,7 +156,7 @@ namespace AdaptyExample
 
         public void GetPaywallProducts(
             AdaptyFlow flow,
-            Action<IList<AdaptyPaywallProduct>> completionHandler
+            Action<IReadOnlyList<AdaptyPaywallProduct>> completionHandler
         )
         {
             this.LogMethodRequest("GetPaywallProducts");
@@ -865,7 +865,7 @@ namespace AdaptyExample
         public void FlowViewDidReceiveAnalyticEvent(
             AdaptyUIFlowView view,
             string name,
-            IDictionary<string, object> @params
+            IReadOnlyDictionary<string, object> @params
         )
         {
             LogIncomingCall_AdaptyUIFlowView("FlowViewDidReceiveAnalyticEvent", view, name);
@@ -876,7 +876,7 @@ namespace AdaptyExample
         public void FlowViewDidAskPermission(
             AdaptyUIFlowView view,
             string permission,
-            IDictionary<string, string> customArgs,
+            IReadOnlyDictionary<string, string> customArgs,
             Action<bool, string> respond
         )
         {

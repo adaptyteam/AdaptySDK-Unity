@@ -8,6 +8,7 @@
 using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Runtime.Serialization;
 
@@ -38,7 +39,9 @@ namespace AdaptySDK
 
         private Dictionary<string, object> _CustomAttributes = new Dictionary<string, object>();
 
-        public Dictionary<string, object> CustomAttributes => _CustomAttributes;
+        [Preserve]
+        public IReadOnlyDictionary<string, object> CustomAttributes =>
+            new ReadOnlyDictionary<string, object>(_CustomAttributes);
 
 
         /// <remarks>

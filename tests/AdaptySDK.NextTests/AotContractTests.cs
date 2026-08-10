@@ -54,12 +54,21 @@ namespace AdaptySDK.NextTests
 
                 Assert.That(
                     found,
-                    Has.Some.EqualTo(typeof(IList<string>)),
+                    Has.Some.EqualTo(typeof(List<string>)),
                     "AdaptyProfile.AppliedAttributionSources is no longer seen"
+                );
+
+                // The models now hand out read-only views over concrete storage, so the interface
+                // case the wrapper rule exists for survives only where a member is still typed as
+                // one - today AdaptyFlowPaywall's internal product references.
+                Assert.That(
+                    found,
+                    Has.Some.EqualTo(typeof(IList<AdaptyFlowPaywall.ProductReference>)),
+                    "no interface-typed collection is left for the wrapper rule to guard"
                 );
                 Assert.That(
                     found,
-                    Has.Some.EqualTo(typeof(IDictionary<string, IList<AdaptyProfile.NonSubscription>>)),
+                    Has.Some.EqualTo(typeof(Dictionary<string, List<AdaptyProfile.NonSubscription>>)),
                     "AdaptyProfile.NonSubscriptions is no longer seen"
                 );
             });

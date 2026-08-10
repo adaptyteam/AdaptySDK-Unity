@@ -123,7 +123,7 @@ namespace AdaptyExample
             );
         }
 
-        private IEnumerator DelayedUpdateProducts(IList<AdaptyPaywallProduct> products)
+        private IEnumerator DelayedUpdateProducts(IReadOnlyList<AdaptyPaywallProduct> products)
         {
             yield return new WaitForEndOfFrame();
             this.UpdateProductsData(products);
@@ -268,7 +268,7 @@ namespace AdaptyExample
             this.ErrorText.SetText("Error: " + error);
         }
 
-        private void UpdateProductsData(IList<AdaptyPaywallProduct> products)
+        private void UpdateProductsData(IReadOnlyList<AdaptyPaywallProduct> products)
         {
             // Clear existing product buttons
             m_productButtons.ForEach(

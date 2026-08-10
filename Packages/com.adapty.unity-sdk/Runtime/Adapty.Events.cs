@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using UnityEngine;
 using AdaptySDK.Serialization;
@@ -466,13 +467,13 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var name = Required<string>(parameters, "name");
-                        var @params = Required<System.Collections.Generic.IDictionary<string, object>>(parameters, "params");
+                        var @params = Required<Dictionary<string, object>>(parameters, "params");
                         try
                         {
                             m_FlowsEventsListener.FlowViewDidReceiveAnalyticEvent(
                                 view,
                                 name,
-                                @params
+                                new ReadOnlyDictionary<string, object>(@params)
                             );
                         }
                         catch (Exception e)
@@ -529,7 +530,9 @@ namespace AdaptySDK
                             m_SystemRequestsHandler.FlowViewDidAskPermission(
                                 view,
                                 permission,
-                                customArgs,
+                                customArgs is null
+                                    ? null
+                                    : new ReadOnlyDictionary<string, string>(customArgs),
                                 respond
                             );
                         }

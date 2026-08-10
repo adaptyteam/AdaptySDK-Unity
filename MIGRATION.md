@@ -259,6 +259,33 @@ extension classes that came with them, `AdaptyUIIOSPresentationStyleExtensions`,
 SDK is unaffected; code that used those types directly can move to Newtonsoft.Json, which is now a
 dependency of the package and available to your assemblies too.
 
+The collections a response model hands back are read-only. `IList<T>` became `IReadOnlyList<T>` and
+`IDictionary<K, V>` became `IReadOnlyDictionary<K, V>` on `AdaptyProfile`, `AdaptyFlow`,
+`AdaptyFlowPaywall`, `AdaptySubscriptionOffer` and `AdaptyRemoteConfig`, and in the callback of
+`GetPaywallProducts`. Reading, `foreach` and LINQ are unaffected; code that wrote into one has to
+copy first:
+
+```csharp
+- profile.CustomAttributes["seen_intro"] = true;
++ var attributes = new Dictionary<string, object>(profile.CustomAttributes);
++ attributes["seen_intro"] = true;
+```
+
+`AdaptyProfile.NonSubscriptions` is read-only at both levels, so its declared type is now
+`IReadOnlyDictionary<string, IReadOnlyList<NonSubscription>>`.
+
+On the way in, the four `AdaptyUICreateFlowViewParameters` setters take an `IReadOnlyDictionary` and
+**copy** it, so filling your dictionary after handing it over no longer changes the view; the four
+matching members are read-only properties instead of public fields, so assign through the setters.
+`UpdateAttribution` and `AdaptyProfileParameters.CustomAttributes` moved the same way.
+
+If you implement `IAdaptyFlowsEventsListener` or `IAdaptyUISystemRequestsHandler`, two signatures
+need `IReadOnlyDictionary` where they said `IDictionary` — `FlowViewDidReceiveAnalyticEvent` and
+`FlowViewDidAskPermission`.
+
+The deprecated onboarding API keeps the collection types it had — it is maintained until it is
+removed, not brought in line.
+
 The models are `sealed`. If you derived from one, you cannot any more — but for a response model you
 already could not: it has no constructor your code can reach, private or `internal`, so a subclass
 never compiled. What changes in practice is the eleven input types, where a public constructor did

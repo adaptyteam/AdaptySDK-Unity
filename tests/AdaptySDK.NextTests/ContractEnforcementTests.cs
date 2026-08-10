@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -409,6 +410,96 @@ namespace AdaptySDK.NextTests
         private static string ProjectDirectory(
             [System.Runtime.CompilerServices.CallerFilePath] string callerPath = null
         ) => System.IO.Path.GetDirectoryName(callerPath);
+
+        /// <summary>
+        /// A response model hands out views, not its own storage. Declaring the member as a
+        /// read-only interface would not be enough on its own: <c>ReadOnlyCollection</c> and
+        /// <c>ReadOnlyDictionary</c> do implement the mutable interfaces, so the cast back compiles
+        /// and succeeds — what it yields is the wrapper, which refuses to write, rather than the
+        /// dictionary behind it.
+        /// </summary>
+        [Test]
+        public void AResponseModelCannotBeMutatedThroughItsCollections()
+        {
+            var profile = AdaptyJson.Deserialize<AdaptyProfile>(
+                Snapshots.LoadResponse("profile-full")
+            );
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(
+                    () => ((IDictionary<string, AdaptyProfile.AccessLevel>)profile.AccessLevels).Clear(),
+                    Throws.InstanceOf<NotSupportedException>()
+                );
+                Assert.That(
+                    () => ((IDictionary<string, AdaptyProfile.Subscription>)profile.Subscriptions).Clear(),
+                    Throws.InstanceOf<NotSupportedException>()
+                );
+                Assert.That(
+                    () => ((IDictionary<string, object>)profile.CustomAttributes)["x"] = 1,
+                    Throws.InstanceOf<NotSupportedException>()
+                );
+                Assert.That(
+                    () => ((IList<string>)profile.AppliedAttributionSources).Add("x"),
+                    Throws.InstanceOf<NotSupportedException>()
+                );
+
+                // Both levels: the values of the outer dictionary are views too.
+                foreach (var purchases in profile.NonSubscriptions.Values)
+                {
+                    Assert.That(
+                        () => ((IList<AdaptyProfile.NonSubscription>)purchases).Clear(),
+                        Throws.InstanceOf<NotSupportedException>()
+                    );
+                }
+            });
+
+            Assert.That(profile.NonSubscriptions.Values, Is.Not.Empty, "the fixture stopped covering the nested case");
+
+            Assert.That(
+                () =>
+                    ((IDictionary<string, IReadOnlyList<AdaptyProfile.NonSubscription>>)profile.NonSubscriptions).Clear(),
+                Throws.InstanceOf<NotSupportedException>(),
+                "the outer dictionary is writable"
+            );
+        }
+
+        /// <summary>
+        /// The mirror on the way in: what the SDK will send has to be decided when the setter is
+        /// called, not whenever the request happens to be serialized. Nothing else would catch this
+        /// — the public surface and the happy-path snapshots look the same either way.
+        /// </summary>
+        [Test]
+        public void AParameterObjectDoesNotKeepTheCallersDictionary()
+        {
+            var tags = new Dictionary<string, string> { ["greeting"] = "hello" };
+            var parameters = new AdaptyUICreateFlowViewParameters().SetCustomTags(tags);
+
+            tags["greeting"] = "goodbye";
+            tags["added_later"] = "x";
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parameters.CustomTags["greeting"], Is.EqualTo("hello"));
+                Assert.That(parameters.CustomTags.ContainsKey("added_later"), Is.False);
+                Assert.That(AdaptyJson.Serialize(parameters), Does.Not.Contain("added_later"));
+            });
+        }
+
+        /// <summary>
+        /// The same ownership question for the one asset built from a caller's buffer.
+        /// </summary>
+        [Test]
+        public void ACustomAssetDoesNotKeepTheCallersBuffer()
+        {
+            var pixels = new byte[] { 1, 2, 3 };
+            var asset = (AdaptyCustomAssetLocalImageData)AdaptyCustomAsset.LocalImageData(pixels);
+
+            pixels[0] = 99;
+            asset.Data[1] = 99;
+
+            Assert.That(AdaptyJson.Serialize(asset), Does.Contain(Convert.ToBase64String(new byte[] { 1, 2, 3 })));
+        }
 
         /// <summary>
         /// An unknown discriminator is forward compatibility; a missing one is a broken payload.

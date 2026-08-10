@@ -61,7 +61,7 @@ namespace AdaptySDK
         /// <param name="source">The source of attribution (e.g., "appsflyer", "adjust", "branch", "custom").</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateAttribution(
-            Dictionary<string, object> attribution,
+            IReadOnlyDictionary<string, object> attribution,
             string source,
             Action<AdaptyError> completionHandler
         ) => UpdateAttribution(AdaptyJson.Serialize(attribution), source, completionHandler);

@@ -112,6 +112,28 @@ Editor menu that installs it is unavailable for the same reason.
   `Models/`. The SDK does not call it: the refund preference is serialized through its
   `[EnumMember]` mapping like every other enum. Two constructors that only the hand-written parser
   ever called are gone too, though those were never public.
+- **Breaking:** the collections on a response model are read-only. `AdaptyProfile`, `AdaptyFlow`,
+  `AdaptyFlowPaywall`, `AdaptySubscriptionOffer` and `AdaptyRemoteConfig` hand back
+  `IReadOnlyList<T>` and `IReadOnlyDictionary<K, V>` instead of `IList<T>` and `IDictionary<K, V>`,
+  and `AdaptyProfile.NonSubscriptions` is read-only at both levels. A `readonly` field never made
+  these models immutable: the reference could not be replaced, but the contents could, and the SDK
+  handed out its own storage. The views refuse to write — casting one back to `IDictionary` still
+  compiles, because `ReadOnlyDictionary` implements it, and every mutating call throws
+  `NotSupportedException`. `GetPaywallProducts` reports an `IReadOnlyList<AdaptyPaywallProduct>` for
+  the same reason. The deprecated onboarding API is the exception and keeps its old shapes —
+  `AdaptyOnboardingsMultiSelectParams.Params` is still an `IList` handed over as it was received.
+  It is maintained rather than improved until it is removed, so do not read the sentence above as
+  covering it.
+- **Breaking:** the parameter objects take the narrowest abstraction and copy it.
+  `AdaptyUICreateFlowViewParameters.SetCustomTags`, `SetCustomTimers`, `SetCustomAssets` and
+  `SetProductPurchaseParameters` accept an `IReadOnlyDictionary` and copy it, so a caller that keeps
+  writing to its own dictionary afterwards no longer changes what the view is built with; the four
+  matching members are now read-only properties rather than public fields. `UpdateAttribution` takes
+  an `IReadOnlyDictionary<string, object>`, and `AdaptyProfileParameters.CustomAttributes` exposes a
+  view rather than the dictionary the builder writes into.
+- **Breaking:** `IAdaptyFlowsEventsListener.FlowViewDidReceiveAnalyticEvent` and
+  `IAdaptyUISystemRequestsHandler.FlowViewDidAskPermission` receive `IReadOnlyDictionary` instead of
+  `IDictionary`. Implementations need the signature updated; nothing else about them changes.
 - **Breaking:** every concrete public class is now `sealed`; the four abstract roots the wire
   contract needs — `AdaptyCustomAsset` and the three legacy onboarding hierarchies — stay open. For
   most of them this states what was already true: a response model has no constructor reachable from

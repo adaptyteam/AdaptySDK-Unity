@@ -8,6 +8,7 @@
 using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
@@ -40,21 +41,44 @@ namespace AdaptySDK
         public bool? PreloadProducts;
 
         [DataMember(Name = "custom_tags")]
-        public Dictionary<string, string> CustomTags;
+        private Dictionary<string, string> _CustomTags;
+
+        [Preserve]
+        public IReadOnlyDictionary<string, string> CustomTags =>
+            _CustomTags is null ? null : new ReadOnlyDictionary<string, string>(_CustomTags);
 
         [DataMember(Name = "custom_timers")]
-        public Dictionary<string, DateTime> CustomTimers;
+        private Dictionary<string, DateTime> _CustomTimers;
+
+        [Preserve]
+        public IReadOnlyDictionary<string, DateTime> CustomTimers =>
+            _CustomTimers is null ? null : new ReadOnlyDictionary<string, DateTime>(_CustomTimers);
 
         [DataMember(Name = "custom_assets")]
-        public Dictionary<string, AdaptyCustomAsset> CustomAssets;
+        private Dictionary<string, AdaptyCustomAsset> _CustomAssets;
+
+        [Preserve]
+        public IReadOnlyDictionary<string, AdaptyCustomAsset> CustomAssets =>
+            _CustomAssets is null ? null : new ReadOnlyDictionary<string, AdaptyCustomAsset>(_CustomAssets);
 
         /// <summary>
         /// Android only. Purchase parameters applied to the products the flow offers. Ignored on iOS.
         /// </summary>
-        public Dictionary<
+        private Dictionary<
             AdaptyProductIdentifier,
             AdaptyPurchaseParameters
-        > ProductPurchaseParameters;
+        > _ProductPurchaseParameters;
+
+        [Preserve]
+        public IReadOnlyDictionary<
+            AdaptyProductIdentifier,
+            AdaptyPurchaseParameters
+        > ProductPurchaseParameters =>
+            _ProductPurchaseParameters is null
+                ? null
+                : new ReadOnlyDictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters>(
+                    _ProductPurchaseParameters
+                );
 
         /// <summary>
         /// The contract keys these by the product identifier the store knows, not by the composite
@@ -66,13 +90,13 @@ namespace AdaptySDK
         {
             get
             {
-                if (ProductPurchaseParameters is null)
+                if (_ProductPurchaseParameters is null)
                 {
                     return null;
                 }
 
                 var result = new Dictionary<string, AdaptyPurchaseParameters>();
-                foreach (var entry in ProductPurchaseParameters)
+                foreach (var entry in _ProductPurchaseParameters)
                 {
                     result[entry.Key._AdaptyProductId] = entry.Value;
                 }
@@ -115,11 +139,30 @@ namespace AdaptySDK
         }
 
         public AdaptyUICreateFlowViewParameters SetCustomTags(
-            Dictionary<string, string> customTags
+            IReadOnlyDictionary<string, string> customTags
         )
         {
-            CustomTags = customTags;
+            _CustomTags = Copy(customTags);
             return this;
+        }
+
+        // Copied, so a caller that keeps writing to its own dictionary after handing it over does
+        // not change what the view will be built with.
+        private static Dictionary<TKey, TValue> Copy<TKey, TValue>(
+            IReadOnlyDictionary<TKey, TValue> source
+        )
+        {
+            if (source is null)
+            {
+                return null;
+            }
+
+            var copy = new Dictionary<TKey, TValue>();
+            foreach (var entry in source)
+            {
+                copy[entry.Key] = entry.Value;
+            }
+            return copy;
         }
 
         /// <param name="customTimers">
@@ -129,26 +172,26 @@ namespace AdaptySDK
         /// <see cref="DateTimeKind.Utc"/> value to mean 22:00 UTC.
         /// </param>
         public AdaptyUICreateFlowViewParameters SetCustomTimers(
-            Dictionary<string, DateTime> customTimers
+            IReadOnlyDictionary<string, DateTime> customTimers
         )
         {
-            CustomTimers = customTimers;
+            _CustomTimers = Copy(customTimers);
             return this;
         }
 
         public AdaptyUICreateFlowViewParameters SetCustomAssets(
-            Dictionary<string, AdaptyCustomAsset> customAssets
+            IReadOnlyDictionary<string, AdaptyCustomAsset> customAssets
         )
         {
-            CustomAssets = customAssets;
+            _CustomAssets = Copy(customAssets);
             return this;
         }
 
         public AdaptyUICreateFlowViewParameters SetProductPurchaseParameters(
-            Dictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters> productPurchaseParameters
+            IReadOnlyDictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters> productPurchaseParameters
         )
         {
-            ProductPurchaseParameters = productPurchaseParameters;
+            _ProductPurchaseParameters = Copy(productPurchaseParameters);
             return this;
         }
 

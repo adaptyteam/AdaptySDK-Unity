@@ -7,6 +7,7 @@
 
 using UnityEngine.Scripting;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace AdaptySDK
 {
@@ -28,9 +29,9 @@ namespace AdaptySDK
         {
             Identifier = identifier;
             Type = type;
-            Phases = phases;
+            Phases = new ReadOnlyCollection<AdaptySubscriptionPhase>(phases);
 #if UNITY_ANDROID
-            OfferTags = offerTags;
+            OfferTags = offerTags is null ? null : new ReadOnlyCollection<string>(offerTags);
 #else
             OfferTags = null;
 #endif
@@ -40,8 +41,8 @@ namespace AdaptySDK
 
         public readonly AdaptySubscriptionOfferType Type;
 
-        public readonly IList<AdaptySubscriptionPhase> Phases;
-        public readonly IList<string> OfferTags;
+        public readonly IReadOnlyList<AdaptySubscriptionPhase> Phases;
+        public readonly IReadOnlyList<string> OfferTags;
 
         public override string ToString() => 
             $"{nameof(Identifier)}: {Identifier}, " +

@@ -30,7 +30,7 @@ namespace AdaptySDK
         void FlowViewDidAskPermission(
             AdaptyUIFlowView view,
             string permission,
-            IDictionary<string, string> customArgs,
+            IReadOnlyDictionary<string, string> customArgs,
             Action<bool, string> respond
         );
 

@@ -8,6 +8,7 @@
 using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -23,7 +24,7 @@ namespace AdaptySDK
     [DataContract]
     public sealed partial class AdaptyProfile
     {
-        private AdaptyProfile() { }
+        private AdaptyProfile() => Freeze();
 
         /// <summary>
         /// An identifier of the user in Adapty.
@@ -50,14 +51,20 @@ namespace AdaptySDK
         /// Identifiers of attribution sources applied to the profile.
         /// </summary>
         [DataMember(Name = "applied_attribution_sources")]
-        public readonly IList<string> AppliedAttributionSources = new List<string>();
+        private readonly List<string> _AppliedAttributionSources = new List<string>();
+
+        [Preserve]
+        public IReadOnlyList<string> AppliedAttributionSources { get; private set; }
 
         /// <summary>
         /// Previously set user custom attributes with <see cref="Adapty.UpdateProfile(AdaptyProfileParameters, Action{AdaptyError})"/> method.
         /// </summary>
         [DataMember(Name = "custom_attributes")]
         [Newtonsoft.Json.JsonConverter(typeof(Serialization.AdaptyConverterLooseJson))]
-        public readonly IDictionary<string, object> CustomAttributes = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _CustomAttributes = new Dictionary<string, object>();
+
+        [Preserve]
+        public IReadOnlyDictionary<string, object> CustomAttributes { get; private set; }
 
         /// <summary>
         /// A dictionary of access levels configured in the Adapty Dashboard.
@@ -68,7 +75,10 @@ namespace AdaptySDK
         /// Can be null if the customer has no access levels.
         /// </remarks>
         [DataMember(Name = "paid_access_levels")]
-        public readonly IDictionary<string, AccessLevel> AccessLevels = new Dictionary<string, AccessLevel>();
+        private readonly Dictionary<string, AccessLevel> _AccessLevels = new Dictionary<string, AccessLevel>();
+
+        [Preserve]
+        public IReadOnlyDictionary<string, AccessLevel> AccessLevels { get; private set; }
 
         /// <summary>
         /// A dictionary of active subscriptions.
@@ -79,7 +89,10 @@ namespace AdaptySDK
         /// Can be null if the customer has no subscriptions.
         /// </remarks>
         [DataMember(Name = "subscriptions")]
-        public readonly IDictionary<string, Subscription> Subscriptions = new Dictionary<string, Subscription>();
+        private readonly Dictionary<string, Subscription> _Subscriptions = new Dictionary<string, Subscription>();
+
+        [Preserve]
+        public IReadOnlyDictionary<string, Subscription> Subscriptions { get; private set; }
 
         /// <summary>
         /// A dictionary of non-subscription purchases.
@@ -90,13 +103,39 @@ namespace AdaptySDK
         /// Can be null if the customer has no non-subscription purchases.
         /// </remarks>
         [DataMember(Name = "non_subscriptions")]
-        public readonly IDictionary<string, IList<NonSubscription>> NonSubscriptions = new Dictionary<string, IList<NonSubscription>>();
+        private readonly Dictionary<string, List<NonSubscription>> _NonSubscriptions = new Dictionary<string, List<NonSubscription>>();
+
+        [Preserve]
+        public IReadOnlyDictionary<string, IReadOnlyList<NonSubscription>> NonSubscriptions { get; private set; }
 
         [DataMember(Name = "timestamp", IsRequired = true)]
         internal readonly Int64 Version;
 
         [DataMember(Name = "is_test_user", IsRequired = true)]
         internal readonly bool IsTestUser;
+
+        // Replace hands the deserializer a new collection instead of filling the one the field
+        // initializer made, so the views are built here rather than alongside it.
+        [Preserve]
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context) => Freeze();
+
+        private void Freeze()
+        {
+            AppliedAttributionSources = new ReadOnlyCollection<string>(_AppliedAttributionSources);
+            CustomAttributes = new ReadOnlyDictionary<string, object>(_CustomAttributes);
+            AccessLevels = new ReadOnlyDictionary<string, AccessLevel>(_AccessLevels);
+            Subscriptions = new ReadOnlyDictionary<string, Subscription>(_Subscriptions);
+
+            var nonSubscriptions = new Dictionary<string, IReadOnlyList<NonSubscription>>();
+            foreach (var entry in _NonSubscriptions)
+            {
+                nonSubscriptions[entry.Key] = new ReadOnlyCollection<NonSubscription>(entry.Value);
+            }
+            NonSubscriptions = new ReadOnlyDictionary<string, IReadOnlyList<NonSubscription>>(
+                nonSubscriptions
+            );
+        }
 
         public override string ToString()
         {

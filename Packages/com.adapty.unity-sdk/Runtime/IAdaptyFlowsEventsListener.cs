@@ -140,7 +140,7 @@ namespace AdaptySDK
         void FlowViewDidReceiveAnalyticEvent(
             AdaptyUIFlowView view,
             string name,
-            IDictionary<string, object> @params
+            IReadOnlyDictionary<string, object> @params
         );
     }
 }

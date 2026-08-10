@@ -3,7 +3,7 @@
   "FlowVersionId": null,
   "InstanceIdentity": "flow-0002",
   "Name": "Minimal Flow",
-  "Paywalls": [],
+  "Paywalls (property)": [],
   "Placement": {
     "$type": "AdaptyPlacement",
     "ABTestName": "default",
@@ -15,9 +15,11 @@
   },
   "ProductIdentifiers (property)": [],
   "RemoteConfig (property)": null,
-  "RemoteConfigs": [],
+  "RemoteConfigs (property)": [],
   "VariationId": "variation-0002",
   "VendorProductIds (property)": [],
   "_PayloadData": null,
+  "_Paywalls": [],
+  "_RemoteConfigs": [],
   "_ResponseCreatedAt": 1753876800000
 }

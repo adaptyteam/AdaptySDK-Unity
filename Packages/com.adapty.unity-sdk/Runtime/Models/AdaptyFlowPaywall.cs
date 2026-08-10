@@ -5,6 +5,7 @@
 
 using UnityEngine.Scripting;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
@@ -53,7 +54,7 @@ namespace AdaptySDK
         /// <summary>
         /// Array of vendor product IDs (App Store or Google Play product identifiers) associated with this paywall.
         /// </summary>
-        public IList<string> VendorProductIds
+        public IReadOnlyList<string> VendorProductIds
         {
             get
             {
@@ -62,14 +63,14 @@ namespace AdaptySDK
                 {
                     list.Add(item.VendorProductId);
                 }
-                return list;
+                return new ReadOnlyCollection<string>(list);
             }
         }
 
         /// <summary>
         /// Array of product identifiers associated with this paywall.
         /// </summary>
-        public IList<AdaptyProductIdentifier> ProductIdentifiers
+        public IReadOnlyList<AdaptyProductIdentifier> ProductIdentifiers
         {
             get
             {
@@ -78,7 +79,7 @@ namespace AdaptySDK
                 {
                     list.Add(product.ToAdaptyProductIdentifier());
                 }
-                return list;
+                return new ReadOnlyCollection<AdaptyProductIdentifier>(list);
             }
         }
 

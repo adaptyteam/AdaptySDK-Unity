@@ -5,6 +5,7 @@
 
 using UnityEngine.Scripting;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
@@ -23,7 +24,7 @@ namespace AdaptySDK
         public readonly string Data;
 
         /// A custom dictionary configured in Adapty Dashboard for this paywall (same as `remoteConfigString`)
-        public IDictionary<string, object> Dictionary
+        public IReadOnlyDictionary<string, object> Dictionary
         {
             get
             {
@@ -32,7 +33,9 @@ namespace AdaptySDK
                     return null;
                 }
 
-                return AdaptyJson.DeserializeRemoteConfigDictionary(Data);
+                return new ReadOnlyDictionary<string, object>(
+                    AdaptyJson.DeserializeRemoteConfigDictionary(Data)
+                );
             }
         }
     }

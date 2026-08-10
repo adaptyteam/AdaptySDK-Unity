@@ -5,6 +5,7 @@
 
 using UnityEngine.Scripting;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 
 namespace AdaptySDK
@@ -20,7 +21,7 @@ namespace AdaptySDK
     [Preserve]
     public sealed class AdaptyFlow
     {
-        private AdaptyFlow() { }
+        private AdaptyFlow() => Freeze();
 
         /// <summary>
         /// An <see cref="AdaptyPlacement"/> object that contains information about the placement of the flow.
@@ -59,7 +60,10 @@ namespace AdaptySDK
         /// Array of custom JSON formatted data configured in the Adapty Dashboard, one entry per locale.
         /// </summary>
         [DataMember(Name = "remote_configs")]
-        public readonly IList<AdaptyRemoteConfig> RemoteConfigs = new List<AdaptyRemoteConfig>();
+        private readonly List<AdaptyRemoteConfig> _RemoteConfigs = new List<AdaptyRemoteConfig>();
+
+        [Preserve]
+        public IReadOnlyList<AdaptyRemoteConfig> RemoteConfigs { get; private set; }
 
         /// <summary>
         /// The first custom JSON formatted data configured in the Adapty Dashboard.
@@ -76,17 +80,33 @@ namespace AdaptySDK
         /// Array of paywall variations associated with this flow.
         /// </summary>
         [DataMember(Name = "variations", IsRequired = true)]
-        public readonly IList<AdaptyFlowPaywall> Paywalls;
+        private readonly List<AdaptyFlowPaywall> _Paywalls;
+
+        [Preserve]
+        public IReadOnlyList<AdaptyFlowPaywall> Paywalls { get; private set; }
 
         [DataMember(Name = "response_created_at", IsRequired = true)]
         private readonly long _ResponseCreatedAt;
         [DataMember(Name = "payload_data")]
         private readonly string _PayloadData; // nullable
 
+        [Preserve]
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context) => Freeze();
+
+        private void Freeze()
+        {
+            RemoteConfigs = new ReadOnlyCollection<AdaptyRemoteConfig>(_RemoteConfigs);
+            Paywalls =
+                _Paywalls is null
+                    ? null
+                    : new ReadOnlyCollection<AdaptyFlowPaywall>(_Paywalls);
+        }
+
         /// <summary>
         /// Array of vendor product IDs (App Store or Google Play product identifiers) aggregated across all paywall variations of this flow.
         /// </summary>
-        public IList<string> VendorProductIds
+        public IReadOnlyList<string> VendorProductIds
         {
             get
             {
@@ -102,14 +122,14 @@ namespace AdaptySDK
                         }
                     }
                 }
-                return list;
+                return new ReadOnlyCollection<string>(list);
             }
         }
 
         /// <summary>
         /// Array of product identifiers aggregated across all paywall variations of this flow.
         /// </summary>
-        public IList<AdaptyProductIdentifier> ProductIdentifiers
+        public IReadOnlyList<AdaptyProductIdentifier> ProductIdentifiers
         {
             get
             {
@@ -125,7 +145,7 @@ namespace AdaptySDK
                         }
                     }
                 }
-                return list;
+                return new ReadOnlyCollection<AdaptyProductIdentifier>(list);
             }
         }
 
