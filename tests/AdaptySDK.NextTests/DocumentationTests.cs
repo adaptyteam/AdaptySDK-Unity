@@ -41,9 +41,14 @@ namespace AdaptySDK.NextTests
                     missing.Add(name);
                 }
 
-                foreach (var member in Members(type))
+                var members = Members(type).ToList();
+                var overloads = members
+                    .GroupBy(member => member.Name, StringComparer.Ordinal)
+                    .ToDictionary(group => group.Key, group => group.Count(), StringComparer.Ordinal);
+
+                foreach (var member in members.GroupBy(member => member.Name).Select(group => group.First()))
                 {
-                    if (!IsSummarised(summarised, name, member))
+                    if (!IsSummarised(summarised, name, member, overloads[member.Name]))
                     {
                         missing.Add($"{name}.{member.Name}");
                     }
@@ -183,19 +188,28 @@ namespace AdaptySDK.NextTests
         /// name merely begins the same way, the failure a plain prefix match allows.
         /// </summary>
         /// <remarks>
-        /// Overloads of one name are still covered together: telling them apart means rendering
-        /// the parameter types the way the compiler writes them, and what this is here to catch is
-        /// a member with nothing said about it at all.
+        /// Overloads are counted rather than matched one by one: rendering the parameter types the
+        /// way the compiler writes them is a lot of machinery for the same answer. Two overloads
+        /// and one summary between them fails, which is the case that matters.
         /// </remarks>
-        private static bool IsSummarised(HashSet<string> summarised, string type, MemberInfo member)
+        private static bool IsSummarised(
+            HashSet<string> summarised,
+            string type,
+            MemberInfo member,
+            int overloads
+        )
         {
             var name = member.Name == ".ctor" ? "#ctor" : member.Name;
             var stem = $"{type}.{name}";
 
             if (member is MethodBase)
             {
-                return summarised.Contains("M:" + stem)
-                    || summarised.Any(entry => entry.StartsWith("M:" + stem + "(", StringComparison.Ordinal));
+                var documented = summarised.Count(entry =>
+                    entry == "M:" + stem
+                    || entry.StartsWith("M:" + stem + "(", StringComparison.Ordinal)
+                );
+
+                return documented >= overloads;
             }
 
             return summarised.Contains("F:" + stem)

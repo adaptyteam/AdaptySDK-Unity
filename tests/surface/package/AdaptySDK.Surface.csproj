@@ -22,7 +22,11 @@
          The Unity stubs linked in for compilation are not the package's surface, so they are
          excluded below rather than documented. -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!-- Not an error yet: the live surface is not fully documented. -->
+    <!-- CS1591 (missing) stays a warning: the Unity stubs and the deprecated tree share this
+         assembly and are not the SDK's surface, and DocumentationTests applies those exclusions.
+         Invalid documentation has no such exception - an unresolved cref or a param tag naming
+         nothing is wrong wherever it appears, and the compiler is the authority on both. -->
+    <WarningsAsErrors>$(WarningsAsErrors);CS1571;CS1572;CS1573;CS1574</WarningsAsErrors>
     <SdkRuntime>$(MSBuildThisFileDirectory)../../../Packages/com.adapty.unity-sdk/Runtime</SdkRuntime>
     <Shared>$(MSBuildThisFileDirectory)../../shared</Shared>
   </PropertyGroup>
