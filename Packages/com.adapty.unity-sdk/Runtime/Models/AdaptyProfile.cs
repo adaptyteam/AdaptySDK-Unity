@@ -46,6 +46,9 @@ namespace AdaptySDK
         [DataMember(Name = "applied_attribution_sources")]
         private readonly List<string> _AppliedAttributionSources = new List<string>();
 
+        /// <summary>
+        /// The attribution sources applied to this profile.
+        /// </summary>
         [Preserve]
         public IReadOnlyList<string> AppliedAttributionSources { get; private set; }
 
@@ -56,6 +59,9 @@ namespace AdaptySDK
         [Newtonsoft.Json.JsonConverter(typeof(Serialization.AdaptyConverterLooseJson))]
         private readonly Dictionary<string, object> _CustomAttributes = new Dictionary<string, object>();
 
+        /// <summary>
+        /// The custom attributes set on this profile. Numbers arrive as <see cref="double"/>.
+        /// </summary>
         [Preserve]
         public IReadOnlyDictionary<string, object> CustomAttributes { get; private set; }
 
@@ -70,6 +76,10 @@ namespace AdaptySDK
         [DataMember(Name = "paid_access_levels")]
         private readonly Dictionary<string, AccessLevel> _AccessLevels = new Dictionary<string, AccessLevel>();
 
+        /// <summary>
+        /// The profile's access levels, keyed by the identifier configured in the Dashboard. Empty when
+        /// the user has none.
+        /// </summary>
         [Preserve]
         public IReadOnlyDictionary<string, AccessLevel> AccessLevels { get; private set; }
 
@@ -84,6 +94,9 @@ namespace AdaptySDK
         [DataMember(Name = "subscriptions")]
         private readonly Dictionary<string, Subscription> _Subscriptions = new Dictionary<string, Subscription>();
 
+        /// <summary>
+        /// The profile's subscriptions, keyed by store product id. Empty when the user has none.
+        /// </summary>
         [Preserve]
         public IReadOnlyDictionary<string, Subscription> Subscriptions { get; private set; }
 
@@ -98,6 +111,10 @@ namespace AdaptySDK
         [DataMember(Name = "non_subscriptions")]
         private readonly Dictionary<string, List<NonSubscription>> _NonSubscriptions = new Dictionary<string, List<NonSubscription>>();
 
+        /// <summary>
+        /// The profile's non-subscription purchases, keyed by store product id — a list each, since one
+        /// product can be bought more than once. Empty when the user has none.
+        /// </summary>
         [Preserve]
         public IReadOnlyDictionary<string, IReadOnlyList<NonSubscription>> NonSubscriptions { get; private set; }
 
@@ -130,6 +147,10 @@ namespace AdaptySDK
             );
         }
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString()
         {
             var customAttributesStr =

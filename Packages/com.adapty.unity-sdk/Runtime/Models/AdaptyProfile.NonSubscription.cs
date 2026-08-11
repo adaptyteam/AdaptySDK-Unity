@@ -7,6 +7,9 @@ namespace AdaptySDK
     [Preserve]
     public sealed partial class AdaptyProfile
     {
+        /// <summary>
+        /// One non-subscription purchase of a profile — consumable or lifetime.
+        /// </summary>
         [DataContract]
         public sealed class NonSubscription
         {
@@ -69,6 +72,10 @@ namespace AdaptySDK
             [DataMember(Name = "is_consumable", IsRequired = true)]
             public readonly bool IsConsumable;
 
+            /// <summary>
+            /// A description for logs and the debugger. The format is not part of the contract —
+            /// read the members rather than parsing it.
+            /// </summary>
             public override string ToString() => $"{nameof(PurchaseId)}: {PurchaseId}, " +
                        $"{nameof(VendorProductId)}: {VendorProductId}, " +
                        $"{nameof(Store)}: {Store}, " +

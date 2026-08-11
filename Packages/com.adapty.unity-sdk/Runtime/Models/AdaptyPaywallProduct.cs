@@ -128,6 +128,10 @@ namespace AdaptySDK
         internal string PayloadData => _PayloadData;
         internal string WebPurchaseUrl => _WebPurchaseUrl;
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(VendorProductId)}: {VendorProductId}, "
             + $"{nameof(AdaptyProductId)}: {AdaptyProductId}, "

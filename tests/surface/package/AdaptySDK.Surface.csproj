@@ -16,6 +16,13 @@
     <RootNamespace>AdaptySDK</RootNamespace>
     <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
+
+    <!-- The completeness gate for public XML docs: CS1591 is "missing comment on a publicly
+         visible member", and the compiler enumerates them far more reliably than reading files.
+         The Unity stubs linked in for compilation are not the package's surface, so they are
+         excluded below rather than documented. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Not an error yet: the live surface is not fully documented. -->
     <SdkRuntime>$(MSBuildThisFileDirectory)../../../Packages/com.adapty.unity-sdk/Runtime</SdkRuntime>
     <Shared>$(MSBuildThisFileDirectory)../../shared</Shared>
   </PropertyGroup>

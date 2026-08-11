@@ -30,8 +30,8 @@ namespace AdaptySDK
         /// <summary>
         /// Initializes a new instance of the AdaptyCustomerIdentity class.
         /// </summary>
-        /// <param name="appAccountToken">The UUID for iOS App Store transactions (iOS Only). Nullable.</param>
-        /// <param name="obfuscatedAccountId">The obfuscated account identifier (Android Only). Nullable.</param>
+        /// <param name="iosAppAccountToken">The UUID for iOS App Store transactions (iOS Only). Nullable.</param>
+        /// <param name="androidObfuscatedAccountId">The obfuscated account identifier (Android Only). Nullable.</param>
         public AdaptyCustomerIdentity(Guid iosAppAccountToken, string androidObfuscatedAccountId)
         {
             IosAppAccountToken = iosAppAccountToken;
@@ -56,6 +56,10 @@ namespace AdaptySDK
         private string AndroidObfuscatedAccountIdForRequest =>
             string.IsNullOrEmpty(AndroidObfuscatedAccountId) ? null : AndroidObfuscatedAccountId;
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(IosAppAccountToken)}: {IosAppAccountToken}, "
             + $"{nameof(AndroidObfuscatedAccountId)}: {AndroidObfuscatedAccountId}";

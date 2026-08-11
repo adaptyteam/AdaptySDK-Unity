@@ -3,16 +3,29 @@ using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    /// <summary>
+    /// A flow view built by <see cref="AdaptyUI.CreateFlowView"/>. Single use: once dismissed it
+    /// is destroyed, and showing the flow again means building another one.
+    /// </summary>
     [DataContract]
     [Preserve]
     public sealed class AdaptyUIFlowView
     {
         private AdaptyUIFlowView() { }
 
+        /// <summary>
+        /// The identifier of this view, which the events carry back.
+        /// </summary>
         [DataMember(Name = "id", IsRequired = true)]
         public string Id;
+        /// <summary>
+        /// The placement the flow behind this view was fetched for.
+        /// </summary>
         [DataMember(Name = "placement_id", IsRequired = true)]
         public string PlacementId;
+        /// <summary>
+        /// The variation the flow resolved to. Purchases made here are attributed to it.
+        /// </summary>
         [DataMember(Name = "variation_id", IsRequired = true)]
         public string VariationId;
 
@@ -27,6 +40,10 @@ namespace AdaptySDK
         [DataMember(Name = "locale")]
         public string Locale;
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(Id)}: {Id}, "
             + $"{nameof(PlacementId)}: {PlacementId}, "

@@ -5,6 +5,9 @@ namespace AdaptySDK
 {
     public sealed partial class AdaptyProfile
     {
+        /// <summary>
+        /// One access level of a profile: whether it is active, what granted it, and until when.
+        /// </summary>
         [DataContract]
         public sealed class AccessLevel
         {
@@ -93,6 +96,9 @@ namespace AdaptySDK
             [DataMember(Name = "active_promotional_offer_id")]
             public readonly string ActivePromotionalOfferId; // nullable
 
+            /// <summary>
+            /// The offer the purchase behind this access level used, when it used one.
+            /// </summary>
             [DataMember(Name = "offer_id")]
             public readonly string OfferId; // nullable
 
@@ -149,6 +155,10 @@ namespace AdaptySDK
             [DataMember(Name = "is_refund", IsRequired = true)]
             public readonly bool IsRefund;
 
+            /// <summary>
+            /// A description for logs and the debugger. The format is not part of the contract —
+            /// read the members rather than parsing it.
+            /// </summary>
             public override string ToString() => $"{nameof(Id)}: {Id}, " +
                        $"{nameof(IsActive)}: {IsActive}, " +
                        $"{nameof(VendorProductId)}: {VendorProductId}, " +

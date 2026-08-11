@@ -6,6 +6,14 @@ using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    /// <summary>
+    /// The optional extras of <see cref="AdaptyUI.CreateFlowView"/>: which localization to render,
+    /// how long to wait, and the tags, timers and assets the flow substitutes into its layout.
+    /// </summary>
+    /// <remarks>
+    /// A dictionary handed to a setter is copied, so writing into your own copy afterwards does
+    /// not change what the view is built with.
+    /// </remarks>
     [DataContract]
     [Preserve]
     public sealed class AdaptyUICreateFlowViewParameters
@@ -21,6 +29,10 @@ namespace AdaptySDK
         [DataMember(Name = "locale")]
         public string Locale;
 
+        /// <summary>
+        /// How long to wait for the flow's assets before giving up. Null leaves the native
+        /// default.
+        /// </summary>
         public TimeSpan? LoadTimeout;
 
         /// <summary>
@@ -30,12 +42,19 @@ namespace AdaptySDK
         [Preserve]
         private double? LoadTimeoutInSeconds => LoadTimeout?.TotalSeconds;
 
+        /// <summary>
+        /// Fetches the flow's products while the view is being built, so the first frame already
+        /// has prices. Null leaves the native default.
+        /// </summary>
         [DataMember(Name = "preload_products")]
         public bool? PreloadProducts;
 
         [DataMember(Name = "custom_tags")]
         private Dictionary<string, string> _CustomTags;
 
+        /// <summary>
+        /// The values the flow substitutes for its custom tags, keyed by tag name. Null when none were set.
+        /// </summary>
         [Preserve]
         public IReadOnlyDictionary<string, string> CustomTags =>
             _CustomTags is null ? null : new ReadOnlyDictionary<string, string>(_CustomTags);
@@ -43,6 +62,9 @@ namespace AdaptySDK
         [DataMember(Name = "custom_timers")]
         private Dictionary<string, DateTime> _CustomTimers;
 
+        /// <summary>
+        /// When each of the flow's custom timers ends, keyed by timer name. A value with no <see cref="DateTimeKind"/> of its own is read as the user's local clock. Null when none were set.
+        /// </summary>
         [Preserve]
         public IReadOnlyDictionary<string, DateTime> CustomTimers =>
             _CustomTimers is null ? null : new ReadOnlyDictionary<string, DateTime>(_CustomTimers);
@@ -50,6 +72,9 @@ namespace AdaptySDK
         [DataMember(Name = "custom_assets")]
         private Dictionary<string, AdaptyCustomAsset> _CustomAssets;
 
+        /// <summary>
+        /// The assets the flow uses in place of its own, keyed by the asset id in the layout. Null when none were set.
+        /// </summary>
         [Preserve]
         public IReadOnlyDictionary<string, AdaptyCustomAsset> CustomAssets =>
             _CustomAssets is null ? null : new ReadOnlyDictionary<string, AdaptyCustomAsset>(_CustomAssets);
@@ -62,6 +87,10 @@ namespace AdaptySDK
             AdaptyPurchaseParameters
         > _ProductPurchaseParameters;
 
+        /// <summary>
+        /// Android only. The purchase extras to apply to each product the flow offers, keyed by
+        /// identifier. Null when none were set; ignored on iOS.
+        /// </summary>
         [Preserve]
         public IReadOnlyDictionary<
             AdaptyProductIdentifier,
@@ -98,11 +127,16 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Android only. When false, the flow view is laid out without safe area paddings. Defaults to true.
+        /// Android only. Lays the view out without safe area paddings when false. Null leaves the
+        /// native default, which is true. Ignored on iOS.
         /// </summary>
         [DataMember(Name = "enable_safe_area_paddings")]
         public bool? EnableSafeAreaPaddings;
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(Locale)}: {Locale}, "
             + $"{nameof(LoadTimeout)}: {LoadTimeout}, "
@@ -113,24 +147,32 @@ namespace AdaptySDK
             + $"{nameof(ProductPurchaseParameters)}: {ProductPurchaseParameters}, "
             + $"{nameof(EnableSafeAreaPaddings)}: {EnableSafeAreaPaddings}";
 
+        /// <summary>Sets <see cref="Locale"/>.</summary>
+        /// <param name="locale">The localization to render the flow with, such as "en" or "es".</param>
         public AdaptyUICreateFlowViewParameters SetLocale(string locale)
         {
             Locale = locale;
             return this;
         }
 
+        /// <summary>Sets <see cref="LoadTimeout"/>.</summary>
+        /// <param name="loadTimeout">How long to wait for the flow's assets.</param>
         public AdaptyUICreateFlowViewParameters SetLoadTimeout(TimeSpan? loadTimeout)
         {
             LoadTimeout = loadTimeout;
             return this;
         }
 
+        /// <summary>Sets <see cref="PreloadProducts"/>.</summary>
+        /// <param name="preloadProducts">True to fetch the products while the view is built.</param>
         public AdaptyUICreateFlowViewParameters SetPreloadProducts(bool? preloadProducts)
         {
             PreloadProducts = preloadProducts;
             return this;
         }
 
+        /// <summary>Sets <see cref="CustomTags"/>, copying the dictionary.</summary>
+        /// <param name="customTags">The value for each custom tag, keyed by tag name.</param>
         public AdaptyUICreateFlowViewParameters SetCustomTags(
             IReadOnlyDictionary<string, string> customTags
         )
@@ -164,6 +206,9 @@ namespace AdaptySDK
         /// <c>new DateTime(2026, 7, 30, 22, 0, 0)</c> means 22:00 where the user is; pass a
         /// <see cref="DateTimeKind.Utc"/> value to mean 22:00 UTC.
         /// </param>
+        /// <summary>
+        /// Sets <see cref="CustomTimers"/>, copying the dictionary.
+        /// </summary>
         public AdaptyUICreateFlowViewParameters SetCustomTimers(
             IReadOnlyDictionary<string, DateTime> customTimers
         )
@@ -172,6 +217,8 @@ namespace AdaptySDK
             return this;
         }
 
+        /// <summary>Sets <see cref="CustomAssets"/>, copying the dictionary.</summary>
+        /// <param name="customAssets">The asset to use for each id in the layout.</param>
         public AdaptyUICreateFlowViewParameters SetCustomAssets(
             IReadOnlyDictionary<string, AdaptyCustomAsset> customAssets
         )
@@ -180,6 +227,8 @@ namespace AdaptySDK
             return this;
         }
 
+        /// <summary>Sets <see cref="ProductPurchaseParameters"/>, copying the dictionary. Android only.</summary>
+        /// <param name="productPurchaseParameters">The purchase extras for each product.</param>
         public AdaptyUICreateFlowViewParameters SetProductPurchaseParameters(
             IReadOnlyDictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters> productPurchaseParameters
         )
@@ -188,6 +237,8 @@ namespace AdaptySDK
             return this;
         }
 
+        /// <summary>Sets <see cref="EnableSafeAreaPaddings"/>. Android only.</summary>
+        /// <param name="enableSafeAreaPaddings">False to lay the view out without safe area paddings.</param>
         public AdaptyUICreateFlowViewParameters SetEnableSafeAreaPaddings(
             bool? enableSafeAreaPaddings
         )

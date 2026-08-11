@@ -10,6 +10,9 @@ namespace AdaptySDK
     /// <c>AdaptySDK.Serialization.AdaptyConverterSubscriptionOffer</c> rather than from member
     /// annotations.
     /// </remarks>
+    /// <summary>
+    /// A discounted offer on a subscription, and the phases it runs through.
+    /// </summary>
     [Preserve]
     public sealed class AdaptySubscriptionOffer
     {
@@ -29,13 +32,29 @@ namespace AdaptySDK
             OfferTags = offerTags is null ? null : new ReadOnlyCollection<string>(offerTags);
         }
 
+        /// <summary>
+        /// The offer id the store knows it by. Null for an introductory offer on iOS, which has none.
+        /// </summary>
         public readonly string Identifier;
 
+        /// <summary>
+        /// Which kind of offer this is.
+        /// </summary>
         public readonly AdaptySubscriptionOfferType Type;
 
+        /// <summary>
+        /// The phases the offer runs through, in order.
+        /// </summary>
         public readonly IReadOnlyList<AdaptySubscriptionPhase> Phases;
+        /// <summary>
+        /// Android only. The tags Google Play carries on the offer. Null on iOS.
+        /// </summary>
         public readonly IReadOnlyList<string> OfferTags;
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() => 
             $"{nameof(Identifier)}: {Identifier}, " +
             $"{nameof(Type)}: {Type}, " +

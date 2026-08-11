@@ -57,6 +57,10 @@ namespace AdaptySDK
         [DataMember(Name = "remote_configs")]
         private readonly List<AdaptyRemoteConfig> _RemoteConfigs = new List<AdaptyRemoteConfig>();
 
+        /// <summary>
+        /// The remote configs of the flow, one per localization. Empty when none is configured;
+        /// <see cref="RemoteConfig"/> is the first of them.
+        /// </summary>
         [Preserve]
         public IReadOnlyList<AdaptyRemoteConfig> RemoteConfigs { get; private set; }
 
@@ -77,6 +81,9 @@ namespace AdaptySDK
         [DataMember(Name = "variations", IsRequired = true)]
         private readonly List<AdaptyFlowPaywall> _Paywalls;
 
+        /// <summary>
+        /// The paywall variations this flow offers.
+        /// </summary>
         [Preserve]
         public IReadOnlyList<AdaptyFlowPaywall> Paywalls { get; private set; }
 
@@ -144,6 +151,10 @@ namespace AdaptySDK
             }
         }
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(Placement)}: {Placement}, "
             + $"{nameof(InstanceIdentity)}: {InstanceIdentity}, "

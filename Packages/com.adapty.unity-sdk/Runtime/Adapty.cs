@@ -898,6 +898,9 @@ namespace AdaptySDK
         }
     }
 
+    /// <summary>
+    /// Building, presenting and dismissing the views that render a flow.
+    /// </summary>
     public static partial class AdaptyUI
     {
         /// <summary>
@@ -1162,9 +1165,13 @@ namespace AdaptySDK
         /// Sends one request to the native side and hands the typed reply to
         /// <paramref name="completionHandler"/>.
         /// </summary>
+        /// <param name="method">The method name the bridge dispatches on.</param>
         /// <param name="request">
         /// The parameters, either a model or a <see cref="JObject"/> built at the call site. Null
         /// sends the method alone.
+        /// </param>
+        /// <param name="completionHandler">
+        /// Called with the decoded reply, or with the error the reply carried.
         /// </param>
         internal static void Send<T>(
             string method,

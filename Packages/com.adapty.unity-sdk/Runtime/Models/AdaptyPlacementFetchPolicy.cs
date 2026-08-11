@@ -4,6 +4,10 @@ using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    /// <summary>
+    /// Whether a fetch may answer from the cache, and for how long. Pick one of the shared
+    /// instances or build one with <see cref="ReturnCacheDataIfNotExpiredElseLoad"/>.
+    /// </summary>
     [DataContract]
     [Preserve]
     public sealed class AdaptyPlacementFetchPolicy
@@ -26,10 +30,16 @@ namespace AdaptySDK
             _MaxAge = maxAge;
         }
 
+        /// <summary>
+        /// Ask the server, and fall back to the cache when it cannot be reached. The default.
+        /// </summary>
         public static readonly AdaptyPlacementFetchPolicy ReloadRevalidatingCacheData = new(
             "reload_revalidating_cache_data",
             null
         );
+        /// <summary>
+        /// Use the cache when there is anything in it, however old, and only ask the server otherwise.
+        /// </summary>
         public static readonly AdaptyPlacementFetchPolicy ReturnCacheDataElseLoad = new(
             "return_cache_data_else_load",
             null
@@ -37,12 +47,24 @@ namespace AdaptySDK
 
         // Declared after the policy it aliases: a static field initializer runs in declaration
         // order, so the other way round leaves Default null.
+        /// <summary>
+        /// The policy used when none is given — the same instance as
+        /// <see cref="ReloadRevalidatingCacheData"/>.
+        /// </summary>
         public static readonly AdaptyPlacementFetchPolicy Default = ReloadRevalidatingCacheData;
 
+        /// <summary>
+        /// Use the cache while it is younger than <paramref name="maxAge"/>, and ask the server once it
+        /// is older.
+        /// </summary>
         public static AdaptyPlacementFetchPolicy ReturnCacheDataIfNotExpiredElseLoad(
             TimeSpan maxAge
         ) => new("return_cache_data_if_not_expired_else_load", maxAge);
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(_Type)}: {_Type}, " + $"{nameof(_MaxAge)}: {_MaxAge}";
     }

@@ -3,12 +3,20 @@ using System.Runtime.Serialization;
 
 namespace AdaptySDK
 {
+    /// <summary>
+    /// What <see cref="Adapty.GetCurrentInstallationStatus"/> reports: how much is known about this
+    /// installation, and the details when they are.
+    /// </summary>
     [DataContract]
     [Preserve]
     public sealed class AdaptyInstallationStatus
     {
         private AdaptyInstallationStatus() { }
 
+        /// <summary>
+        /// How much is known. <see cref="Details"/> is set when this is
+        /// <see cref="AdaptyInstallationStatusType.Determined"/>.
+        /// </summary>
         [DataMember(Name = "status", IsRequired = true)]
         public readonly AdaptyInstallationStatusType Status;
 
@@ -37,6 +45,10 @@ namespace AdaptySDK
             }
         }
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(Status)}: {Status}, "
             + $"{nameof(Details)}: {(Details == null ? "null" : Details.ToString())}";

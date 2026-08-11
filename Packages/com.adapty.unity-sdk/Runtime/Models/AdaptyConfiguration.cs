@@ -59,6 +59,10 @@ namespace AdaptySDK
         [Preserve]
         private string CrossPlatformSdkVersion => Adapty.SDKVersion;
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(ApiKey)}: {ApiKey}, "
             + $"{nameof(CustomerUserId)}: {CustomerUserId}, "
