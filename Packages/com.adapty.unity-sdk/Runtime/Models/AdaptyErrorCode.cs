@@ -223,9 +223,12 @@ namespace AdaptySDK
         FetchSubscriptionStatusFailed = 1020,
 
         /// <summary>
-        /// iOS only. Reported by <see cref="Adapty.ReportTransaction(System.String, System.Action{AdaptySDK.AdaptyError})"/> when the purchase is
-        /// waiting for confirmation — Ask to Buy, or a pending payment method. The profile updates
-        /// when the store resolves it, so wait for it rather than retrying.
+        /// iOS only, and not reachable from Unity today. The native SDK raises it when StoreKit
+        /// answers a purchase with <c>.pending</c> — Ask to Buy, or a payment method that settles
+        /// later — from an overload that takes StoreKit's own result. The Unity bridge reports a
+        /// transaction by its id, which is a different path with no pending state, so the code is
+        /// named here for completeness rather than as something to handle. A pending purchase made
+        /// through the SDK arrives as <see cref="AdaptyPurchaseResultType.Pending"/> instead.
         /// </summary>
         PaymentPendingError = 1050,
 
