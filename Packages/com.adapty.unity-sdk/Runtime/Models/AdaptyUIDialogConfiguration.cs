@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     /// <summary>
-    /// What <see cref="AdaptyUI.ShowDialog"/> puts on the dialog. Only the default action title
+    /// What <see cref="AdaptyUI.ShowDialog(AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyUIDialogConfiguration, System.Action{AdaptySDK.AdaptyUIDialogActionType, AdaptySDK.AdaptyError})"/> puts on the dialog. Only the default action title
     /// is required; a dialog without a secondary one has a single button.
     /// </summary>
     [DataContract]

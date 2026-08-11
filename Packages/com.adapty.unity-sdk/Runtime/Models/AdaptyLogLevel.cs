@@ -7,7 +7,7 @@ namespace AdaptySDK
     /// How much the native SDK writes to the platform log.
     /// </summary>
     /// <remarks>
-    /// Each level includes the ones before it. Set it in the configuration, or at any time with <see cref="Adapty.SetLogLevel"/>.
+    /// Each level includes the ones before it. Set it in the configuration, or at any time with <see cref="Adapty.SetLogLevel(AdaptySDK.AdaptyLogLevel, System.Action{AdaptySDK.AdaptyError})"/>.
     /// </remarks>
     [Preserve]
     public enum AdaptyLogLevel

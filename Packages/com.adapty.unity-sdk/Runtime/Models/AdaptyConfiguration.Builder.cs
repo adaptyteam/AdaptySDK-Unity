@@ -60,7 +60,7 @@ namespace AdaptySDK
 
             /// <summary>
             /// The identifier of the user in your system, when you already know it at activation.
-            /// Null to stay anonymous and call <see cref="Adapty.Identify"/> later.
+            /// Null to stay anonymous and call <see cref="Adapty.Identify(System.String, System.Action{AdaptySDK.AdaptyError})"/> later.
             /// </summary>
             public string CustomerUserId; // nullable
 
@@ -132,13 +132,13 @@ namespace AdaptySDK
 
             /// <summary>
             /// How much the native SDK logs. Also settable at any time with
-            /// <see cref="Adapty.SetLogLevel"/>.
+            /// <see cref="Adapty.SetLogLevel(AdaptySDK.AdaptyLogLevel, System.Action{AdaptySDK.AdaptyError})"/>.
             /// </summary>
             public AdaptyLogLevel LogLevel;
 
             /// <summary>
             /// Activates the flow rendering module along with the SDK. Required before
-            /// <see cref="AdaptyUI.CreateFlowView"/> can build a view.
+            /// <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/> can build a view.
             /// </summary>
             public bool ActivateUI;
 

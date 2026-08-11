@@ -8,7 +8,7 @@ namespace AdaptySDK {
     [Preserve]
     public enum AdaptyUIUserActionType {
         /// <summary>
-        /// The close control of the flow was tapped. The view is not dismissed for you — call <see cref="AdaptyUI.DismissFlowView"/> if that is what you want.
+        /// The close control of the flow was tapped. The view is not dismissed for you — call <see cref="AdaptyUI.DismissFlowView(AdaptySDK.AdaptyUIFlowView, System.Action{AdaptySDK.AdaptyError})"/> if that is what you want.
         /// </summary>
         [EnumMember(Value = "close")]
         Close = 0,

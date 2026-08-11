@@ -93,7 +93,7 @@ namespace AdaptySDK
         InvalidOfferPrice = 14,
 
         /// <summary>
-        /// Android only. The SDK was called before <see cref="Adapty.Activate"/>.
+        /// Android only. The SDK was called before <see cref="Adapty.Activate(AdaptySDK.AdaptyConfiguration, System.Action{AdaptySDK.AdaptyError})"/>.
         /// </summary>
         AdaptyNotInitialized = 20,
 
@@ -197,7 +197,7 @@ namespace AdaptySDK
         CantMakePayments = 1003,
 
         /// <summary>
-        /// Android only. <see cref="Adapty.RestorePurchases"/> found nothing to restore. iOS does
+        /// Android only. <see cref="Adapty.RestorePurchases(System.Action{AdaptySDK.AdaptyProfile, AdaptySDK.AdaptyError})"/> found nothing to restore. iOS does
         /// not produce this code.
         /// </summary>
         NoPurchasesToRestore = 1004,
@@ -223,7 +223,7 @@ namespace AdaptySDK
         FetchSubscriptionStatusFailed = 1020,
 
         /// <summary>
-        /// iOS only. Reported by <see cref="Adapty.ReportTransaction"/> when the purchase is
+        /// iOS only. Reported by <see cref="Adapty.ReportTransaction(System.String, System.Action{AdaptySDK.AdaptyError})"/> when the purchase is
         /// waiting for confirmation — Ask to Buy, or a pending payment method. The profile updates
         /// when the store resolves it, so wait for it rather than retrying.
         /// </summary>
@@ -231,7 +231,7 @@ namespace AdaptySDK
 
         /// <summary>
         /// The two platforms mean different things by this number. On iOS the SDK was called
-        /// before <see cref="Adapty.Activate"/>; on Android the Adapty backend answered 401 or 403,
+        /// before <see cref="Adapty.Activate(AdaptySDK.AdaptyConfiguration, System.Action{AdaptySDK.AdaptyError})"/>; on Android the Adapty backend answered 401 or 403,
         /// which points at the API key.
         /// </summary>
         NotActivated = 2002,
@@ -273,13 +273,13 @@ namespace AdaptySDK
         WrongParam = 3001,
 
         /// <summary>
-        /// iOS only. <see cref="Adapty.Activate"/> was called more than once.
+        /// iOS only. <see cref="Adapty.Activate(AdaptySDK.AdaptyConfiguration, System.Action{AdaptySDK.AdaptyError})"/> was called more than once.
         /// </summary>
         ActivateOnceError = 3005,
 
         /// <summary>
-        /// The profile changed while the operation was running — an <see cref="Adapty.Identify"/>
-        /// or <see cref="Adapty.Logout"/> in between. Repeat the operation on the new profile.
+        /// The profile changed while the operation was running — an <see cref="Adapty.Identify(System.String, System.Action{AdaptySDK.AdaptyError})"/>
+        /// or <see cref="Adapty.Logout(System.Action{AdaptySDK.AdaptyError})"/> in between. Repeat the operation on the new profile.
         /// </summary>
         ProfileWasChanged = 3006,
 
@@ -289,7 +289,7 @@ namespace AdaptySDK
         UnsupportedData = 3007,
 
         /// <summary>
-        /// <see cref="Adapty.Logout"/> was called for a profile that was never identified.
+        /// <see cref="Adapty.Logout(System.Action{AdaptySDK.AdaptyError})"/> was called for a profile that was never identified.
         /// </summary>
         UnidentifiedUserLogout = 3020,
 

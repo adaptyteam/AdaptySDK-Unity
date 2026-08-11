@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     /// <summary>
-    /// A flow view built by <see cref="AdaptyUI.CreateFlowView"/>. Single use: once dismissed it
+    /// A flow view built by <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/>. Single use: once dismissed it
     /// is destroyed, and showing the flow again means building another one.
     /// </summary>
     [DataContract]

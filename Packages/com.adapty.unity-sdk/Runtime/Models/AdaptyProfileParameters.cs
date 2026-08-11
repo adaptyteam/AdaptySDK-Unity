@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     /// <summary>
-    /// The profile attributes <see cref="Adapty.UpdateProfile"/> sends. Build one with
+    /// The profile attributes <see cref="Adapty.UpdateProfile(AdaptySDK.AdaptyProfileParameters, System.Action{AdaptySDK.AdaptyError})"/> sends. Build one with
     /// <see cref="Builder"/>.
     /// </summary>
     /// <remarks>

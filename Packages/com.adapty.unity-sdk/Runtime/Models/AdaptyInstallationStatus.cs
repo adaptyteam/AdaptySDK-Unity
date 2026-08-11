@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     /// <summary>
-    /// What <see cref="Adapty.GetCurrentInstallationStatus"/> reports: how much is known about this
+    /// What <see cref="Adapty.GetCurrentInstallationStatus(System.Action{AdaptySDK.AdaptyInstallationStatus, AdaptySDK.AdaptyError})"/> reports: how much is known about this
     /// installation, and the details when they are.
     /// </summary>
     [DataContract]

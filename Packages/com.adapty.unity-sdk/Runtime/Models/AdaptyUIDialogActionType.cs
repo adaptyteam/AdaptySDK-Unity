@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace AdaptySDK
 {
     /// <summary>
-    /// Which button closed a dialog shown by <see cref="AdaptyUI.ShowDialog"/>.
+    /// Which button closed a dialog shown by <see cref="AdaptyUI.ShowDialog(AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyUIDialogConfiguration, System.Action{AdaptySDK.AdaptyUIDialogActionType, AdaptySDK.AdaptyError})"/>.
     /// </summary>
     [Preserve]
     public enum AdaptyUIDialogActionType {
