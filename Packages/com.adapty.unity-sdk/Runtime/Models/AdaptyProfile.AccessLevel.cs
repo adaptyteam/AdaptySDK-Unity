@@ -50,16 +50,16 @@ namespace AdaptySDK
             public readonly DateTime ActivatedAt;
 
             /// <summary>
-            /// The time when the access level was renewed.
+            /// The time when the access level was renewed. Null when there has been no renewal.
             /// </summary>
             [DataMember(Name = "renewed_at")]
-            public readonly DateTime? RenewedAt; // nullable
+            public readonly DateTime? RenewedAt;
 
             /// <summary>
             /// The time when the access level will expire (could be in the past and could be null for lifetime access).
             /// </summary>
             [DataMember(Name = "expires_at")]
-            public readonly DateTime? ExpiresAt; // nullable
+            public readonly DateTime? ExpiresAt;
 
             /// <summary>
             /// Whether the access level is active for a lifetime (no expiration date).
@@ -78,7 +78,7 @@ namespace AdaptySDK
             /// If the value is not null, it means that the offer was applied during the current subscription period. 
             /// </remarks>
             [DataMember(Name = "active_introductory_offer_type")]
-            public readonly string ActiveIntroductoryOfferType; // nullable
+            public readonly string ActiveIntroductoryOfferType;
 
             /// <summary>
             /// The type of active promotional offer.
@@ -88,19 +88,19 @@ namespace AdaptySDK
             /// If the value is not null, it means that the offer was applied during the current subscription period.
             /// </remarks>
             [DataMember(Name = "active_promotional_offer_type")]
-            public readonly string ActivePromotionalOfferType; // nullable
+            public readonly string ActivePromotionalOfferType;
 
             /// <summary>
-            /// An identifier of active promotional offer.
+            /// An identifier of active promotional offer. Null when none is active.
             /// </summary>
             [DataMember(Name = "active_promotional_offer_id")]
-            public readonly string ActivePromotionalOfferId; // nullable
+            public readonly string ActivePromotionalOfferId;
 
             /// <summary>
-            /// The offer the purchase behind this access level used, when it used one.
+            /// The offer the purchase behind this access level used. Null when it used none.
             /// </summary>
             [DataMember(Name = "offer_id")]
-            public readonly string OfferId; // nullable
+            public readonly string OfferId;
 
             /// <summary>
             /// Whether the auto-renewable subscription is set to renew.
@@ -122,7 +122,7 @@ namespace AdaptySDK
             /// Will be set to null if the user reactivates the subscription. 
             /// </remarks>
             [DataMember(Name = "unsubscribed_at")]
-            public readonly DateTime? UnsubscribedAt; // nullable
+            public readonly DateTime? UnsubscribedAt;
 
             /// <summary>
             /// The time when billing issue was detected (Apple was not able to charge the card).
@@ -131,23 +131,24 @@ namespace AdaptySDK
             /// Subscription can still be active. Will be set to null if the charge will be made. 
             /// </remarks>
             [DataMember(Name = "billing_issue_detected_at")]
-            public readonly DateTime? BillingIssueDetectedAt; // nullable
+            public readonly DateTime? BillingIssueDetectedAt;
 
 
             /// <summary>
-            /// The time when the access level has started (could be in the future).
+            /// The time when the access level has started (could be in the future). Null when there is
+        /// no start date.
             /// </summary>
             [DataMember(Name = "starts_at")]
-            public readonly DateTime? StartsAt; // nullable
+            public readonly DateTime? StartsAt;
 
             /// <summary>
-            /// The reason why the subscription was cancelled.
+            /// The reason why the subscription was cancelled. Null when it was not.
             /// </summary>
             /// <remarks>
             /// Possible values are: voluntarily_cancelled, billing_error, refund, price_increase, product_was_not_available, unknown.
             /// </remarks>
             [DataMember(Name = "cancellation_reason")]
-            public readonly string CancellationReason; // nullable
+            public readonly string CancellationReason;
 
             /// <summary>
             /// Whether the purchase was refunded.

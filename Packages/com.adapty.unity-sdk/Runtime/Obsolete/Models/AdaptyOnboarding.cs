@@ -50,7 +50,7 @@ namespace AdaptySDK
         /// This can be null if no remote config is configured for the onboarding.
         /// </remarks>
         [DataMember(Name = "remote_config")]
-        public readonly AdaptyRemoteConfig RemoteConfig; // nullable
+        public readonly AdaptyRemoteConfig RemoteConfig;
 
         [DataMember(Name = "onboarding_builder", IsRequired = true)]
         private readonly OnboardingBuilder _Builder;
@@ -59,7 +59,7 @@ namespace AdaptySDK
         private readonly long _ResponseCreatedAt;
 
         [DataMember(Name = "payload_data")]
-        private readonly string _PayloadData; // nullable
+        private readonly string _PayloadData;
 
         [DataMember(Name = "request_locale", IsRequired = true)]
         private readonly string _RequestLocale;

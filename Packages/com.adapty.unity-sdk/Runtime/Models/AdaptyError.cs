@@ -26,7 +26,7 @@ namespace AdaptySDK {
         /// response. Null when there is nothing to add.
         /// </summary>
         [DataMember(Name = "detail")]
-        public readonly string Detail; // nullable
+        public readonly string Detail;
 
         /// <summary>
         /// A description for logs and the debugger. The format is not part of the contract —

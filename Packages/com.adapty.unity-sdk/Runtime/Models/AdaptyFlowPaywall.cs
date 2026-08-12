@@ -44,7 +44,7 @@ namespace AdaptySDK
         [DataMember(Name = "products", IsRequired = true)]
         internal readonly IList<ProductReference> _Products;
         [DataMember(Name = "web_purchase_url")]
-        private readonly string _WebPurchaseUrl; // nullable
+        private readonly string _WebPurchaseUrl;
 
         /// <summary>
         /// Array of vendor product IDs (App Store or Google Play product identifiers) associated with this paywall.

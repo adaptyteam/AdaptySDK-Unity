@@ -46,8 +46,8 @@ namespace AdaptySDK
     public sealed class AdaptyOnboardingsAnalyticsEventScreenCompleted
         : AdaptyOnboardingsAnalyticsEvent
     {
-        public readonly string ElementId; // nullable
-        public readonly string Reply; // nullable
+        public readonly string ElementId;
+        public readonly string Reply;
 
         public AdaptyOnboardingsAnalyticsEventScreenCompleted(string elementId, string reply)
         {

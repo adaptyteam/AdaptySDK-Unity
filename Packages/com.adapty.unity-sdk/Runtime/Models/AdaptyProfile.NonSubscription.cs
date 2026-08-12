@@ -40,10 +40,10 @@ namespace AdaptySDK
             public readonly string VendorProductId;
 
             /// <summary>
-            /// Transaction id from the App Store.
+            /// Transaction id from the App Store. Null when the store does not report one.
             /// </summary>
             [DataMember(Name = "vendor_transaction_id")]
-            public readonly string VendorTransactionId; // nullable
+            public readonly string VendorTransactionId;
 
             /// <summary>
             /// The time when the product was purchased.

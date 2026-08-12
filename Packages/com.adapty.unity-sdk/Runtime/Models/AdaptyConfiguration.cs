@@ -9,9 +9,9 @@ namespace AdaptySDK
         [DataMember(Name = "api_key", IsRequired = true)]
         private readonly string ApiKey;
         [DataMember(Name = "customer_user_id")]
-        private readonly string CustomerUserId; // nullable
+        private readonly string CustomerUserId;
         [DataMember(Name = "customer_identity_parameters")]
-        private readonly AdaptyCustomerIdentity CustomerIdentity; // nullable
+        private readonly AdaptyCustomerIdentity CustomerIdentity;
         [DataMember(Name = "observer_mode")]
         private readonly bool? ObserverMode;
         [DataMember(Name = "apple_idfa_collection_disabled")]
@@ -29,9 +29,9 @@ namespace AdaptySDK
         [DataMember(Name = "server_cluster")]
         private readonly AdaptyServerCluster? ServerCluster;
         [DataMember(Name = "backend_proxy_host")]
-        private readonly string BackendProxyHost; // nullable
+        private readonly string BackendProxyHost;
         [DataMember(Name = "backend_proxy_port")]
-        private readonly int? BackendProxyPort; // nullable
+        private readonly int? BackendProxyPort;
         [DataMember(Name = "log_level")]
         private readonly AdaptyLogLevel? LogLevel;
         [DataMember(Name = "activate_ui")]

@@ -49,7 +49,7 @@ namespace AdaptySDK
         /// This can be null if the version identifier is not available.
         /// </remarks>
         [DataMember(Name = "flow_version_id")]
-        public readonly string FlowVersionId; // nullable
+        public readonly string FlowVersionId;
 
         /// <summary>
         /// Array of custom JSON formatted data configured in the Adapty Dashboard, one entry per locale.
@@ -90,7 +90,7 @@ namespace AdaptySDK
         [DataMember(Name = "response_created_at", IsRequired = true)]
         private readonly long _ResponseCreatedAt;
         [DataMember(Name = "payload_data")]
-        private readonly string _PayloadData; // nullable
+        private readonly string _PayloadData;
 
         [Preserve]
         [OnDeserialized]

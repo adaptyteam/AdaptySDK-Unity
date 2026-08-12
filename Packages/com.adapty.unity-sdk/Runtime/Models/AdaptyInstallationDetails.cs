@@ -18,7 +18,7 @@ namespace AdaptySDK
         /// has not been established.
         /// </summary>
         [DataMember(Name = "install_id")]
-        public readonly string InstallId; // nullable
+        public readonly string InstallId;
         /// <summary>
         /// When the app was installed, on the machine's clock — the wire carries UTC and the SDK converts.
         /// </summary>
@@ -34,7 +34,7 @@ namespace AdaptySDK
         /// was none.
         /// </summary>
         [DataMember(Name = "payload")]
-        public readonly string Payload; // nullable
+        public readonly string Payload;
 
         /// <summary>
         /// A description for logs and the debugger. The format is not part of the contract —

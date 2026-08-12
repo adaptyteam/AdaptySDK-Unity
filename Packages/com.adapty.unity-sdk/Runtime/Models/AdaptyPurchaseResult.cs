@@ -26,15 +26,17 @@ namespace AdaptySDK
 
         /// <summary>
         /// iOS only. The signed App Store transaction, for server-side verification of your own.
+        /// Null off iOS, and when the store does not provide one.
         /// </summary>
         [DataMember(Name = "apple_jws_transaction")]
-        public readonly string AppleJWSTransaction; // nullable, iOS Only
+        public readonly string AppleJWSTransaction;
 
         /// <summary>
         /// Android only. The Google Play purchase token, for server-side verification of your own.
+        /// Null off Android, and when the store does not provide one.
         /// </summary>
         [DataMember(Name = "google_purchase_token")]
-        public readonly string GooglePurchaseToken; // nullable, Android Only
+        public readonly string GooglePurchaseToken;
 
         /// <summary>
         /// A description for logs and the debugger. The format is not part of the contract —

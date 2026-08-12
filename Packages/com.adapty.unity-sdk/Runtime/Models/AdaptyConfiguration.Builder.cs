@@ -68,13 +68,13 @@ namespace AdaptySDK
             /// The identifier of the user in your system, when you already know it at activation.
             /// Null to stay anonymous and call <see cref="Adapty.Identify(System.String, System.Action{AdaptySDK.AdaptyError})"/> later.
             /// </summary>
-            public string CustomerUserId; // nullable
+            public string CustomerUserId;
 
             /// <summary>
             /// The store account identifiers to attribute purchases with. Null, or an instance
             /// carrying neither value, is not sent.
             /// </summary>
-            public AdaptyCustomerIdentity CustomerIdentity; // nullable
+            public AdaptyCustomerIdentity CustomerIdentity;
 
             /// <summary>
             /// Observer mode: your own code makes the purchases and Adapty only observes them.
@@ -129,7 +129,7 @@ namespace AdaptySDK
             /// <summary>
             /// The host of a proxy to route Adapty's backend calls through. Null for none.
             /// </summary>
-            public string BackendProxyHost; // nullable
+            public string BackendProxyHost;
 
             /// <summary>
             /// The port of the proxy named by <see cref="BackendProxyHost"/>. Ignored without it.
@@ -152,7 +152,7 @@ namespace AdaptySDK
             /// Limits for the cache the flow renderer keeps for images and video. Null leaves the
             /// native defaults.
             /// </summary>
-            public AdaptyUIMediaCacheConfiguration AdaptyUIMediaCache; // nullable
+            public AdaptyUIMediaCacheConfiguration AdaptyUIMediaCache;
 
             /// <summary>
             /// Starts a configuration for the given API key.
@@ -216,8 +216,8 @@ namespace AdaptySDK
             /// </param>
             public Builder SetCustomerUserId(
                 string customerUserId,
-                Guid iosAppAccountToken, // nullable
-                string androidObfuscatedAccountId // nullable
+                Guid iosAppAccountToken,
+                string androidObfuscatedAccountId
             )
             {
                 CustomerUserId = customerUserId;

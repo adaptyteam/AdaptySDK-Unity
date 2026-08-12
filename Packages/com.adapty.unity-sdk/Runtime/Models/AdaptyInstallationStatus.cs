@@ -26,7 +26,7 @@ namespace AdaptySDK
         /// </summary>
         [DataMember(Name = "details")]
         [Preserve]
-        public AdaptyInstallationDetails Details { get; private set; } // nullable
+        public AdaptyInstallationDetails Details { get; private set; }
 
         // The contract carries details on the determined branch only, which no attribute can say.
         // Dropping it elsewhere rather than failing is what the branch-per-subclass model did.
