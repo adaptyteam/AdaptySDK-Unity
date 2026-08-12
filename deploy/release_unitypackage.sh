@@ -1,4 +1,25 @@
 #!/usr/bin/env bash
+#
+# Publishes the .unitypackage: builds it, commits it under Releases/, tags, pushes, and creates the
+# GitHub release. The route around it is feature branch -> dev -> a release/x.y branch cut from dev,
+# with the tag and this commit on that branch; main gets a merge only for a release. 4.0.0-beta.1
+# went out that way, and its tag sits on origin/release/4.0.0 rather than on main or dev.
+#
+# Four things here decide what actually ships, none of them obvious from the flags:
+#
+#   - It REBUILDS the package unless --skip-build, so a run without that flag puts different bytes
+#     under the tag than whatever was accepted. Pass --skip-build to release the file you tested.
+#   - It creates its own commit, "add unitypackage <version>", and tags THAT. The tag names the
+#     artifact commit, not the sources it was built from - record the source SHA separately or
+#     nothing connects the two.
+#   - It pushes HEAD and the tag without checking which branch it is on or whether the tree is
+#     clean. Standing on the wrong branch releases that branch.
+#   - Its tag is lightweight, so `gh release create --notes-from-tag` falls back to the commit
+#     message and the release notes read "add unitypackage <version>". Create the GitHub release
+#     separately with --notes-file, or pass --skip-github-release here.
+#
+# --prerelease is off by default and has to be passed to both this script and any separate
+# `gh release create`.
 
 set -euo pipefail
 
