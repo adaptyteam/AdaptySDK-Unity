@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -7,7 +7,8 @@ namespace AdaptySDK
     /// Which button closed a dialog shown by <see cref="AdaptyUI.ShowDialog(AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyUIDialogConfiguration, System.Action{AdaptySDK.AdaptyUIDialogActionType, AdaptySDK.AdaptyError})"/>.
     /// </summary>
     [Preserve]
-    public enum AdaptyUIDialogActionType {
+    public enum AdaptyUIDialogActionType
+    {
         /// <summary>
         /// The default action — the title given as the default one.
         /// </summary>

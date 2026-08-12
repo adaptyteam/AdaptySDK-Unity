@@ -1,8 +1,8 @@
-using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -147,7 +147,9 @@ namespace AdaptySDK
             + $"{nameof(ProductPurchaseParameters)}: {ProductPurchaseParameters}, "
             + $"{nameof(EnableSafeAreaPaddings)}: {EnableSafeAreaPaddings}";
 
-        /// <summary>Sets <see cref="Locale"/>.</summary>
+        /// <summary>
+        /// Sets <see cref="Locale"/>.
+        /// </summary>
         /// <param name="locale">The localization to render the flow with, such as "en" or "es".</param>
         public AdaptyUICreateFlowViewParameters SetLocale(string locale)
         {
@@ -155,7 +157,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets <see cref="LoadTimeout"/>.</summary>
+        /// <summary>
+        /// Sets <see cref="LoadTimeout"/>.
+        /// </summary>
         /// <param name="loadTimeout">How long to wait for the flow's assets.</param>
         public AdaptyUICreateFlowViewParameters SetLoadTimeout(TimeSpan? loadTimeout)
         {
@@ -163,7 +167,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets <see cref="PreloadProducts"/>.</summary>
+        /// <summary>
+        /// Sets <see cref="PreloadProducts"/>.
+        /// </summary>
         /// <param name="preloadProducts">True to fetch the products while the view is built.</param>
         public AdaptyUICreateFlowViewParameters SetPreloadProducts(bool? preloadProducts)
         {
@@ -171,7 +177,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets <see cref="CustomTags"/>, copying the dictionary.</summary>
+        /// <summary>
+        /// Sets <see cref="CustomTags"/>, copying the dictionary.
+        /// </summary>
         /// <param name="customTags">The value for each custom tag, keyed by tag name.</param>
         public AdaptyUICreateFlowViewParameters SetCustomTags(
             IReadOnlyDictionary<string, string> customTags
@@ -217,7 +225,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets <see cref="CustomAssets"/>, copying the dictionary.</summary>
+        /// <summary>
+        /// Sets <see cref="CustomAssets"/>, copying the dictionary.
+        /// </summary>
         /// <param name="customAssets">The asset to use for each id in the layout.</param>
         public AdaptyUICreateFlowViewParameters SetCustomAssets(
             IReadOnlyDictionary<string, AdaptyCustomAsset> customAssets
@@ -227,7 +237,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets <see cref="ProductPurchaseParameters"/>, copying the dictionary. Android only.</summary>
+        /// <summary>
+        /// Sets <see cref="ProductPurchaseParameters"/>, copying the dictionary. Android only.
+        /// </summary>
         /// <param name="productPurchaseParameters">The purchase extras for each product.</param>
         public AdaptyUICreateFlowViewParameters SetProductPurchaseParameters(
             IReadOnlyDictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters> productPurchaseParameters
@@ -237,7 +249,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets <see cref="EnableSafeAreaPaddings"/>. Android only.</summary>
+        /// <summary>
+        /// Sets <see cref="EnableSafeAreaPaddings"/>. Android only.
+        /// </summary>
         /// <param name="enableSafeAreaPaddings">False to lay the view out without safe area paddings.</param>
         public AdaptyUICreateFlowViewParameters SetEnableSafeAreaPaddings(
             bool? enableSafeAreaPaddings

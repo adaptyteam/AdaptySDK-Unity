@@ -12,11 +12,9 @@ namespace AdaptySDK.Serialization
     {
         private static readonly JsonSerializerSettings Settings = CreateSettings();
 
-        internal static string Serialize(object value) =>
-            JsonConvert.SerializeObject(value, Settings);
+        internal static string Serialize(object value) => JsonConvert.SerializeObject(value, Settings);
 
-        internal static T Deserialize<T>(string json) =>
-            JsonConvert.DeserializeObject<T>(json, Settings);
+        internal static T Deserialize<T>(string json) => JsonConvert.DeserializeObject<T>(json, Settings);
 
         /// <summary>
         /// Serializes one value into the DOM, for a request assembled key by key.

@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -186,7 +186,9 @@ namespace AdaptySDK
                 + $"{nameof(AdaptyUIMediaCache)}: {AdaptyUIMediaCache}, "
                 + $"{nameof(LogLevel)}: {LogLevel}";
 
-            /// <summary>Replaces the API key the builder was created with.</summary>
+            /// <summary>
+            /// Replaces the API key the builder was created with.
+            /// </summary>
             /// <param name="apiKey">The public SDK key from the Adapty Dashboard.</param>
             public Builder SetAPIKey(string apiKey)
             {
@@ -194,7 +196,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="CustomerUserId"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="CustomerUserId"/>.
+            /// </summary>
             /// <param name="customerUserId">The identifier of the user in your system.</param>
             public Builder SetCustomerUserId(string customerUserId)
             {
@@ -228,7 +232,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="ObserverMode"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="ObserverMode"/>.
+            /// </summary>
             /// <param name="observerMode">True when your own code makes the purchases and Adapty only observes them.</param>
             public Builder SetObserverMode(bool observerMode)
             {
@@ -236,7 +242,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="AppleIdfaCollectionDisabled"/>. iOS only.</summary>
+            /// <summary>
+            /// Sets <see cref="AppleIdfaCollectionDisabled"/>. iOS only.
+            /// </summary>
             /// <param name="appleIdfaCollectionDisabled">True to stop the SDK collecting the IDFA.</param>
             public Builder SetAppleIDFACollectionDisabled(bool appleIdfaCollectionDisabled)
             {
@@ -244,7 +252,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="GoogleAdvertisingIdCollectionDisabled"/>. Android only.</summary>
+            /// <summary>
+            /// Sets <see cref="GoogleAdvertisingIdCollectionDisabled"/>. Android only.
+            /// </summary>
             /// <param name="googleAdvertisingIdCollectionDisabled">True to stop the SDK collecting the Google Advertising ID.</param>
             public Builder SetGoogleAdvertisingIdCollectionDisabled(
                 bool googleAdvertisingIdCollectionDisabled
@@ -254,7 +264,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="GoogleEnablePendingPrepaidPlans"/>. Android only.</summary>
+            /// <summary>
+            /// Sets <see cref="GoogleEnablePendingPrepaidPlans"/>. Android only.
+            /// </summary>
             /// <param name="googleEnablePendingPrepaidPlans">True to report pending transactions for prepaid plans.</param>
             public Builder SetGoogleEnablePendingPrepaidPlans(bool googleEnablePendingPrepaidPlans)
             {
@@ -262,7 +274,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="GoogleLocalAccessLevelAllowed"/>. Android only.</summary>
+            /// <summary>
+            /// Sets <see cref="GoogleLocalAccessLevelAllowed"/>. Android only.
+            /// </summary>
             /// <param name="googleLocalAccessLevelAllowed">True to grant access levels on the device when Adapty cannot be reached.</param>
             public Builder SetGoogleLocalAccessLevelAllowed(bool googleLocalAccessLevelAllowed)
             {
@@ -270,7 +284,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="IpAddressCollectionDisabled"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="IpAddressCollectionDisabled"/>.
+            /// </summary>
             /// <param name="ipAddressCollectionDisabled">True to stop the SDK collecting the device's IP address.</param>
             public Builder SetIPAddressCollectionDisabled(bool ipAddressCollectionDisabled)
             {
@@ -278,7 +294,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="AppleClearDataOnBackup"/>. iOS only.</summary>
+            /// <summary>
+            /// Sets <see cref="AppleClearDataOnBackup"/>. iOS only.
+            /// </summary>
             /// <param name="appleClearDataOnBackup">True to clear stored data when the app is restored from an iCloud backup.</param>
             public Builder SetAppleClearDataOnBackup(bool appleClearDataOnBackup)
             {
@@ -286,7 +304,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="ServerCluster"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="ServerCluster"/>.
+            /// </summary>
             /// <param name="serverCluster">The Adapty server region to talk to.</param>
             public Builder SetServerCluster(AdaptyServerCluster serverCluster)
             {
@@ -294,7 +314,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="BackendProxyHost"/> and <see cref="BackendProxyPort"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="BackendProxyHost"/> and <see cref="BackendProxyPort"/>.
+            /// </summary>
             /// <param name="host">The proxy host to route Adapty's backend calls through.</param>
             /// <param name="port">The port on that host.</param>
             public Builder SetBackendProxy(string host, int port)
@@ -304,7 +326,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="ActivateUI"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="ActivateUI"/>.
+            /// </summary>
             /// <param name="activate">True to activate the flow rendering module along with the SDK.</param>
             public Builder SetActivateUI(bool activate)
             {
@@ -312,7 +336,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="AdaptyUIMediaCache"/>. Null leaves a native default.</summary>
+            /// <summary>
+            /// Sets <see cref="AdaptyUIMediaCache"/>. Null leaves a native default.
+            /// </summary>
             /// <param name="memoryStorageTotalCostLimit">In-memory cache limit, in bytes.</param>
             /// <param name="memoryStorageCountLimit">How many items the in-memory cache holds.</param>
             /// <param name="diskStorageSizeLimit">On-disk cache limit, in bytes.</param>

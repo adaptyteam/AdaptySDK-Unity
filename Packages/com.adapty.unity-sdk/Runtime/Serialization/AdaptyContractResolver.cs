@@ -21,8 +21,7 @@ namespace AdaptySDK.Serialization
     {
         internal static readonly AdaptyContractResolver Instance = new AdaptyContractResolver();
 
-        protected override JsonContract CreateContract(Type objectType) =>
-            base.CreateContract(Concrete(objectType));
+        protected override JsonContract CreateContract(Type objectType) => base.CreateContract(Concrete(objectType));
 
         /// <summary>
         /// The concrete collection to build for an interface-typed member. Newtonsoft would populate

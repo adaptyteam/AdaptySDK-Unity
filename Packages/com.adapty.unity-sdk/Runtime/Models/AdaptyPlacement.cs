@@ -1,6 +1,6 @@
-using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {

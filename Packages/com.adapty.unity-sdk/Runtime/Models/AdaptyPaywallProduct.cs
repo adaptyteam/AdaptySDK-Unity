@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -85,7 +85,7 @@ namespace AdaptySDK
         /// <summary>
         /// Indicates whether the product is available for family sharing in App Store Connect (iOS only).
         /// </summary>
-        #if UNITY_IOS
+#if UNITY_IOS
         [DataMember(Name = "is_family_shareable", IsRequired = true)]
 #endif
         public readonly bool IsFamilyShareable;

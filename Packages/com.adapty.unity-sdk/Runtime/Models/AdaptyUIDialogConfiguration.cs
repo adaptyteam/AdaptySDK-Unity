@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -46,7 +46,9 @@ namespace AdaptySDK
             $"{nameof(SecondaryActionTitle)}: {SecondaryActionTitle}";
 
 
-        /// <summary>Sets the title.</summary>
+        /// <summary>
+        /// Sets the title.
+        /// </summary>
         /// <param name="title">The dialog's title.</param>
         public AdaptyUIDialogConfiguration SetTitle(string title)
         {
@@ -54,7 +56,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets the content.</summary>
+        /// <summary>
+        /// Sets the content.
+        /// </summary>
         /// <param name="content">The body text.</param>
         public AdaptyUIDialogConfiguration SetContent(string content)
         {
@@ -62,7 +66,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets the default action title.</summary>
+        /// <summary>
+        /// Sets the default action title.
+        /// </summary>
         /// <param name="defaultActionTitle">The label of the button reported as <see cref="AdaptyUIDialogActionType.Primary"/>.</param>
         public AdaptyUIDialogConfiguration SetDefaultActionTitle(string defaultActionTitle)
         {
@@ -70,7 +76,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets the secondary action title.</summary>
+        /// <summary>
+        /// Sets the secondary action title.
+        /// </summary>
         /// <param name="secondaryActionTitle">The label of the button reported as <see cref="AdaptyUIDialogActionType.Secondary"/>. Leave it out for a one-button dialog.</param>
         public AdaptyUIDialogConfiguration SetSecondaryActionTitle(string secondaryActionTitle)
         {

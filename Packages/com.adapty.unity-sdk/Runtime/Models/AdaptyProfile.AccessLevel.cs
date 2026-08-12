@@ -23,7 +23,7 @@ namespace AdaptySDK
             /// Whether the access level is active.
             /// </summary>
             /// <remarks>
-            /// Generally, you have to check just this property to determine if the user has access to premium features. 
+            /// Generally, you have to check just this property to determine if the user has access to premium features.
             /// </remarks>
             [DataMember(Name = "is_active", IsRequired = true)]
             public readonly bool IsActive;
@@ -65,7 +65,7 @@ namespace AdaptySDK
             /// Whether the access level is active for a lifetime (no expiration date).
             /// </summary>
             /// <remarks>
-            /// If set to true you shouldn't check expires_at , or you could just check isActive. 
+            /// If set to true you shouldn't check expires_at , or you could just check isActive.
             /// </remarks>
             [DataMember(Name = "is_lifetime", IsRequired = true)]
             public readonly bool IsLifetime;
@@ -74,8 +74,8 @@ namespace AdaptySDK
             /// The type of active introductory offer.
             /// </summary>
             /// <remarks>
-            /// Possible values are: free_trial, pay_as_you_go, pay_up_front. 
-            /// If the value is not null, it means that the offer was applied during the current subscription period. 
+            /// Possible values are: free_trial, pay_as_you_go, pay_up_front.
+            /// If the value is not null, it means that the offer was applied during the current subscription period.
             /// </remarks>
             [DataMember(Name = "active_introductory_offer_type")]
             public readonly string ActiveIntroductoryOfferType;
@@ -122,7 +122,7 @@ namespace AdaptySDK
             /// </summary>
             /// <remarks>
             /// Subscription can still be active, it just means that auto-renewal turned off.
-            /// Will be set to null if the user reactivates the subscription. 
+            /// Will be set to null if the user reactivates the subscription.
             /// </remarks>
             [DataMember(Name = "unsubscribed_at")]
             public readonly DateTime? UnsubscribedAt;
@@ -131,7 +131,7 @@ namespace AdaptySDK
             /// The time when billing issue was detected (Apple was not able to charge the card).
             /// </summary>
             /// <remarks>
-            /// Subscription can still be active. Will be set to null if the charge will be made. 
+            /// Subscription can still be active. Will be set to null if the charge will be made.
             /// </remarks>
             [DataMember(Name = "billing_issue_detected_at")]
             public readonly DateTime? BillingIssueDetectedAt;
@@ -139,7 +139,7 @@ namespace AdaptySDK
 
             /// <summary>
             /// The time when the access level has started (could be in the future). Null when there is
-        /// no start date.
+            /// no start date.
             /// </summary>
             [DataMember(Name = "starts_at")]
             public readonly DateTime? StartsAt;

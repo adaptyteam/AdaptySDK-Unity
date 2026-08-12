@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK.Serialization
 {

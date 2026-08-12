@@ -11,8 +11,7 @@ namespace AdaptySDK.Serialization
     /// </summary>
     internal sealed class AdaptyConverterCustomAssets : JsonConverter
     {
-        public override bool CanConvert(Type objectType) =>
-            objectType == typeof(Dictionary<string, AdaptyCustomAsset>);
+        public override bool CanConvert(Type objectType) => objectType == typeof(Dictionary<string, AdaptyCustomAsset>);
 
         public override bool CanRead => false;
 

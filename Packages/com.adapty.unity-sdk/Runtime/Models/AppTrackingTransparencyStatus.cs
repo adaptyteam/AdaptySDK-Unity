@@ -1,6 +1,7 @@
 using UnityEngine.Scripting;
 
-namespace AdaptySDK {
+namespace AdaptySDK
+{
 
     /// <summary>
     /// iOS only. What the user answered to the App Tracking Transparency prompt, as <c>ATTrackingManager.AuthorizationStatus</c> reports it.
@@ -9,7 +10,8 @@ namespace AdaptySDK {
     /// The numbers are Apple's own, so a value read from <c>ATTrackingManager</c> can be cast across directly.
     /// </remarks>
     [Preserve]
-    public enum AppTrackingTransparencyStatus {
+    public enum AppTrackingTransparencyStatus
+    {
         /// <summary>
         /// The prompt has not been shown yet.
         /// </summary>

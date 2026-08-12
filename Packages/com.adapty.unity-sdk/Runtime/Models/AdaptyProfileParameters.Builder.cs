@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -16,7 +16,9 @@ namespace AdaptySDK
         {
             private AdaptyProfileParameters _Parameters = new AdaptyProfileParameters();
 
-            /// <summary>Sets <see cref="FirstName"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="FirstName"/>.
+            /// </summary>
             /// <param name="value">The user's first name.</param>
             public Builder SetFirstName(string value)
             {
@@ -24,7 +26,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="LastName"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="LastName"/>.
+            /// </summary>
             /// <param name="value">The user's last name.</param>
             public Builder SetLastName(string value)
             {
@@ -32,7 +36,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="Gender"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="Gender"/>.
+            /// </summary>
             /// <param name="value">The user's gender.</param>
             public Builder SetGender(AdaptyProfileGender? value)
             {
@@ -40,7 +46,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="Birthday"/>. Sent as a calendar date, so the time of day is ignored.</summary>
+            /// <summary>
+            /// Sets <see cref="Birthday"/>. Sent as a calendar date, so the time of day is ignored.
+            /// </summary>
             /// <param name="value">The user's date of birth.</param>
             public Builder SetBirthday(DateTime? value)
             {
@@ -48,7 +56,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="Email"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="Email"/>.
+            /// </summary>
             /// <param name="value">The user's email address.</param>
             public Builder SetEmail(string value)
             {
@@ -56,7 +66,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="PhoneNumber"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="PhoneNumber"/>.
+            /// </summary>
             /// <param name="value">The user's phone number.</param>
             public Builder SetPhoneNumber(string value)
             {
@@ -65,7 +77,9 @@ namespace AdaptySDK
             }
 
 
-            /// <summary>Sets <see cref="AppTrackingTransparencyStatus"/>. iOS only.</summary>
+            /// <summary>
+            /// Sets <see cref="AppTrackingTransparencyStatus"/>. iOS only.
+            /// </summary>
             /// <param name="value">What the user answered to the tracking prompt.</param>
             public Builder SetAppTrackingTransparencyStatus(AppTrackingTransparencyStatus? value)
             {
@@ -73,7 +87,9 @@ namespace AdaptySDK
                 return this;
             }
 
-            /// <summary>Sets <see cref="AnalyticsDisabled"/>.</summary>
+            /// <summary>
+            /// Sets <see cref="AnalyticsDisabled"/>.
+            /// </summary>
             /// <param name="value">True to switch analytics off for this profile.</param>
             public Builder SetAnalyticsDisabled(bool? value)
             {

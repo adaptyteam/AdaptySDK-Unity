@@ -1,9 +1,9 @@
-using UnityEngine.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -19,13 +19,19 @@ namespace AdaptySDK
     [DataContract]
     public sealed partial class AdaptyProfileParameters
     {
-        /// <summary>The user's first name. Null leaves whatever the profile already has.</summary>
+        /// <summary>
+        /// The user's first name. Null leaves whatever the profile already has.
+        /// </summary>
         [DataMember(Name = "first_name")]
         public string FirstName;
-        /// <summary>The user's last name. Null leaves whatever the profile already has.</summary>
+        /// <summary>
+        /// The user's last name. Null leaves whatever the profile already has.
+        /// </summary>
         [DataMember(Name = "last_name")]
         public string LastName;
-        /// <summary>The user's gender. Null leaves whatever the profile already has.</summary>
+        /// <summary>
+        /// The user's gender. Null leaves whatever the profile already has.
+        /// </summary>
         [DataMember(Name = "gender")]
         public AdaptyProfileGender? Gender;
         /// <summary>
@@ -33,10 +39,14 @@ namespace AdaptySDK
         /// day and the <see cref="DateTimeKind"/> are ignored, unlike the dates the SDK hands back.
         /// </summary>
         public DateTime? Birthday;
-        /// <summary>The user's email address. Null leaves whatever the profile already has.</summary>
+        /// <summary>
+        /// The user's email address. Null leaves whatever the profile already has.
+        /// </summary>
         [DataMember(Name = "email")]
         public string Email;
-        /// <summary>The user's phone number. Null leaves whatever the profile already has.</summary>
+        /// <summary>
+        /// The user's phone number. Null leaves whatever the profile already has.
+        /// </summary>
         [DataMember(Name = "phone_number")]
         public string PhoneNumber;
 
@@ -82,7 +92,9 @@ namespace AdaptySDK
         private System.Collections.Generic.Dictionary<string, object> CustomAttributesForRequest =>
             _CustomAttributes.Count > 0 ? _CustomAttributes : null;
 
-        /// <summary>Sets a custom attribute to a string value.</summary>
+        /// <summary>
+        /// Sets a custom attribute to a string value.
+        /// </summary>
         /// <param name="key">
         /// Up to 30 characters of letters, digits, dashes, points and underscores.
         /// </param>
@@ -105,7 +117,9 @@ namespace AdaptySDK
 
         }
 
-        /// <summary>Sets a custom attribute to a numeric value.</summary>
+        /// <summary>
+        /// Sets a custom attribute to a numeric value.
+        /// </summary>
         /// <param name="key">
         /// Up to 30 characters of letters, digits, dashes, points and underscores.
         /// </param>

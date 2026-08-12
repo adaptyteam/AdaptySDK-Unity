@@ -1,12 +1,14 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
-namespace AdaptySDK {
+namespace AdaptySDK
+{
     /// <summary>
     /// What the user did in a flow view, as reported by <c>FlowViewDidPerformAction</c>.
     /// </summary>
     [Preserve]
-    public enum AdaptyUIUserActionType {
+    public enum AdaptyUIUserActionType
+    {
         /// <summary>
         /// The close control of the flow was tapped. The view is not dismissed for you — call <see cref="AdaptyUI.DismissFlowView(AdaptySDK.AdaptyUIFlowView, System.Action{AdaptySDK.AdaptyError})"/> if that is what you want.
         /// </summary>

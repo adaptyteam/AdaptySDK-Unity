@@ -1,7 +1,8 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
-namespace AdaptySDK {
+namespace AdaptySDK
+{
     /// <summary>
     /// Something the user did in a flow view, reported through
     /// <c>FlowViewDidPerformAction</c>. Nothing is done for you — a close does not dismiss the
@@ -9,7 +10,8 @@ namespace AdaptySDK {
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed class AdaptyUIUserAction {
+    public sealed class AdaptyUIUserAction
+    {
         private AdaptyUIUserAction() { }
 
         /// <summary>

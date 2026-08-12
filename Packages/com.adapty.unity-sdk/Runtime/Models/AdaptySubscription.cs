@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -17,7 +17,7 @@ namespace AdaptySDK
         ///
         /// [Nullable]
         /// </summary>
-        #if UNITY_IOS
+#if UNITY_IOS
         [DataMember(Name = "group_identifier", IsRequired = true)]
 #endif
         public readonly string GroupIdentifier;
@@ -47,7 +47,7 @@ namespace AdaptySDK
         /// <summary>
         /// Android only. Whether the subscription renews by itself.
         /// </summary>
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
         [DataMember(Name = "renewal_type", IsRequired = true)]
 #endif
         public readonly AdaptySubscriptionRenewalType RenewalType =
@@ -55,7 +55,7 @@ namespace AdaptySDK
         /// <summary>
         /// Android only. The Google Play base plan this subscription is on. Null on iOS.
         /// </summary>
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
         [DataMember(Name = "base_plan_id", IsRequired = true)]
 #endif
         public readonly string BasePlanId;

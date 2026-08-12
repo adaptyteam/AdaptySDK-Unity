@@ -1,6 +1,6 @@
-using UnityEngine.Scripting;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -55,7 +55,7 @@ namespace AdaptySDK
         /// A description for logs and the debugger. The format is not part of the contract —
         /// read the members rather than parsing it.
         /// </summary>
-        public override string ToString() => 
+        public override string ToString() =>
             $"{nameof(Identifier)}: {Identifier}, " +
             $"{nameof(Type)}: {Type}, " +
             $"{nameof(Phases)}: {Phases}, " +

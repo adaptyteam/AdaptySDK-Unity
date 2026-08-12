@@ -1,14 +1,16 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
-namespace AdaptySDK {
+namespace AdaptySDK
+{
     /// <summary>
     /// A failure reported by the native SDK. Every completion handler takes one, and it is null
     /// when the call succeeded.
     /// </summary>
     [DataContract]
     [Preserve]
-    public sealed class AdaptyError {
+    public sealed class AdaptyError
+    {
         private AdaptyError() { }
 
         /// <summary>
@@ -37,7 +39,8 @@ namespace AdaptySDK {
             $"{nameof(Message)}: {Message}, " +
             $"{nameof(Detail)}: {Detail}";
 
-        internal AdaptyError(AdaptyErrorCode Code, string Message, string Detail) {
+        internal AdaptyError(AdaptyErrorCode Code, string Message, string Detail)
+        {
             this.Message = Message;
             this.Detail = Detail;
             this.Code = Code;

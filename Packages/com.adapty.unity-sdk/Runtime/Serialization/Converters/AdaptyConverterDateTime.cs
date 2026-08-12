@@ -34,8 +34,7 @@ namespace AdaptySDK.Serialization
     {
         private const string Format = "yyyy-MM-ddTHH:mm:ss.fffZ";
 
-        public override bool CanConvert(Type objectType) =>
-            objectType == typeof(DateTime) || objectType == typeof(DateTime?);
+        public override bool CanConvert(Type objectType) => objectType == typeof(DateTime) || objectType == typeof(DateTime?);
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

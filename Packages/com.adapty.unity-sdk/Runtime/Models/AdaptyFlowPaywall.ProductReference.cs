@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -21,19 +21,19 @@ namespace AdaptySDK
             internal readonly string AccessLevelId;
             [DataMember(Name = "product_type", IsRequired = true)]
             internal readonly string ProductType;
-            #if UNITY_IOS
+#if UNITY_IOS
             [DataMember(Name = "promotional_offer_id")]
 #endif
             internal readonly string PromotionalOfferId;
-            #if UNITY_IOS
+#if UNITY_IOS
             [DataMember(Name = "win_back_offer_id")]
 #endif
             internal readonly string WinBackOfferId;
-            #if UNITY_ANDROID
+#if UNITY_ANDROID
             [DataMember(Name = "base_plan_id")]
 #endif
             internal readonly string AndroidBasePlanId;
-            #if UNITY_ANDROID
+#if UNITY_ANDROID
             [DataMember(Name = "offer_id")]
 #endif
             internal readonly string AndroidOfferId;

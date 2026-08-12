@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -62,7 +62,9 @@ namespace AdaptySDK
     {
         private AdaptyPurchaseParameters _parameters = new AdaptyPurchaseParameters();
 
-        /// <summary>Sets <see cref="AdaptyPurchaseParameters.SubscriptionUpdateParams"/>. Android only.</summary>
+        /// <summary>
+        /// Sets <see cref="AdaptyPurchaseParameters.SubscriptionUpdateParams"/>. Android only.
+        /// </summary>
         /// <param name="subscriptionUpdateParams">The subscription this purchase replaces.</param>
         public AdaptyPurchaseParametersBuilder SetSubscriptionUpdateParams(
             AdaptySubscriptionUpdateParameters subscriptionUpdateParams
@@ -75,7 +77,9 @@ namespace AdaptySDK
             return this;
         }
 
-        /// <summary>Sets <see cref="AdaptyPurchaseParameters.IsOfferPersonalized"/>. Android only.</summary>
+        /// <summary>
+        /// Sets <see cref="AdaptyPurchaseParameters.IsOfferPersonalized"/>. Android only.
+        /// </summary>
         /// <param name="isOfferPersonalized">Whether the price shown was personalised to this user.</param>
         public AdaptyPurchaseParametersBuilder SetIsOfferPersonalized(bool? isOfferPersonalized)
         {
