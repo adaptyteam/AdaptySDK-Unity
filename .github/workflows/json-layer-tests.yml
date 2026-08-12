@@ -2,18 +2,26 @@ name: JSON layer tests
 
 # The SDK JSON layer against its approved snapshots. The suite links the SDK sources into a plain
 # .NET project, so it needs neither the Unity Editor nor a licence, and runs once per platform:
-# the layer branches on UNITY_IOS / UNITY_ANDROID and each has its own snapshots.
+# the layer branches on UNITY_IOS / UNITY_ANDROID and each has its own snapshots. The third leg is
+# the Editor, which the projects define as UNITY_EDITOR when no platform is asked for - it is a
+# configuration of its own, not the absence of one.
 
 on:
   push:
     branches: ["**"]
     paths:
       - "Packages/com.adapty.unity-sdk/Runtime/**"
+      # The suite links two Editor sources as well - AdaptyManifest and AdaptyKidsModeTrait, the
+      # two that edit a build file by text - so a change to one of them has to run it.
+      - "Packages/com.adapty.unity-sdk/Editor/**"
       - "tests/**"
       - ".github/workflows/json-layer-tests.yml"
   pull_request:
     paths:
       - "Packages/com.adapty.unity-sdk/Runtime/**"
+      # The suite links two Editor sources as well - AdaptyManifest and AdaptyKidsModeTrait, the
+      # two that edit a build file by text - so a change to one of them has to run it.
+      - "Packages/com.adapty.unity-sdk/Editor/**"
       - "tests/**"
       - ".github/workflows/json-layer-tests.yml"
   workflow_dispatch:
