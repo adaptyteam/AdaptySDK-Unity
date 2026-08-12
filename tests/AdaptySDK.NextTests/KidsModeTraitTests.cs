@@ -32,7 +32,7 @@ namespace AdaptySDK.NextTests
         public void TheTraitLandsExactlyWhereTheRealBuildPutIt()
         {
             Assert.That(
-                AdaptyKidsModeTrait.Enable(Fixture("edm-package-reference.pbxproj")),
+                AdaptyIOSKidsModeTrait.Enable(Fixture("edm-package-reference.pbxproj")),
                 Is.EqualTo(Fixture("edm-package-reference.applied.pbxproj"))
             );
         }
@@ -45,7 +45,7 @@ namespace AdaptySDK.NextTests
         {
             var applied = Fixture("edm-package-reference.applied.pbxproj");
 
-            Assert.That(AdaptyKidsModeTrait.Enable(applied), Is.EqualTo(applied));
+            Assert.That(AdaptyIOSKidsModeTrait.Enable(applied), Is.EqualTo(applied));
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace AdaptySDK.NextTests
                 + Section;
 
             Assert.That(
-                AdaptyKidsModeTrait.Enable(
+                AdaptyIOSKidsModeTrait.Enable(
                     Fixture("edm-package-reference.pbxproj").Replace(Section, Decoy)
                 ),
                 Is.EqualTo(Fixture("edm-package-reference.applied.pbxproj").Replace(Section, Decoy))
@@ -78,10 +78,10 @@ namespace AdaptySDK.NextTests
         public void AProjectWithoutTheReferenceFails()
         {
             var project = Fixture("edm-package-reference.pbxproj")
-                .Replace(AdaptyKidsModeTrait.PackageUrl, "someoneelse/OtherSDK");
+                .Replace(AdaptyIOSKidsModeTrait.PackageUrl, "someoneelse/OtherSDK");
 
             Assert.That(
-                () => AdaptyKidsModeTrait.Enable(project),
+                () => AdaptyIOSKidsModeTrait.Enable(project),
                 Throws.InvalidOperationException.With.Message.Contains("no AdaptySDK-iOS")
             );
         }
@@ -100,7 +100,7 @@ namespace AdaptySDK.NextTests
             var reference = project.Substring(open, close - open);
 
             Assert.That(
-                () => AdaptyKidsModeTrait.Enable(project.Replace(reference, reference + reference)),
+                () => AdaptyIOSKidsModeTrait.Enable(project.Replace(reference, reference + reference)),
                 Throws.InvalidOperationException.With.Message.Contains("2 AdaptySDK-iOS")
             );
         }
@@ -113,10 +113,10 @@ namespace AdaptySDK.NextTests
         public void AForeignTraitsBlockIsReported()
         {
             var project = Fixture("edm-package-reference.applied.pbxproj")
-                .Replace(AdaptyKidsModeTrait.Trait, "SomeOtherTrait");
+                .Replace(AdaptyIOSKidsModeTrait.Trait, "SomeOtherTrait");
 
             Assert.That(
-                () => AdaptyKidsModeTrait.Enable(project),
+                () => AdaptyIOSKidsModeTrait.Enable(project),
                 Throws.InvalidOperationException.With.Message.Contains("already declares a traits block")
             );
         }

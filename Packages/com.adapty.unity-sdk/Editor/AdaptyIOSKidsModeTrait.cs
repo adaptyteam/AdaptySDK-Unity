@@ -13,7 +13,7 @@ namespace AdaptySDK.Editor
     /// remote Swift package reference. Every shape this does not recognise throws, since a Kids
     /// Category build that quietly keeps IDFA is worse than one that fails.
     /// </remarks>
-    internal static class AdaptyKidsModeTrait
+    internal static class AdaptyIOSKidsModeTrait
     {
         internal const string PackageUrl = "adaptyteam/AdaptySDK-iOS";
         internal const string Trait = "KidsMode";

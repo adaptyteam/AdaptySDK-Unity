@@ -13,7 +13,7 @@ namespace AdaptySDK.Editor
     /// Enables the KidsMode trait on the AdaptySDK-iOS Swift package reference in the generated
     /// Xcode project, so IDFA / AdSupport / AppTrackingTransparency code is compiled out of the
     /// binary (App Store Kids Category / COPPA compliance). The edit itself is in
-    /// AdaptyKidsModeTrait, which is free of Unity types so that the tests can run it.
+    /// AdaptyIOSKidsModeTrait, which is free of Unity types so that the tests can run it.
     ///
     /// Compiled in only when the ADAPTY_KIDS_MODE scripting define is set — the same define that
     /// forces apple_idfa_collection_disabled in the runtime configuration. Prefer setting it in Player
@@ -38,7 +38,7 @@ namespace AdaptySDK.Editor
 
             try
             {
-                File.WriteAllText(pbxPath, AdaptyKidsModeTrait.Enable(File.ReadAllText(pbxPath)));
+                File.WriteAllText(pbxPath, AdaptyIOSKidsModeTrait.Enable(File.ReadAllText(pbxPath)));
             }
             catch (InvalidOperationException e)
             {
