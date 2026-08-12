@@ -11,7 +11,7 @@ on:
     branches: ["**"]
     paths:
       - "Packages/com.adapty.unity-sdk/Runtime/**"
-      # The suite links two Editor sources as well - AdaptyManifest and AdaptyKidsModeTrait, the
+      # The suite links two Editor sources as well - AdaptyManifest and AdaptyIOSKidsModeTrait, the
       # two that edit a build file by text - so a change to one of them has to run it.
       - "Packages/com.adapty.unity-sdk/Editor/**"
       - "tests/**"
@@ -19,7 +19,7 @@ on:
   pull_request:
     paths:
       - "Packages/com.adapty.unity-sdk/Runtime/**"
-      # The suite links two Editor sources as well - AdaptyManifest and AdaptyKidsModeTrait, the
+      # The suite links two Editor sources as well - AdaptyManifest and AdaptyIOSKidsModeTrait, the
       # two that edit a build file by text - so a change to one of them has to run it.
       - "Packages/com.adapty.unity-sdk/Editor/**"
       - "tests/**"
