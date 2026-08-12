@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -17,6 +17,9 @@ namespace AdaptySDK
         /// </summary>
         [DataMember(Name = "vendor_product_id", IsRequired = true)]
         public readonly string VendorProductId;
+        /// <summary>
+        /// The product's id in Adapty, which is also the key a request addresses it by.
+        /// </summary>
         [DataMember(Name = "adapty_product_id", IsRequired = true)]
         internal readonly string _AdaptyProductId;
         /// <summary>
@@ -32,6 +35,11 @@ namespace AdaptySDK
         /// <summary>
         /// Builds an identifier for a product you name yourself, rather than one taken from a flow.
         /// </summary>
+        /// <param name="vendorProductId">The product id in App Store Connect or the Google Play Console.</param>
+        /// <param name="adaptyProductId">
+        /// The product's id in Adapty, as <see cref="AdaptyPaywallProduct.AdaptyProductId"/> carries it.
+        /// </param>
+        /// <param name="basePlanId">Android only. The Google Play base plan, or null for none.</param>
         public AdaptyProductIdentifier(
             string vendorProductId,
             string adaptyProductId,
