@@ -374,13 +374,20 @@ Unity target. Building `Unity-iPhone.xcodeproj` directly fails at link time with
 `ld: framework 'Pods_UnityFramework' not found`; the same tree builds from
 `Unity-iPhone.xcworkspace`. Open and build the workspace exactly as you did in v3.
 
-External Dependency Manager has to be 1.2.188 or later, since earlier versions have no Swift Package
-Manager support, and the iOS deployment target moves from 13.0 to **15.0 or later**, which a build
+External Dependency Manager has to be 1.2.188 or later. Swift Package Manager support arrived in
+1.2.187, and 1.2.188 is what determines the Xcode project path correctly for the Swift project type
+it generates. The iOS deployment target moves from 13.0 to **15.0 or later**, which a build
 validator enforces in the Editor.
+
+**Xcode moves to 26 or later.** AdaptySDK-iOS 4.0 declares `swift-tools-version: 6.2`, where the
+3.17.2 that v3 pinned declared 6.0. Swift Package Manager refuses a package whose tools version is
+newer than the installed toolchain, so on Xcode 16 the build fails while resolving the dependency,
+before anything is compiled. Nothing in Unity can check this for you — the Editor never sees which
+Xcode will open the generated project.
 
 The Android dependencies are declared in an `.androidlib` module that Unity includes in the Gradle
 build on its own.
 
 If your app ships in the App Store Kids Category, v4.0 adds the `ADAPTY_KIDS_MODE` scripting define,
 which compiles IDFA, AdSupport and AppTrackingTransparency out of the iOS binary. See the
-[README](README.md#kids-mode-on-ios) for what it requires.
+[README](README.md#kids-mode-on-ios) for how to set it.

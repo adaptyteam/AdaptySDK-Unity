@@ -16,8 +16,8 @@ Editor menu that installs it is unavailable for the same reason.
 - **iOS Kids Mode** for the App Store Kids Category / COPPA. Setting the `ADAPTY_KIDS_MODE` scripting
   define enables the `KidsMode` trait on the AdaptySDK-iOS Swift package, so IDFA, AdSupport and
   AppTrackingTransparency are compiled out of the binary, and forces
-  `apple_idfa_collection_disabled` in the runtime configuration. Requires Xcode 26 or newer
-  (Swift package traits). Set the define in Player Settings; a build profile's scripting defines
+  `apple_idfa_collection_disabled` in the runtime configuration. Swift package traits need Xcode 26,
+  which v4 requires anyway. Set the define in Player Settings; a build profile's scripting defines
   work too, but only once Unity has recompiled the Editor assemblies for them, and the iOS build
   fails if the SDK detects that it is running against stale ones.
   `BuildPlayerOptions.extraScriptingDefines` is not supported at all, because it reaches the player
@@ -100,6 +100,12 @@ Editor menu that installs it is unavailable for the same reason.
   also the one fallback that could be sent — as `"unknown"`, which no branch of the contract's offer
   identifier accepts — so a purchase of such an offer failed on the native side instead of here.
   A JSON number is no longer accepted for a string enum either; it used to read as `Unknown`.
+- **iOS builds now require Xcode 26 or newer.** AdaptySDK-iOS 4.0 declares
+  `swift-tools-version: 6.2`, where the 3.17.2 that v3 pinned declared 6.0, and Swift Package Manager
+  refuses a package whose tools version is newer than the installed toolchain. On Xcode 16 the build
+  fails while resolving the dependency, before anything is compiled. This is the floor for the whole
+  SDK, not only for Kids Mode. Nothing in Unity can check it — the Editor never sees which Xcode will
+  open the generated project.
 - Updated the cross-platform contract to 4.0.2 and the native SDK dependencies to
   iOS 4.0.2 and Android 4.0.1. `MakePurchase`'s purchase parameters and
   `AdaptyUICreateFlowViewParameters.ProductPurchaseParameters` are now documented as Android only,
@@ -209,7 +215,11 @@ Editor menu that installs it is unavailable for the same reason.
   while the native side returns `{"success": true}`, so the completion handler always received a
   decoding error even though the transaction had been reported successfully.
 - Calling the SDK in the Editor now returns a readable "not supported on this platform" error
-  instead of failing to parse a null response.
+  instead of failing to parse a null response. That holds for the whole surface now:
+  `UpdateAppStoreCollectingRefundDataConsent`, `UpdateAppStoreRefundPreference` and
+  `PresentCodeRedemptionSheet` were guarded so that the Editor took their off-iOS branch, which
+  reports a null error — indistinguishable from success — so testing them in the Editor looked like
+  they had worked. On an Android device they still report `null`, which is unchanged.
 - Custom linear gradient assets are now serialized from every color and alpha key of the Unity
   `Gradient`. Gradients whose color and alpha keys differed in count threw
   `"Color keys and alpha keys arrays must have the same length"`, and gradients whose alpha keys sat

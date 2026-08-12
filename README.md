@@ -23,7 +23,9 @@
 
 Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/adaptyteam/AdaptySDK-iOS) and [Adapty Android SDK](https://github.com/adaptyteam/AdaptySDK-Android). Both SDKs are written in pure Swift/Kotlin, all wrapped into a C# lib.
 
-Requires Unity 2022.3 or newer, an iOS deployment target of 15.0 or newer, and Android API 21 or newer.
+Requires Unity 2022.3 or newer and Android API 21 or newer. iOS builds require **Xcode 26 or newer**
+and a deployment target of 15.0 or newer: AdaptySDK-iOS 4.0 is a `swift-tools-version: 6.2` package,
+and an older toolchain refuses to resolve it.
 
 ## Why Adapty?
 
@@ -105,7 +107,8 @@ Apps in the App Store Kids Category must not link the advertising identifier. Ad
   AdSupport and AppTrackingTransparency are compiled out of the binary;
 - `apple_idfa_collection_disabled` is forced in the runtime configuration.
 
-Requires Xcode 26 or newer, which is where Swift package traits are supported.
+Swift package traits need Xcode 26 or newer, which is already the floor for v4 on iOS — Kids Mode
+adds no requirement of its own.
 
 Set the define in **Player Settings > Other Settings > Scripting Define Symbols**. The build step
 that enables the trait lives in an Editor assembly, and Player Settings is what Editor assemblies
