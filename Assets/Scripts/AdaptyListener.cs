@@ -185,6 +185,9 @@ namespace AdaptyExample
                     this.LogMethodResult("MakePurchase", error);
                     completionHandler.Invoke(error);
 
+                    // No result on the error path.
+                    if (error != null) { return; }
+
                     switch (result.Type)
                     {
                         case AdaptyPurchaseResultType.Pending:
