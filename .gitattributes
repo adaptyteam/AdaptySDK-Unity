@@ -1,4 +1,7 @@
-# Adapted from the community Unity template, with one deliberate change: it routes every binary
+# Adapted from Unity.gitattributes in github.com/gitattributes/gitattributes, MIT, copyright (c)
+# 2015-2026 Alexander Karatarakis. The notice is in THIRD_PARTY_NOTICES.md, as that licence asks.
+#
+# One deliberate change against upstream: it routes every binary
 # asset through Git LFS, and this repository does not use LFS - `git lfs ls-files` is empty, and
 # turning the filter on would rewrite the .png, .unitypackage and .aar files already committed as
 # ordinary blobs into pointers. They are marked `binary` here instead, which buys what is actually
@@ -47,6 +50,10 @@
 *.physicMaterial        unity-yaml
 *.physicsMaterial2D     unity-yaml
 
+# The one .asset Unity writes as JSON rather than YAML. `unity-json` does not clear the merge driver
+# the rule above set, so it is unset by hand - feeding JSON to unityyamlmerge would not end well.
+ProjectSettings/XRSettings.asset  unity-json !merge
+
 # The native halves and the build files around them
 *.gradle                text
 *.java                  text diff=java
@@ -56,6 +63,11 @@
 *.m                     text diff=objc
 *.mm                    text diff=objc
 *.pbxproj               text -diff merge=binary
+
+# ...except the only two this repository tracks, which are not generated projects but the fixtures
+# KidsModeTraitTests round-trips between. Their diff is the review: the edit they pin is indentation
+# exact, and "Binary files differ" would hide a change to what the test expects.
+tests/shared/Fixtures/pbxproj/*.pbxproj  text diff !merge
 *.plist                 text
 *.podspec               text diff=ruby
 Podfile                 text diff=ruby
