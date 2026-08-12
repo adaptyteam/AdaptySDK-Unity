@@ -557,7 +557,7 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_IOS || UNITY_EDITOR
             var parameters = new JObject();
             parameters["consent"] = consent;
 
@@ -594,7 +594,7 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_IOS || UNITY_EDITOR
             var parameters = new JObject();
             parameters["refund_preference"] = AdaptyJson.ToNode(refundPreference);
 
@@ -663,7 +663,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void PresentCodeRedemptionSheet(Action<AdaptyError> completionHandler)
         {
-#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_IOS || UNITY_EDITOR
             Request.Send<bool>(
                 "present_code_redemption_sheet",
                 null,

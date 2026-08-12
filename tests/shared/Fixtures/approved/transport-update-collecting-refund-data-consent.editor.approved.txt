@@ -1,0 +1,4 @@
+{
+  "consent": true,
+  "method": "update_collecting_refund_data_consent"
+}

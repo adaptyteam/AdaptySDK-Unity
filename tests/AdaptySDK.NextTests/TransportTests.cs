@@ -242,6 +242,25 @@ namespace AdaptySDK.NextTests
                 "restore_purchases",
                 () => Adapty.RestorePurchases((_, __) => { })
             );
+            // iOS-only, and the reason they are here is the Editor rather than the payload: they
+            // used to take an #else that reported a null error, which a caller cannot tell from
+            // success, instead of reaching the bridge that says the SDK is not available here.
+            yield return Case(
+                "update-collecting-refund-data-consent",
+                "update_collecting_refund_data_consent",
+                () => Adapty.UpdateAppStoreCollectingRefundDataConsent(true, _ => { })
+            );
+            yield return Case(
+                "update-refund-preference",
+                "update_refund_preference",
+                () => Adapty.UpdateAppStoreRefundPreference(AdaptyRefundPreference.Grant, _ => { })
+            );
+            yield return Case(
+                "present-code-redemption-sheet",
+                "present_code_redemption_sheet",
+                () => Adapty.PresentCodeRedemptionSheet(_ => { })
+            );
+
             yield return Case(
                 "open-url",
                 "adapty_ui_open_url",
