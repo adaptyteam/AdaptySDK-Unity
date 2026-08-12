@@ -35,7 +35,7 @@ namespace AdaptySDK
         /// This can be null if the product does not belong to a flow.
         /// </remarks>
         [DataMember(Name = "flow_product_id")]
-        public readonly string FlowProductId; //nullable
+        public readonly string FlowProductId;
 
         /// <summary>
         /// The identifier of the access level configured in the Adapty Dashboard.
@@ -112,7 +112,7 @@ namespace AdaptySDK
         /// This is null for non-subscription products.
         /// </remarks>
         [DataMember(Name = "subscription")]
-        public readonly AdaptySubscription Subscription; //nullable
+        public readonly AdaptySubscription Subscription;
 
         /// <summary>
         /// The index of the product in the paywall (0-based).

@@ -23,12 +23,12 @@ namespace AdaptySDK
         /// When the app was installed, on the machine's clock — the wire carries UTC and the SDK converts.
         /// </summary>
         [DataMember(Name = "install_time", IsRequired = true)]
-        public readonly DateTime InstallTime; // Date string, non-null
+        public readonly DateTime InstallTime;
         /// <summary>
         /// How many times the app has been launched, counted by the SDK.
         /// </summary>
         [DataMember(Name = "app_launch_count", IsRequired = true)]
-        public readonly int AppLaunchCount; // non-null
+        public readonly int AppLaunchCount;
         /// <summary>
         /// The install payload the attribution provider passed through, as its own string. Null when there
         /// was none.

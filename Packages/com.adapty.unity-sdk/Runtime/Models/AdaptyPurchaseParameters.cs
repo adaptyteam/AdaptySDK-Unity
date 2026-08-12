@@ -17,14 +17,14 @@ namespace AdaptySDK
         /// an ordinary purchase.
         /// </summary>
         [DataMember(Name = "subscription_update_params")]
-        public readonly AdaptySubscriptionUpdateParameters SubscriptionUpdateParams; // Android Only, nullable
+        public readonly AdaptySubscriptionUpdateParameters SubscriptionUpdateParams;
 
         /// <summary>
         /// Android only. Declares to Google Play that the price shown was personalised to this
         /// user, which some jurisdictions require disclosing. Null leaves the native default.
         /// </summary>
         [DataMember(Name = "is_offer_personalized")]
-        public readonly bool? IsOfferPersonalized; // Android Only, nullable
+        public readonly bool? IsOfferPersonalized;
 
         /// <param name="subscriptionUpdateParams">
         /// Android only. The subscription this purchase replaces, or null.

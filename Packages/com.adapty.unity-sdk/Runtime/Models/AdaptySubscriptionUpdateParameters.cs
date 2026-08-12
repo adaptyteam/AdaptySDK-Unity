@@ -41,7 +41,7 @@ namespace AdaptySDK
         {
             OldSubVendorProductId =
                 oldSubVendorProductId
-                ?? throw new ArgumentNullException(nameof(oldSubVendorProductId)); //TODO
+                ?? throw new ArgumentNullException(nameof(oldSubVendorProductId));
             ReplacementMode = replacementMode;
         }
 

@@ -27,7 +27,7 @@ namespace AdaptySDK
         /// so the constructor normalizes it and <c>NullValueHandling</c> drops it.
         /// </remarks>
         [DataMember(Name = "base_plan_id")]
-        public readonly string BasePlanId; // Android Only, nullable
+        public readonly string BasePlanId;
 
         /// <summary>
         /// Builds an identifier for a product you name yourself, rather than one taken from a flow.

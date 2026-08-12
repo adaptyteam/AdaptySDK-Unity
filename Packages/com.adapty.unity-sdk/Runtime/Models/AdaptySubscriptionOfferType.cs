@@ -28,6 +28,6 @@ namespace AdaptySDK
         /// iOS only. An offer redeemed through an App Store offer code.
         /// </summary>
         [EnumMember(Value = "code")]
-        Code = 3, // iOS Only
+        Code = 3,
     }
 }

@@ -58,7 +58,7 @@ namespace AdaptySDK
         #if UNITY_ANDROID
         [DataMember(Name = "base_plan_id", IsRequired = true)]
 #endif
-        public readonly string BasePlanId; //nullable
+        public readonly string BasePlanId;
 
 
         /// <summary>

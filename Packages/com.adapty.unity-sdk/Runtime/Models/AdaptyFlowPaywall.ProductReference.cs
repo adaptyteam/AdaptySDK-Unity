@@ -12,7 +12,7 @@ namespace AdaptySDK
             private ProductReference() { }
 
             [DataMember(Name = "flow_product_id")]
-            internal readonly string FlowProductId; //nullable
+            internal readonly string FlowProductId;
             [DataMember(Name = "vendor_product_id", IsRequired = true)]
             internal readonly string VendorProductId;
             [DataMember(Name = "adapty_product_id", IsRequired = true)]
@@ -24,19 +24,19 @@ namespace AdaptySDK
             #if UNITY_IOS
             [DataMember(Name = "promotional_offer_id")]
 #endif
-            internal readonly string PromotionalOfferId; //nullable
+            internal readonly string PromotionalOfferId;
             #if UNITY_IOS
             [DataMember(Name = "win_back_offer_id")]
 #endif
-            internal readonly string WinBackOfferId; //nullable
+            internal readonly string WinBackOfferId;
             #if UNITY_ANDROID
             [DataMember(Name = "base_plan_id")]
 #endif
-            internal readonly string AndroidBasePlanId; //nullable
+            internal readonly string AndroidBasePlanId;
             #if UNITY_ANDROID
             [DataMember(Name = "offer_id")]
 #endif
-            internal readonly string AndroidOfferId; //nullable
+            internal readonly string AndroidOfferId;
 
             internal AdaptyProductIdentifier ToAdaptyProductIdentifier()
             {

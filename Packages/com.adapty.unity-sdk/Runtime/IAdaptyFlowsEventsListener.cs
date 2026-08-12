@@ -122,8 +122,8 @@ namespace AdaptySDK
         /// <param name="error">The <see cref="AdaptyError"/> object, or null if no error occurred.</param>
         void FlowViewDidFinishWebPaymentNavigation(
             AdaptyUIFlowView view,
-            AdaptyPaywallProduct product, // can be null
-            AdaptyError error // can be null if no error occurred
+            AdaptyPaywallProduct product,
+            AdaptyError error
         );
 
         /// <summary>
