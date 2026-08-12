@@ -1,0 +1,124 @@
+# Adapted from the community Unity template, with one deliberate change: it routes every binary
+# asset through Git LFS, and this repository does not use LFS - `git lfs ls-files` is empty, and
+# turning the filter on would rewrite the .png, .unitypackage and .aar files already committed as
+# ordinary blobs into pointers. They are marked `binary` here instead, which buys what is actually
+# needed: no end-of-line conversion and no attempt to diff them.
+
+# Everything text is stored with LF, whatever the working tree uses. This is the rule that keeps a
+# reformat done on one machine from rewriting every line of a file for the next reader.
+* text=auto
+
+[attr]unity-yaml merge=unityyamlmerge eol=lf linguist-language=yaml
+[attr]unity-json eol=lf linguist-language=json
+
+# Unity source files
+*.cs                    text diff=csharp
+*.cginc                 text
+*.compute               text linguist-language=hlsl
+*.hlsl                  text linguist-language=hlsl
+*.shader                text
+
+# Unity JSON files
+*.asmdef                unity-json
+*.asmref                unity-json
+*.inputactions          unity-json
+*.shadergraph           unity-json
+*.shadersubgraph        unity-json
+
+# Unity YAML files
+*.anim                  unity-yaml
+*.asset                 unity-yaml
+*.controller            unity-yaml
+*.mask                  unity-yaml
+*.mat                   unity-yaml
+*.meta                  unity-yaml
+*.mixer                 unity-yaml
+*.overrideController    unity-yaml
+*.playable              unity-yaml
+*.prefab                unity-yaml
+*.preset                unity-yaml
+*.renderTexture         unity-yaml
+*.scenetemplate         unity-yaml
+*.spriteatlas           unity-yaml
+*.terrainlayer          unity-yaml
+*.unity                 unity-yaml
+
+# "physic" for 3D but "physics" for 2D
+*.physicMaterial        unity-yaml
+*.physicsMaterial2D     unity-yaml
+
+# The native halves and the build files around them
+*.gradle                text
+*.java                  text diff=java
+*.kt                    text
+*.swift                 text diff=swift
+*.h                     text
+*.m                     text diff=objc
+*.mm                    text diff=objc
+*.pbxproj               text -diff merge=binary
+*.plist                 text
+*.podspec               text diff=ruby
+Podfile                 text diff=ruby
+
+# Repository text that is not Unity's
+*.json                  text
+*.md                    text diff=markdown
+*.properties            text
+*.pro                   text
+*.txt                   text
+*.xml                   text
+*.yaml                  text
+*.yml                   text
+
+# Scripts, where the ending is not cosmetic: cmd.exe wants CRLF, sh wants LF. The Gradle wrapper
+# ships as both, and each half has to keep its own.
+*.sh                    text eol=lf
+*.bat                   text eol=crlf
+*.cmd                   text eol=crlf
+gradlew                 text eol=lf
+
+# Binary: no end-of-line conversion, no diff. Not LFS - see the note at the top.
+*.unitypackage          binary
+*.aar                   binary
+*.jar                   binary
+*.a                     binary
+*.dll                   binary
+*.dylib                 binary
+*.pdb                   binary
+*.so                    binary
+*.bmp                   binary
+*.exr                   binary
+*.gif                   binary
+*.hdr                   binary
+*.jpeg                  binary
+*.jpg                   binary
+*.png                   binary
+*.psd                   binary
+*.tga                   binary
+*.tif                   binary
+*.tiff                  binary
+*.webp                  binary
+*.aif                   binary
+*.aiff                  binary
+*.mp3                   binary
+*.ogg                   binary
+*.wav                   binary
+*.mov                   binary
+*.mp4                   binary
+*.otf                   binary
+*.ttf                   binary
+*.pdf                   binary
+*.7z                    binary
+*.gz                    binary
+*.rar                   binary
+*.tar                   binary
+*.zip                   binary
+*.apk                   binary
+*.cubemap               binary
+
+# Lightmap data is an .asset, but it is not YAML to merge.
+LightingData.asset      binary
+
+# Keep third-party trees and the lock file out of GitHub's language stats and diffs
+Assets/Plugins/**           linguist-generated
+Packages/packages-lock.json linguist-generated
