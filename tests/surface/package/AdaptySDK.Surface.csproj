@@ -31,7 +31,14 @@
     <Shared>$(MSBuildThisFileDirectory)../../shared</Shared>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(AdaptyPlatform)' != ''">
+  <!-- No platform asked for means the Editor, which is the leg the workflow already names that
+       way. It has to say so: UNITY_EDITOR is what selects the no-op bridge over a native one, and
+       defining nothing at all is a configuration Unity never produces. -->
+  <PropertyGroup Condition="'$(AdaptyPlatform)' == ''">
+    <AdaptyPlatform>UNITY_EDITOR</AdaptyPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DefineConstants>$(DefineConstants);$(AdaptyPlatform)</DefineConstants>
   </PropertyGroup>
 

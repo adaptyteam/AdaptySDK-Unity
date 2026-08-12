@@ -21,7 +21,13 @@
     <Shared>$(MSBuildThisFileDirectory)../shared</Shared>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(AdaptyPlatform)' != ''">
+  <!-- Same default as the surface project: no platform asked for is the Editor, and it has to be
+       said rather than left as an empty define set. -->
+  <PropertyGroup Condition="'$(AdaptyPlatform)' == ''">
+    <AdaptyPlatform>UNITY_EDITOR</AdaptyPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DefineConstants>$(DefineConstants);$(AdaptyPlatform)</DefineConstants>
   </PropertyGroup>
 
@@ -53,6 +59,7 @@
     <Compile Include="$(SdkRuntime)/Plugins/iOS/*.cs" LinkBase="Sdk/Plugins/iOS" />
     <Compile Include="$(SdkRuntime)/Plugins/Android/*.cs" LinkBase="Sdk/Plugins/Android" />
     <Compile Include="$(SdkEditor)/AdaptyManifest.cs" LinkBase="Sdk/Editor" />
+    <Compile Include="$(SdkEditor)/AdaptyKidsModeTrait.cs" LinkBase="Sdk/Editor" />
     <Compile Include="$(Shared)/ModelSnapshot.cs" LinkBase="Shared" />
     <Compile Include="$(Shared)/Snapshots.cs" LinkBase="Shared" />
     <Compile Include="$(Shared)/UnityStubs.cs" LinkBase="Shared" />
