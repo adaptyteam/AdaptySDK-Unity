@@ -562,7 +562,6 @@ public static const AdaptySDK.AdaptyErrorCode.FeatureNotSupported : AdaptySDK.Ad
 public static const AdaptySDK.AdaptyErrorCode.FetchSubscriptionStatusFailed : AdaptySDK.AdaptyErrorCode = 1020
 public static const AdaptySDK.AdaptyErrorCode.FetchTimeoutError : AdaptySDK.AdaptyErrorCode = 3101
 public static const AdaptySDK.AdaptyErrorCode.InvalidActionUrl : AdaptySDK.AdaptyErrorCode = 4107
-public static const AdaptySDK.AdaptyErrorCode.InvalidJson : AdaptySDK.AdaptyErrorCode = 23
 public static const AdaptySDK.AdaptyErrorCode.InvalidOfferIdentifier : AdaptySDK.AdaptyErrorCode = 11
 public static const AdaptySDK.AdaptyErrorCode.InvalidOfferPrice : AdaptySDK.AdaptyErrorCode = 14
 public static const AdaptySDK.AdaptyErrorCode.InvalidSignature : AdaptySDK.AdaptyErrorCode = 12
@@ -580,7 +579,6 @@ public static const AdaptySDK.AdaptyErrorCode.PaymentCancelled : AdaptySDK.Adapt
 public static const AdaptySDK.AdaptyErrorCode.PaymentInvalid : AdaptySDK.AdaptyErrorCode = 3
 public static const AdaptySDK.AdaptyErrorCode.PaymentNotAllowed : AdaptySDK.AdaptyErrorCode = 4
 public static const AdaptySDK.AdaptyErrorCode.PaymentPendingError : AdaptySDK.AdaptyErrorCode = 1050
-public static const AdaptySDK.AdaptyErrorCode.PendingPurchase : AdaptySDK.AdaptyErrorCode = 25
 public static const AdaptySDK.AdaptyErrorCode.PrivacyAcknowledgementRequired : AdaptySDK.AdaptyErrorCode = 9
 public static const AdaptySDK.AdaptyErrorCode.ProductNotFound : AdaptySDK.AdaptyErrorCode = 22
 public static const AdaptySDK.AdaptyErrorCode.ProductPurchaseFailed : AdaptySDK.AdaptyErrorCode = 1006

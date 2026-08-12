@@ -112,6 +112,12 @@ Editor menu that installs it is unavailable for the same reason.
   matching what the native SDKs actually do with them.
 - Errors returned by `flow_view_did_answer_permission` and by the observer-mode round trips are now
   logged instead of being swallowed.
+- **Breaking:** removed `AdaptyErrorCode.InvalidJson` (23) and `AdaptyErrorCode.PendingPurchase`
+  (25). Neither native SDK has these codes: iOS 4.0 declares no 23 or 25 at all, and the Android
+  enum runs 20, 22, 24, 97 — the two numbers are gaps left where the members were deleted, while
+  their neighbours stayed. Nothing can raise them, so nothing can match on them; a pending
+  purchase is reported as `AdaptyPurchaseResultType.Pending` rather than as an error. Removing a
+  public member is a breaking change, which is why it happens in a major.
 - **Breaking:** removed what the old JSON layer left behind.
   `AdaptyRefundPreferenceExtensions.ToJSONNode` was the last of the `ToJSONNode` extension classes —
   the other three went with `AdaptySDK.SimpleJSON`, while this one survived because it sat in

@@ -103,22 +103,9 @@ namespace AdaptySDK
         ProductNotFound = 22,
 
         /// <summary>
-        /// Neither pinned native SDK produces this code. It is kept so a number that reached an
-        /// older app still has a name.
-        /// </summary>
-        InvalidJson = 23,
-
-        /// <summary>
         /// Android only. The subscription being replaced was not found in the purchase history.
         /// </summary>
         CurrentSubscriptionToUpdateNotFoundInHistory = 24,
-
-        /// <summary>
-        /// Neither pinned native SDK produces this code. It is kept so a number that reached an
-        /// older app still has a name; a pending purchase now arrives as
-        /// <see cref="AdaptyPurchaseResultType.Pending"/>.
-        /// </summary>
-        PendingPurchase = 25,
 
         /// <summary>
         /// Android only. Google Play's <c>SERVICE_TIMEOUT</c>: the billing service did not answer
