@@ -37,7 +37,7 @@ namespace AdaptySDK.Serialization
                 // silently reporting it as a successful default would turn a broken bridge into a
                 // false negative - "not premium", "purchase did not happen".
                 return new AdaptyResult<T>(
-                    JsonRequire.Token(response, "success").ToObject<T>(AdaptyJson.CreateSerializer()),
+                    AdaptyJsonRequire.Token(response, "success").ToObject<T>(AdaptyJson.CreateSerializer()),
                     null
                 );
             }

@@ -1,5 +1,5 @@
-using UnityEngine.Scripting;
 using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -41,7 +41,7 @@ namespace AdaptySDK
             }
             else if (Details is null)
             {
-                throw Serialization.JsonRequire.Missing("details");
+                throw Serialization.AdaptyJsonRequire.Missing("details");
             }
         }
 

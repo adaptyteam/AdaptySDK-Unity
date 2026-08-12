@@ -35,7 +35,7 @@ namespace AdaptySDK.Serialization
             }
 
             var node = JObject.Load(reader);
-            var name = JsonRequire.String(node, "name");
+            var name = AdaptyJsonRequire.String(node, "name");
 
             switch (name)
             {

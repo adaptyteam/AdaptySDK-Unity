@@ -37,7 +37,7 @@ namespace AdaptySDK.Serialization
             }
 
             var node = JObject.Load(reader);
-            var identity = JsonRequire.Object(node, "offer_identifier");
+            var identity = AdaptyJsonRequire.Object(node, "offer_identifier");
 
             // The key is not even looked at off Android: an Android-only value of an unexpected
             // shape must not be able to fail a read that never uses it.
@@ -49,7 +49,7 @@ namespace AdaptySDK.Serialization
 
             // Read before the id: the contract requires the id in two of the type's branches only,
             // so which rule applies is not known until the type is.
-            var type = JsonRequire
+            var type = AdaptyJsonRequire
                 .Token(identity, "type")
                 .ToObject<AdaptySubscriptionOfferType>(serializer);
 
@@ -62,13 +62,13 @@ namespace AdaptySDK.Serialization
 #endif
 
             var identifier = idIsRequired
-                ? JsonRequire.String(identity, "id")
+                ? AdaptyJsonRequire.String(identity, "id")
                 : identity.Value<string>("id");
 
             return new AdaptySubscriptionOffer(
                 identifier,
                 type,
-                JsonRequire
+                AdaptyJsonRequire
                     .Array(node, "phases")
                     .ToObject<IList<AdaptySubscriptionPhase>>(serializer),
                 offerTags

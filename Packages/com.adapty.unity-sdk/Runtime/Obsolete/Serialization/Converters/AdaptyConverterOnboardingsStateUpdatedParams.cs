@@ -37,26 +37,26 @@ namespace AdaptySDK.Serialization
             }
 
             var node = JObject.Load(reader);
-            var elementType = JsonRequire.String(node, "element_type");
+            var elementType = AdaptyJsonRequire.String(node, "element_type");
 
             switch (elementType)
             {
                 case "select":
-                    return ReadSelect(JsonRequire.Object(node, "value"));
+                    return ReadSelect(AdaptyJsonRequire.Object(node, "value"));
 
                 case "multi_select":
                     var items = new List<AdaptyOnboardingsSelectParams>();
-                    foreach (var item in JsonRequire.Array(node, "value"))
+                    foreach (var item in AdaptyJsonRequire.Array(node, "value"))
                     {
                         items.Add(ReadSelect(item));
                     }
                     return new AdaptyOnboardingsMultiSelectParams(items);
 
                 case "input":
-                    return ReadInput(JsonRequire.Object(node, "value"));
+                    return ReadInput(AdaptyJsonRequire.Object(node, "value"));
 
                 case "date_picker":
-                    var picker = JsonRequire.Object(node, "value");
+                    var picker = AdaptyJsonRequire.Object(node, "value");
                     return new AdaptyOnboardingsDatePickerParams(
                         picker.Value<int?>("day"),
                         picker.Value<int?>("month"),
@@ -70,29 +70,29 @@ namespace AdaptySDK.Serialization
 
         private static AdaptyOnboardingsSelectParams ReadSelect(JToken value) =>
             new AdaptyOnboardingsSelectParams(
-                JsonRequire.String(value, "id"),
-                JsonRequire.String(value, "value"),
-                JsonRequire.String(value, "label")
+                AdaptyJsonRequire.String(value, "id"),
+                AdaptyJsonRequire.String(value, "value"),
+                AdaptyJsonRequire.String(value, "label")
             );
 
         private static AdaptyOnboardingsStateUpdatedParams ReadInput(JToken value)
         {
-            var type = JsonRequire.String(value, "type");
+            var type = AdaptyJsonRequire.String(value, "type");
             switch (type)
             {
                 case "text":
                     return new AdaptyOnboardingsInputParams(
-                        new AdaptyOnboardingsTextInput(JsonRequire.String(value, "value"))
+                        new AdaptyOnboardingsTextInput(AdaptyJsonRequire.String(value, "value"))
                     );
 
                 case "email":
                     return new AdaptyOnboardingsInputParams(
-                        new AdaptyOnboardingsEmailInput(JsonRequire.String(value, "value"))
+                        new AdaptyOnboardingsEmailInput(AdaptyJsonRequire.String(value, "value"))
                     );
 
                 case "number":
                     return new AdaptyOnboardingsInputParams(
-                        new AdaptyOnboardingsNumberInput(JsonRequire.Double(value, "value"))
+                        new AdaptyOnboardingsNumberInput(AdaptyJsonRequire.Double(value, "value"))
                     );
 
                 default:

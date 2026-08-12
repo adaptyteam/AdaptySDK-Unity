@@ -138,7 +138,7 @@ namespace AdaptySDK
         }
 
         private static T Required<T>(JObject parameters, string key) =>
-            JsonRequire.Token(parameters, key).ToObject<T>(AdaptyJson.CreateSerializerFor(typeof(T)));
+            AdaptyJsonRequire.Token(parameters, key).ToObject<T>(AdaptyJson.CreateSerializerFor(typeof(T)));
 
         private static T Optional<T>(JObject parameters, string key)
         {

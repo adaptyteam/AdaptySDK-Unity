@@ -200,8 +200,8 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIOnboardingView>(parameters, "view");
                         var meta = Required<AdaptyUIOnboardingMeta>(parameters, "meta");
-                        var elementId = JsonRequire.String(
-                            JsonRequire.Object(parameters, "action"),
+                        var elementId = AdaptyJsonRequire.String(
+                            AdaptyJsonRequire.Object(parameters, "action"),
                             "element_id"
                         );
                         var @params = Required<AdaptyOnboardingsStateUpdatedParams>(parameters, "action");
