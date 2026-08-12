@@ -145,13 +145,16 @@ namespace AdaptySDK
             public readonly string ActivePromotionalOfferType;
 
             /// <summary>
-            /// The promotional offer in force right now. Null when none is.
+            /// The App Store promotional offer in force right now. Null when there is none, and
+            /// for a subscription bought on Android — the profile is one object across platforms,
+            /// so this says where the purchase happened, not where the app runs.
             /// </summary>
             [DataMember(Name = "active_promotional_offer_id")]
             public readonly string ActivePromotionalOfferId;
 
             /// <summary>
-            /// The offer the current period was bought with. Null when there was none.
+            /// The Google Play offer the current period was bought with. Null when there was none,
+            /// and for a subscription bought on iOS — see <see cref="ActivePromotionalOfferId"/>.
             /// </summary>
             [DataMember(Name = "offer_id")]
             public readonly string OfferId;

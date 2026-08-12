@@ -91,13 +91,16 @@ namespace AdaptySDK
             public readonly string ActivePromotionalOfferType;
 
             /// <summary>
-            /// An identifier of active promotional offer. Null when none is active.
+            /// The App Store promotional offer that unlocked this access level. Null when the
+            /// purchase used none, and for a purchase made on Android — the profile is one object
+            /// across platforms, so this says where the purchase happened, not where the app runs.
             /// </summary>
             [DataMember(Name = "active_promotional_offer_id")]
             public readonly string ActivePromotionalOfferId;
 
             /// <summary>
-            /// The offer the purchase behind this access level used. Null when it used none.
+            /// The Google Play offer that unlocked this access level. Null when the purchase used
+            /// none, and for a purchase made on iOS — see <see cref="ActivePromotionalOfferId"/>.
             /// </summary>
             [DataMember(Name = "offer_id")]
             public readonly string OfferId;
