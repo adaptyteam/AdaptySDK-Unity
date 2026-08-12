@@ -8,6 +8,7 @@ using AdaptySDK.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace AdaptySDK.NextTests
 {
@@ -499,6 +500,25 @@ namespace AdaptySDK.NextTests
             asset.Data[1] = 99;
 
             Assert.That(AdaptyJson.Serialize(asset), Does.Contain(Convert.ToBase64String(new byte[] { 1, 2, 3 })));
+        }
+
+        /// <summary>
+        /// A <c>Gradient</c> is the family's other mutable argument, and the payload is read from it
+        /// lazily, so the window a caller can change it in runs until the request goes out.
+        /// </summary>
+        [Test]
+        public void ACustomAssetDoesNotKeepTheCallersGradient()
+        {
+            var gradient = new Gradient
+            {
+                colorKeys = new[] { new GradientColorKey(new Color(1f, 0f, 0f, 1f), 0f) },
+                alphaKeys = new[] { new GradientAlphaKey(1f, 0f) },
+            };
+            var asset = (AdaptyCustomAssetLinearGradient)AdaptyCustomAsset.LinearGradient(gradient);
+
+            gradient.colorKeys = new[] { new GradientColorKey(new Color(0f, 1f, 0f, 1f), 0f) };
+
+            Assert.That(AdaptyJson.Serialize(asset), Does.Contain("#FF0000FF"));
         }
 
         /// <summary>

@@ -1,7 +1,8 @@
-using UnityEngine.Scripting;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -258,24 +259,15 @@ namespace AdaptySDK
         /// <summary>
         /// The Unity Gradient.
         /// </summary>
+        /// <remarks>
+        /// The request was read off it when the asset was built, so a gradient the caller keeps
+        /// writing into - this one included - no longer changes what goes out.
+        /// </remarks>
         public Gradient Gradient { get; }
 
         [DataMember(Name = "values", IsRequired = true)]
         [Preserve]
-        private System.Collections.Generic.List<Stop> ValuesForRequest
-        {
-            get
-            {
-                var stops = new System.Collections.Generic.List<Stop>();
-                foreach (var time in KeyTimes())
-                {
-                    stops.Add(
-                        new Stop(AdaptyCustomAssetPath.ColorToHex(Gradient.Evaluate(time)), time)
-                    );
-                }
-                return stops;
-            }
-        }
+        private List<Stop> ValuesForRequest { get; }
 
         /// <summary>
         /// A Unity gradient always runs left to right over its full width.
@@ -287,6 +279,7 @@ namespace AdaptySDK
         internal AdaptyCustomAssetLinearGradient(Gradient gradient)
         {
             Gradient = gradient ?? throw new ArgumentNullException(nameof(gradient));
+            ValuesForRequest = Stops(gradient);
         }
 
         /// <summary>
@@ -294,11 +287,11 @@ namespace AdaptySDK
         /// at different times. Emit a stop at every key time of either channel and let Gradient.Evaluate
         /// resolve the RGBA there, so the serialized gradient matches what Unity renders.
         /// </summary>
-        private System.Collections.Generic.List<float> KeyTimes()
+        private static List<Stop> Stops(Gradient gradient)
         {
-            var times = new System.Collections.Generic.List<float>();
+            var times = new List<float>();
 
-            foreach (var key in Gradient.colorKeys)
+            foreach (var key in gradient.colorKeys)
             {
                 if (!times.Contains(key.time))
                 {
@@ -306,7 +299,7 @@ namespace AdaptySDK
                 }
             }
 
-            foreach (var key in Gradient.alphaKeys)
+            foreach (var key in gradient.alphaKeys)
             {
                 if (!times.Contains(key.time))
                 {
@@ -315,7 +308,14 @@ namespace AdaptySDK
             }
 
             times.Sort();
-            return times;
+
+            var stops = new List<Stop>();
+            foreach (var time in times)
+            {
+                stops.Add(new Stop(AdaptyCustomAssetPath.ColorToHex(gradient.Evaluate(time)), time));
+            }
+
+            return stops;
         }
 
         [DataContract]
