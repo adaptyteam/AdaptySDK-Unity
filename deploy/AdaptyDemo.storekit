@@ -1,0 +1,97 @@
+{
+  "identifier": "AD2E4CA1-E1C6-4DD5-92EC-ADB9D3D6524E",
+  "nonRenewingSubscriptions": [],
+  "products": [],
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_askToBuyEnabled": false
+  },
+  "subscriptionGroups": [
+    {
+      "id": "7DD53B64-E911-4C1C-AC72-E7604A7AADAF",
+      "localizations": [],
+      "name": "premium",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "5.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "8FFAF2A4-9C49-4744-96C7-09C8A49CA15D",
+          "introductoryOffer": {
+            "internalID": "1E1E333C-6F4B-409C-8864-A08174ECBE55",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
+          },
+          "localizations": [
+            {
+              "description": "1 Week Premium",
+              "displayName": "1 Week Premium",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "weekly.premium.599",
+          "recurringSubscriptionPeriod": "P1W",
+          "referenceName": "1 Week Premium",
+          "subscriptionGroupID": "7DD53B64-E911-4C1C-AC72-E7604A7AADAF",
+          "type": "RecurringSubscription"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "9.99",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "63F8B390-B7C0-49B6-AF90-51053C0FA917",
+          "introductoryOffer": {
+            "internalID": "370BB628-746C-4CB9-91E4-E275580B7EF4",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
+          },
+          "localizations": [
+            {
+              "description": "1 Month Premium",
+              "displayName": "1 Month Premium",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "monthly.premium.999",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "1 Month Premium",
+          "subscriptionGroupID": "7DD53B64-E911-4C1C-AC72-E7604A7AADAF",
+          "type": "RecurringSubscription"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "69.99",
+          "familyShareable": false,
+          "groupNumber": 3,
+          "internalID": "831CD323-BC49-45F9-A47F-C51A9EFDB177",
+          "introductoryOffer": {
+            "internalID": "5AE22388-BB92-4EDD-A9F0-E721F2EB5004",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
+          },
+          "localizations": [
+            {
+              "description": "1 Year Premium",
+              "displayName": "1 Year Premium",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "yearly.premium.6999",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "1 Year Premium",
+          "subscriptionGroupID": "7DD53B64-E911-4C1C-AC72-E7604A7AADAF",
+          "type": "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 4,
+    "minor": 0
+  }
+}
