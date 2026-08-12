@@ -251,6 +251,28 @@ replacements for them — use what the v3 warnings pointed at:
 | `RemoteConfigString` | `flow.RemoteConfig.Data` |
 | `Locale` | `flow.RemoteConfig.Locale` |
 
+Two `AdaptyErrorCode` members are gone: `InvalidJson` (23) and `PendingPurchase` (25). Neither
+number is declared by either native SDK — not at the versions v4.0 pins, and not at the 3.17.2 both
+of them were on for v3 — so nothing could raise either one and a `case` on it was already dead.
+
+A pending purchase is a result rather than an error, so the check moves to the other branch of the
+callback. It cannot stay where it was: on the error path the result is null.
+
+```csharp
+Adapty.MakePurchase(product, (result, error) =>
+{
+    if (error != null)
+    {
+        // AdaptyErrorCode.PendingPurchase used to be checked here.
+        return;
+    }
+
+    if (result.Type == AdaptyPurchaseResultType.Pending) { /* ... */ }
+});
+```
+
+`InvalidJson` has no replacement.
+
 The `AdaptySDK.SimpleJSON` namespace went with the parser it belonged to, together with its public
 types — `JSON`, `JSONNode`, `JSONObject`, `JSONArray` and the rest — and with the `ToJSONNode`
 extension classes that came with them, `AdaptyUIIOSPresentationStyleExtensions`,
