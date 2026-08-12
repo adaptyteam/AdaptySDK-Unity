@@ -14,6 +14,7 @@ namespace AdaptySDK
         private readonly AdaptyCustomerIdentity CustomerIdentity; // nullable
         [DataMember(Name = "observer_mode")]
         private readonly bool? ObserverMode;
+        [DataMember(Name = "apple_idfa_collection_disabled")]
         private readonly bool? AppleIdfaCollectionDisabled;
         [DataMember(Name = "google_adid_collection_disabled")]
         private readonly bool? GoogleAdvertisingIdCollectionDisabled;
@@ -38,18 +39,6 @@ namespace AdaptySDK
         [DataMember(Name = "media_cache")]
         private AdaptyUIMediaCacheConfiguration AdaptyUIMediaCache;
 
-
-        /// <remarks>
-        /// The KidsMode trait compiles IDFA out of the binary; keep the request in sync.
-        /// </remarks>
-        [DataMember(Name = "apple_idfa_collection_disabled")]
-        [Preserve]
-        private bool? AppleIdfaCollectionDisabledForRequest =>
-#if ADAPTY_KIDS_MODE && UNITY_IOS
-            true;
-#else
-            AppleIdfaCollectionDisabled;
-#endif
 
         [DataMember(Name = "cross_platform_sdk_name")]
         [Preserve]

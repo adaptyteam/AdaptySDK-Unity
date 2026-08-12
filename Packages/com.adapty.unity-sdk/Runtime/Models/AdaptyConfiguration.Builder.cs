@@ -16,7 +16,13 @@ namespace AdaptySDK
             CustomerUserId = builder.CustomerUserId;
             CustomerIdentity = builder.CustomerIdentity;
             ObserverMode = builder.ObserverMode;
-            AppleIdfaCollectionDisabled = builder.AppleIdfaCollectionDisabled;
+            // The KidsMode trait compiles IDFA out of the binary; keep the request in sync.
+            AppleIdfaCollectionDisabled =
+#if ADAPTY_KIDS_MODE && UNITY_IOS
+                true;
+#else
+                builder.AppleIdfaCollectionDisabled;
+#endif
             GoogleAdvertisingIdCollectionDisabled = builder.GoogleAdvertisingIdCollectionDisabled;
             GoogleEnablePendingPrepaidPlans = builder.GoogleEnablePendingPrepaidPlans;
             GoogleLocalAccessLevelAllowed = builder.GoogleLocalAccessLevelAllowed;
