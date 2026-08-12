@@ -357,6 +357,12 @@ out:
 - **`AdaptySubscriptionOfferType` gained `Code`** (iOS only). The existing members keep their
   values, but a `switch` that was exhaustive in v3 is not exhaustive now — give it a default branch.
   A string the contract does not list still fails the read, exactly as in v3.
+- **A call in the Editor reports an error rather than appearing to work.** The SDK talks to the
+  native iOS and Android libraries, which the Editor does not have, so every method now completes
+  with a readable "not supported on this platform" error. Three of them used to hand back a null
+  error there — `UpdateAppStoreCollectingRefundDataConsent`, `UpdateAppStoreRefundPreference` and
+  `PresentCodeRedemptionSheet` — which is indistinguishable from success, so Editor code that
+  treated them as having worked will now see the error. On a device nothing changes.
 
 ## Update the native dependencies
 
