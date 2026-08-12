@@ -92,7 +92,7 @@ namespace AdaptySDK
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
-        private string Type => "image";
+        private static string Type => "image";
 
         [DataMember(Name = "value", IsRequired = true)]
         [Preserve]
@@ -128,7 +128,7 @@ namespace AdaptySDK
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
-        private string Type => "image";
+        private static string Type => "image";
 
         /// <summary>
         /// The asset ID of the image.
@@ -152,7 +152,7 @@ namespace AdaptySDK
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
-        private string Type => "image";
+        private static string Type => "image";
 
         /// <summary>
         /// The file path to the image.
@@ -178,7 +178,7 @@ namespace AdaptySDK
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
-        private string Type => "video";
+        private static string Type => "video";
 
         /// <summary>
         /// The asset ID of the video.
@@ -202,7 +202,7 @@ namespace AdaptySDK
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
-        private string Type => "video";
+        private static string Type => "video";
 
         /// <summary>
         /// The file path to the video.
@@ -228,7 +228,7 @@ namespace AdaptySDK
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
-        private string Type => "color";
+        private static string Type => "color";
 
         /// <summary>
         /// The Unity Color.
@@ -254,7 +254,7 @@ namespace AdaptySDK
     {
         [DataMember(Name = "type", IsRequired = true)]
         [Preserve]
-        private string Type => "linear-gradient";
+        private static string Type => "linear-gradient";
 
         /// <summary>
         /// The Unity Gradient.
