@@ -30,24 +30,7 @@ namespace AdaptySDK
             parameters["onboarding"] = AdaptyJson.ToNode(onboarding);
             parameters["external_urls_presentation"] = AdaptyJson.ToNode(externalUrlsPresentation);
 
-            Request.Send<AdaptyUIOnboardingView>(
-                "adapty_ui_create_onboarding_view",
-                parameters,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyUIOnboardingView, AdaptyError> completionHandler in Adapty.CreateOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            Request.Send("adapty_ui_create_onboarding_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -91,24 +74,7 @@ namespace AdaptySDK
             parameters["id"] = view.Id;
             parameters["ios_presentation_style"] = AdaptyJson.ToNode(iosPresentationStyle);
 
-            Request.Send<bool>(
-                "adapty_ui_present_onboarding_view",
-                parameters,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            Request.SendVoid("adapty_ui_present_onboarding_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -138,24 +104,7 @@ namespace AdaptySDK
             parameters["id"] = view.Id;
             parameters["destroy"] = destroy;
 
-            Request.Send<bool>(
-                "adapty_ui_dismiss_onboarding_view",
-                parameters,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            Request.SendVoid("adapty_ui_dismiss_onboarding_view", parameters, completionHandler);
         }
 
         /// <summary>

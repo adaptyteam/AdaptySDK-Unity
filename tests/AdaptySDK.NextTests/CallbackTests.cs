@@ -1,12 +1,15 @@
 using System;
 using NUnit.Framework;
+#if !UNITY_IOS && !UNITY_ANDROID
+using AdaptySDK.Noop;
+#endif
 
 namespace AdaptySDK.NextTests
 {
     /// <summary>
-    /// The one policy behind every call back into the app from the live API — the deprecated
-    /// onboarding API keeps its own copies. It replaced 57 hand-written ones, so what it does is
-    /// stated once here rather than implied by each of them.
+    /// The one policy behind every call back into the app. Requests own it in <c>Request</c> and
+    /// events go through the helper, so what it does is stated once here rather than implied by
+    /// each of the call sites it replaced.
     /// </summary>
     [TestFixture]
     public class CallbackTests
@@ -51,5 +54,58 @@ namespace AdaptySDK.NextTests
 
             Assert.That(() => Callbacks.InvokeSafe(() => absent?.Invoke(1), "context"), Throws.Nothing);
         }
+
+#if !UNITY_IOS && !UNITY_ANDROID
+        /// <summary>
+        /// The name in the diagnostic is the compiler's, not a copy. The two tests below are what
+        /// makes that true rather than merely intended: nothing else ties the text a request throws
+        /// to the method the app actually called.
+        /// </summary>
+        /// <remarks>
+        /// They drive the no-op bridge, which answers synchronously, so the app's exception comes
+        /// back out of the public call itself.
+        /// </remarks>
+        [TearDown]
+        public void ClearTheBridge() => AdaptyNoop.Handler = null;
+
+        /// <summary>
+        /// A typed request. <c>GetOnboarding</c> is deliberately the subject: it is the one call
+        /// that used to hand the app's exception on raw, so this is the regression as well as the
+        /// guard.
+        /// </summary>
+        [Test]
+        public void ATypedRequestNamesTheMethodTheAppCalled()
+        {
+            AdaptyNoop.Handler = (method, request) => "{\"success\":null}";
+            var cause = new InvalidOperationException("the app's own bug");
+
+            Assert.That(
+                () => Adapty.GetOnboarding("placement", (onboarding, error) => throw cause),
+                Throws
+                    .InstanceOf<Exception>()
+                    .With.Message.EqualTo("Failed to invoke completionHandler in GetOnboarding(..)")
+                    .And.InnerException.SameAs(cause)
+            );
+        }
+
+        /// <summary>
+        /// An error-only request, which reaches the transport through a second hop. The name has to
+        /// survive it — without the explicit hand-off the message would read <c>SendVoid</c>.
+        /// </summary>
+        [Test]
+        public void AnErrorOnlyRequestNamesTheMethodAndNotTheHelper()
+        {
+            AdaptyNoop.Handler = (method, request) => "{\"success\":true}";
+            var cause = new InvalidOperationException("the app's own bug");
+
+            Assert.That(
+                () => Adapty.Logout(error => throw cause),
+                Throws
+                    .InstanceOf<Exception>()
+                    .With.Message.EqualTo("Failed to invoke completionHandler in Logout(..)")
+                    .And.InnerException.SameAs(cause)
+            );
+        }
+#endif
     }
 }

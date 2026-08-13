@@ -189,6 +189,10 @@ Editor menu that installs it is unavailable for the same reason.
 
 ### Fixed
 
+- An exception thrown by the completion handler passed to the deprecated `Adapty.GetOnboarding` now
+  arrives with the name of the call that raised it, and the original as `InnerException`, the way
+  every other Adapty call already reported one. That single method handed the exception on untouched,
+  so it surfaced with no indication of which callback had failed. Only `GetOnboarding` was affected.
 - `AdaptyProfileParameters.SetBirthday` now sends the date the contract asks for. The key is
   declared `YYYY-MM-dd` and was built by hand from the parts, without padding, so 7 March 1990 went
   out as `1990-3-7` rather than `1990-03-07`. Every birthday whose month or day is below the tenth

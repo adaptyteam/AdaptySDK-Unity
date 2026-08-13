@@ -47,14 +47,7 @@ namespace AdaptySDK
                 parameters["load_timeout"] = loadTimeout.Value.TotalSeconds;
             }
 
-            Request.Send<AdaptyOnboarding>(
-                "get_onboarding",
-                parameters,
-                (value, error) =>
-                {
-                    completionHandler?.Invoke(value, error);
-                }
-            );
+            Request.Send("get_onboarding", parameters, completionHandler);
         }
 
         /// <summary>
@@ -90,24 +83,7 @@ namespace AdaptySDK
                 parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
-            Request.Send<AdaptyOnboarding>(
-                "get_onboarding_for_default_audience",
-                parameters,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyOnboarding,AdaptyError> completionHandler in Adapty.GetOnboardingForDefaultAudience(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            Request.Send("get_onboarding_for_default_audience", parameters, completionHandler);
         }
 
         /// <summary>
