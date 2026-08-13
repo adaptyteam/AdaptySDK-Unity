@@ -47,7 +47,7 @@ namespace AdaptySDK
                 parameters["load_timeout"] = loadTimeout.Value.TotalSeconds;
             }
 
-            Request.Send("get_onboarding", parameters, completionHandler);
+            AdaptyRequest.Send("get_onboarding", parameters, completionHandler);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace AdaptySDK
                 parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
-            Request.Send("get_onboarding_for_default_audience", parameters, completionHandler);
+            AdaptyRequest.Send("get_onboarding_for_default_audience", parameters, completionHandler);
         }
 
         /// <summary>

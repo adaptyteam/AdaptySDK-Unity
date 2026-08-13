@@ -7,7 +7,7 @@ using AdaptySDK.Noop;
 namespace AdaptySDK.NextTests
 {
     /// <summary>
-    /// The one policy behind every call back into the app. Requests own it in <c>Request</c> and
+    /// The one policy behind every call back into the app. Requests own it in <c>AdaptyRequest</c> and
     /// events go through the helper, so what it does is stated once here rather than implied by
     /// each of the call sites it replaced.
     /// </summary>
@@ -19,7 +19,7 @@ namespace AdaptySDK.NextTests
         {
             var called = false;
 
-            Callbacks.InvokeSafe(() => called = true, "context");
+            AdaptyCallbacks.InvokeSafe(() => called = true, "context");
 
             Assert.That(called, Is.True);
         }
@@ -35,7 +35,7 @@ namespace AdaptySDK.NextTests
             var cause = new InvalidOperationException("the app's own bug");
 
             Assert.That(
-                () => Callbacks.InvokeSafe(() => throw cause, "Failed to invoke Something(..)"),
+                () => AdaptyCallbacks.InvokeSafe(() => throw cause, "Failed to invoke Something(..)"),
                 Throws
                     .InstanceOf<Exception>()
                     .With.Message.EqualTo("Failed to invoke Something(..)")
@@ -52,7 +52,7 @@ namespace AdaptySDK.NextTests
         {
             Action<int> absent = null;
 
-            Assert.That(() => Callbacks.InvokeSafe(() => absent?.Invoke(1), "context"), Throws.Nothing);
+            Assert.That(() => AdaptyCallbacks.InvokeSafe(() => absent?.Invoke(1), "context"), Throws.Nothing);
         }
 
 #if !UNITY_IOS && !UNITY_ANDROID

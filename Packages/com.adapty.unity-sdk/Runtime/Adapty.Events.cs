@@ -157,7 +157,7 @@ namespace AdaptySDK
                         if (!RequireEventListener(id))
                             return;
                         var profile = Required<AdaptyProfile>(parameters, "profile");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_Listener.OnLoadLatestProfile(profile),
                             "Failed to invoke IAdaptyEventListener.OnLoadLatestProfile(..)"
                         );
@@ -168,7 +168,7 @@ namespace AdaptySDK
                         if (!RequireEventListener(id))
                             return;
                         var details = Required<AdaptyInstallationDetails>(parameters, "details");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_Listener.OnInstallationDetailsSuccess(details),
                             "Failed to invoke IAdaptyEventListener.OnInstallationDetailsSuccess(..)"
                         );
@@ -179,7 +179,7 @@ namespace AdaptySDK
                         if (!RequireEventListener(id))
                             return;
                         var error = Required<AdaptyError>(parameters, "error");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_Listener.OnInstallationDetailsFail(error),
                             "Failed to invoke IAdaptyEventListener.OnInstallationDetailsFail(..)"
                         );
@@ -199,7 +199,7 @@ namespace AdaptySDK
                         if (!RequireFlowsListener(id))
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidAppear(view),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidAppear(..)"
                         );
@@ -210,7 +210,7 @@ namespace AdaptySDK
                         if (!RequireFlowsListener(id))
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidDisappear(view),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidDisappear(..)"
                         );
@@ -222,7 +222,7 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var action = Required<AdaptyUIUserAction>(parameters, "action");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidPerformAction(view, action),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidPerformAction(..)"
                         );
@@ -234,7 +234,7 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var productId = Required<string>(parameters, "product_id");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidSelectProduct(view, productId),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidSelectProduct(..)"
                         );
@@ -246,7 +246,7 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var product = Required<AdaptyPaywallProduct>(parameters, "product");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidStartPurchase(view, product),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidStartPurchase(..)"
                         );
@@ -259,7 +259,7 @@ namespace AdaptySDK
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var product = Required<AdaptyPaywallProduct>(parameters, "product");
                         var purchaseResult = Required<AdaptyPurchaseResult>(parameters, "purchased_result");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () =>
                                 m_FlowsEventsListener.FlowViewDidFinishPurchase(
                                     view,
@@ -277,7 +277,7 @@ namespace AdaptySDK
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var product = Required<AdaptyPaywallProduct>(parameters, "product");
                         var error = Required<AdaptyError>(parameters, "error");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidFailPurchase(view, product, error),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailPurchase(..)"
                         );
@@ -288,7 +288,7 @@ namespace AdaptySDK
                         if (!RequireFlowsListener(id))
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidStartRestore(view),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidStartRestore(..)"
                         );
@@ -300,7 +300,7 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var profile = Required<AdaptyProfile>(parameters, "profile");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidFinishRestore(view, profile),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFinishRestore(..)"
                         );
@@ -312,7 +312,7 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var error = Required<AdaptyError>(parameters, "error");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidFailRestore(view, error),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailRestore(..)"
                         );
@@ -324,7 +324,7 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var error = Required<AdaptyError>(parameters, "error");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidReceiveError(view, error),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidReceiveError(..)"
                         );
@@ -336,7 +336,7 @@ namespace AdaptySDK
                             return;
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var error = Required<AdaptyError>(parameters, "error");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_FlowsEventsListener.FlowViewDidFailLoadingProducts(view, error),
                             "Failed to invoke IAdaptyFlowsEventsListener.FlowViewDidFailLoadingProducts(..)"
                         );
@@ -349,7 +349,7 @@ namespace AdaptySDK
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var product = Optional<AdaptyPaywallProduct>(parameters, "product");
                         var error = Optional<AdaptyError>(parameters, "error");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () =>
                                 m_FlowsEventsListener.FlowViewDidFinishWebPaymentNavigation(
                                     view,
@@ -367,7 +367,7 @@ namespace AdaptySDK
                         var view = Required<AdaptyUIFlowView>(parameters, "view");
                         var name = Required<string>(parameters, "name");
                         var analyticParameters = Required<Dictionary<string, object>>(parameters, "params");
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () =>
                                 m_FlowsEventsListener.FlowViewDidReceiveAnalyticEvent(
                                     view,
@@ -418,7 +418,7 @@ namespace AdaptySDK
                             AdaptyUI.FlowViewAnswerPermission(eventId, granted, detail);
                         };
 
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () =>
                                 m_SystemRequestsHandler.FlowViewDidAskPermission(
                                     view,
@@ -442,7 +442,7 @@ namespace AdaptySDK
                             return;
                         }
 
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () => m_SystemRequestsHandler.FlowViewDidRequestAppReview(view),
                             "Failed to invoke IAdaptyUISystemRequestsHandler.FlowViewDidRequestAppReview(..)"
                         );
@@ -467,7 +467,7 @@ namespace AdaptySDK
                         Action onFinishPurchase = () =>
                             AdaptyUI.SendObserverEvent("observer_purchase_did_finish", eventId);
 
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () =>
                                 m_ObserverModeResolver.FlowViewDidInitiatePurchase(
                                     view,
@@ -497,7 +497,7 @@ namespace AdaptySDK
                         Action onFinishRestore = () =>
                             AdaptyUI.SendObserverEvent("observer_restore_did_finish", eventId);
 
-                        Callbacks.InvokeSafe(
+                        AdaptyCallbacks.InvokeSafe(
                             () =>
                                 m_ObserverModeResolver.FlowViewDidInitiateRestore(
                                     view,

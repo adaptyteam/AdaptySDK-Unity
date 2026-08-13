@@ -14,7 +14,7 @@ namespace AdaptySDK.Noop
         /// </summary>
         /// <remarks>
         /// The only seam into the transport when there is no native side: the request payload is
-        /// assembled inside <c>Request.Send</c>, so this is where a test can read what would have
+        /// assembled inside <c>AdaptyRequest.Send</c>, so this is where a test can read what would have
         /// gone over the bridge.
         /// </remarks>
         internal static Func<string, string, string> Handler;

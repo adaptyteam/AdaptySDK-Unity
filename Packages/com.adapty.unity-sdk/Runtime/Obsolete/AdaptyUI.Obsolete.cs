@@ -30,7 +30,7 @@ namespace AdaptySDK
             parameters["onboarding"] = AdaptyJson.ToNode(onboarding);
             parameters["external_urls_presentation"] = AdaptyJson.ToNode(externalUrlsPresentation);
 
-            Request.Send("adapty_ui_create_onboarding_view", parameters, completionHandler);
+            AdaptyRequest.Send("adapty_ui_create_onboarding_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace AdaptySDK
             parameters["id"] = view.Id;
             parameters["ios_presentation_style"] = AdaptyJson.ToNode(iosPresentationStyle);
 
-            Request.SendVoid("adapty_ui_present_onboarding_view", parameters, completionHandler);
+            AdaptyRequest.SendVoid("adapty_ui_present_onboarding_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace AdaptySDK
             parameters["id"] = view.Id;
             parameters["destroy"] = destroy;
 
-            Request.SendVoid("adapty_ui_dismiss_onboarding_view", parameters, completionHandler);
+            AdaptyRequest.SendVoid("adapty_ui_dismiss_onboarding_view", parameters, completionHandler);
         }
 
         /// <summary>

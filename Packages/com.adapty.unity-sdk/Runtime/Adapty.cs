@@ -47,7 +47,7 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["configuration"] = AdaptyJson.ToNode(configuration);
 
-            Request.SendVoid("activate", parameters, completionHandler);
+            AdaptyRequest.SendVoid("activate", parameters, completionHandler);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace AdaptySDK
                 parameters["load_timeout"] = loadTimeout.Value.TotalSeconds;
             }
 
-            Request.Send("get_flow", parameters, completionHandler);
+            AdaptyRequest.Send("get_flow", parameters, completionHandler);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace AdaptySDK
                 parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
-            Request.Send("get_flow_for_default_audience", parameters, completionHandler);
+            AdaptyRequest.Send("get_flow_for_default_audience", parameters, completionHandler);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["flow"] = AdaptyJson.ToNode(flow);
 
-            Request.Send<List<AdaptyPaywallProduct>>(
+            AdaptyRequest.Send<List<AdaptyPaywallProduct>>(
                 "get_paywall_products",
                 parameters,
                 (value, error) =>
@@ -164,7 +164,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyProfile"/> object.</param>
         public static void GetProfile(Action<AdaptyProfile, AdaptyError> completionHandler)
         {
-            Request.Send("get_profile", null, completionHandler);
+            AdaptyRequest.Send("get_profile", null, completionHandler);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace AdaptySDK
                 parameters["parameters"] = AdaptyJson.ToNode(customerIdentity);
             }
 
-            Request.SendVoid("identify", parameters, completionHandler);
+            AdaptyRequest.SendVoid("identify", parameters, completionHandler);
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains a boolean value indicating whether the SDK is activated.</param>
         public static void IsActivated(Action<bool, AdaptyError> completionHandler)
         {
-            Request.Send("is_activated", null, completionHandler);
+            AdaptyRequest.Send("is_activated", null, completionHandler);
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains the current <see cref="AdaptyLogLevel"/> value.</param>
         public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
         {
-            Request.Send("get_log_level", null, completionHandler);
+            AdaptyRequest.Send("get_log_level", null, completionHandler);
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["value"] = AdaptyJson.ToNode(level);
 
-            Request.SendVoid("set_log_level", parameters, completionHandler);
+            AdaptyRequest.SendVoid("set_log_level", parameters, completionHandler);
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace AdaptySDK
             Action<AdaptyInstallationStatus, AdaptyError> completionHandler
         )
         {
-            Request.Send("get_current_installation_status", null, completionHandler);
+            AdaptyRequest.Send("get_current_installation_status", null, completionHandler);
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Logout(Action<AdaptyError> completionHandler)
         {
-            Request.SendVoid("logout", null, completionHandler);
+            AdaptyRequest.SendVoid("logout", null, completionHandler);
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["paywall"] = AdaptyJson.ToNode(paywall);
 
-            Request.Send("create_web_paywall_url", parameters, completionHandler);
+            AdaptyRequest.Send("create_web_paywall_url", parameters, completionHandler);
         }
 
         /// <summary>
@@ -318,7 +318,7 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["product"] = AdaptyJson.ToNode(new AdaptyPaywallProductRequest(product));
 
-            Request.Send("create_web_paywall_url", parameters, completionHandler);
+            AdaptyRequest.Send("create_web_paywall_url", parameters, completionHandler);
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace AdaptySDK
             parameters["paywall"] = AdaptyJson.ToNode(paywall);
             parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.SendVoid("open_web_paywall", parameters, completionHandler);
+            AdaptyRequest.SendVoid("open_web_paywall", parameters, completionHandler);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace AdaptySDK
             parameters["product"] = AdaptyJson.ToNode(new AdaptyPaywallProductRequest(product));
             parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.SendVoid("open_web_paywall", parameters, completionHandler);
+            AdaptyRequest.SendVoid("open_web_paywall", parameters, completionHandler);
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["flow"] = AdaptyJson.ToNode(flow);
 
-            Request.SendVoid("log_show_flow", parameters, completionHandler);
+            AdaptyRequest.SendVoid("log_show_flow", parameters, completionHandler);
         }
 
         /// <summary>
@@ -404,9 +404,9 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["consent"] = consent;
 
-            Request.SendVoid("update_collecting_refund_data_consent", parameters, completionHandler);
+            AdaptyRequest.SendVoid("update_collecting_refund_data_consent", parameters, completionHandler);
 #else
-            Callbacks.InvokeSafe(
+            AdaptyCallbacks.InvokeSafe(
                 () => completionHandler?.Invoke(null),
                 $"Failed to invoke completionHandler in {nameof(UpdateAppStoreCollectingRefundDataConsent)}(..)"
             );
@@ -431,9 +431,9 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["refund_preference"] = AdaptyJson.ToNode(refundPreference);
 
-            Request.SendVoid("update_refund_preference", parameters, completionHandler);
+            AdaptyRequest.SendVoid("update_refund_preference", parameters, completionHandler);
 #else
-            Callbacks.InvokeSafe(
+            AdaptyCallbacks.InvokeSafe(
                 () => completionHandler?.Invoke(null),
                 $"Failed to invoke completionHandler in {nameof(UpdateAppStoreRefundPreference)}(..)"
             );
@@ -463,7 +463,7 @@ namespace AdaptySDK
                 parameters["parameters"] = AdaptyJson.ToNode(purchaseParameters);
             }
 
-            Request.Send("make_purchase", parameters, completionHandler);
+            AdaptyRequest.Send("make_purchase", parameters, completionHandler);
         }
 
         /// <summary>
@@ -477,9 +477,9 @@ namespace AdaptySDK
         public static void PresentCodeRedemptionSheet(Action<AdaptyError> completionHandler)
         {
 #if UNITY_IOS || UNITY_EDITOR
-            Request.SendVoid("present_code_redemption_sheet", null, completionHandler);
+            AdaptyRequest.SendVoid("present_code_redemption_sheet", null, completionHandler);
 #else
-            Callbacks.InvokeSafe(
+            AdaptyCallbacks.InvokeSafe(
                 () => completionHandler?.Invoke(null),
                 $"Failed to invoke completionHandler in {nameof(PresentCodeRedemptionSheet)}(..)"
             );
@@ -511,7 +511,7 @@ namespace AdaptySDK
                 parameters["variation_id"] = variationId;
             }
 
-            Request.SendVoid("report_transaction", parameters, completionHandler);
+            AdaptyRequest.SendVoid("report_transaction", parameters, completionHandler);
         }
 
         /// <summary>
@@ -525,7 +525,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyProfile"/> object.</param>
         public static void RestorePurchases(Action<AdaptyProfile, AdaptyError> completionHandler)
         {
-            Request.Send("restore_purchases", null, completionHandler);
+            AdaptyRequest.Send("restore_purchases", null, completionHandler);
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains the native SDK version string.</param>
         public static void GetNativeSDKVersion(Action<string, AdaptyError> completionHandler)
         {
-            Request.Send("get_sdk_version", null, completionHandler);
+            AdaptyRequest.Send("get_sdk_version", null, completionHandler);
         }
 
         /// <summary>
@@ -561,7 +561,7 @@ namespace AdaptySDK
             parameters["path"] = "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + fileName;
 #endif
 
-            Request.SendVoid("set_fallback", parameters, completionHandler);
+            AdaptyRequest.SendVoid("set_fallback", parameters, completionHandler);
         }
 
         /// <summary>
@@ -583,7 +583,7 @@ namespace AdaptySDK
             var identifier = new JObject { [key] = value };
             parameters["key_values"] = identifier;
 
-            Request.SendVoid("set_integration_identifiers", parameters, completionHandler);
+            AdaptyRequest.SendVoid("set_integration_identifiers", parameters, completionHandler);
         }
 
         /// <summary>
@@ -606,7 +606,7 @@ namespace AdaptySDK
             parameters["attribution"] = jsonString;
             parameters["source"] = source;
 
-            Request.SendVoid("update_attribution_data", parameters, completionHandler);
+            AdaptyRequest.SendVoid("update_attribution_data", parameters, completionHandler);
         }
 
         /// <summary>
@@ -627,7 +627,7 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["params"] = AdaptyJson.ToNode(param);
 
-            Request.SendVoid("update_profile", parameters, completionHandler);
+            AdaptyRequest.SendVoid("update_profile", parameters, completionHandler);
         }
     }
 
@@ -665,7 +665,7 @@ namespace AdaptySDK
                 }
             }
 
-            Request.Send("adapty_ui_create_flow_view", parameters, completionHandler);
+            AdaptyRequest.Send("adapty_ui_create_flow_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -686,7 +686,7 @@ namespace AdaptySDK
             parameters["id"] = view.Id;
             parameters["destroy"] = true;
 
-            Request.SendVoid("adapty_ui_dismiss_flow_view", parameters, completionHandler);
+            AdaptyRequest.SendVoid("adapty_ui_dismiss_flow_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -718,7 +718,7 @@ namespace AdaptySDK
             parameters["id"] = view.Id;
             parameters["ios_presentation_style"] = AdaptyJson.ToNode(iosPresentationStyle);
 
-            Request.SendVoid("adapty_ui_present_flow_view", parameters, completionHandler);
+            AdaptyRequest.SendVoid("adapty_ui_present_flow_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -749,7 +749,7 @@ namespace AdaptySDK
             parameters["id"] = viewId;
             parameters["configuration"] = AdaptyJson.ToNode(configuration);
 
-            Request.Send("adapty_ui_show_dialog", parameters, completionHandler);
+            AdaptyRequest.Send("adapty_ui_show_dialog", parameters, completionHandler);
         }
 
         /// <summary>
@@ -771,7 +771,7 @@ namespace AdaptySDK
             parameters["url"] = url;
             parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.SendVoid("adapty_ui_open_url", parameters, completionHandler);
+            AdaptyRequest.SendVoid("adapty_ui_open_url", parameters, completionHandler);
         }
 
         /// <summary>
@@ -783,7 +783,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void RequestAppReview(Action<AdaptyError> completionHandler)
         {
-            Request.SendVoid("adapty_ui_request_app_review", null, completionHandler);
+            AdaptyRequest.SendVoid("adapty_ui_request_app_review", null, completionHandler);
         }
 
         internal static void FlowViewAnswerPermission(string eventId, bool granted, string detail)
@@ -796,7 +796,7 @@ namespace AdaptySDK
                 parameters["detail"] = detail;
             }
 
-            Request.SendVoid(
+            AdaptyRequest.SendVoid(
                 "flow_view_did_answer_permission",
                 parameters,
                 (error) => LogRoundTripError("flow_view_did_answer_permission", error)
@@ -808,7 +808,7 @@ namespace AdaptySDK
             var parameters = new JObject();
             parameters["event_id"] = eventId;
 
-            Request.SendVoid(method, parameters, (error) => LogRoundTripError(method, error));
+            AdaptyRequest.SendVoid(method, parameters, (error) => LogRoundTripError(method, error));
         }
 
         private static void LogRoundTripError(string method, AdaptyError error)
@@ -828,7 +828,7 @@ namespace AdaptySDK
         }
     }
 
-    internal static class Request
+    internal static class AdaptyRequest
     {
         /// <summary>
         /// Sends one request to the native side and hands the typed reply to
@@ -891,11 +891,11 @@ namespace AdaptySDK
         /// Names the request that is calling back, and hands the call to the one callback policy.
         /// </summary>
         /// <remarks>
-        /// The wrapping itself belongs to <see cref="Callbacks.InvokeSafe"/> - what lives here is
+        /// The wrapping itself belongs to <see cref="AdaptyCallbacks.InvokeSafe"/> - what lives here is
         /// only the wording, in one place, so that the 40 requests cannot drift apart.
         /// </remarks>
         private static void InvokeCompletion(Action invocation, string caller) =>
-            Callbacks.InvokeSafe(invocation, $"Failed to invoke completionHandler in {caller}(..)");
+            AdaptyCallbacks.InvokeSafe(invocation, $"Failed to invoke completionHandler in {caller}(..)");
 
         private static void SendRaw<T>(
             string method,
