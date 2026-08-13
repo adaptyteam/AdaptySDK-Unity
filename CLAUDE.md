@@ -40,7 +40,7 @@ cd adaptyandroidwrapper && ./gradlew :unitywrapper:build
 All SDK calls follow a single JSON-based bridge:
 
 1. **C# public API** (`Packages/com.adapty.unity-sdk/Runtime/Adapty.cs`, `Adapty.Overloads.cs`) — `static partial class Adapty` with methods like `GetFlow`, `MakePurchase`, etc.
-2. Each method serializes parameters to JSON via `AdaptyRequest.Send()` or `AdaptyRequest.SendVoid()` (bottom of `Adapty.cs`), which adds the `method` key and calls `_Adapty.Invoke(method, json, callback)`. Those two are the only way in: the raw transport is `private`, and both take the caller's name through `[CallerMemberName]`, so no call site writes a diagnostic string of its own.
+2. Each method serializes parameters to JSON via `AdaptyRequest.Send()` or `AdaptyRequest.SendVoid()` (`Runtime/AdaptyRequest.cs`), which adds the `method` key and calls `_Adapty.Invoke(method, json, callback)`. Those two are the only way in: the raw transport is `private`, and both take the caller's name through `[CallerMemberName]`, so no call site writes a diagnostic string of its own.
 3. **`_Adapty`** is compile-time aliased per platform:
    - `AdaptySDK.iOS.AdaptyIOS` — P/Invoke `[DllImport("__Internal")]` to Swift plugin
    - `AdaptySDK.Android.AdaptyAndroid` — `AndroidJavaClass` calling `com.adapty.unity.AdaptyAndroidWrapper`
@@ -61,7 +61,8 @@ Editor code therefore cannot reference Runtime types, and the Editor asmdef's em
 ### Key Directory Layout
 
 - **`Packages/com.adapty.unity-sdk/`** — The SDK package distributed to users (UPM layout):
-  - `Runtime/Adapty.cs` — Main API (all public methods + internal `AdaptyRequest` class)
+  - `Runtime/Adapty.cs` — Main API (all public methods)
+  - `Runtime/AdaptyRequest.cs` — the transport: the two safe entry points, the private raw send, and the `_Adapty` alias that picks the platform bridge
   - `Runtime/Adapty.Overloads.cs` — Convenience overloads with fewer parameters
   - `Runtime/I*.cs` — one public interface per file, named after it: `IAdaptyEventListener`, `IAdaptyFlowsEventsListener`, `IAdaptyUISystemRequestsHandler`, `IAdaptyUIObserverModeResolver`. The deprecated `IAdaptyOnboardingsEventsListener` is under `Obsolete/` instead, by the rule below.
   - `Runtime/Adapty.Events.cs` — the implementation behind them: listener registration, `OnMessage` and the `Dispatch` switch. Kept out of the interface files, so a contract and the code that calls it are not the same file.
