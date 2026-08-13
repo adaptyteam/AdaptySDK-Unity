@@ -2,13 +2,6 @@ using System;
 using UnityEngine;
 using AdaptySDK.Serialization;
 using Newtonsoft.Json.Linq;
-#if UNITY_IOS && !UNITY_EDITOR
-using _AdaptyCallbackAction = AdaptySDK.iOS.AdaptyIOSCallbackAction;
-#elif UNITY_ANDROID && !UNITY_EDITOR
-using _AdaptyCallbackAction = AdaptySDK.Android.AdaptyAndroidCallbackAction;
-#else
-using _AdaptyCallbackAction = AdaptySDK.Noop.AdaptyNoopCallbackAction;
-#endif
 
 namespace AdaptySDK
 {
@@ -32,7 +25,6 @@ namespace AdaptySDK
         )]
         public static void SetOnboardingsEventsListener(IAdaptyOnboardingsEventsListener listener)
         {
-            _AdaptyCallbackAction.InitializeOnce();
             m_OnboardingsEventsListener = listener;
         }
 

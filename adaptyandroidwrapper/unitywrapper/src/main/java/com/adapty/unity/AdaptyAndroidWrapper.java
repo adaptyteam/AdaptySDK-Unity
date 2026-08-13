@@ -46,9 +46,9 @@ public class AdaptyAndroidWrapper {
     private static AdaptyAndroidMessageHandler messageHandler;
 
     /**
-     * Binds to the registering thread's Looper - Unity's, since Adapty.SetEventListener calls this.
-     * Unity's player loop is not the Android UI thread, so Looper.getMainLooper() would deliver
-     * every callback on the wrong one.
+     * Binds to the registering thread's Looper - Unity's, since the C# side registers from its
+     * scripting thread before the first scene loads. Unity's player loop is not the Android UI
+     * thread, so Looper.getMainLooper() would deliver every callback on the wrong one.
      */
     public static void registerMessageHandler(AdaptyAndroidMessageHandler handler) {
         messageHandler = handler;

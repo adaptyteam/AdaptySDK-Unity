@@ -37,12 +37,24 @@ namespace AdaptySDK
         }
 
         /// <summary>
+        /// Registers the platform callback transport, before the first scene loads.
+        /// </summary>
+        /// <remarks>
+        /// Nothing native reaches C# until this has run: on iOS the bridge drops a completion while
+        /// its delegate is null, and on Android the wrapper has no handler to post it to. It used to
+        /// happen inside the listener setters, which made every completion handler depend on a
+        /// subscription that is optional and unrelated. The stage covers the whole MonoBehaviour
+        /// lifecycle, and it is what binds Android's handler to the scripting thread.
+        /// </remarks>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        internal static void InitializeTransport() => _AdaptyCallbackAction.InitializeOnce();
+
+        /// <summary>
         /// Sets the event listener for Adapty SDK events.
         /// </summary>
         /// <param name="listener">The <see cref="IAdaptyEventListener"/> implementation to receive events, or null to detach the previous one.</param>
         public static void SetEventListener(IAdaptyEventListener listener)
         {
-            _AdaptyCallbackAction.InitializeOnce();
             m_Listener = listener;
         }
 
@@ -52,7 +64,6 @@ namespace AdaptySDK
         /// <param name="listener">The <see cref="IAdaptyFlowsEventsListener"/> implementation to receive events, or null to detach the previous one.</param>
         public static void SetFlowsEventsListener(IAdaptyFlowsEventsListener listener)
         {
-            _AdaptyCallbackAction.InitializeOnce();
             m_FlowsEventsListener = listener;
         }
 
@@ -62,7 +73,6 @@ namespace AdaptySDK
         /// <param name="handler">The <see cref="IAdaptyUISystemRequestsHandler"/> implementation to receive requests, or null to detach the previous one.</param>
         public static void SetSystemRequestsHandler(IAdaptyUISystemRequestsHandler handler)
         {
-            _AdaptyCallbackAction.InitializeOnce();
             m_SystemRequestsHandler = handler;
         }
 
@@ -72,7 +82,6 @@ namespace AdaptySDK
         /// <param name="resolver">The <see cref="IAdaptyUIObserverModeResolver"/> implementation to resolve purchases and restores, or null to detach the previous one.</param>
         public static void SetObserverModeResolver(IAdaptyUIObserverModeResolver resolver)
         {
-            _AdaptyCallbackAction.InitializeOnce();
             m_ObserverModeResolver = resolver;
         }
 

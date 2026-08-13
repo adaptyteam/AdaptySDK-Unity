@@ -189,6 +189,14 @@ Editor menu that installs it is unavailable for the same reason.
 
 ### Fixed
 
+- Requests call back on a device even when the app never sets an event listener. The platform
+  callback bridge was registered by the four listener setters and by nothing else, so an app that
+  subscribes to no events got no completion handler called at all — `Activate` included — on either
+  platform, and every iOS request additionally leaked the handle meant to carry its reply. The
+  bridge is now registered at player startup, before the first scene loads — so every call made from
+  the MonoBehaviour lifecycle onwards is covered. Present since 3.x: the setters are documented as
+  subscriptions, nothing ever said they were a precondition, and the demo app in this repository
+  calls all four before activating, which is why it was never hit there.
 - An exception thrown by the completion handler passed to the deprecated `Adapty.GetOnboarding` now
   arrives with the name of the call that raised it, and the original as `InnerException`, the way
   every other Adapty call already reported one. That single method handed the exception on untouched,

@@ -86,6 +86,37 @@ namespace AdaptySDK.NextTests
             });
         }
 
+        /// <summary>
+        /// A different rule riding the same mechanism: this one registers the platform callback
+        /// transport rather than clearing anything. It is the only place that does, so the stage is
+        /// the whole of the guarantee - it has to precede the first scene, because a MonoBehaviour's
+        /// `Awake` is where an app calls the SDK. `AfterSceneLoad`, which is what the attribute
+        /// means with no argument at all, runs after that, and on a device every completion handler
+        /// would then go uncalled.
+        /// </summary>
+        [Test]
+        public void TheTransportIsRegisteredBeforeTheFirstScene()
+        {
+            var hook = typeof(Adapty).GetMethod(
+                nameof(Adapty.InitializeTransport),
+                BindingFlags.Static | BindingFlags.NonPublic
+            );
+
+            Assert.That(hook, Is.Not.Null, "Adapty.InitializeTransport is gone");
+
+            var attribute = hook.GetCustomAttribute<RuntimeInitializeOnLoadMethodAttribute>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(attribute, Is.Not.Null, "Unity only calls it while it carries the attribute");
+                Assert.That(
+                    attribute?.LoadType,
+                    Is.Not.EqualTo(RuntimeInitializeLoadType.AfterSceneLoad),
+                    "the first scene has already had its chance to call the SDK by then"
+                );
+            });
+        }
+
         private sealed class Listener : IAdaptyEventListener
         {
             internal static int Calls;
