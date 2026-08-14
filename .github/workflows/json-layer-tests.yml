@@ -1,10 +1,11 @@
 name: JSON layer tests
 
 # The SDK JSON layer against its approved snapshots. The suite links the SDK sources into a plain
-# .NET project, so it needs neither the Unity Editor nor a licence, and runs once per platform:
+# .NET project, so it needs neither the Unity Editor nor a licence, and runs once per define set:
 # the layer branches on UNITY_IOS / UNITY_ANDROID and each has its own snapshots. The third leg is
 # the Editor, which the projects define as UNITY_EDITOR when no platform is asked for - it is a
-# configuration of its own, not the absence of one.
+# configuration of its own, not the absence of one. The fourth is iOS with ADAPTY_KIDS_MODE, the
+# one define that changes what goes on the wire rather than what compiles.
 
 on:
   push:
@@ -37,8 +38,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: ["", "UNITY_IOS", "UNITY_ANDROID"]
-    name: ${{ matrix.platform == '' && 'editor' || matrix.platform }}
+        include:
+          - name: editor
+            defines: ""
+          - name: UNITY_IOS
+            defines: "UNITY_IOS"
+          - name: UNITY_ANDROID
+            defines: "UNITY_ANDROID"
+          # Kids Mode is the one shipped define that changes the wire format rather than which
+          # sources compile: on iOS it forces apple_idfa_collection_disabled, because the trait has
+          # compiled IDFA out of the binary. Without a leg of its own the three configuration
+          # snapshots it moves are approved for no one - the run simply failed all three.
+          # %3B is MSBuild's escape for the ';' separating the two defines; a literal one would be
+          # read by the shell as the end of the command.
+          - name: UNITY_IOS-kids
+            defines: "UNITY_IOS%3BADAPTY_KIDS_MODE"
+    name: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -51,17 +66,17 @@ jobs:
 
       - name: Test
         run: |
-          if [ -z "${{ matrix.platform }}" ]; then
+          if [ -z "${{ matrix.defines }}" ]; then
             dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj --no-restore
           else
             dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj --no-restore \
-              -p:AdaptyPlatform=${{ matrix.platform }}
+              -p:AdaptyPlatform="${{ matrix.defines }}"
           fi
 
       - name: Upload received snapshots
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: received-${{ matrix.platform == '' && 'editor' || matrix.platform }}
+          name: received-${{ matrix.name }}
           path: tests/shared/Fixtures/approved/*.received.txt
           if-no-files-found: ignore

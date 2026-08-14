@@ -77,17 +77,35 @@ namespace AdaptySDK.NextTests
             );
         }
 
+        /// <summary>
+        /// Kids Mode forces <c>apple_idfa_collection_disabled</c> on iOS, because the trait has
+        /// compiled IDFA out of the binary and the request has to say so. That is the whole of its
+        /// effect on this layer, so only the configuration requests get a second approved form.
+        /// </summary>
+        /// <remarks>
+        /// Without this the three snapshots below would be pinned by nothing under the define: the
+        /// approved files hold the flag as false, so a Kids Mode run failed all three and there was
+        /// no form of them anyone had approved. The flag is the only thing the define changes that
+        /// this layer can see, and it is the one thing a Kids Category build cannot get wrong.
+        /// </remarks>
+        private static string Configured(string name) =>
+#if UNITY_IOS && ADAPTY_KIDS_MODE
+            name + "-kids";
+#else
+            name;
+#endif
+
         [Test]
         public void Configuration() =>
             Snapshots.Matches(
-                "request-configuration",
+                Configured("request-configuration"),
                 Snapshots.Canonical(AdaptyJson.Serialize(Samples.Configuration()))
             );
 
         [Test]
         public void ConfigurationWithEmptyIdentity() =>
             Snapshots.Matches(
-                "request-configuration-empty-identity",
+                Configured("request-configuration-empty-identity"),
                 Snapshots.Canonical(
                     AdaptyJson.Serialize(Samples.ConfigurationWithEmptyIdentity())
                 )
@@ -96,7 +114,7 @@ namespace AdaptySDK.NextTests
         [Test]
         public void ConfigurationWithDefaultCluster() =>
             Snapshots.Matches(
-                "request-configuration-default-cluster",
+                Configured("request-configuration-default-cluster"),
                 Snapshots.Canonical(
                     AdaptyJson.Serialize(Samples.ConfigurationWithDefaultCluster())
                 )
