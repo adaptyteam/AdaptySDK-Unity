@@ -541,6 +541,38 @@ namespace AdaptySDK.NextTests
             Assert.That(analytics, Is.TypeOf<AdaptyOnboardingsAnalyticsEventUnknown>());
         }
 
+        /// <summary>
+        /// The builder's description is for logs and the debugger, and its format is deliberately
+        /// not pinned - but a member absent from it is one a developer cannot see while diagnosing
+        /// a configuration, although it reaches the request like all the others. Adding a field and
+        /// forgetting the description has already happened once.
+        /// </summary>
+        [Test]
+        public void TheConfigurationBuilderDescribesEveryMemberItCarries()
+        {
+            var description = new AdaptyConfiguration.Builder("key_under_test").ToString();
+
+            var undescribed = new List<string>();
+            foreach (
+                var field in typeof(AdaptyConfiguration.Builder).GetFields(
+                    BindingFlags.Instance | BindingFlags.Public
+                )
+            )
+            {
+                if (!description.Contains(field.Name))
+                {
+                    undescribed.Add(field.Name);
+                }
+            }
+
+            Assert.That(
+                undescribed,
+                Is.Empty,
+                "these are carried into the configuration but missing from Builder.ToString():\n  "
+                    + string.Join("\n  ", undescribed)
+            );
+        }
+
         private static JsonSerializerSettings Settings()
         {
             var settings = new JsonSerializerSettings();

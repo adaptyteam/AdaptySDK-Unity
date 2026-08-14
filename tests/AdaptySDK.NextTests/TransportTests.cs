@@ -127,6 +127,31 @@ namespace AdaptySDK.NextTests
             Snapshots.Matches("transport-update-attribution", Snapshots.Canonical(_request));
         }
 
+        /// <summary>
+        /// The dictionary overload is the one public method that encodes an argument before it can
+        /// build a request, so it is the one place a serialization failure could escape the
+        /// transport's guard and be thrown at the caller instead of reported to the handler.
+        /// </summary>
+        [Test]
+        public void UpdateAttributionReportsAGraphItCannotEncode()
+        {
+            var loop = new Dictionary<string, object>();
+            loop["self"] = loop;
+
+            AdaptyError reported = null;
+
+            Assert.DoesNotThrow(
+                () => Adapty.UpdateAttribution(loop, "custom", error => reported = error)
+            );
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(reported, Is.Not.Null, "the completion handler was never called");
+                Assert.That(reported?.Code, Is.EqualTo(AdaptyErrorCode.EncodingFailed));
+                Assert.That(_method, Is.Null, "nothing should have reached the bridge");
+            });
+        }
+
 
         /// <summary>
         /// One case per migrated public method, so a call site cannot change what it sends - or

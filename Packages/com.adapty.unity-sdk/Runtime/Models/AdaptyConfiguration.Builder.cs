@@ -176,6 +176,7 @@ namespace AdaptySDK
                 + $"{nameof(ObserverMode)}: {ObserverMode}, "
                 + $"{nameof(AppleIdfaCollectionDisabled)}: {AppleIdfaCollectionDisabled}, "
                 + $"{nameof(GoogleAdvertisingIdCollectionDisabled)}: {GoogleAdvertisingIdCollectionDisabled}, "
+                + $"{nameof(GoogleEnablePendingPrepaidPlans)}: {GoogleEnablePendingPrepaidPlans}, "
                 + $"{nameof(GoogleLocalAccessLevelAllowed)}: {GoogleLocalAccessLevelAllowed}, "
                 + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
                 + $"{nameof(AppleClearDataOnBackup)}: {AppleClearDataOnBackup}, "

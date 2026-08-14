@@ -41,15 +41,20 @@ Editor menu that installs it is unavailable for the same reason.
   nothing to restore returned an error that could only be matched against a literal `1004`. Nothing
   about the error changes; it now has its name back. The code is Android-only — iOS does not define
   it.
-- Seven more `AdaptyErrorCode` members the native SDKs emit but this enum never named:
+- Seven more `AdaptyErrorCode` members the native SDKs declare but this enum never named:
   `UnidentifiedUserLogout` (3020, both platforms, from `Logout` on an unidentified profile),
-  `PaymentPendingError` (1050, iOS, from `ReportTransaction`), `BillingNetworkError` (112, Android),
-  and `WrongAssetType` (4104), `JsException` (4105), `NavigatorNotFound` (4106),
-  `InvalidActionUrl` (4107) — the four the Android flow renderer reports through
-  `FlowViewDidReceiveError`. `AdaptyErrorCode` carries the native number, so these codes always
-  arrived; they simply had no constant to match against. Each one was traced in the iOS 4.0.2 and
-  Android 4.0.1 sources to the place the native SDK produces it — a throw site for all but 112, which
-  comes out of the `fromBilling` mapping.
+  `PaymentPendingError` (1050, iOS), `BillingNetworkError` (112, Android), and `WrongAssetType`
+  (4104), `JsException` (4105), `NavigatorNotFound` (4106), `InvalidActionUrl` (4107) — the four
+  the Android flow renderer reports through `FlowViewDidReceiveError`. `AdaptyErrorCode` carries
+  the native number, so these codes already arrived; they simply had no constant to match against.
+  Each one was traced in the iOS 4.0.2 and Android 4.0.1 sources to the place the native SDK
+  produces it — a throw site for all but 112, which comes out of the `fromBilling` mapping.
+
+  `PaymentPendingError` is the one exception to "already arrived", and is named for completeness
+  rather than to be handled: its only throw site is an iOS overload taking StoreKit's own purchase
+  result, which the Unity bridge never calls — `ReportTransaction` goes to the overload taking a
+  transaction id, which has no pending branch. A pending purchase made through the SDK arrives as
+  `AdaptyPurchaseResultType.Pending`, on the result rather than the error.
 
 ### Changed
 
@@ -82,6 +87,9 @@ Editor menu that installs it is unavailable for the same reason.
   `AdaptyOnboardingsStateUpdatedParams` and `AdaptyOnboardingsInput` hierarchies, and the
   `AdaptyUI.ShowDialog` overload taking an `AdaptyUIOnboardingView`. Naming any of them warns now,
   where before only calling one of the six entry points did.
+- **Breaking:** `Adapty.GetLoglevel` is spelled `Adapty.GetLogLevel`. The typo was in the v3 surface
+  too, out of step with its own `SetLogLevel` and with `get_log_level`, the operation the
+  cross-platform contract names. Nothing else changes — same signature, same wire method.
 - **Breaking:** removed two members that only forwarded to another one —
   `AdaptyProfile.NonSubscription.IsOneTime` (returned `IsConsumable` unchanged; its summary had
   called it deprecated for several versions without an attribute to back that up) and
@@ -252,6 +260,28 @@ Editor menu that installs it is unavailable for the same reason.
   nothing.
 - `AdaptyFlow.VendorProductIds` and `AdaptyFlow.ProductIdentifiers` no longer return duplicates when
   several paywall variations of the flow offer the same product.
+- `UpdateAttribution` reports an attribution graph it cannot encode through the completion handler,
+  as `EncodingFailed`, instead of throwing at the call site. The overload taking a dictionary is the
+  only public method that has to encode an argument before it can build a request, so it was the
+  only one whose failure escaped the transport's guard — a reference loop or a throwing getter in
+  the provider's data reached the caller as an exception while every other method reported an error.
+- **Adapty SDK > Install Dependencies** stops on two loaded copies of Newtonsoft.Json, which is the
+  state the SDK's own validator already reports as an error. It examined the first copy only, and
+  the order loaded assemblies come back in is not specified, so the same project could be told its
+  dependencies were complete on one run and be sent to fix them on the next.
+- `AdaptyConfiguration.Builder.ToString()` includes `GoogleEnablePendingPrepaidPlans`. It was the
+  one member missing from the description, so two builders differing only in whether Android
+  reports pending prepaid transactions printed identically in logs.
+
+### Known issues
+
+- **Custom color and linear gradient assets are not rendered on iOS.** The pinned AdaptySDK-iOS
+  4.0.2 discards the values it receives and substitutes a transparent color and an empty gradient,
+  so a flow view shows neither. Nothing on the Unity side is involved: `AdaptyCustomAsset.Color` and
+  `AdaptyCustomAsset.LinearGradient` serialize the actual RGBA and the actual stops, and the same
+  substitution is in the later 4.0.3 and 4.1.0 native releases, so there is no version to move the
+  pin to. Custom image and video assets are unaffected. Whether Android is affected has not been
+  established.
 
 ## [3.17.0] - 2026-07-02
 

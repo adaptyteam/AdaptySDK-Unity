@@ -94,7 +94,7 @@ namespace AdaptySDK
         /// This method enables you to retrieve the flow from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
         /// </summary>
         /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products#speed-up-paywall-fetching-with-default-audience-paywall">Adapty Documentation</see>
+        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products#speed-up-flow-fetching-with-default-audience-flow">Adapty Documentation</see>
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
@@ -224,7 +224,7 @@ namespace AdaptySDK
         /// Returns the current log level of the Adapty SDK.
         /// </summary>
         /// <param name="completionHandler">The action that will be called with the result. The result contains the current <see cref="AdaptyLogLevel"/> value.</param>
-        public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
+        public static void GetLogLevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
         {
             AdaptyRequest.Send("get_log_level", null, completionHandler);
         }
@@ -410,7 +410,7 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// This method is iOS-only and allows you to set how refunds should be handled for a specific user.
-        /// Read more on the <see href="https://adapty.io/docs/refund-saver#set-refund-behavior-for-a-specific-user-in-the-dashboard">Adapty Documentation</see>
+        /// Read more on the <see href="https://adapty.io/docs/refund-saver#set-refund-behavior-for-a-specific-user-in-the-sdk">Adapty Documentation</see>
         /// </remarks>
         /// <param name="refundPreference">The <see cref="AdaptyRefundPreference"/> value to set.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>

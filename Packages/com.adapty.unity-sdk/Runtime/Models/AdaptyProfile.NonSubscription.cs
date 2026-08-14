@@ -34,13 +34,13 @@ namespace AdaptySDK
             public readonly string Store;
 
             /// <summary>
-            /// The identifier of the product in the App Store Connect.
+            /// The identifier of the product in the store it was bought from.
             /// </summary>
             [DataMember(Name = "vendor_product_id", IsRequired = true)]
             public readonly string VendorProductId;
 
             /// <summary>
-            /// Transaction id from the App Store. Null when the store does not report one.
+            /// The transaction id the store reported. Null when it does not report one.
             /// </summary>
             [DataMember(Name = "vendor_transaction_id")]
             public readonly string VendorTransactionId;

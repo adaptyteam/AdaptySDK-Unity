@@ -96,7 +96,7 @@ name and now takes an `AdaptyFlow`.
 
 ```csharp
 - IList<AdaptyPaywall.ProductReference> products = paywall.Products;
-+ IList<AdaptyFlowPaywall> paywalls = flow.Paywalls;
++ IReadOnlyList<AdaptyFlowPaywall> paywalls = flow.Paywalls;
 ```
 
 | v3 on `AdaptyPaywall` | v4 on `AdaptyFlow` |
@@ -222,9 +222,13 @@ must be answered exactly once.
 `IAdaptyFlowsEventsListener` gains one callback of its own, `FlowViewDidReceiveAnalyticEvent` — five
 new callbacks in total.
 
-`FlowViewDidAskPermission`, `FlowViewDidRequestAppReview` and `FlowViewDidReceiveAnalyticEvent` are
-reserved: the interfaces require them, but flows do not emit these events yet. Implement them as
-no-ops unless you have a reason not to.
+`FlowViewDidAskPermission`, `FlowViewDidRequestAppReview` and `FlowViewDidReceiveAnalyticEvent` all
+fire today. The first two have to do something. Answering the permission request is what releases
+the flow: until `respond` runs it stays pending, and dismissing the view resolves it as denied.
+`FlowViewDidRequestAppReview` should call `AdaptyUI.RequestAppReview` to keep the default behavior;
+an empty body there is worse than registering no handler at all, because with no handler the SDK
+makes that call for you. `FlowViewDidReceiveAnalyticEvent` is the one you may leave empty — just
+know it is a live event you are dropping, not a placeholder.
 
 ## Replace members removed in v4.0
 
@@ -237,6 +241,15 @@ already.
 
 - builder.SetIDFACollectionDisabled(true);
 + builder.SetAppleIDFACollectionDisabled(true);
+```
+
+One more rename is a typo rather than a deprecation, so there is no v3 warning you will have seen
+for it. `GetLoglevel` is spelled `GetLogLevel` now, matching its own `SetLogLevel` and the name the
+cross-platform contract has always used for the operation:
+
+```csharp
+- Adapty.GetLoglevel((level, error) => { });
++ Adapty.GetLogLevel((level, error) => { });
 ```
 
 The `AdaptyPaywall` members deprecated in v3.14 are gone with the type itself. `AdaptyFlow` has no
@@ -285,11 +298,11 @@ The collections a response model hands back are read-only. `IList<T>` became `IR
 `IDictionary<K, V>` became `IReadOnlyDictionary<K, V>` on `AdaptyProfile`, `AdaptyFlow`,
 `AdaptyFlowPaywall`, `AdaptySubscriptionOffer` and `AdaptyRemoteConfig`, and in the callback of
 `GetPaywallProducts`. Reading, `foreach` and LINQ are unaffected; code that wrote into one has to
-copy first:
+copy first, which `ToDictionary` from `System.Linq` does in one line:
 
 ```csharp
 - profile.CustomAttributes["seen_intro"] = true;
-+ var attributes = new Dictionary<string, object>(profile.CustomAttributes);
++ var attributes = profile.CustomAttributes.ToDictionary(pair => pair.Key, pair => pair.Value);
 + attributes["seen_intro"] = true;
 ```
 

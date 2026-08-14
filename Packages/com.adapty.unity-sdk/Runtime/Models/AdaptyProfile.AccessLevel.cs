@@ -29,7 +29,7 @@ namespace AdaptySDK
             public readonly bool IsActive;
 
             /// <summary>
-            /// The identifier of the product in the App Store Connect that unlocked this access level.
+            /// The identifier of the product, in the store it was bought from, that unlocked this access level.
             /// </summary>
             [DataMember(Name = "vendor_product_id", IsRequired = true)]
             public readonly string VendorProductId;
@@ -128,7 +128,7 @@ namespace AdaptySDK
             public readonly DateTime? UnsubscribedAt;
 
             /// <summary>
-            /// The time when billing issue was detected (Apple was not able to charge the card).
+            /// The time a billing issue was detected — the store could not charge the payment method.
             /// </summary>
             /// <remarks>
             /// Subscription can still be active. Will be set to null if the charge will be made.
@@ -148,7 +148,10 @@ namespace AdaptySDK
             /// The reason why the subscription was cancelled. Null when it was not.
             /// </summary>
             /// <remarks>
-            /// Possible values are: voluntarily_cancelled, billing_error, refund, price_increase, product_was_not_available, unknown.
+            /// The values the native SDKs list: voluntarily_cancelled, billing_error,
+            /// price_increase, product_was_not_available, refund, upgraded, unknown. It stays a
+            /// string rather than an enum because the contract leaves the set open — do not write
+            /// a switch that assumes these are all of them.
             /// </remarks>
             [DataMember(Name = "cancellation_reason")]
             public readonly string CancellationReason;

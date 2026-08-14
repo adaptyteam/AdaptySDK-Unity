@@ -21,19 +21,19 @@ namespace AdaptySDK
             public readonly string Store;
 
             /// <summary>
-            /// The identifier of the product in the App Store Connect.
+            /// The identifier of the product in the store it was bought from.
             /// </summary>
             [DataMember(Name = "vendor_product_id", IsRequired = true)]
             public readonly string VendorProductId;
 
             /// <summary>
-            /// Transaction id from the App Store.
+            /// The transaction id the store reported.
             /// </summary>
             [DataMember(Name = "vendor_transaction_id", IsRequired = true)]
             public readonly string VendorTransactionId;
 
             /// <summary>
-            /// Original transaction id from the App Store.
+            /// The original transaction id the store reported.
             /// </summary>
             /**
             * For auto-renewable subscription, this will be the id of the first transaction in the subscription.
@@ -92,7 +92,7 @@ namespace AdaptySDK
             public readonly DateTime? UnsubscribedAt;
 
             /// <summary>
-            /// The time when billing issue was detected (Apple was not able to charge the card).
+            /// The time a billing issue was detected — the store could not charge the payment method.
             /// </summary>
             /**
             * Subscription can still be active. Will be set to null if the charge will be made.
@@ -162,9 +162,12 @@ namespace AdaptySDK
             /// <summary>
             /// The reason why the subscription was cancelled. Null when it was not.
             /// </summary>
-            /**
-            * Possible values are: voluntarily_cancelled, billing_error, refund, price_increase, product_was_not_available, unknown.
-            */
+            /// <remarks>
+            /// The values the native SDKs list: voluntarily_cancelled, billing_error,
+            /// price_increase, product_was_not_available, refund, upgraded, unknown. It stays a
+            /// string rather than an enum because the contract leaves the set open — do not write
+            /// a switch that assumes these are all of them.
+            /// </remarks>
             [DataMember(Name = "cancellation_reason")]
             public readonly string CancellationReason;
 

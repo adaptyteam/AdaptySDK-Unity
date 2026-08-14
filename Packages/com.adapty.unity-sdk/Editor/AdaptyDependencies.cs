@@ -65,17 +65,28 @@ namespace AdaptySDK.Editor
                 return;
             }
 
-            var newtonsoft = Copies(NewtonsoftAssembly).FirstOrDefault();
-            if (newtonsoft != null && PackageOf(newtonsoft) != NewtonsoftId)
+            // Materialized once: the order of GetAssemblies() is not specified, so asking twice -
+            // or looking only at the first copy - decides the same project differently from run to
+            // run. Every state the validator calls an error has to stop the install too, or the
+            // menu item reports success over a project that will not compile.
+            var newtonsoft = Copies(NewtonsoftAssembly).ToList();
+
+            if (newtonsoft.Count > 1)
+            {
+                Debug.LogError(DuplicateMessage(newtonsoft, "Nothing was installed."));
+                return;
+            }
+
+            if (newtonsoft.Count == 1 && PackageOf(newtonsoft[0]) != NewtonsoftId)
             {
                 // Adding the package on top would leave two copies of it, which is its own failure.
                 // Nothing else is installed either: the project is in a state the user has to fix
                 // first, and saying anything about the other dependencies here would contradict it.
-                Debug.LogError(StandaloneMessage(newtonsoft));
+                Debug.LogError(StandaloneMessage(newtonsoft[0]));
                 return;
             }
 
-            var missing = Missing().ToArray();
+            var missing = Missing(newtonsoft.Count > 0).ToArray();
             if (missing.Length == 0)
             {
                 Debug.Log("[Adapty] Every dependency is already installed.");
@@ -96,11 +107,11 @@ namespace AdaptySDK.Editor
             EditorApplication.update += Poll;
         }
 
-        private static IEnumerable<string> Missing()
+        private static IEnumerable<string> Missing(bool newtonsoftPresent)
         {
             // The SDK assembly is gated on the package rather than on the assembly, so a copy that
             // came from anywhere else does not make the SDK compile and is reported separately.
-            if (!Copies(NewtonsoftAssembly).Any())
+            if (!newtonsoftPresent)
             {
                 yield return $"{NewtonsoftId}@{NewtonsoftVersion}";
             }
@@ -120,6 +131,44 @@ namespace AdaptySDK.Editor
 
         internal static string PackageOf(Assembly assembly) =>
             PackageInfo.FindForAssembly(assembly)?.name;
+
+        /// <summary>
+        /// The one wording for two copies, shared by the validator that reports the state and the
+        /// installer that refuses to add to it.
+        /// </summary>
+        /// <param name="copies">Every loaded copy, listed so the user can tell them apart.</param>
+        /// <param name="andThen">
+        /// What the caller did about it, placed before the list rather than after it - the list
+        /// ends in a file path, and a sentence trailing that is unreadable.
+        /// </param>
+        internal static string DuplicateMessage(IReadOnlyList<Assembly> copies, string andThen = null) =>
+            $"[Adapty] {copies.Count} copies of {NewtonsoftAssembly} are loaded, so its types are "
+            + "ambiguous and compilation against the Adapty SDK may fail unpredictably. "
+            + (andThen is null ? "" : andThen + " ")
+            + $"Keep one - preferably the \"{NewtonsoftId}\" package - and remove the others:\n  "
+            + string.Join("\n  ", Describe(copies));
+
+        /// <summary>
+        /// Where each copy came from, since the name alone does not distinguish them.
+        /// </summary>
+        private static IEnumerable<string> Describe(IEnumerable<Assembly> assemblies) =>
+            assemblies.Select(assembly =>
+            {
+                var name = assembly.GetName();
+                string location;
+                try
+                {
+                    location = string.IsNullOrEmpty(assembly.Location)
+                        ? "(no file on disk)"
+                        : assembly.Location;
+                }
+                catch (NotSupportedException)
+                {
+                    location = "(location unavailable)";
+                }
+
+                return $"{name.Name} {name.Version} - {location}";
+            });
 
         internal static string StandaloneMessage(Assembly assembly) =>
             $"[Adapty] {NewtonsoftAssembly} is in this project, but not as the \"{NewtonsoftId}\" "

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -35,12 +34,7 @@ namespace AdaptySDK.Editor
 
             if (found.Count > 1)
             {
-                Debug.LogError(
-                    $"[Adapty] {found.Count} copies of {AssemblyName} are loaded, so its types are "
-                        + "ambiguous and compilation against the Adapty SDK may fail unpredictably. "
-                        + $"Keep one - preferably the \"{PackageId}\" package - and remove the "
-                        + "others:\n  " + string.Join("\n  ", Describe(found))
-                );
+                Debug.LogError(AdaptyDependencies.DuplicateMessage(found));
                 return;
             }
 
@@ -52,27 +46,5 @@ namespace AdaptySDK.Editor
 
         private static List<Assembly> Loaded() =>
             AdaptyDependencies.Copies(AssemblyName).ToList();
-
-        /// <summary>
-        /// Where each copy came from, since the name alone does not distinguish them.
-        /// </summary>
-        private static IEnumerable<string> Describe(IEnumerable<Assembly> assemblies) =>
-            assemblies.Select(assembly =>
-            {
-                var name = assembly.GetName();
-                string location;
-                try
-                {
-                    location = string.IsNullOrEmpty(assembly.Location)
-                        ? "(no file on disk)"
-                        : assembly.Location;
-                }
-                catch (NotSupportedException)
-                {
-                    location = "(location unavailable)";
-                }
-
-                return $"{name.Name} {name.Version} - {location}";
-            });
     }
 }

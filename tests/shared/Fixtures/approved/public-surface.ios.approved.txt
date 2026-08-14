@@ -476,7 +476,7 @@ public static AdaptySDK.Adapty.GetFlow(System.String placementId, AdaptySDK.Adap
 public static AdaptySDK.Adapty.GetFlow(System.String placementId, System.Action<AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.GetFlowForDefaultAudience(System.String placementId, AdaptySDK.AdaptyPlacementFetchPolicy fetchPolicy, System.Action<AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.GetFlowForDefaultAudience(System.String placementId, System.Action<AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyError> completionHandler) : System.Void
-public static AdaptySDK.Adapty.GetLoglevel(System.Action<AdaptySDK.AdaptyLogLevel, AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.GetLogLevel(System.Action<AdaptySDK.AdaptyLogLevel, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.GetNativeSDKVersion(System.Action<System.String, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.GetOnboarding(System.String placementId, System.Action<AdaptySDK.AdaptyOnboarding, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.GetOnboarding(System.String placementId, System.String locale, AdaptySDK.AdaptyPlacementFetchPolicy fetchPolicy, System.Nullable<System.TimeSpan> loadTimeout, System.Action<AdaptySDK.AdaptyOnboarding, AdaptySDK.AdaptyError> completionHandler) : System.Void

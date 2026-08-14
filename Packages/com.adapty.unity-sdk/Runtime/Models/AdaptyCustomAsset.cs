@@ -65,6 +65,9 @@ namespace AdaptySDK
         /// <summary>
         /// Creates a custom asset from a Unity Color.
         /// </summary>
+        /// <remarks>
+        /// Not rendered on iOS: the pinned native SDK substitutes a transparent color for whatever it receives.
+        /// </remarks>
         /// <param name="color">The Unity Color.</param>
         /// <returns>A custom asset representing the color.</returns>
         public static AdaptyCustomAsset Color(Color color)
@@ -75,6 +78,9 @@ namespace AdaptySDK
         /// <summary>
         /// Creates a custom asset from a Unity Gradient.
         /// </summary>
+        /// <remarks>
+        /// Not rendered on iOS: the pinned native SDK substitutes an empty gradient for whatever it receives.
+        /// </remarks>
         /// <param name="gradient">The Unity Gradient.</param>
         /// <returns>A custom asset representing the linear gradient.</returns>
         public static AdaptyCustomAsset LinearGradient(Gradient gradient)

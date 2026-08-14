@@ -103,8 +103,9 @@ namespace AdaptySDK
                 );
 
         /// <summary>
-        /// The contract keys these by the product identifier the store knows, not by the composite
-        /// identifier the app passes.
+        /// The contract keys these by <c>adapty_product_id</c> — neither the composite identifier
+        /// the app passes nor the store's own <c>vendor_product_id</c>. Swapping in either of those
+        /// compiles and sends a well-formed request whose parameters match no product.
         /// </summary>
         [DataMember(Name = "product_purchase_parameters")]
         [Preserve]

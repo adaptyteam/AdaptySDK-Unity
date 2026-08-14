@@ -6,10 +6,14 @@ namespace AdaptySDK
     /// The numeric code carried by <see cref="AdaptyError.Code"/>.
     /// </summary>
     /// <remarks>
-    /// The value is the native SDK's own, so a code always arrives whether or not this enum names
-    /// it. Most codes are produced by one platform only, and each member says which; where both
-    /// produce a number, both meanings are given, because they are not always the same one.
-    /// Verified against AdaptySDK-iOS 4.0.2 and AdaptySDK-Android 4.0.1, the pinned dependencies.
+    /// Almost every value is the native SDK's own, so a code always arrives whether or not this
+    /// enum names it. Most of those are produced by one platform only, and each member says which;
+    /// where both produce a number, both meanings are given, because they are not always the same
+    /// one. Verified against AdaptySDK-iOS 4.0.2 and AdaptySDK-Android 4.0.1, the pinned
+    /// dependencies. Two are different: <see cref="EncodingFailed"/> and
+    /// <see cref="DecodingFailed"/> are also raised by this SDK itself, on either platform, when a
+    /// request cannot be encoded or a reply cannot be read — the native side is never reached in
+    /// the first case and has already answered in the second.
     /// </remarks>
     [Preserve]
     public enum AdaptyErrorCode
@@ -245,11 +249,20 @@ namespace AdaptySDK
         /// A response could not be decoded. If it arrives from a call this SDK makes, the versions
         /// of the Unity and native SDKs may not match.
         /// </summary>
+        /// <remarks>
+        /// Raised by this SDK on either platform, as well as by the native ones.
+        /// </remarks>
         DecodingFailed = 2006,
 
         /// <summary>
-        /// iOS only. The parameters of a request could not be encoded.
+        /// The parameters of a request could not be encoded, so the call never left this SDK.
         /// </summary>
+        /// <remarks>
+        /// Raised on either platform, not only iOS: the request is built and encoded in managed
+        /// code, before the native bridge is reached. A value the serializer cannot write is what
+        /// produces it — a reference loop or a throwing getter in something the app passed in.
+        /// The native iOS SDK declares the same number for its own encoding failures.
+        /// </remarks>
         EncodingFailed = 2009,
 
         /// <summary>

@@ -63,7 +63,29 @@ namespace AdaptySDK
             IReadOnlyDictionary<string, object> attribution,
             string source,
             Action<AdaptyError> completionHandler
-        ) => UpdateAttribution(AdaptyJson.Serialize(attribution), source, completionHandler);
+        )
+        {
+            // The only overload that has to encode an argument before it can build the request,
+            // and therefore the only one that can fail outside the transport's own guard - a
+            // reference loop or a throwing getter in the provider's graph. Reported the way the
+            // transport would have reported it rather than thrown at the caller.
+            string json;
+            try
+            {
+                json = AdaptyJson.Serialize(attribution);
+            }
+            catch (Exception exception)
+            {
+                AdaptyRequest.FailEncoding(
+                    "update_attribution_data",
+                    exception,
+                    completionHandler
+                );
+                return;
+            }
+
+            UpdateAttribution(json, source, completionHandler);
+        }
 
         /// <summary>
         /// Opens the paywall in a web view or browser.

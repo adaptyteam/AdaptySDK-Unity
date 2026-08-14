@@ -82,7 +82,7 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 
 ## Get started
 
-Follow our [quickstart guide](https://adapty.io/docs/unity-sdk-overview#get-started?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
+Follow our [quickstart guide](https://adapty.io/docs/unity-sdk-overview?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity#get-started) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
 
 The SDK depends on `com.unity.nuget.newtonsoft-json`, and on External Dependency Manager to resolve
 the native SDKs. Package Manager installs the first for you when you add the package by Git URL;

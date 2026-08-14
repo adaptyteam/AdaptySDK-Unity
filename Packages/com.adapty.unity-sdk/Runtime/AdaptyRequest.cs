@@ -90,6 +90,33 @@ namespace AdaptySDK
         private static void InvokeCompletion(Action invocation, string caller) =>
             AdaptyCallbacks.InvokeSafe(invocation, $"Failed to invoke completionHandler in {caller}(..)");
 
+        /// <summary>
+        /// Reports a request that could not be encoded before it reached <see cref="SendVoid"/>,
+        /// with the error the transport would have produced had the encoding happened inside it.
+        /// </summary>
+        /// <remarks>
+        /// For the one overload that has to serialize an argument of its own before it can build
+        /// the request. Without this the exception would leave the SDK synchronously, and that one
+        /// public method would report failure differently from the other forty.
+        /// </remarks>
+        internal static void FailEncoding(
+            string method,
+            Exception exception,
+            Action<AdaptyError> completionHandler,
+            [CallerMemberName] string caller = null
+        ) =>
+            InvokeCompletion(
+                () => completionHandler?.Invoke(EncodingFailed(method, exception)),
+                caller
+            );
+
+        private static AdaptyError EncodingFailed(string method, Exception exception) =>
+            new AdaptyError(
+                AdaptyErrorCode.EncodingFailed,
+                $"Failed encoding request: {method}",
+                $"AdaptyUnityError.EncodingFailed({exception})"
+            );
+
         private static void SendRaw<T>(
             string method,
             object request,
@@ -103,14 +130,7 @@ namespace AdaptySDK
             }
             catch (Exception ex)
             {
-                completionHandler(
-                    default(T),
-                    new AdaptyError(
-                        AdaptyErrorCode.EncodingFailed,
-                        $"Failed encoding request: {method}",
-                        $"AdaptyUnityError.EncodingFailed({ex})"
-                    )
-                );
+                completionHandler(default(T), EncodingFailed(method, ex));
                 return;
             }
 
