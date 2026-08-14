@@ -94,7 +94,7 @@ the model when the discriminator is chosen by a static factory rather than a `sw
 Also read the converters in `Runtime/Serialization/` directly, one by one. Types built by a
 converter have no `[DataMember]` at all, so nothing in step 3 says anything about them, and each
 converter is a hand-written restatement of a contract object. For each key the converter reads, ask
-whether the contract requires it and whether the converter enforces that — `JsonRequire.*` enforces,
+whether the contract requires it and whether the converter enforces that — `AdaptyJsonRequire.*` enforces,
 a plain `node["x"]?` does not.
 
 ## Step 5. Ask the questions the script cannot

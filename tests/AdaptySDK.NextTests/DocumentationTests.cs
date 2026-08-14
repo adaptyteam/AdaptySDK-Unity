@@ -86,7 +86,7 @@ namespace AdaptySDK.NextTests
 
         /// <summary>
         /// The SDK's own public types. The Unity stubs stand in for types Unity ships, and the
-        /// deprecated tree is exempt by the policy in CLAUDE.md.
+        /// deprecated tree is exempt by the policy in AGENTS.md.
         /// </summary>
         private static bool IsSurface(Type type) =>
             (type.IsPublic || (type.IsNestedPublic && IsSurface(type.DeclaringType)))
