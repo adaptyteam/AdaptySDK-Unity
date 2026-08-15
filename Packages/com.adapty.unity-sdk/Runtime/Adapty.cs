@@ -778,29 +778,38 @@ namespace AdaptySDK
             AdaptyRequest.SendVoid("adapty_ui_request_app_review", null, completionHandler);
         }
 
+        // The two senders behind the delegates the SDK hands to app code, which the app may invoke
+        // from any thread - hence the hop, see Adapty.RunOnMainThread.
+
         internal static void FlowViewAnswerPermission(string eventId, bool granted, string detail)
         {
-            var parameters = new JObject();
-            parameters["event_id"] = eventId;
-            parameters["status"] = granted ? "granted" : "denied";
-            if (detail != null)
+            Adapty.RunOnMainThread(() =>
             {
-                parameters["detail"] = detail;
-            }
+                var parameters = new JObject();
+                parameters["event_id"] = eventId;
+                parameters["status"] = granted ? "granted" : "denied";
+                if (detail != null)
+                {
+                    parameters["detail"] = detail;
+                }
 
-            AdaptyRequest.SendVoid(
-                "flow_view_did_answer_permission",
-                parameters,
-                (error) => LogRoundTripError("flow_view_did_answer_permission", error)
-            );
+                AdaptyRequest.SendVoid(
+                    "flow_view_did_answer_permission",
+                    parameters,
+                    (error) => LogRoundTripError("flow_view_did_answer_permission", error)
+                );
+            });
         }
 
         internal static void SendObserverEvent(string method, string eventId)
         {
-            var parameters = new JObject();
-            parameters["event_id"] = eventId;
+            Adapty.RunOnMainThread(() =>
+            {
+                var parameters = new JObject();
+                parameters["event_id"] = eventId;
 
-            AdaptyRequest.SendVoid(method, parameters, (error) => LogRoundTripError(method, error));
+                AdaptyRequest.SendVoid(method, parameters, (error) => LogRoundTripError(method, error));
+            });
         }
 
         private static void LogRoundTripError(string method, AdaptyError error)

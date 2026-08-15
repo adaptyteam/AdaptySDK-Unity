@@ -22,6 +22,11 @@ namespace AdaptySDK
         private static IAdaptyUISystemRequestsHandler m_SystemRequestsHandler;
         private static IAdaptyUIObserverModeResolver m_ObserverModeResolver;
 
+        // Not cleared by a reset: like the bridge registration, this is infrastructure derived from
+        // the environment, identical every run, and InitializeTransport re-captures it on each one.
+        private static SynchronizationContext m_MainThreadContext;
+        private static int m_MainThreadId = -1;
+
         /// <summary>
         /// With Domain Reload disabled, statics survive leaving Play Mode, so the listeners a
         /// previous run registered would still be here - and would receive the next run's events.
@@ -47,7 +52,38 @@ namespace AdaptySDK
         /// lifecycle, and it is what binds Android's handler to the scripting thread.
         /// </remarks>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        internal static void InitializeTransport() => _AdaptyCallbackAction.InitializeOnce();
+        internal static void InitializeTransport()
+        {
+            // Captured beside the registration because it serves the same boundary, and the stage
+            // guarantees Unity's context is the current one here.
+            m_MainThreadContext = SynchronizationContext.Current;
+            m_MainThreadId = Thread.CurrentThread.ManagedThreadId;
+
+            _AdaptyCallbackAction.InitializeOnce();
+        }
+
+        /// <summary>
+        /// Runs the action on the main thread: inline when the caller is already there, posted
+        /// through the captured <see cref="SynchronizationContext"/> otherwise.
+        /// </summary>
+        /// <remarks>
+        /// For the requests behind the delegates the SDK hands to app code - the permission
+        /// <c>respond</c> and the observer-mode reports - which the app may invoke from any thread.
+        /// On Android the bridge is JNI, and a thread Unity did not attach cannot enter it, so the
+        /// hop is what makes "any thread" true off the main one. Without a captured context the
+        /// action runs inline, which is where every call was made before the capture existed.
+        /// </remarks>
+        internal static void RunOnMainThread(Action action)
+        {
+            var context = m_MainThreadContext;
+            if (context is null || Thread.CurrentThread.ManagedThreadId == m_MainThreadId)
+            {
+                action();
+                return;
+            }
+
+            context.Post(_ => action(), null);
+        }
 
         /// <summary>
         /// Sets the event listener for Adapty SDK events.

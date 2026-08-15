@@ -21,7 +21,7 @@ namespace AdaptySDK
         /// <param name="view">The <see cref="AdaptyUIFlowView"/> that asked for the permission.</param>
         /// <param name="permission">The permission identifier (e.g., "push", "camera", "tracking"). Unknown values pass through unchanged.</param>
         /// <param name="customArgs">Optional custom arguments configured in the Adapty Dashboard, or null.</param>
-        /// <param name="respond">Invoke with the outcome: granted flag and an optional detail string (may be null).</param>
+        /// <param name="respond">Invoke with the outcome: granted flag and an optional detail string (may be null). Safe to invoke from any thread - the SDK sends the answer from the Unity main thread.</param>
         void FlowViewDidAskPermission(
             AdaptyUIFlowView view,
             string permission,

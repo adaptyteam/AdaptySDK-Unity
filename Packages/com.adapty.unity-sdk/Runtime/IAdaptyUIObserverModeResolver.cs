@@ -15,7 +15,7 @@ namespace AdaptySDK
         /// Called when a user initiates a purchase in a flow view while the SDK runs in Observer mode.
         /// </summary>
         /// <remarks>
-        /// Perform the purchase with your own billing implementation. Invoke <paramref name="onStartPurchase"/> when your purchase flow starts and <paramref name="onFinishPurchase"/> when it finishes (successfully or not).
+        /// Perform the purchase with your own billing implementation. Invoke <paramref name="onStartPurchase"/> when your purchase flow starts and <paramref name="onFinishPurchase"/> when it finishes (successfully or not). Both are safe to invoke from any thread - the SDK sends the report from the Unity main thread.
         /// </remarks>
         /// <param name="view">The <see cref="AdaptyUIFlowView"/> where the purchase was initiated.</param>
         /// <param name="product">The <see cref="AdaptyPaywallProduct"/> being purchased.</param>
@@ -32,7 +32,7 @@ namespace AdaptySDK
         /// Called when a user initiates a restore in a flow view while the SDK runs in Observer mode.
         /// </summary>
         /// <remarks>
-        /// Perform the restore with your own billing implementation. Invoke <paramref name="onStartRestore"/> when your restore flow starts and <paramref name="onFinishRestore"/> when it finishes (successfully or not).
+        /// Perform the restore with your own billing implementation. Invoke <paramref name="onStartRestore"/> when your restore flow starts and <paramref name="onFinishRestore"/> when it finishes (successfully or not). Both are safe to invoke from any thread - the SDK sends the report from the Unity main thread.
         /// </remarks>
         /// <param name="view">The <see cref="AdaptyUIFlowView"/> where the restore was initiated.</param>
         /// <param name="onStartRestore">Invoke when your restore flow starts.</param>

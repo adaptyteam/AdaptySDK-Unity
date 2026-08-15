@@ -201,6 +201,15 @@ lives in.
 
 ### Fixed
 
+- The `respond` delegate of `IAdaptyUISystemRequestsHandler.FlowViewDidAskPermission` and the report
+  callbacks of `IAdaptyUIObserverModeResolver` are now safe to invoke from any thread, which is where
+  they are invoked from in practice — an OS permission callback, a billing implementation's own
+  thread. Each of them sends a request when invoked, and the SDK now sends it from the Unity main
+  thread. On Android the bridge is JNI, which a thread must be attached to the JVM to enter, and a
+  C# worker thread is not: on Unity 2022.3 — the declared floor, measured on 2022.3.62f3 — the call
+  throws into the app's thread and the flow stays blocked waiting for an answer that never went
+  out. Unity 6 attaches the thread on demand, so it happened to work there; the hop makes it work
+  everywhere, and ordered with the SDK's other callbacks. iOS was unaffected.
 - Requests call back on a device even when the app never sets an event listener. The platform
   callback bridge was registered by the four listener setters and by nothing else, so an app that
   subscribes to no events got no completion handler called at all — `Activate` included — on either

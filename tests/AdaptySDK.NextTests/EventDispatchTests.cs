@@ -6,7 +6,10 @@
 #if !UNITY_IOS && !UNITY_ANDROID
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
+using AdaptySDK.Noop;
 using AdaptySDK.TestSupport;
 using NUnit.Framework;
 
@@ -162,6 +165,180 @@ namespace AdaptySDK.NextTests
             {
                 Adapty.SetFlowsEventsListener(null);
             }
+        }
+
+        /// <summary>
+        /// <c>respond</c> is a delegate the SDK hands to app code, and the app may invoke it from
+        /// any thread - an OS permission callback rarely arrives on the main one. The answer it
+        /// produces is a request, and on Android the bridge is JNI, which a thread Unity did not
+        /// attach cannot enter - so the send has to reach the bridge from the main thread, whatever
+        /// thread the app answered on.
+        /// </summary>
+        [Test]
+        public void RespondFromABackgroundThreadReachesTheBridgeOnTheMainThread()
+        {
+            var pump = new PumpingContext();
+            var previous = SynchronizationContext.Current;
+            SynchronizationContext.SetSynchronizationContext(pump);
+
+            try
+            {
+                Adapty.InitializeTransport();
+
+                string sentMethod = null;
+                string sentRequest = null;
+                var sentOnThread = -1;
+                AdaptyNoop.Handler = (method, request) =>
+                {
+                    sentMethod = method;
+                    sentRequest = request;
+                    sentOnThread = Thread.CurrentThread.ManagedThreadId;
+                    return "{\"success\":true}";
+                };
+
+                var handler = new PermissionHandler();
+                Adapty.SetSystemRequestsHandler(handler);
+
+                Adapty.OnMessage(
+                    "flow_view_did_ask_permission",
+                    "{\"view\":{\"id\":\"v\",\"placement_id\":\"p\",\"variation_id\":\"var\"},"
+                        + "\"event_id\":\"evt-1\",\"permission\":\"camera\"}"
+                );
+
+                Assert.That(handler.Respond, Is.Not.Null, "the request never reached the handler");
+
+                var worker = new Thread(() => handler.Respond(true, "os said yes"));
+                worker.Start();
+                worker.Join();
+
+                Assert.That(sentMethod, Is.Null, "the answer reached the bridge from the worker thread");
+
+                pump.RunAll();
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(sentMethod, Is.EqualTo("flow_view_did_answer_permission"));
+                    Assert.That(sentRequest, Does.Contain("\"status\":\"granted\""));
+                    Assert.That(sentRequest, Does.Contain("\"detail\":\"os said yes\""));
+                    Assert.That(sentOnThread, Is.EqualTo(Thread.CurrentThread.ManagedThreadId));
+                });
+            }
+            finally
+            {
+                Adapty.SetSystemRequestsHandler(null);
+                AdaptyNoop.Handler = null;
+                SynchronizationContext.SetSynchronizationContext(previous);
+
+                // Re-capture, so the pump this test made does not stay the SDK's main thread.
+                Adapty.InitializeTransport();
+            }
+        }
+
+        /// <summary>
+        /// The observer-mode reports are the other delegates handed to app code, and a billing
+        /// implementation answers on its own threads. Same rule, same route.
+        /// </summary>
+        [Test]
+        public void AnObserverReportFromABackgroundThreadReachesTheBridgeOnTheMainThread()
+        {
+            var pump = new PumpingContext();
+            var previous = SynchronizationContext.Current;
+            SynchronizationContext.SetSynchronizationContext(pump);
+
+            try
+            {
+                Adapty.InitializeTransport();
+
+                string sentMethod = null;
+                var sentOnThread = -1;
+                AdaptyNoop.Handler = (method, request) =>
+                {
+                    sentMethod = method;
+                    sentOnThread = Thread.CurrentThread.ManagedThreadId;
+                    return "{\"success\":true}";
+                };
+
+                var resolver = new Resolver();
+                Adapty.SetObserverModeResolver(resolver);
+
+                Adapty.OnMessage(
+                    "flow_view_observer_did_initiate_restore",
+                    "{\"view\":{\"id\":\"v\",\"placement_id\":\"p\",\"variation_id\":\"var\"},"
+                        + "\"event_id\":\"evt-2\"}"
+                );
+
+                Assert.That(resolver.StartRestore, Is.Not.Null, "the event never reached the resolver");
+
+                var worker = new Thread(() => resolver.StartRestore());
+                worker.Start();
+                worker.Join();
+
+                Assert.That(sentMethod, Is.Null, "the report reached the bridge from the worker thread");
+
+                pump.RunAll();
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(sentMethod, Is.EqualTo("observer_restore_did_start"));
+                    Assert.That(sentOnThread, Is.EqualTo(Thread.CurrentThread.ManagedThreadId));
+                });
+            }
+            finally
+            {
+                Adapty.SetObserverModeResolver(null);
+                AdaptyNoop.Handler = null;
+                SynchronizationContext.SetSynchronizationContext(previous);
+                Adapty.InitializeTransport();
+            }
+        }
+
+        private sealed class PumpingContext : SynchronizationContext
+        {
+            private readonly ConcurrentQueue<KeyValuePair<SendOrPostCallback, object>> _queue =
+                new ConcurrentQueue<KeyValuePair<SendOrPostCallback, object>>();
+
+            public override void Post(SendOrPostCallback d, object state) =>
+                _queue.Enqueue(new KeyValuePair<SendOrPostCallback, object>(d, state));
+
+            internal void RunAll()
+            {
+                while (_queue.TryDequeue(out var work))
+                {
+                    work.Key(work.Value);
+                }
+            }
+        }
+
+        private sealed class PermissionHandler : IAdaptyUISystemRequestsHandler
+        {
+            internal Action<bool, string> Respond;
+
+            public void FlowViewDidAskPermission(
+                AdaptyUIFlowView view,
+                string permission,
+                IReadOnlyDictionary<string, string> customArgs,
+                Action<bool, string> respond
+            ) => Respond = respond;
+
+            public void FlowViewDidRequestAppReview(AdaptyUIFlowView view) { }
+        }
+
+        private sealed class Resolver : IAdaptyUIObserverModeResolver
+        {
+            internal Action StartRestore;
+
+            public void FlowViewDidInitiatePurchase(
+                AdaptyUIFlowView view,
+                AdaptyPaywallProduct product,
+                Action onStartPurchase,
+                Action onFinishPurchase
+            ) { }
+
+            public void FlowViewDidInitiateRestore(
+                AdaptyUIFlowView view,
+                Action onStartRestore,
+                Action onFinishRestore
+            ) => StartRestore = onStartRestore;
         }
 
         private sealed class FlowsListener : IAdaptyFlowsEventsListener
