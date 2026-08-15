@@ -25,7 +25,9 @@ Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/
 
 Requires Unity 2022.3 or newer and Android API 21 or newer. iOS builds require **Xcode 26 or newer**
 and a deployment target of 15.0 or newer: AdaptySDK-iOS 4.0 is a `swift-tools-version: 6.2` package,
-and an older toolchain refuses to resolve it.
+and an older toolchain refuses to resolve it. Open the exported project as
+**`Unity-iPhone.xcworkspace`** — building `Unity-iPhone.xcodeproj` directly fails at link time with
+`ld: framework 'Pods_UnityFramework' not found`.
 
 ## Why Adapty?
 
@@ -45,7 +47,7 @@ and an older toolchain refuses to resolve it.
 
 **Adapty handles everything, from free trials to refunds, in a simple, developer-friendly SDK.**
 
-- Free trials, upgrades, downgrades, crossgrades, family sharing, renewals, promo offers, intro offers, promo codes, and more – Adapty SDK does everything with a single line of code.
+- Free trials, upgrades, downgrades, crossgrades, family sharing, renewals, promo offers, intro offers, promo codes, and more – Adapty SDK handles them all through one API.
 - Easy subscription management.
 - One-time purchases and lifetime subscriptions supported.
 - Sync subscribers' states across iOS, Android, and Web.
@@ -84,19 +86,42 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 
 Follow our [quickstart guide](https://adapty.io/docs/unity-sdk-overview?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity#get-started) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
 
-The SDK depends on `com.unity.nuget.newtonsoft-json`, and on External Dependency Manager to resolve
-the native SDKs. Package Manager installs the first for you when you add the package by Git URL;
-neither can arrive with a `.unitypackage`, which carries assets only.
+**v4 works in flows.** Paywalls and onboardings are both fetched with `Adapty.GetFlow` and shown
+with `AdaptyUI.CreateFlowView`, whether you built them in the Paywall Builder or the new Flow
+Builder. The separate onboarding API of v3 still works but is deprecated and warns at compile time,
+so start new integrations on flows.
 
-**Installing from a `.unitypackage`:** add `com.unity.nuget.newtonsoft-json` **before** importing.
-Until it is there the SDK assembly is skipped by a define constraint, so your calls into Adapty will
-not compile — and **Adapty SDK > Install Dependencies**, the menu item that installs both
-dependencies, is unavailable for the same reason. With Newtonsoft in place, that menu item adds
-whatever else is missing — including the OpenUPM scoped registry External Dependency Manager is
-published on — and upgrades an External Dependency Manager older than the SDK needs.
+**Installing with Package Manager:** *Add package from git URL*, with the path suffix — the package
+does not sit at the repository root:
 
-Already on 3.x? [MIGRATION.md](MIGRATION.md) covers the move to 4.0 — the renamed paywall API, the
+```
+https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk
+```
+
+The SDK depends on `com.unity.nuget.newtonsoft-json`, which Package Manager installs for you and
+which every platform needs — the SDK assembly is gated on it. It also depends on External Dependency
+Manager, but only for iOS, where it resolves the Swift package; Android never goes through it, since
+its dependencies ship in a bundled `.androidlib` that Unity adds to the Gradle build itself. Neither
+dependency can arrive with a `.unitypackage`, which carries assets only.
+
+**Installing from a `.unitypackage`:** take the latest from
+[Releases](https://github.com/adaptyteam/AdaptySDK-Unity/releases), and add
+`com.unity.nuget.newtonsoft-json` **before** importing. Until it is there the SDK assembly is skipped
+by a define constraint, so your calls into Adapty will not compile — and **Adapty SDK > Install
+Dependencies**, the menu item that installs both dependencies, is unavailable for the same reason.
+With Newtonsoft in place, that menu item adds whatever else is missing, including the OpenUPM scoped
+registry External Dependency Manager is published on.
+
+It also upgrades an External Dependency Manager older than the SDK needs — but only one installed as
+a package. A copy imported from Google's own `.unitypackage` under `Assets/` has no version Package
+Manager can read, so the menu item leaves it alone and warns instead; update that one yourself.
+
+Already on 3.x? [MIGRATION-v3.17-to-v4.0.md](MIGRATION-v3.17-to-v4.0.md) covers the move to 4.0 — the renamed paywall API, the
 new Newtonsoft.Json dependency, and the order to install things in.
+
+Read the [release notes and known issues](Packages/com.adapty.unity-sdk/CHANGELOG.md) before you
+integrate: they carry the limitations of the pinned native SDKs, which no amount of configuration on
+your side will work around.
 
 ## Kids Mode on iOS
 
