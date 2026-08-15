@@ -4,9 +4,9 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.0-beta.2] - 2026-08-08
+## [4.0.0-beta.2] - 2026-08-15
 
-Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/MIGRATION-v3.17-to-v4.0.md).
+Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.0.0-beta.2/MIGRATION-v3.17-to-v4.0.md).
 If you install from a `.unitypackage`, delete `Assets/AdaptySDK` and add
 `com.unity.nuget.newtonsoft-json` **before** importing. A `.unitypackage` never removes files, so the
 62 sources this release drops would otherwise stay behind and compile alongside the new ones, which

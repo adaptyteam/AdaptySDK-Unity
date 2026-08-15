@@ -92,11 +92,15 @@ Builder. The separate onboarding API of v3 still works but is deprecated and war
 so start new integrations on flows.
 
 **Installing with Package Manager:** *Add package from git URL*, with the path suffix — the package
-does not sit at the repository root:
+does not sit at the repository root — and the version suffix, which pins the tag:
 
 ```
-https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk
+https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.0.0-beta.2
 ```
+
+Drop `#4.0.0-beta.2` and Package Manager resolves the default branch, which carries the previous
+major until a release merges this one into it — so an unpinned URL installs 3.17 and says nothing
+about it.
 
 The SDK depends on `com.unity.nuget.newtonsoft-json`, which Package Manager installs for you and
 which every platform needs — the SDK assembly is gated on it. It also depends on External Dependency
