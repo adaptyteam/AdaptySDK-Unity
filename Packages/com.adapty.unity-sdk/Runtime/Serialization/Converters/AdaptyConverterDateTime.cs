@@ -86,7 +86,17 @@ namespace AdaptySDK.Serialization
 
             try
             {
-                return DateTime.Parse(text, CultureInfo.InvariantCulture);
+                // AssumeUniversal is what makes this branch agree with the one above about a string
+                // carrying no designator: the wire is UTC, so a value with nothing to say otherwise
+                // is UTC. Left to the default styles it would come back Unspecified and unconverted,
+                // which moves the instant by the device's offset. A string that does carry Z or an
+                // offset is unaffected - AdjustToUniversal resolves it, and ToLocalTime puts both
+                // shapes back on the contract's local side.
+                return DateTime.Parse(
+                    text,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
+                ).ToLocalTime();
             }
             catch (Exception e)
             {

@@ -209,6 +209,37 @@ namespace AdaptySDK.NextTests
         }
 
         /// <summary>
+        /// A date string with no <c>Z</c> and no offset is read as UTC, like every other date.
+        /// </summary>
+        /// <remarks>
+        /// The contract's format always carries a designator and neither native SDK omits one, so
+        /// this shape does not arrive today. It is pinned because the converter has two branches
+        /// that have to agree: <see cref="APreParsedDateIsBroughtBackToTheContract"/> covers the
+        /// pre-parsed one, which treats an unspecified kind as UTC, and the string branch used to
+        /// disagree - <c>DateTime.Parse</c>'s default styles hand back <c>Unspecified</c>
+        /// unconverted, which moves the instant by the device's offset and contradicts the
+        /// convention the type documents.
+        /// </remarks>
+        [Test]
+        public void ADateCarryingNoZoneIsReadAsUtc()
+        {
+            var parsed = AdaptyJson
+                .Deserialize<Sample>(
+                    "{\"required_field\":\"r\",\"activated_at\":\"2026-07-30T10:00:00.000\"}"
+                )
+                .ActivatedAt.Value;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(parsed.Kind, Is.EqualTo(DateTimeKind.Local));
+                Assert.That(
+                    parsed.ToUniversalTime(),
+                    Is.EqualTo(new DateTime(2026, 7, 30, 10, 0, 0, DateTimeKind.Utc))
+                );
+            });
+        }
+
+        /// <summary>
         /// The other half of the same convention: whatever the app hands over goes out as UTC.
         /// </summary>
         /// <remarks>
