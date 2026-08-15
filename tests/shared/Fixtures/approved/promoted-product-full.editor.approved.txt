@@ -1,0 +1,55 @@
+{
+  "$type": "AdaptyPromotedProduct",
+  "IsFamilyShareable": false,
+  "LocalizedDescription": "Full access, billed monthly",
+  "LocalizedTitle": "Monthly",
+  "Price": {
+    "$type": "AdaptyPrice",
+    "Amount": 9.99,
+    "CurrencyCode": "USD",
+    "CurrencySymbol": "$",
+    "LocalizedString": "$9.99"
+  },
+  "RegionCode": "US",
+  "Subscription": {
+    "$type": "AdaptySubscription",
+    "BasePlanId": null,
+    "GroupIdentifier": null,
+    "LocalizedPeriod": "1 month",
+    "Offer": {
+      "$type": "AdaptySubscriptionOffer",
+      "Identifier": "promo-1",
+      "OfferTags": null,
+      "Phases": [
+        {
+          "$type": "AdaptySubscriptionPhase",
+          "LocalizedNumberOfPeriods": "1 time",
+          "LocalizedSubscriptionPeriod": "1 week",
+          "NumberOfPeriods": 1,
+          "PaymentMode": "FreeTrial (2)",
+          "Price": {
+            "$type": "AdaptyPrice",
+            "Amount": 0,
+            "CurrencyCode": "USD",
+            "CurrencySymbol": "$",
+            "LocalizedString": "Free"
+          },
+          "SubscriptionPeriod": {
+            "$type": "AdaptySubscriptionPeriod",
+            "NumberOfUnits": 1,
+            "Unit": "Week (1)"
+          }
+        }
+      ],
+      "Type": "Promotional (1)"
+    },
+    "Period": {
+      "$type": "AdaptySubscriptionPeriod",
+      "NumberOfUnits": 1,
+      "Unit": "Month (2)"
+    },
+    "RenewalType": "Autorenewable (1)"
+  },
+  "VendorProductId": "com.adapty.sample.monthly",
+  "_PayloadData": "{\"custom\":\"promoted payload\"}"
+}

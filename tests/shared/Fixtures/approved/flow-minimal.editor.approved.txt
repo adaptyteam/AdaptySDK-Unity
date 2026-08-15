@@ -21,5 +21,6 @@
   "_PayloadData": null,
   "_Paywalls": [],
   "_RemoteConfigs": [],
-  "_ResponseCreatedAt": 1753876800000
+  "_ResponseCreatedAt": 1753876800000,
+  "_UiSchema": null
 }

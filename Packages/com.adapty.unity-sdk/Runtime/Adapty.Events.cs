@@ -208,6 +208,17 @@ namespace AdaptySDK
                         );
                         return;
                     }
+                case "did_receive_promoted_purchase":
+                    {
+                        if (!RequireEventListener(id))
+                            return;
+                        var product = Required<AdaptyPromotedProduct>(parameters, "product");
+                        AdaptyCallbacks.InvokeSafe(
+                            () => m_Listener.OnReceivePromotedPurchase(product),
+                            "Failed to invoke IAdaptyEventListener.OnReceivePromotedPurchase(..)"
+                        );
+                        return;
+                    }
                 case "on_installation_details_success":
                     {
                         if (!RequireEventListener(id))

@@ -5,7 +5,7 @@ namespace AdaptySDK.Serialization
 {
     /// <summary>
     /// What the native side expects when a product is handed back to it - a strict subset of what
-    /// it sent, with the subscription offer flattened to an identifier.
+    /// it sent, with the subscription reduced to its offer identifier.
     /// </summary>
     /// <remarks>
     /// The model itself cannot express this: a member carries one contract name for both
@@ -32,7 +32,7 @@ namespace AdaptySDK.Serialization
             var offer = product.Subscription?.Offer;
             if (offer != null)
             {
-                Offer = new OfferIdentifier(offer.Identifier, offer.Type);
+                Subscription = new AdaptySubscriptionOfferRequest(offer);
             }
         }
 
@@ -76,26 +76,8 @@ namespace AdaptySDK.Serialization
         [Preserve]
         private string PayloadData { get; }
 
-        [DataMember(Name = "subscription_offer_identifier")]
+        [DataMember(Name = "subscription")]
         [Preserve]
-        private OfferIdentifier Offer { get; }
-
-        [DataContract]
-        private sealed class OfferIdentifier
-        {
-            internal OfferIdentifier(string id, AdaptySubscriptionOfferType type)
-            {
-                Id = id;
-                Type = type;
-            }
-
-            [DataMember(Name = "id")]
-            [Preserve]
-            private string Id { get; }
-
-            [DataMember(Name = "type", IsRequired = true)]
-            [Preserve]
-            private AdaptySubscriptionOfferType Type { get; }
-        }
+        private AdaptySubscriptionOfferRequest Subscription { get; }
     }
 }

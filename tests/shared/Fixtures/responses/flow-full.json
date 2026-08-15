@@ -56,6 +56,39 @@
       ]
     }
   ],
+  "ui_schema": {
+    "layouts": [
+      {
+        "flow_layout_id": "layout-0001"
+      }
+    ],
+    "grids": [
+      {
+        "platforms": "all",
+        "devices": [
+          "phone"
+        ],
+        "custom_id": "grid-main",
+        "h_breakpoints": [
+          320,
+          768
+        ],
+        "v_breakpoints": [
+          568
+        ],
+        "cells": [
+          0,
+          1,
+          2
+        ]
+      },
+      {
+        "cells": [
+          3
+        ]
+      }
+    ]
+  },
   "payload_data": "{\"custom\":\"payload\"}",
   "response_created_at": 1753876800000
 }

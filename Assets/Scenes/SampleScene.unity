@@ -11528,7 +11528,7 @@ GameObject:
   - component: {fileID: 4323543924197680724}
   - component: {fileID: 911211715495459256}
   m_Layer: 5
-  m_Name: Button Update Attribution
+  m_Name: Button Update External Attribution
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12917,7 +12917,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Update Attribution
+  m_text: Update External Attribution
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13987,7 +13987,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4053823967713777864}
         m_TargetAssemblyTypeName: ActionsSection, Assembly-CSharp
-        m_MethodName: UpdateAttributionPressed
+        m_MethodName: UpdateExternalAttributionPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

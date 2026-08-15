@@ -105,9 +105,9 @@ namespace AdaptySDK.NextTests
         }
 
         [Test]
-        public void UpdateAttributionSendsEveryValueKind()
+        public void UpdateExternalAttributionSendsEveryValueKind()
         {
-            Adapty.UpdateAttribution(
+            Adapty.UpdateExternalAttribution(
                 new Dictionary<string, object>
                 {
                     { "status", "organic" },
@@ -123,8 +123,8 @@ namespace AdaptySDK.NextTests
                 _ => { }
             );
 
-            Assert.That(_method, Is.EqualTo("update_attribution_data"));
-            Snapshots.Matches("transport-update-attribution", Snapshots.Canonical(_request));
+            Assert.That(_method, Is.EqualTo("update_external_attribution_data"));
+            Snapshots.Matches("transport-update-external-attribution", Snapshots.Canonical(_request));
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace AdaptySDK.NextTests
         /// transport's guard and be thrown at the caller instead of reported to the handler.
         /// </summary>
         [Test]
-        public void UpdateAttributionReportsAGraphItCannotEncode()
+        public void UpdateExternalAttributionReportsAGraphItCannotEncode()
         {
             var loop = new Dictionary<string, object>();
             loop["self"] = loop;
@@ -141,7 +141,7 @@ namespace AdaptySDK.NextTests
             AdaptyError reported = null;
 
             Assert.DoesNotThrow(
-                () => Adapty.UpdateAttribution(loop, "custom", error => reported = error)
+                () => Adapty.UpdateExternalAttribution(loop, "custom", error => reported = error)
             );
 
             Assert.Multiple(() =>
@@ -181,6 +181,9 @@ namespace AdaptySDK.NextTests
             var paywall = AdaptyJson
                 .Deserialize<AdaptyFlow>(Snapshots.LoadResponse("flow-full"))
                 .Paywalls[0];
+            var promoted = AdaptyJson.Deserialize<AdaptyPromotedProduct>(
+                Snapshots.LoadResponse("promoted-product-full")
+            );
             var flowView = AdaptyJson.Deserialize<AdaptyUIFlowView>(
                 "{\"id\":\"view-1\",\"placement_id\":\"onboarding\",\"variation_id\":\"variation-0001\"}"
             );
@@ -199,6 +202,11 @@ namespace AdaptySDK.NextTests
                 "make-purchase-without-offer",
                 "make_purchase",
                 () => Adapty.MakePurchase(withoutOffer, (_, __) => { })
+            );
+            yield return Case(
+                "make-promoted-purchase",
+                "make_promoted_purchase",
+                () => Adapty.MakePromotedPurchase(promoted, (_, __) => { })
             );
             yield return Case(
                 "create-web-paywall-url-product",

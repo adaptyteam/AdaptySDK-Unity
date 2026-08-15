@@ -26,7 +26,11 @@ MAPPING = {
     "CustomerIdentityParameters": "AdaptyCustomerIdentity",
     "AdaptyPaywallProduct.Response": "AdaptyPaywallProduct",
     "AdaptyPaywallProduct.Request": "AdaptyPaywallProductRequest",
-    "AdaptyPaywallProduct.Subscription": "AdaptySubscription",
+    # Renamed from AdaptyPaywallProduct.Subscription in contract 4.1.0, now shared with the
+    # promoted product.
+    "AdaptyProduct.Subscription": "AdaptySubscription",
+    "AdaptyPromotedProduct.Response": "AdaptyPromotedProduct",
+    "AdaptyPromotedProduct.Request": "AdaptyPromotedProductRequest",
     "AdaptySubscriptionOffer.Phase": "AdaptySubscriptionPhase",
     "AdaptyUI.FlowView": "AdaptyUIFlowView",
     "AdaptyUI.OnboardingView": "AdaptyUIOnboardingView",

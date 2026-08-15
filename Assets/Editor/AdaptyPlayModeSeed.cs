@@ -21,6 +21,8 @@ public static class AdaptyPlayModeSeed
     {
         public void OnLoadLatestProfile(AdaptyProfile profile) { }
 
+        public void OnReceivePromotedPurchase(AdaptyPromotedProduct product) { }
+
         public void OnInstallationDetailsSuccess(AdaptyInstallationDetails details) { }
 
         public void OnInstallationDetailsFail(AdaptyError error) { }

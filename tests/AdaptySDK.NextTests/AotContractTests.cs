@@ -55,7 +55,7 @@ namespace AdaptySDK.NextTests
                 Assert.That(
                     found,
                     Has.Some.EqualTo(typeof(List<string>)),
-                    "AdaptyProfile.AppliedAttributionSources is no longer seen"
+                    "AdaptyProfile.AppliedExternalAttributionProviders is no longer seen"
                 );
 
                 // The models now hand out read-only views over concrete storage, so the interface

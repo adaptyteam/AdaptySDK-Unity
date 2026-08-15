@@ -41,16 +41,16 @@ namespace AdaptySDK
         internal readonly string SegmentId;
 
         /// <summary>
-        /// Identifiers of attribution sources applied to the profile.
+        /// Identifiers of external attribution providers applied to the profile.
         /// </summary>
         [DataMember(Name = "applied_attribution_sources")]
-        private readonly List<string> _AppliedAttributionSources = new List<string>();
+        private readonly List<string> _AppliedExternalAttributionProviders = new List<string>();
 
         /// <summary>
-        /// The attribution sources applied to this profile.
+        /// The external attribution providers applied to this profile.
         /// </summary>
         [Preserve]
-        public IReadOnlyList<string> AppliedAttributionSources { get; private set; }
+        public IReadOnlyList<string> AppliedExternalAttributionProviders { get; private set; }
 
         /// <summary>
         /// Previously set user custom attributes with <see cref="Adapty.UpdateProfile(AdaptyProfileParameters, Action{AdaptyError})"/> method.
@@ -132,7 +132,7 @@ namespace AdaptySDK
 
         private void Freeze()
         {
-            AppliedAttributionSources = new ReadOnlyCollection<string>(_AppliedAttributionSources);
+            AppliedExternalAttributionProviders = new ReadOnlyCollection<string>(_AppliedExternalAttributionProviders);
             CustomAttributes = new ReadOnlyDictionary<string, object>(_CustomAttributes);
             AccessLevels = new ReadOnlyDictionary<string, AccessLevel>(_AccessLevels);
             Subscriptions = new ReadOnlyDictionary<string, Subscription>(_Subscriptions);
@@ -189,7 +189,7 @@ namespace AdaptySDK
             return $"{nameof(ProfileId)}: {ProfileId}, "
                 + $"{nameof(SegmentId)}: {SegmentId}, "
                 + $"{nameof(CustomerUserId)}: {CustomerUserId}, "
-                + $"{nameof(AppliedAttributionSources)}: [{string.Join(", ", AppliedAttributionSources)}], "
+                + $"{nameof(AppliedExternalAttributionProviders)}: [{string.Join(", ", AppliedExternalAttributionProviders)}], "
                 + $"{nameof(CustomAttributes)}: {customAttributesStr}, "
                 + $"{nameof(AccessLevels)}: {accessLevelsStr}, "
                 + $"{nameof(Subscriptions)}: {subscriptionsStr}, "

@@ -1,0 +1,15 @@
+{
+  "method": "make_promoted_purchase",
+  "product": {
+    "payload_data": "{\"custom\":\"promoted payload\"}",
+    "subscription": {
+      "offer": {
+        "offer_identifier": {
+          "id": "promo-1",
+          "type": "promotional"
+        }
+      }
+    },
+    "vendor_product_id": "com.adapty.sample.monthly"
+  }
+}

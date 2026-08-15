@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
 using UnityEngine.Scripting;
 
 namespace AdaptySDK
@@ -87,6 +88,13 @@ namespace AdaptySDK
         [Preserve]
         public IReadOnlyList<AdaptyFlowPaywall> Paywalls { get; private set; }
 
+        /// <summary>
+        /// The renderer's custom-layout schema. Opaque to the app: carried only so a flow handed
+        /// back to the native side keeps it.
+        /// </summary>
+        [DataMember(Name = "ui_schema")]
+        private readonly JObject _UiSchema;
+
         [DataMember(Name = "response_created_at", IsRequired = true)]
         private readonly long _ResponseCreatedAt;
         [DataMember(Name = "payload_data")]
@@ -163,6 +171,7 @@ namespace AdaptySDK
             + $"{nameof(FlowVersionId)}: {FlowVersionId}, "
             + $"{nameof(RemoteConfigs)}: {RemoteConfigs}, "
             + $"{nameof(Paywalls)}: {Paywalls}, "
+            + $"{nameof(_UiSchema)}: {_UiSchema?.ToString(Newtonsoft.Json.Formatting.None)}, "
             + $"{nameof(_ResponseCreatedAt)}: {_ResponseCreatedAt}, "
             + $"{nameof(_PayloadData)}: {_PayloadData}";
     }

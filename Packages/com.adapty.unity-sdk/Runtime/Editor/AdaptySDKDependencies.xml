@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
-  <remoteSwiftPackage url="https://github.com/adaptyteam/AdaptySDK-iOS.git" version="4.0.2">
+  <remoteSwiftPackage url="https://github.com/adaptyteam/AdaptySDK-iOS.git" version="4.1.0">
     <swiftPackage name="Adapty"/>
     <swiftPackage name="AdaptyUI"/>
     <swiftPackage name="AdaptyPlugin"/>

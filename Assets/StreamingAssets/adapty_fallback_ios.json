@@ -1,1 +1,9 @@
-{"data": {}, "meta": {"version": 10, "developer_ids": [], "response_created_at": 0}, "ui_builder": {}}
+{
+  "data": {},
+  "meta": {
+    "version": 11,
+    "developer_ids": [],
+    "response_created_at": 0
+  },
+  "ui_builder": {}
+}

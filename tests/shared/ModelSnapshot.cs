@@ -89,6 +89,14 @@ namespace AdaptySDK.TestSupport
                 return;
             }
 
+            // A JToken enumerates as its children, which the sequence walk below would render as
+            // nested empty arrays. It is already JSON - print it as itself, compactly.
+            if (value is Newtonsoft.Json.Linq.JToken token)
+            {
+                builder.Append(Quote(token.ToString(Newtonsoft.Json.Formatting.None)));
+                return;
+            }
+
             if (depth >= MaxDepth)
             {
                 builder.Append(Quote("<max depth>"));

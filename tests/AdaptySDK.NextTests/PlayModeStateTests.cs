@@ -125,6 +125,8 @@ namespace AdaptySDK.NextTests
 
             public void OnLoadLatestProfile(AdaptyProfile profile) => Calls += 1;
 
+            public void OnReceivePromotedPurchase(AdaptyPromotedProduct product) { }
+
             public void OnInstallationDetailsSuccess(AdaptyInstallationDetails details) { }
 
             public void OnInstallationDetailsFail(AdaptyError error) { }

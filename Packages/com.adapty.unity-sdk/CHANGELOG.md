@@ -4,6 +4,51 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-dev.1] - 2026-08-15
+
+> Unreleased iOS-integration snapshot — not for publishing. The Android SDK has no 4.1 release yet,
+> so this version pins native iOS 4.1.0 while Android stays on the 4.0.x line; the coordinated
+> release is cut once Android exposes the matching 4.1 contract.
+
+Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0-dev.1/MIGRATION-v4.0-to-v4.1.md).
+
+### Breaking Changes
+
+- `Adapty.UpdateAttribution(...)` is renamed to `Adapty.UpdateExternalAttribution(...)`, with the
+  `source` parameter renamed to `provider`, matching the native 4.1 attribution API rename. The old
+  name is removed without a deprecated alias.
+- `AdaptyProfile.AppliedAttributionSources` is renamed to
+  `AdaptyProfile.AppliedExternalAttributionProviders`. The wire key is unchanged.
+- `IAdaptyEventListener` gained `OnReceivePromotedPurchase(AdaptyPromotedProduct)`; implementations
+  must add the method.
+- [iOS] The native 4.1 reads **fallback file format 11** and rejects the format 10 file v4.0 shipped
+  against: `Adapty.SetFallback` reports `DecodingFailed` (`adapty_code: 2006`, *"The fallback
+  paywalls version is not correct"*). Re-download the iOS fallback file from the Adapty Dashboard.
+  The Android fallback file is unaffected while Android stays on 4.0.x.
+
+### Added
+
+- `AdaptyConfiguration.Builder.SetAdaptyAttributionEnabled(bool)` — enables the Adapty Attribution
+  service. Not sent unless set, leaving the native default (off).
+- `Adapty.MakePromotedPurchase(AdaptyPromotedProduct, ...)` and
+  `IAdaptyEventListener.OnReceivePromotedPurchase` — App Store promoted in-app purchases (iOS only;
+  on other platforms the completion handler reports an error). At native iOS 4.1.0 the event is not
+  yet emitted — the native SDK still completes promoted purchases by itself — so this API is wired
+  for the native release that starts reporting them.
+- `AdaptyFlow` carries the 4.1 `ui_schema` (custom flow layouts, UIBuilder 5.1) through to the
+  renderer. It is not public API: the schema is the renderer's own data, and the SDK only makes sure
+  a flow handed back to the native side keeps it.
+
+### Native and Protocol
+
+- [iOS] Native Adapty iOS SDK is pinned to 4.1.0, which includes the 4.0.3 hotfix. Android stays on
+  crossplatform 4.0.2 / android-sdk 4.0.1 until the Android 4.1 release.
+- The cross-platform contract is 4.1.0: `update_external_attribution_data`,
+  `make_promoted_purchase`, `did_receive_promoted_purchase`, `adapty_attribution_enabled` and
+  `ui_schema` are new, and the offer identifier of a product request now travels nested as
+  `subscription.offer.offer_identifier` — the natives read both forms, the flat
+  `subscription_offer_identifier` is no longer written.
+
 ## [4.0.0-beta.2] - 2026-08-15
 
 Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.0.0-beta.2/MIGRATION-v3.17-to-v4.0.md).

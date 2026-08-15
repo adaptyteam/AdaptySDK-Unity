@@ -171,6 +171,22 @@ namespace AdaptySDK.NextTests
             );
         }
 
+        [TestCase("promoted-product-full", "request-promoted-product-with-offer")]
+        [TestCase("promoted-product-minimal", "request-promoted-product-plain")]
+        public void PromotedProduct(string fixture, string snapshot) =>
+            Snapshots.Matches(
+                snapshot,
+                Snapshots.Canonical(
+                    AdaptyJson.Serialize(
+                        new AdaptyPromotedProductRequest(
+                            AdaptyJson.Deserialize<AdaptyPromotedProduct>(
+                                Snapshots.LoadResponse(fixture)
+                            )
+                        )
+                    )
+                )
+            );
+
         [Test]
         public void ProductIdentifier() =>
             Snapshots.Matches(
