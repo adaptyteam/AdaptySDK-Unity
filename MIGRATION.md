@@ -29,7 +29,8 @@ v4.0 requires **Unity 2022.3 or later** and two packages:
 
 Newtonsoft.Json replaces the JSON parser that used to ship inside the SDK, so this dependency is new
 in v4.0. The SDK installs whichever package is missing, together with the OpenUPM scoped registry
-that External Dependency Manager is published on:
+that External Dependency Manager is published on. It also upgrades an External Dependency Manager
+older than 1.2.188 — v3 declared 1.2.187, so a project coming from it has one:
 
 > **Adapty SDK > Install Dependencies**
 
@@ -417,8 +418,10 @@ Unity target. Building `Unity-iPhone.xcodeproj` directly fails at link time with
 
 External Dependency Manager has to be 1.2.188 or later. Swift Package Manager support arrived in
 1.2.187, and 1.2.188 is what determines the Xcode project path correctly for the Swift project type
-it generates. The iOS deployment target moves from 13.0 to **15.0 or later**, which a build
-validator enforces in the Editor.
+it generates. **Adapty SDK > Install Dependencies** upgrades a package-managed copy for you; one
+installed from Google's own `.unitypackage` under `Assets/` has no version Package Manager can read,
+so it is left alone with a warning and you have to update it yourself. The iOS deployment target
+moves from 13.0 to **15.0 or later**, which a build validator enforces in the Editor.
 
 **Xcode moves to 26 or later.** AdaptySDK-iOS 4.0 declares `swift-tools-version: 6.2`, where the
 3.17.2 that v3 pinned declared 6.0. Swift Package Manager refuses a package whose tools version is

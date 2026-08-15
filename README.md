@@ -92,8 +92,8 @@ neither can arrive with a `.unitypackage`, which carries assets only.
 Until it is there the SDK assembly is skipped by a define constraint, so your calls into Adapty will
 not compile — and **Adapty SDK > Install Dependencies**, the menu item that installs both
 dependencies, is unavailable for the same reason. With Newtonsoft in place, that menu item adds
-whatever else is missing, including the OpenUPM scoped registry External Dependency Manager is
-published on.
+whatever else is missing — including the OpenUPM scoped registry External Dependency Manager is
+published on — and upgrades an External Dependency Manager older than the SDK needs.
 
 Already on 3.x? [MIGRATION.md](MIGRATION.md) covers the move to 4.0 — the renamed paywall API, the
 new Newtonsoft.Json dependency, and the order to install things in.

@@ -35,7 +35,8 @@ Editor menu that installs it is unavailable for the same reason.
   missing: Newtonsoft.Json, and External Dependency Manager along with the OpenUPM scoped registry it
   is published on. A `.unitypackage` carries assets only and can bring neither, and External
   Dependency Manager has always had to be installed by hand even alongside Package Manager. Packages
-  already in the project are left as they are.
+  already in the project are left as they are, apart from an External Dependency Manager older than
+  the SDK needs, which is upgraded.
 - `AdaptyErrorCode.NoPurchasesToRestore` (1004) — restored. The member was commented out in December
   2024 while the native Android SDK kept sending the code, so `RestorePurchases` on a profile with
   nothing to restore returned an error that could only be matched against a literal `1004`. Nothing
@@ -269,6 +270,13 @@ Editor menu that installs it is unavailable for the same reason.
   state the SDK's own validator already reports as an error. It examined the first copy only, and
   the order loaded assemblies come back in is not specified, so the same project could be told its
   dependencies were complete on one run and be sent to fix them on the next.
+- **Adapty SDK > Install Dependencies** upgrades an External Dependency Manager older than the SDK
+  needs, instead of reporting the project complete. It checked only that a copy was loaded, so a
+  project coming from v3 — which declared 1.2.187 — kept it, and the iOS build resolved through a
+  version that gets the Xcode project path wrong for the Swift project type. Package Manager is the
+  only thing that can tell those versions apart: every 1.2.x build of `Google.VersionHandler`
+  reports the same assembly version, so a copy installed from Google's own `.unitypackage` under
+  `Assets/` is now reported rather than replaced — adding the package over it would leave two.
 - `AdaptyConfiguration.Builder.ToString()` includes `GoogleEnablePendingPrepaidPlans`. It was the
   one member missing from the description, so two builders differing only in whether Android
   reports pending prepaid transactions printed identically in logs.

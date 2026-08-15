@@ -16,7 +16,7 @@ namespace AdaptySDK.Editor
     internal static class AdaptyNewtonsoftValidator
     {
         private const string AssemblyName = AdaptyDependencies.NewtonsoftAssembly;
-        private const string PackageId = AdaptyDependencies.NewtonsoftId;
+        private const string PackageId = AdaptyDependencyPlan.NewtonsoftId;
 
         static AdaptyNewtonsoftValidator()
         {

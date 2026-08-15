@@ -60,6 +60,7 @@
     <Compile Include="$(SdkRuntime)/Plugins/Android/*.cs" LinkBase="Sdk/Plugins/Android" />
     <Compile Include="$(SdkEditor)/AdaptyManifest.cs" LinkBase="Sdk/Editor" />
     <Compile Include="$(SdkEditor)/AdaptyIOSKidsModeTrait.cs" LinkBase="Sdk/Editor" />
+    <Compile Include="$(SdkEditor)/AdaptyDependencyPlan.cs" LinkBase="Sdk/Editor" />
     <Compile Include="$(Shared)/ModelSnapshot.cs" LinkBase="Shared" />
     <Compile Include="$(Shared)/Snapshots.cs" LinkBase="Shared" />
     <Compile Include="$(Shared)/UnityStubs.cs" LinkBase="Shared" />

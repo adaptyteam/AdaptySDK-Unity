@@ -14,17 +14,12 @@ namespace AdaptySDK.Editor
     /// <summary>
     /// Installs the packages the SDK needs from Package Manager. A .unitypackage carries assets
     /// only and cannot touch the project manifest, so nothing else can bring them in. Installs
-    /// whichever ones are missing and leaves the rest alone.
+    /// whichever ones are missing, and upgrades an External Dependency Manager older than the SDK
+    /// needs; a copy Package Manager does not describe is reported rather than replaced.
     /// </summary>
     internal static class AdaptyDependencies
     {
         internal const string MenuPath = "Adapty SDK/Install Dependencies";
-
-        // Keep in sync with dependencies and peerDependencies in package.json.
-        internal const string NewtonsoftId = "com.unity.nuget.newtonsoft-json";
-        private const string NewtonsoftVersion = "3.2.2";
-        private const string EdmId = "com.google.external-dependency-manager";
-        private const string EdmVersion = "1.2.188";
 
         internal const string NewtonsoftAssembly = "Newtonsoft.Json";
         private const string EdmAssembly = "Google.VersionHandler";
@@ -77,7 +72,7 @@ namespace AdaptySDK.Editor
                 return;
             }
 
-            if (newtonsoft.Count == 1 && PackageOf(newtonsoft[0]) != NewtonsoftId)
+            if (newtonsoft.Count == 1 && PackageOf(newtonsoft[0]) != AdaptyDependencyPlan.NewtonsoftId)
             {
                 // Adding the package on top would leave two copies of it, which is its own failure.
                 // Nothing else is installed either: the project is in a state the user has to fix
@@ -86,16 +81,32 @@ namespace AdaptySDK.Editor
                 return;
             }
 
-            var missing = Missing(newtonsoft.Count > 0).ToArray();
+            var edm = EdmInstalled(out var edmVersion);
+            var missing = AdaptyDependencyPlan.Missing(newtonsoft.Count > 0, edm, edmVersion).ToArray();
+
+            // Said whether or not anything is installed: a copy whose version cannot be read is
+            // the one case where "everything is installed" would be a guess rather than a fact.
+            var caution = AdaptyDependencyPlan.EdmCaution(edm, edmVersion);
+            if (caution != null)
+            {
+                Debug.LogWarning(caution);
+            }
+
             if (missing.Length == 0)
             {
-                Debug.Log("[Adapty] Every dependency is already installed.");
+                if (caution == null)
+                {
+                    Debug.Log("[Adapty] Every dependency is already installed.");
+                }
+
                 return;
             }
 
             // EDM is published on OpenUPM, and a scoped registry has no public API - the project
             // manifest is the only way in.
-            if (missing.Any(package => package.StartsWith(EdmId, StringComparison.Ordinal))
+            if (missing.Any(package =>
+                    package.StartsWith(AdaptyDependencyPlan.EdmId, StringComparison.Ordinal)
+                )
                 && !EnsureRegistry())
             {
                 return;
@@ -107,21 +118,40 @@ namespace AdaptySDK.Editor
             EditorApplication.update += Poll;
         }
 
-        private static IEnumerable<string> Missing(bool newtonsoftPresent)
+        /// <summary>
+        /// Which copy of External Dependency Manager the project has, and the version when that is
+        /// something Package Manager can answer.
+        /// </summary>
+        /// <remarks>
+        /// More than one copy counts as unmanaged: no single version answers for the project, and
+        /// the order <c>GetAssemblies()</c> returns is not specified, so picking one would decide
+        /// the same project differently from run to run.
+        /// </remarks>
+        private static AdaptyEdmSource EdmInstalled(out string version)
         {
-            // The SDK assembly is gated on the package rather than on the assembly, so a copy that
-            // came from anywhere else does not make the SDK compile and is reported separately.
-            if (!newtonsoftPresent)
+            version = null;
+
+            var copies = Copies(EdmAssembly).ToList();
+
+            if (copies.Count == 0)
             {
-                yield return $"{NewtonsoftId}@{NewtonsoftVersion}";
+                return AdaptyEdmSource.None;
             }
 
-            // EDM has no define constraint, so any copy will do - including the one Google ships as
-            // its own .unitypackage under Assets/.
-            if (!Copies(EdmAssembly).Any())
+            if (copies.Count > 1)
             {
-                yield return $"{EdmId}@{EdmVersion}";
+                return AdaptyEdmSource.Unmanaged;
             }
+
+            var info = PackageInfo.FindForAssembly(copies[0]);
+
+            if (info?.name != AdaptyDependencyPlan.EdmId)
+            {
+                return AdaptyEdmSource.Unmanaged;
+            }
+
+            version = info.version;
+            return AdaptyEdmSource.Package;
         }
 
         internal static IEnumerable<Assembly> Copies(string assemblyName) =>
@@ -145,7 +175,7 @@ namespace AdaptySDK.Editor
             $"[Adapty] {copies.Count} copies of {NewtonsoftAssembly} are loaded, so its types are "
             + "ambiguous and compilation against the Adapty SDK may fail unpredictably. "
             + (andThen is null ? "" : andThen + " ")
-            + $"Keep one - preferably the \"{NewtonsoftId}\" package - and remove the others:\n  "
+            + $"Keep one - preferably the \"{AdaptyDependencyPlan.NewtonsoftId}\" package - and remove the others:\n  "
             + string.Join("\n  ", Describe(copies));
 
         /// <summary>
@@ -171,7 +201,7 @@ namespace AdaptySDK.Editor
             });
 
         internal static string StandaloneMessage(Assembly assembly) =>
-            $"[Adapty] {NewtonsoftAssembly} is in this project, but not as the \"{NewtonsoftId}\" "
+            $"[Adapty] {NewtonsoftAssembly} is in this project, but not as the \"{AdaptyDependencyPlan.NewtonsoftId}\" "
             + "package, and the Adapty SDK only compiles against that package. Nothing was "
             + $"installed. Remove the copy at {Where(assembly)}, then run \"{MenuPath}\" again.";
 

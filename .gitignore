@@ -88,7 +88,8 @@ ExportedObj/
 *.aab
 *.app
 
-# Staging area of build_unitypackage.sh; the released package is kept at the repository root.
+# Staging area of build_unitypackage.sh. -p moves the artifact to the repository root, and
+# release_unitypackage.sh moves it from there into Releases/, which is tracked.
 /deploy/output/
 
 # =============================================================================

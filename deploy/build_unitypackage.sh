@@ -15,6 +15,11 @@ PACKAGE_NAME="${PACKAGE_NAME:-}"
 PACKAGE_VERSION="$(sed -n 's/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$PACKAGE_JSON" 2>/dev/null | head -n 1 || true)"
 DEFAULT_PACKAGE_NAME="adapty-unity-plugin-${PACKAGE_VERSION:-unknown}.unitypackage"
 
+# The key is anchored to the start of a line so the copies inside the _upm.changelog string, which
+# is one long line, cannot be read instead.
+NEWTONSOFT_ID="com.unity.nuget.newtonsoft-json"
+NEWTONSOFT_VERSION="$(sed -n "s|^[[:space:]]*\"$NEWTONSOFT_ID\"[[:space:]]*:[[:space:]]*\"\([^\"]*\)\".*|\1|p" "$PACKAGE_JSON" 2>/dev/null | head -n 1 || true)"
+
 PRODUCTION=0
 KEEP_STAGING=0
 
@@ -108,6 +113,11 @@ if [[ -z "$PACKAGE_VERSION" ]]; then
   exit 1
 fi
 
+if [[ -z "$NEWTONSOFT_VERSION" ]]; then
+  echo "$NEWTONSOFT_ID not found in the dependencies of $PACKAGE_JSON" >&2
+  exit 1
+fi
+
 if [[ -z "$PACKAGE_NAME" ]]; then
   PACKAGE_NAME="$DEFAULT_PACKAGE_NAME"
 fi
@@ -139,8 +149,11 @@ mkdir -p "$STAGING_PROJECT/ProjectSettings"
 
 # The staged sources are compiled by the Editor during export, so the staging project has to
 # resolve what they import. Newtonsoft arrived with the JSON layer migration; without it the
-# export builds against a project that cannot compile the SDK.
-printf '{ "dependencies": { "com.unity.nuget.newtonsoft-json": "3.2.2" } }\n' > "$STAGING_PROJECT/Packages/manifest.json"
+# export builds against a project that cannot compile the SDK. The version is read from the
+# manifest rather than written here, so the export cannot be built against a version the package
+# does not declare.
+printf '{ "dependencies": { "%s": "%s" } }\n' "$NEWTONSOFT_ID" "$NEWTONSOFT_VERSION" \
+  > "$STAGING_PROJECT/Packages/manifest.json"
 cp "$PROJECT_ROOT/ProjectSettings/ProjectVersion.txt" "$STAGING_PROJECT/ProjectSettings/ProjectVersion.txt"
 
 cp -R "$SOURCE_PATH" "$STAGING_PROJECT/$STAGED_SDK_PATH"
