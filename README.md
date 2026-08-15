@@ -107,10 +107,19 @@ dependency can arrive with a `.unitypackage`, which carries assets only.
 **Installing from a `.unitypackage`:** take the latest from
 [Releases](https://github.com/adaptyteam/AdaptySDK-Unity/releases), and add
 `com.unity.nuget.newtonsoft-json` **before** importing. Until it is there the SDK assembly is skipped
-by a define constraint, so your calls into Adapty will not compile — and **Adapty SDK > Install
-Dependencies**, the menu item that installs both dependencies, is unavailable for the same reason.
-With Newtonsoft in place, that menu item adds whatever else is missing, including the OpenUPM scoped
-registry External Dependency Manager is published on.
+by a define constraint, so your calls into Adapty will not compile. **Adapty SDK > Install
+Dependencies** is what fixes that, and it lives in an Editor assembly carrying no such constraint —
+so it is available as long as the rest of your scripts still compile. Once they do not, because they
+are the code calling Adapty, Unity stops loading Editor assemblies and Newtonsoft has to come from
+Package Manager by hand. With Newtonsoft in place, that menu item adds whatever else is missing,
+including the OpenUPM scoped registry External Dependency Manager is published on.
+
+**Upgrading from 3.x: delete `Assets/AdaptySDK` before importing.** A `.unitypackage` never removes
+files, and 4.0 drops 62 sources that 3.x shipped — the whole `JSON/` folder among them. Left where
+they are, they compile into the same assembly as the new ones: 35 of them redeclare a type 4.0 also
+declares, and the rest reference types it no longer has. Either way the SDK does not
+compile, and because the assembly is gated on Newtonsoft the errors appear only once Newtonsoft is
+installed.
 
 It also upgrades an External Dependency Manager older than the SDK needs — but only one installed as
 a package. A copy imported from Google's own `.unitypackage` under `Assets/` has no version Package

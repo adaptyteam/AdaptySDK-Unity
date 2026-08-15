@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.0.0-beta.2] - 2026-08-08
 
 Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/MIGRATION-v3.17-to-v4.0.md).
-If you install from a `.unitypackage`, add `com.unity.nuget.newtonsoft-json` **before** importing —
-until it is there the SDK assembly is skipped, so code that calls Adapty will not compile, and the
-Editor menu that installs it is unavailable for the same reason.
+If you install from a `.unitypackage`, delete `Assets/AdaptySDK` and add
+`com.unity.nuget.newtonsoft-json` **before** importing. A `.unitypackage` never removes files, so the
+62 sources this release drops would otherwise stay behind and compile alongside the new ones, which
+they collide with. Until Newtonsoft is there the SDK assembly is skipped, so code that calls Adapty
+will not compile — and once it does not, Unity stops loading the Editor assembly the installer menu
+lives in.
 
 ### Added
 

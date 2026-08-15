@@ -46,6 +46,17 @@ Package Manager > + > Add package by name**. It has to be that package: a `Newto
 dropped into `Assets/` does not satisfy the SDK, and installing the package on top of one leaves two
 copies. Delete the DLL first.
 
+**Installing from a `.unitypackage`: delete `Assets/AdaptySDK` before you import.** A
+`.unitypackage` never removes files, and 4.0 drops 62 sources that 3.17 shipped — the whole
+`Assets/AdaptySDK/JSON/` folder, plus `AdaptyPaywall.cs` and its neighbours. Importing over them
+keeps the folder and the assembly definition GUIDs, so the leftovers compile into the same assembly
+as the new sources: 35 of them declare a `partial` half of a type the new sources also declare —
+`AdaptyPlacement`, `AdaptyProfile`, `AdaptyPaywallProduct` among them, and 4.0 declares most of
+those `sealed` — while the rest call constructors and a `SimpleJSON` namespace that are gone. The
+errors do not appear at import — the assembly is gated on Newtonsoft — but the
+moment Newtonsoft is in place the project stops compiling, and from there the menu item above is out
+of reach too. Deleting the folder first costs nothing: everything in it is replaced.
+
 **iOS requirements changed — needed to build for iOS, not to compile.** Nothing below blocks the
 rest of this guide; the deployment target is checked by a build validator when an iOS build starts,
 and Xcode only comes in after the export, when it resolves the Swift package.
@@ -90,6 +101,7 @@ includes in the Gradle build on its own.
 | `Adapty.GetPaywallProducts(paywall, ...)` | same name, takes an `AdaptyFlow` |
 | `Adapty.LogShowPaywall` | `Adapty.LogShowFlow`, takes an `AdaptyFlow`. Same variation, so funnels and A/B tests carry over |
 | `AdaptyUIPaywallView` | `AdaptyUIFlowView` |
+| `view.PaywallVariationId` | `view.VariationId` — same value, shorter name now that the view is a flow's. The view also gains `view.Locale`, the localization it was built with |
 | `AdaptyUICreatePaywallViewParameters` | `AdaptyUICreateFlowViewParameters` — same fields, plus `Locale` and `EnableSafeAreaPaddings` (Android only, defaults to `true`) |
 | `paywall.RemoteConfig` | `flow.RemoteConfigs`, one per configured language. `RemoteConfig` still exists and returns the first |
 | `paywall.Products` | `flow.ProductIdentifiers`, or `GetPaywallProducts(flow, ...)` |
@@ -187,13 +199,14 @@ Renames, first:
 | `Adapty.SetFallbackPaywalls` | `Adapty.SetFallback` |
 | `builder.SetIDFACollectionDisabled` | `builder.SetAppleIDFACollectionDisabled` |
 | `Adapty.GetLoglevel` | `Adapty.GetLogLevel` — a typo fixed, so there was no v3 warning for this one |
+| `builder.IdfaCollectionDisabled` | `builder.AppleIdfaCollectionDisabled` — the property matching the method above. It was already `[Obsolete]` in v3, naming this same replacement |
 
 Removed with a replacement:
 
 | Removed | Use instead |
 |---|---|
 | `AdaptyProfile.NonSubscription.IsOneTime` | `IsConsumable`, which it returned unchanged |
-| `AdaptyPlacement.GetIsTrackingPurchases` | `IsTrackingPurchases`, the field it wrapped |
+| `AdaptyPlacement.GetIsTrackingPurchases` | `IsTrackingPurchases`, the field it wrapped — but that field is `bool?`, where the removed member returned `bool`. Write `IsTrackingPurchases ?? false` to keep the old expression's type |
 | `AdaptyInstallationStatusNotAvailable`, `AdaptyInstallationStatusNotDetermined`, `AdaptyInstallationStatusDetermined` | `AdaptyInstallationStatus.Status` and `.Details`, see below |
 | `AdaptyErrorCode.PendingPurchase` (25) | `AdaptyPurchaseResultType.Pending`, see below |
 | `AdaptyErrorCode.InvalidJson` (23) | nothing — no native SDK can raise it |
@@ -204,7 +217,8 @@ Changed types and shapes:
 | Member | Change |
 |---|---|
 | Collections on `AdaptyProfile`, `AdaptyFlow`, `AdaptyFlowPaywall`, `AdaptySubscriptionOffer`, `AdaptyRemoteConfig`, and the `GetPaywallProducts` callback | `IList<T>` → `IReadOnlyList<T>`, `IDictionary<K, V>` → `IReadOnlyDictionary<K, V>`. `AdaptyProfile.NonSubscriptions` is read-only at both levels |
-| The four `AdaptyUICreateFlowViewParameters` setters, `UpdateAttribution`, `AdaptyProfileParameters.CustomAttributes` | take an `IReadOnlyDictionary` and **copy** it, so filling your dictionary afterwards no longer changes the view. The four matching members are read-only properties — assign through the setters |
+| The four `AdaptyUICreateFlowViewParameters` setters and `UpdateAttribution` | take an `IReadOnlyDictionary` and **copy** it, so filling your dictionary afterwards no longer changes the view. The four matching members are read-only properties — assign through the setters |
+| `AdaptyProfileParameters.CustomAttributes` | was a `Dictionary` you could write into and is now a read-only view over the builder's own storage. There is no setter taking a dictionary: use `SetCustomStringAttribute`, `SetCustomDoubleAttribute` and `RemoveCustomAttribute`. Copying this one does not reach the request |
 | `FlowViewDidReceiveAnalyticEvent`, `FlowViewDidAskPermission` | take `IReadOnlyDictionary` instead of `IDictionary`. The analytics parameter is renamed `@params` → `parameters`, which matters only for a named argument |
 | Every concrete public class | `sealed`. If you derived from one, hold it as a field instead of inheriting it |
 | `AdaptyPlacementFetchPolicy.Default`, `.ReloadRevalidatingCacheData`, `.ReturnCacheDataElseLoad` | `readonly` — reading is unchanged, assigning no longer compiles |
