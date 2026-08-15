@@ -59,7 +59,7 @@
     "NAME": "Ada"
   },
   "custom_timers": {
-    "OFFER_END": "2026-07-30T10:00:00Z"
+    "OFFER_END": "2026-07-30T10:00:00.000Z"
   },
   "enable_safe_area_paddings": false,
   "flow": {

@@ -118,8 +118,10 @@ namespace UnityEngine
 
     public static class Mathf
     {
-        public static int RoundToInt(float f) =>
-            (int)Math.Round((double)f, MidpointRounding.AwayFromZero);
+        // Unity's Mathf.RoundToInt is (int)Math.Round(f), which rounds a midpoint to even. Rounding
+        // away from zero here instead would make the approved colour and gradient hexes disagree
+        // with what a real player sends for any channel landing exactly on .5.
+        public static int RoundToInt(float f) => (int)Math.Round((double)f);
     }
 
     public static class Application

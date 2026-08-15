@@ -32,10 +32,25 @@ namespace AdaptySDK.TestSupport
         /// whole-numbered floats to integers - a difference no reader can observe. Fractional values
         /// keep their digits, so real precision drift still shows.
         /// </summary>
+        /// <remarks>
+        /// Not <c>JToken.Parse</c>, for the reason <c>AdaptyJson.ParseDocument</c> avoids it too: its
+        /// reader defaults to <c>DateParseHandling.DateTime</c>, so every ISO string would be parsed
+        /// to a <see cref="DateTime"/> and printed back in Newtonsoft's own form. The snapshot would
+        /// then record that form rather than the one the SDK writes, and the format
+        /// <c>AdaptyConverterDateTime</c> emits - milliseconds and the <c>Z</c> designator included -
+        /// could change without moving a single approved file.
+        /// </remarks>
         public static string Canonical(string json)
         {
-            var token = Newtonsoft.Json.Linq.JToken.Parse(json);
-            return Sort(token).ToString(Newtonsoft.Json.Formatting.Indented) + "\n";
+            using (var reader = new Newtonsoft.Json.JsonTextReader(new StringReader(json))
+            {
+                DateParseHandling = Newtonsoft.Json.DateParseHandling.None,
+                FloatParseHandling = Newtonsoft.Json.FloatParseHandling.Double,
+            })
+            {
+                var token = Newtonsoft.Json.Linq.JToken.Load(reader);
+                return Sort(token).ToString(Newtonsoft.Json.Formatting.Indented) + "\n";
+            }
         }
 
         private static Newtonsoft.Json.Linq.JToken Sort(Newtonsoft.Json.Linq.JToken token)
