@@ -33,8 +33,9 @@ Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptytea
 - `Adapty.MakePromotedPurchase(AdaptyPromotedProduct, ...)` and
   `IAdaptyEventListener.OnReceivePromotedPurchase` — App Store promoted in-app purchases (iOS only;
   on other platforms the completion handler reports an error). At native iOS 4.1.0 the event is not
-  yet emitted — the native SDK still completes promoted purchases by itself — so this API is wired
-  for the native release that starts reporting them.
+  yet emitted — the native SDK still completes promoted purchases by itself, and the exact pin keeps
+  it that way — so the listener method starts firing only once a future SDK release moves the pin to
+  a native that reports them.
 - `AdaptyFlow` carries the 4.1 `ui_schema` (custom flow layouts, UIBuilder 5.1) through to the
   renderer. It is not public API: the schema is the renderer's own data, and the SDK only makes sure
   a flow handed back to the native side keeps it.

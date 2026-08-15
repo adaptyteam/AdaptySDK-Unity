@@ -74,10 +74,12 @@ know. An empty body is a perfectly honest implementation in that case, and the m
 called on Android either way.
 
 One thing worth knowing before you rely on it: the pinned AdaptySDK-iOS 4.1.0 does not yet hand
-promoted purchases to wrappers — it completes them by itself, natively, without telling anyone. We
-wired the Unity API to the contract anyway, so when a native release starts reporting them, your
-handler starts receiving them with no SDK update on your side. Implementing it now costs you five
-lines and nothing else.
+promoted purchases to wrappers — it completes them by itself, natively, without telling anyone. And
+because the native dependency is pinned to exactly 4.1.0 — deliberately, so native behaviour never
+changes underneath a wrapper that was not built for it — a future native release will not slip into
+your build on its own. The handler starts receiving purchases once a future Unity SDK release moves
+that pin to a native that reports them; implementing it now means your code is ready the day you
+take that update.
 
 ## Re-download your fallback file
 
