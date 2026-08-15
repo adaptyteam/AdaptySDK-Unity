@@ -241,6 +241,26 @@ Editor menu that installs it is unavailable for the same reason.
 - `ReportTransaction` no longer reports `DecodingFailed`. It decoded the response as a profile,
   while the native side returns `{"success": true}`, so the completion handler always received a
   decoding error even though the transaction had been reported successfully.
+- **The server cluster selected through the configuration builder now reaches the native SDK.**
+  `ServerCluster` was the one builder field `AdaptyConfiguration`'s constructor did not copy, so
+  `server_cluster` was never sent and every app ran against the default cluster whatever it chose.
+  Selecting EU or CN did nothing in v3 and takes effect now, so an app that selected one starts
+  talking to that region on upgrade. The builder field is `AdaptyServerCluster?` rather than
+  `AdaptyServerCluster`, which is what keeps an unset cluster out of the request.
+- `AdaptyPlacementFetchPolicy.Default` is no longer null. It aliases `ReloadRevalidatingCacheData`
+  but was declared above it, and static field initializers run in declaration order, so passing
+  `Default` explicitly raised a `NullReferenceException` when the request was built.
+- `UpdateAttribution` sends `bool` and `DateTime` values instead of dropping them. The dictionary
+  serializer had branches for strings, numbers, nested dictionaries, lists and null, and none for
+  those two, so `UpdateAttribution(new Dictionary<string, object> { { "flag", true } }, ...)` went
+  out as an empty object.
+- `AdaptyCustomerIdentity.IsEmpty` reports an empty identity. `IosAppAccountToken` is a
+  non-nullable `Guid`, so comparing it to null was always false and the property never returned
+  true, which left the guard that keeps an empty identity out of the configuration dead.
+- A partially filled date in an onboarding `date_picker` event no longer throws. The helpers reading
+  the optional `day`, `month` and `year` cast the nullable they received straight to `int`, which
+  raises `InvalidOperationException` when the key is absent — and the contract marks all three
+  optional.
 - Calling the SDK in the Editor now returns a readable "not supported on this platform" error
   instead of failing to parse a null response. That holds for the whole surface now:
   `UpdateAppStoreCollectingRefundDataConsent`, `UpdateAppStoreRefundPreference` and

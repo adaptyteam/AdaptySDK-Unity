@@ -1,151 +1,78 @@
 # Migrate Adapty Unity SDK to v4.0
 
-Adapty Unity SDK 4.0 introduces flows and renames the paywall APIs accordingly. The new APIs work
-with both the new Flow Builder and the existing Paywall Builder, and nothing changes on the Adapty
-Dashboard side.
+v4.0 introduces flows and renames the paywall APIs accordingly. The new APIs work with both the new
+Flow Builder and the existing Paywall Builder, and nothing changes on the Adapty Dashboard side.
 
-This guide covers the move from v3.17 to v4.0. Work through it in order — the first step has to
-happen before the others, or your project will not compile long enough for you to reach them.
+This guide is the move from v3.17 to v4.0. Read **Before you upgrade** first and sort its
+prerequisites by when they bite: Unity and Newtonsoft.Json have to be in place before your C#
+compiles at all, while External Dependency Manager, Xcode and the iOS deployment target are only
+needed by the time you build for iOS. The other sections are independent of each other; take them
+in whatever order suits your project. Everything
+this guide does not cover — why each change was made, and what was fixed along the way — is in
+[CHANGELOG.md](Packages/com.adapty.unity-sdk/CHANGELOG.md).
 
-1. [Install the SDK dependencies](#install-the-sdk-dependencies)
-2. [Fetch flows instead of paywalls](#fetch-flows-instead-of-paywalls)
-3. [Update the flow model](#update-the-flow-model)
-4. [Rename view creation and presentation methods](#rename-view-creation-and-presentation-methods)
-5. [Update the web paywall methods](#update-the-web-paywall-methods)
-6. [Update event listeners](#update-event-listeners)
-7. [Replace members removed in v4.0](#replace-members-removed-in-v40)
-8. [Move off the legacy onboarding API](#move-off-the-legacy-onboarding-api)
-9. [Check the behavior changes](#check-the-behavior-changes)
-10. [Update the native dependencies](#update-the-native-dependencies)
+1. [Before you upgrade](#before-you-upgrade)
+2. [Rename the paywall APIs to flows](#rename-the-paywall-apis-to-flows)
+3. [Update listeners and handlers](#update-listeners-and-handlers)
+4. [Fix the compile errors](#fix-the-compile-errors)
+5. [Review the runtime behavior changes](#review-the-runtime-behavior-changes)
+6. [Optional](#optional)
 
-## Install the SDK dependencies
+## Before you upgrade
 
-v4.0 requires **Unity 2022.3 or later** and two packages:
+**Unity 2022.3 or later**, and two packages:
 
-| Package | Comes from | Installed for you |
-|---|---|---|
-| `com.unity.nuget.newtonsoft-json` 3.2.2 | Unity registry | Yes, with Package Manager |
-| `com.google.external-dependency-manager` 1.2.188 | OpenUPM | No — it is a peer dependency, as in v3 |
+| Package | Comes from | Installed for you | Needed by |
+|---|---|---|---|
+| `com.unity.nuget.newtonsoft-json` 3.2.2 | Unity registry | Yes, with Package Manager | compile time — the SDK assembly is gated on it |
+| `com.google.external-dependency-manager` 1.2.188 | OpenUPM | No — a peer dependency, as in v3 | iOS build — it resolves the Swift package. Android does not go through it |
 
-Newtonsoft.Json replaces the JSON parser that used to ship inside the SDK, so this dependency is new
-in v4.0. The SDK installs whichever package is missing, together with the OpenUPM scoped registry
-that External Dependency Manager is published on. It also upgrades an External Dependency Manager
-older than 1.2.188 — v3 declared 1.2.187, so a project coming from it has one:
+Newtonsoft.Json replaces the JSON parser that used to ship inside the SDK, so it is new in v4.0. One
+menu item installs whichever is missing, adds the OpenUPM registry, and upgrades an External
+Dependency Manager below 1.2.188 — v3 declared 1.2.187, so a project coming from it has one:
 
 > **Adapty SDK > Install Dependencies**
 
-### Which Unity versions this was verified on
+A copy of External Dependency Manager installed from Google's own `.unitypackage` under `Assets/`
+has no version Package Manager can read. It is left alone with a warning, and you update it
+yourself.
 
-The steps above were run end to end on **2022.3**, the declared floor: a clean `.unitypackage` import
-into a project with no Newtonsoft, then **Adapty SDK > Install Dependencies**, then a compile. No
-errors at any stage.
+**Installing from a `.unitypackage`: add `com.unity.nuget.newtonsoft-json` before you import.** A
+`.unitypackage` carries assets only and cannot touch your project manifest. Without Newtonsoft the
+SDK assembly is skipped, your calls into Adapty stop compiling (`error CS0103: The name 'Adapty'
+does not exist in the current context`), and the menu item above is unavailable — Unity does not
+load the Editor assembly it lives in while your scripts fail to compile. Recover through **Window >
+Package Manager > + > Add package by name**. It has to be that package: a `Newtonsoft.Json.dll`
+dropped into `Assets/` does not satisfy the SDK, and installing the package on top of one leaves two
+copies. Delete the DLL first.
 
-Everything else behind v4.0 — player builds, device runs, the full acceptance matrix — was done on
-**Unity 6**, which is what the SDK is developed against.
+**iOS requirements changed — needed to build for iOS, not to compile.** Nothing below blocks the
+rest of this guide; the deployment target is checked by a build validator when an iOS build starts,
+and Xcode only comes in after the export, when it resolves the Swift package.
 
-### If you install from a `.unitypackage`
+| | v3 | v4 |
+|---|---|---|
+| Xcode | any recent | **26 or later** |
+| Deployment target | 13.0 | **15.0 or later**, enforced by a build validator |
+| Native dependency | CocoaPods (`iosPods`) | Swift Package Manager |
 
-**Install `com.unity.nuget.newtonsoft-json` before you import the package.**
+Stop running **Assets > External Dependency Manager > iOS Resolver > Install Cocoapods** for Adapty;
+no pod of ours appears in the Podfile any more. **Keep building
+`Unity-iPhone.xcworkspace`,** exactly as in v3 — External Dependency Manager still generates it and
+still wires `Pods_UnityFramework` into the Unity target, so building `Unity-iPhone.xcodeproj`
+directly fails with `ld: framework 'Pods_UnityFramework' not found`.
 
-A `.unitypackage` carries assets and nothing else, so it cannot add a package to your project
-manifest. Without Newtonsoft.Json the SDK assembly is skipped rather than failing to compile, which
-keeps a fresh import quiet — but in a project that already calls Adapty, your own code stops
-compiling:
+Android needs nothing from you: the dependencies are declared in an `.androidlib` module Unity
+includes in the Gradle build on its own.
 
-```
-Assets/YourScript.cs(8,19): error CS0103: The name 'Adapty' does not exist in the current context
-```
+## Rename the paywall APIs to flows
 
-The **Adapty SDK > Install Dependencies** menu item is unavailable while that lasts, because Unity
-does not load the Editor assembly it lives in while your scripts fail to compile. Recover by hand:
-open **Window > Package Manager**, choose **Add package by name** from the **+** menu (newer Editors
-label it *Install package by name*), and enter `com.unity.nuget.newtonsoft-json`. Compilation
-recovers, and from then on the menu item is available for External Dependency Manager.
-
-Newtonsoft.Json has to arrive as that package. A `Newtonsoft.Json.dll` dropped into `Assets/`, which
-some other SDKs ship, does not set the version define the SDK assembly is gated on, so the SDK stays
-uncompiled. Delete that DLL first, then add the package — installing the package on top would leave
-two copies of Newtonsoft in the project, which breaks compilation a different way.
-
-The SDK reports both states in the Editor console, but only once its Editor assembly loads. While
-your own scripts fail to compile, nothing of ours runs and you are on the manual path above.
-
-## Fetch flows instead of paywalls
-
-`GetPaywall` becomes `GetFlow` and no longer takes a locale. A flow is localized when its view is
-built, so the locale moved to `AdaptyUICreateFlowViewParameters.Locale`.
+`AdaptyPaywall` becomes `AdaptyFlow`, and a flow is not a paywall — it holds the paywall variations.
 
 ```csharp
 - Adapty.GetPaywall("YOUR_PLACEMENT_ID", "en", (paywall, error) => { });
 + Adapty.GetFlow("YOUR_PLACEMENT_ID", (flow, error) => { });
-```
 
-The overloads that take an `AdaptyPlacementFetchPolicy` and a load timeout keep their shape, minus
-the locale:
-
-```csharp
-- Adapty.GetPaywall("YOUR_PLACEMENT_ID", null, fetchPolicy, timeout, (paywall, error) => { });
-+ Adapty.GetFlow("YOUR_PLACEMENT_ID", fetchPolicy, timeout, (flow, error) => { });
-```
-
-`GetPaywallForDefaultAudience` becomes `GetFlowForDefaultAudience`. `GetPaywallProducts` keeps its
-name and now takes an `AdaptyFlow`.
-
-## Update the flow model
-
-`AdaptyPaywall` becomes `AdaptyFlow`. A flow is not a paywall — it holds the paywall variations:
-
-```csharp
-- IList<AdaptyPaywall.ProductReference> products = paywall.Products;
-+ IReadOnlyList<AdaptyFlowPaywall> paywalls = flow.Paywalls;
-```
-
-| v3 on `AdaptyPaywall` | v4 on `AdaptyFlow` |
-|---|---|
-| `RemoteConfig` | `RemoteConfigs`, one per configured language. `RemoteConfig` still exists and returns the first |
-| `Products` | `ProductIdentifiers`, or `GetPaywallProducts(flow)` |
-| `HasViewConfiguration` | removed — `CreateFlowView` returns an error instead |
-| — | `Paywalls`, the paywall variations of the flow |
-| — | `FlowVersionId`, nullable |
-
-`Placement`, `InstanceIdentity`, `Name`, `VariationId`, `ProductIdentifiers` and `VendorProductIds`
-keep their names.
-
-`AdaptyUIPaywallView` becomes `AdaptyUIFlowView`, and `AdaptyPaywallProduct` keeps its name and
-gains `FlowProductId`, nullable.
-
-### Product references are gone, not renamed
-
-Both ways of reading product references off a paywall are removed, and there is no drop-in
-replacement:
-
-- `paywall.Products`, the list of `AdaptyPaywall.ProductReference`;
-- `AdaptyProductReference`, which in v3 was a public type you could construct yourself, with
-  `VendorProductId`, `PromotionalOfferId`, `WinBackOfferId`, `AndroidBasePlanId` and
-  `AndroidOfferId` on it.
-
-`AdaptyFlowPaywall.ProductReference` exists in v4, but it is not that type under a new name: its
-constructor is private, its fields are internal, and no public member of `AdaptyFlowPaywall` returns
-one. Do not migrate to it — you cannot write that code through the public API.
-
-Migrate by what you were reading the reference for:
-
-| You needed | In v4 |
-|---|---|
-| The product ids of a flow | `flow.ProductIdentifiers` or `flow.VendorProductIds` |
-| The products themselves | `Adapty.GetPaywallProducts(flow, ...)`, giving `AdaptyPaywallProduct` |
-| Access level, product type | `product.AccessLevelId`, `product.ProductType` |
-| Offer id and kind | `product.Subscription.Offer.Identifier` and `.Type` |
-| Android base plan | `product.Subscription.BasePlanId`, or `identifier.BasePlanId` |
-
-`AdaptyProductIdentifier` carries `VendorProductId` and `BasePlanId` only, so anything else has to
-come from the fetched product.
-
-## Rename view creation and presentation methods
-
-The view methods stay on `AdaptyUI` and take a flow:
-
-```csharp
 - AdaptyUI.CreatePaywallView(paywall, parameters, (view, error) => { });
 + AdaptyUI.CreateFlowView(flow, parameters, (view, error) => { });
 
@@ -156,37 +83,65 @@ The view methods stay on `AdaptyUI` and take a flow:
 + AdaptyUI.DismissFlowView(view, (error) => { });
 ```
 
-`AdaptyUICreatePaywallViewParameters` becomes `AdaptyUICreateFlowViewParameters`. It keeps its
-fields and adds `Locale`, which selects the localization to render, and `EnableSafeAreaPaddings`,
-which is Android only and defaults to `true`.
+| v3 | v4 |
+|---|---|
+| `Adapty.GetPaywall` | `Adapty.GetFlow` — **no locale argument**; it moved to `AdaptyUICreateFlowViewParameters.Locale`, since a flow is localized when its view is built |
+| `Adapty.GetPaywallForDefaultAudience` | `Adapty.GetFlowForDefaultAudience` |
+| `Adapty.GetPaywallProducts(paywall, ...)` | same name, takes an `AdaptyFlow` |
+| `Adapty.LogShowPaywall` | `Adapty.LogShowFlow`, takes an `AdaptyFlow`. Same variation, so funnels and A/B tests carry over |
+| `AdaptyUIPaywallView` | `AdaptyUIFlowView` |
+| `AdaptyUICreatePaywallViewParameters` | `AdaptyUICreateFlowViewParameters` — same fields, plus `Locale` and `EnableSafeAreaPaddings` (Android only, defaults to `true`) |
+| `paywall.RemoteConfig` | `flow.RemoteConfigs`, one per configured language. `RemoteConfig` still exists and returns the first |
+| `paywall.Products` | `flow.ProductIdentifiers`, or `GetPaywallProducts(flow, ...)` |
+| `paywall.HasViewConfiguration` | removed — `CreateFlowView` returns an error instead |
+| — | `flow.Paywalls`, the paywall variations; `flow.FlowVersionId`, nullable |
+| — | `AdaptyUI.OpenUrl` and `AdaptyUI.RequestAppReview` are new |
 
-`LogShowPaywall` becomes `LogShowFlow` and takes an `AdaptyFlow`. It logs against the same
-variation, so existing funnels and A/B tests carry over.
+`Placement`, `InstanceIdentity`, `Name`, `VariationId`, `ProductIdentifiers` and `VendorProductIds`
+keep their names on `AdaptyFlow`. `AdaptyPaywallProduct` keeps its name and gains `FlowProductId`,
+nullable.
 
-Two methods are new on `AdaptyUI`: `OpenUrl` and `RequestAppReview`.
+The members deprecated in v3.14 are gone with the type:
 
-## Update the web paywall methods
+| Removed from `AdaptyPaywall` | Use instead |
+|---|---|
+| `PlacementId`, `AudienceName`, `ABTestName`, `Revision` | `flow.Placement.Id`, `.AudienceName`, `.ABTestName`, `.Revision` |
+| `RemoteConfigString`, `Locale` | `flow.RemoteConfig.Data`, `flow.RemoteConfig.Locale` |
 
-`CreateWebPaywallUrl` and `OpenWebPaywall` took an `AdaptyPaywall` in v3 and take an
-`AdaptyFlowPaywall` in v4 — one variation out of the flow, not the flow itself:
+### Product references have no replacement
+
+`paywall.Products` and the public `AdaptyProductReference` are both gone.
+`AdaptyFlowPaywall.ProductReference` is not that type renamed — it is internal, and no public member
+returns one, so you cannot write that code. Migrate by what you read the reference for:
+
+| You needed | In v4 |
+|---|---|
+| The product ids of a flow | `flow.ProductIdentifiers` or `flow.VendorProductIds` |
+| The products themselves | `Adapty.GetPaywallProducts(flow, ...)`, giving `AdaptyPaywallProduct` |
+| Access level, product type | `product.AccessLevelId`, `product.ProductType` |
+| Offer id and kind | `product.Subscription.Offer.Identifier` and `.Type` |
+| Android base plan | `product.Subscription.BasePlanId`, or `identifier.BasePlanId` |
+
+`AdaptyProductIdentifier` carries `VendorProductId` and `BasePlanId` only; anything else comes from
+the fetched product.
+
+### Web paywalls take one variation
+
+`CreateWebPaywallUrl` and `OpenWebPaywall` took an `AdaptyPaywall` and now take an
+`AdaptyFlowPaywall` — one variation out of the flow, not the flow itself. Pick the one you mean:
 
 ```csharp
 - AdaptyPaywall paywall = ...;
 + AdaptyFlowPaywall paywall = flow.Paywalls[index];
 
   Adapty.CreateWebPaywallUrl(paywall, (url, error) => { });
-  Adapty.OpenWebPaywall(paywall, openIn, (error) => { });
 ```
 
-`flow.Paywalls` holds every variation of the flow, so pick the one you mean to open rather than
-assuming there is exactly one.
+The overloads taking an `AdaptyPaywallProduct` are unchanged.
 
-The overloads that take an `AdaptyPaywallProduct` are unchanged, so code that opened a web paywall
-from a product needs no edit.
+## Update listeners and handlers
 
-## Update event listeners
-
-The listener interfaces now carry the C# `I` prefix, and the paywall one is about flows:
+The interfaces carry the C# `I` prefix, and the paywall one is about flows:
 
 ```csharp
 - public class MyListener : AdaptyEventListener, AdaptyPaywallsEventsListener
@@ -199,78 +154,88 @@ The listener interfaces now carry the C# `I` prefix, and the paywall one is abou
 | `AdaptyPaywallsEventsListener` | `IAdaptyFlowsEventsListener` |
 | `AdaptyOnboardingsEventsListener` | `IAdaptyOnboardingsEventsListener` |
 | `Adapty.SetPaywallsEventsListener` | `Adapty.SetFlowsEventsListener` |
+| `void PaywallViewDid…(AdaptyUIPaywallView view, …)` | `void FlowViewDid…(AdaptyUIFlowView view, …)` — every callback |
+| `PaywallViewDidFailRendering` | `FlowViewDidReceiveError`, which also fires for other runtime errors |
 
-Every callback changes its `PaywallView` prefix to `FlowView`, and one changes name outright:
-
-```csharp
-- void PaywallViewDidFailRendering(AdaptyUIPaywallView view, AdaptyError error);
-+ void FlowViewDidReceiveError(AdaptyUIFlowView view, AdaptyError error);
-```
-
-`FlowViewDidReceiveError` fires for rendering errors and for other runtime errors.
-
-Two handler interfaces are new, both registered on `Adapty`, and each brings two callbacks you have
-to implement:
+Two handler interfaces are new, each with two callbacks you implement, plus one new callback on the
+flows listener:
 
 | Interface | Registered with | Callbacks |
 |---|---|---|
 | `IAdaptyUISystemRequestsHandler` | `Adapty.SetSystemRequestsHandler` | `FlowViewDidAskPermission`, `FlowViewDidRequestAppReview` |
 | `IAdaptyUIObserverModeResolver` | `Adapty.SetObserverModeResolver` | `FlowViewDidInitiatePurchase`, `FlowViewDidInitiateRestore` |
+| `IAdaptyFlowsEventsListener` | `Adapty.SetFlowsEventsListener` | `FlowViewDidReceiveAnalyticEvent` |
 
-Implement `IAdaptyUIObserverModeResolver` only if you run in Observer mode. A permission request
-must be answered exactly once.
+Three rules about the new callbacks:
 
-`IAdaptyFlowsEventsListener` gains one callback of its own, `FlowViewDidReceiveAnalyticEvent` — five
-new callbacks in total.
+- **Answer a permission request exactly once.** Until `respond` runs the flow stays pending;
+  dismissing the view resolves it as denied.
+- **`FlowViewDidRequestAppReview` must call `AdaptyUI.RequestAppReview`** to keep the default
+  behavior. An empty body is worse than registering no handler, because with no handler the SDK
+  makes that call for you.
+- **Implement `IAdaptyUIObserverModeResolver` only if you run in Observer mode.**
 
-`FlowViewDidAskPermission`, `FlowViewDidRequestAppReview` and `FlowViewDidReceiveAnalyticEvent` all
-fire today. The first two have to do something. Answering the permission request is what releases
-the flow: until `respond` runs it stays pending, and dismissing the view resolves it as denied.
-`FlowViewDidRequestAppReview` should call `AdaptyUI.RequestAppReview` to keep the default behavior;
-an empty body there is worse than registering no handler at all, because with no handler the SDK
-makes that call for you. `FlowViewDidReceiveAnalyticEvent` is the one you may leave empty — just
-know it is a live event you are dropping, not a placeholder.
+`FlowViewDidReceiveAnalyticEvent` is the one you may leave empty — it is a live event you are
+dropping, not a placeholder.
 
-## Replace members removed in v4.0
+## Fix the compile errors
 
-v4.0 drops what v3 had already deprecated. If you build with warnings visible, you have seen these
-already.
+Renames, first:
 
-```csharp
-- Adapty.SetFallbackPaywalls("fallback.json", (error) => { });
-+ Adapty.SetFallback("fallback.json", (error) => { });
+| v3 | v4 |
+|---|---|
+| `Adapty.SetFallbackPaywalls` | `Adapty.SetFallback` |
+| `builder.SetIDFACollectionDisabled` | `builder.SetAppleIDFACollectionDisabled` |
+| `Adapty.GetLoglevel` | `Adapty.GetLogLevel` — a typo fixed, so there was no v3 warning for this one |
 
-- builder.SetIDFACollectionDisabled(true);
-+ builder.SetAppleIDFACollectionDisabled(true);
-```
-
-One more rename is a typo rather than a deprecation, so there is no v3 warning you will have seen
-for it. `GetLoglevel` is spelled `GetLogLevel` now, matching its own `SetLogLevel` and the name the
-cross-platform contract has always used for the operation:
-
-```csharp
-- Adapty.GetLoglevel((level, error) => { });
-+ Adapty.GetLogLevel((level, error) => { });
-```
-
-The `AdaptyPaywall` members deprecated in v3.14 are gone with the type itself. `AdaptyFlow` has no
-replacements for them — use what the v3 warnings pointed at:
+Removed with a replacement:
 
 | Removed | Use instead |
 |---|---|
-| `PlacementId` | `flow.Placement.Id` |
-| `AudienceName` | `flow.Placement.AudienceName` |
-| `ABTestName` | `flow.Placement.ABTestName` |
-| `Revision` | `flow.Placement.Revision` |
-| `RemoteConfigString` | `flow.RemoteConfig.Data` |
-| `Locale` | `flow.RemoteConfig.Locale` |
+| `AdaptyProfile.NonSubscription.IsOneTime` | `IsConsumable`, which it returned unchanged |
+| `AdaptyPlacement.GetIsTrackingPurchases` | `IsTrackingPurchases`, the field it wrapped |
+| `AdaptyInstallationStatusNotAvailable`, `AdaptyInstallationStatusNotDetermined`, `AdaptyInstallationStatusDetermined` | `AdaptyInstallationStatus.Status` and `.Details`, see below |
+| `AdaptyErrorCode.PendingPurchase` (25) | `AdaptyPurchaseResultType.Pending`, see below |
+| `AdaptyErrorCode.InvalidJson` (23) | nothing — no native SDK can raise it |
+| The `AdaptySDK.SimpleJSON` namespace, and the `ToJSONNode` extension classes `AdaptyRefundPreferenceExtensions`, `AdaptyUIIOSPresentationStyleExtensions`, `AdaptyUIOnboardingMetaExtensions`, `AdaptyWebPresentationExtensions` | Newtonsoft.Json, now a dependency of the package and available to your assemblies |
 
-Two `AdaptyErrorCode` members are gone: `InvalidJson` (23) and `PendingPurchase` (25). Neither
-number is declared by either native SDK — not at the versions v4.0 pins, and not at the 3.17.2 both
-of them were on for v3 — so nothing could raise either one and a `case` on it was already dead.
+Changed types and shapes:
+
+| Member | Change |
+|---|---|
+| Collections on `AdaptyProfile`, `AdaptyFlow`, `AdaptyFlowPaywall`, `AdaptySubscriptionOffer`, `AdaptyRemoteConfig`, and the `GetPaywallProducts` callback | `IList<T>` → `IReadOnlyList<T>`, `IDictionary<K, V>` → `IReadOnlyDictionary<K, V>`. `AdaptyProfile.NonSubscriptions` is read-only at both levels |
+| The four `AdaptyUICreateFlowViewParameters` setters, `UpdateAttribution`, `AdaptyProfileParameters.CustomAttributes` | take an `IReadOnlyDictionary` and **copy** it, so filling your dictionary afterwards no longer changes the view. The four matching members are read-only properties — assign through the setters |
+| `FlowViewDidReceiveAnalyticEvent`, `FlowViewDidAskPermission` | take `IReadOnlyDictionary` instead of `IDictionary`. The analytics parameter is renamed `@params` → `parameters`, which matters only for a named argument |
+| Every concrete public class | `sealed`. If you derived from one, hold it as a field instead of inheriting it |
+| `AdaptyPlacementFetchPolicy.Default`, `.ReloadRevalidatingCacheData`, `.ReturnCacheDataElseLoad` | `readonly` — reading is unchanged, assigning no longer compiles |
+| `AdaptyConfiguration.Builder.ServerCluster` | `AdaptyServerCluster?` where it was `AdaptyServerCluster`. `SetServerCluster` is unchanged |
+
+Reading a read-only collection is unaffected — `foreach` and LINQ included. Writing needs a copy
+first, which `ToDictionary` from `System.Linq` does in one line:
+
+```csharp
+- profile.CustomAttributes["seen_intro"] = true;
++ var attributes = profile.CustomAttributes.ToDictionary(pair => pair.Key, pair => pair.Value);
++ attributes["seen_intro"] = true;
+```
+
+`AdaptyInstallationStatus` is one sealed type instead of a base class and three subclasses.
+`GetCurrentInstallationStatus` still hands back an `AdaptyInstallationStatus`; you switch on its
+`Status`, and `Details` is non-null exactly when that is `Determined`:
+
+```csharp
+- if (status is AdaptyInstallationStatusDetermined determined)
+- {
+-     Debug.Log(determined.Details.InstallId);
+- }
++ if (status.Status == AdaptyInstallationStatusType.Determined)
++ {
++     Debug.Log(status.Details.InstallId);
++ }
+```
 
 A pending purchase is a result rather than an error, so the check moves to the other branch of the
-callback. It cannot stay where it was: on the error path the result is null.
+callback — on the error path the result is null:
 
 ```csharp
 Adapty.MakePurchase(product, (result, error) =>
@@ -285,153 +250,31 @@ Adapty.MakePurchase(product, (result, error) =>
 });
 ```
 
-`InvalidJson` has no replacement.
-
-The `AdaptySDK.SimpleJSON` namespace went with the parser it belonged to, together with its public
-types — `JSON`, `JSONNode`, `JSONObject`, `JSONArray` and the rest — and with the `ToJSONNode`
-extension classes that came with them, `AdaptyUIIOSPresentationStyleExtensions`,
-`AdaptyUIOnboardingMetaExtensions`, `AdaptyWebPresentationExtensions` and
-`AdaptyRefundPreferenceExtensions`. Code that only calls the
-SDK is unaffected; code that used those types directly can move to Newtonsoft.Json, which is now a
-dependency of the package and available to your assemblies too.
-
-The collections a response model hands back are read-only. `IList<T>` became `IReadOnlyList<T>` and
-`IDictionary<K, V>` became `IReadOnlyDictionary<K, V>` on `AdaptyProfile`, `AdaptyFlow`,
-`AdaptyFlowPaywall`, `AdaptySubscriptionOffer` and `AdaptyRemoteConfig`, and in the callback of
-`GetPaywallProducts`. Reading, `foreach` and LINQ are unaffected; code that wrote into one has to
-copy first, which `ToDictionary` from `System.Linq` does in one line:
-
-```csharp
-- profile.CustomAttributes["seen_intro"] = true;
-+ var attributes = profile.CustomAttributes.ToDictionary(pair => pair.Key, pair => pair.Value);
-+ attributes["seen_intro"] = true;
-```
-
-`AdaptyProfile.NonSubscriptions` is read-only at both levels, so its declared type is now
-`IReadOnlyDictionary<string, IReadOnlyList<NonSubscription>>`.
-
-On the way in, the four `AdaptyUICreateFlowViewParameters` setters take an `IReadOnlyDictionary` and
-**copy** it, so filling your dictionary after handing it over no longer changes the view; the four
-matching members are read-only properties instead of public fields, so assign through the setters.
-`UpdateAttribution` and `AdaptyProfileParameters.CustomAttributes` moved the same way.
-
-If you implement `IAdaptyFlowsEventsListener` or `IAdaptyUISystemRequestsHandler`, two signatures
-need `IReadOnlyDictionary` where they said `IDictionary` — `FlowViewDidReceiveAnalyticEvent` and
-`FlowViewDidAskPermission`. The third parameter of the first is also renamed from `@params`
-to `parameters`, which matters only if you passed it as a named argument.
-
-The deprecated onboarding API keeps the collection types it had — it is maintained until it is
-removed, not brought in line.
-
-The models are `sealed`. If you derived from one, you cannot any more — but for a response model you
-already could not: it has no constructor your code can reach, private or `internal`, so a subclass
-never compiled. What changes in practice is the eleven input types, where a public constructor did
-allow it: the parameter objects, the three builders, `AdaptyCustomerIdentity` and
-`AdaptyProductIdentifier`. There is no replacement seam,
-because there was never anything to extend — no model declares a `virtual` or `protected` member,
-and a subclass reaching the SDK was serialized by the declared contract, so whatever it added was
-dropped on the way out. `AdaptyCustomAsset` and the three legacy onboarding hierarchies keep their
-abstract roots, since the wire contract picks between their branches.
-
-`AdaptyInstallationStatus` is one sealed type instead of a base class and three subclasses.
-`GetCurrentInstallationStatus` still hands back an `AdaptyInstallationStatus`; what you switch on is
-now its `Status`, and `Details` is on the same object:
-
-```csharp
-- if (status is AdaptyInstallationStatusDetermined determined)
-- {
--     Debug.Log(determined.Details.InstallId);
-- }
-+ if (status.Status == AdaptyInstallationStatusType.Determined)
-+ {
-+     Debug.Log(status.Details.InstallId);
-+ }
-```
-
-`AdaptyInstallationStatusNotAvailable`, `AdaptyInstallationStatusNotDetermined` and
-`AdaptyInstallationStatusDetermined` are gone, public constructors included — the type is a
-response, and only the SDK builds one. `Details` is non-null exactly when `Status` is `Determined`.
-
-Two members that only forwarded to another one are gone:
-
-| Removed | Use instead |
-|---|---|
-| `AdaptyProfile.NonSubscription.IsOneTime` | `IsConsumable`, which it returned unchanged |
-| `AdaptyPlacement.GetIsTrackingPurchases` | `IsTrackingPurchases`, the field it wrapped. It is a `bool?`, but never arrives null: a missing key leaves the declared `false` |
-
-## Move off the legacy onboarding API
-
-`GetOnboarding`, `GetOnboardingForDefaultAudience`, `AdaptyUI.CreateOnboardingView`,
-`AdaptyUI.PresentOnboardingView`, `AdaptyUI.DismissOnboardingView` and
-`Adapty.SetOnboardingsEventsListener` still work and now warn at compile time. Build onboardings as
-flows instead.
-
-The warning now covers the whole API, not only its entry points: `IAdaptyOnboardingsEventsListener`,
-`AdaptyOnboarding`, `AdaptyUIOnboardingView`, `AdaptyUIOnboardingMeta`, the
-`AdaptyOnboardingsAnalyticsEvent` hierarchy, the `AdaptyOnboardingsStateUpdatedParams` and
-`AdaptyOnboardingsInput` hierarchies, and the `AdaptyUI.ShowDialog` overload that takes an
-`AdaptyUIOnboardingView`. Naming any of them in your own code — a listener implementation, a field,
-a method signature — now warns where before only the call did.
-
-## Check the behavior changes
+## Review the runtime behavior changes
 
 These compile as they are and behave differently at runtime, so the compiler will not point them
 out:
 
-- **A flow view stays open after a purchase.** Dismiss it yourself from
-  `FlowViewDidFinishPurchase` when that is what you want.
+- **A flow view stays open after a purchase.** Dismiss it yourself from `FlowViewDidFinishPurchase`
+  when that is what you want.
 - **A view is single use.** After `DismissFlowView` it is destroyed; call `CreateFlowView` again to
   show the flow again.
 - **The Android system back button no longer closes the view on its own.** It arrives in
   `FlowViewDidPerformAction` as a `SystemBack` action, which is what iOS already did.
-- **`ReportTransaction` no longer reports a decoding error on success.** In v3 it decoded the
-  response as a profile while the native side returned `{"success": true}`, so the completion
-  handler received an error even though the transaction had been reported.
-- **`AdaptyProductIdentifier` now compares by value.** Identifiers built from a flow work as
-  dictionary keys, which is what `AdaptyUICreateFlowViewParameters.SetProductPurchaseParameters`
-  expects; in v3 they were compared by reference and the parameters silently applied to nothing.
-- **`AdaptySubscriptionOfferType` gained `Code`** (iOS only). The existing members keep their
-  values, but a `switch` that was exhaustive in v3 is not exhaustive now — give it a default branch.
-  A string the contract does not list still fails the read, exactly as in v3.
-- **A call in the Editor reports an error rather than appearing to work.** The SDK talks to the
-  native iOS and Android libraries, which the Editor does not have, so every method now completes
-  with a readable "not supported on this platform" error. Three of them used to hand back a null
-  error there — `UpdateAppStoreCollectingRefundDataConsent`, `UpdateAppStoreRefundPreference` and
-  `PresentCodeRedemptionSheet` — which is indistinguishable from success, so Editor code that
-  treated them as having worked will now see the error. On a device nothing changes.
+- **`AdaptySubscriptionOfferType` gained `Code`** (iOS only). Existing members keep their values, but
+  a `switch` that was exhaustive in v3 is not exhaustive now — give it a default branch.
 
-## Update the native dependencies
+## Optional
 
-v4.0 pins iOS 4.0.2 and Android 4.0.1, against cross-platform contract 4.0.2.
+**Remove workarounds you no longer need.** Three v3 defects are fixed, so code written around them
+can go: `ReportTransaction` no longer reports a decoding error on success, `AdaptyProductIdentifier`
+compares by value so identifiers from a flow work as dictionary keys, and a call in the Editor
+returns a readable "not supported on this platform" error instead of a null one that looked like
+success. The full list of fixes is in the changelog.
 
-**iOS moves from CocoaPods to Swift Package Manager.** In v3 the SDK declared `iosPods`; in v4 it
-declares a remote Swift package, which External Dependency Manager adds to the generated Xcode
-project as a package reference. You no longer run
-**Assets > External Dependency Manager > iOS Resolver > Install Cocoapods** for Adapty, and no pod
-of ours appears in the Podfile.
+**Move off the legacy onboarding API.** `GetOnboarding`, `AdaptyUI.CreateOnboardingView` and the
+rest still work and now warn at compile time. Build onboardings as flows instead.
 
-**Keep building the workspace.** External Dependency Manager still generates `Podfile` and
-`Unity-iPhone.xcworkspace` — with no pods in them — and still wires `Pods_UnityFramework` into the
-Unity target. Building `Unity-iPhone.xcodeproj` directly fails at link time with
-`ld: framework 'Pods_UnityFramework' not found`; the same tree builds from
-`Unity-iPhone.xcworkspace`. Open and build the workspace exactly as you did in v3.
-
-External Dependency Manager has to be 1.2.188 or later. Swift Package Manager support arrived in
-1.2.187, and 1.2.188 is what determines the Xcode project path correctly for the Swift project type
-it generates. **Adapty SDK > Install Dependencies** upgrades a package-managed copy for you; one
-installed from Google's own `.unitypackage` under `Assets/` has no version Package Manager can read,
-so it is left alone with a warning and you have to update it yourself. The iOS deployment target
-moves from 13.0 to **15.0 or later**, which a build validator enforces in the Editor.
-
-**Xcode moves to 26 or later.** AdaptySDK-iOS 4.0 declares `swift-tools-version: 6.2`, where the
-3.17.2 that v3 pinned declared 6.0. Swift Package Manager refuses a package whose tools version is
-newer than the installed toolchain, so on Xcode 16 the build fails while resolving the dependency,
-before anything is compiled. Nothing in Unity can check this for you — the Editor never sees which
-Xcode will open the generated project.
-
-The Android dependencies are declared in an `.androidlib` module that Unity includes in the Gradle
-build on its own.
-
-If your app ships in the App Store Kids Category, v4.0 adds the `ADAPTY_KIDS_MODE` scripting define,
-which compiles IDFA, AdSupport and AppTrackingTransparency out of the iOS binary. See the
-[README](README.md#kids-mode-on-ios) for how to set it.
+**Kids Mode.** If your app ships in the App Store Kids Category, v4.0 adds the `ADAPTY_KIDS_MODE`
+scripting define, which compiles IDFA, AdSupport and AppTrackingTransparency out of the iOS binary.
+See the [README](README.md#kids-mode-on-ios) for how to set it.
