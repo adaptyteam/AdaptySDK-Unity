@@ -40,7 +40,9 @@ dictionary-object -> n=Int64 nested=JObject
 What this settles:
 
 - **`readonly` fields are assigned under AOT** — public and private alike, including value types
-  and enums. Keeping the SDK's 155 `readonly` fields as they are is safe.
+  and enums. Keeping the SDK's `readonly` fields as they are is safe. (The count this line used to
+  carry, 155, matched no reading of the tree even when it was written: `public readonly` under
+  `Runtime/` is 148 and every `readonly` field is 196. It bought nothing the sentence needs.)
 - **`AdaptyContractResolver` works on IL2CPP**: a missing required field throws, and so does an
   explicit null once `Required.AllowNull` is raised to `Required.Always`.
 - **`[EnumMember]` names are used on write.**
