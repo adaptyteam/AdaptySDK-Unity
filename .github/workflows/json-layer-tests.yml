@@ -49,8 +49,7 @@ jobs:
           # sources compile: on iOS it forces apple_idfa_collection_disabled, because the trait has
           # compiled IDFA out of the binary. Without a leg of its own the three configuration
           # snapshots it moves are approved for no one - the run simply failed all three.
-          # %3B is MSBuild's escape for the ';' separating the two defines; a literal one would be
-          # read by the shell as the end of the command.
+          # %3B escapes the ';' separating the two defines inside the MSBuild property value.
           - name: UNITY_IOS-kids
             defines: "UNITY_IOS%3BADAPTY_KIDS_MODE"
     name: ${{ matrix.name }}
