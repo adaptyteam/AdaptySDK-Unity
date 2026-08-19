@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.adapty.internal</groupId>
   <artifactId>unity-wrapper</artifactId>
-  <version>4.0.1</version>
+  <version>4.1.0</version>
   <packaging>aar</packaging>
   <dependencies/>
 </project>
