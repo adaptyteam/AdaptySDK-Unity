@@ -10,7 +10,7 @@
 
 <p align="center">
 <a href="https://discord.com/invite/subscriptions-hub"><img src="https://img.shields.io/badge/Adapty-discord-purple"></a>
-<a href="https://github.com/adaptyteam/AdaptySDK-Unity/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg"></a>
+<a href="https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg"></a>
 </p>
 
 <p align="center">
@@ -21,7 +21,13 @@
 
 ![Adapty: CRM for mobile apps with subscriptions](https://adapty-portal-media-production.s3.amazonaws.com/github/adapty-schema.png)
 
-Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/adaptyteam/AdaptySDK-iOS) and [Adapty Android SDK](https://github.com/adaptyteam/AdaptySDK-Android). Both SDKs are written in pure Swift/Kotlin and support iOS 9+, Android 4.1+ which fit for 99.9% users all wrapped into C# lib.
+Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/adaptyteam/AdaptySDK-iOS) and [Adapty Android SDK](https://github.com/adaptyteam/AdaptySDK-Android). Both SDKs are written in pure Swift/Kotlin, all wrapped into a C# lib.
+
+Requires Unity 2022.3 or newer and Android API 21 or newer. iOS builds require **Xcode 26 or newer**
+and a deployment target of 15.0 or newer: AdaptySDK-iOS 4.0 is a `swift-tools-version: 6.2` package,
+and an older toolchain refuses to resolve it. Open the exported project as
+**`Unity-iPhone.xcworkspace`** — building `Unity-iPhone.xcodeproj` directly fails at link time with
+`ld: framework 'Pods_UnityFramework' not found`.
 
 ## Why Adapty?
 
@@ -41,7 +47,7 @@ Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/
 
 **Adapty handles everything, from free trials to refunds, in a simple, developer-friendly SDK.**
 
-- Free trials, upgrades, downgrades, crossgrades, family sharing, renewals, promo offers, intro offers, promo codes, and more – Adapty SDK does everything with a single line of code.
+- Free trials, upgrades, downgrades, crossgrades, family sharing, renewals, promo offers, intro offers, promo codes, and more – Adapty SDK handles them all through one API.
 - Easy subscription management.
 - One-time purchases and lifetime subscriptions supported.
 - Sync subscribers' states across iOS, Android, and Web.
@@ -78,7 +84,57 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 
 ## Get started
 
-Follow our [quickstart guide](https://adapty.io/docs/unity-sdk-overview#get-started?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
+Follow our [quickstart guide](https://adapty.io/docs/unity-sdk-overview?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-Unity#get-started) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
+
+**v4 works in flows.** Paywalls and onboardings are both fetched with `Adapty.GetFlow` and shown
+with `AdaptyUI.CreateFlowView`, whether you built them in the Paywall Builder or the new Flow
+Builder. The separate onboarding API of v3 still works but is deprecated and warns at compile time,
+so start new integrations on flows.
+
+**Installing with Package Manager:** *Add package from git URL*, with the path suffix — the package
+does not sit at the repository root — and the version suffix, which pins the tag:
+
+```
+https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.0.0-beta.2
+```
+
+Drop `#4.0.0-beta.2` and Package Manager resolves the default branch, which carries the previous
+major until a release merges this one into it — so an unpinned URL installs 3.17 and says nothing
+about it.
+
+The SDK depends on `com.unity.nuget.newtonsoft-json`, which Package Manager installs for you and
+which every platform needs — the SDK assembly is gated on it. It also depends on External Dependency
+Manager, but only for iOS, where it resolves the Swift package; Android never goes through it, since
+its dependencies ship in a bundled `.androidlib` that Unity adds to the Gradle build itself. Neither
+dependency can arrive with a `.unitypackage`, which carries assets only.
+
+**Installing from a `.unitypackage`:** take the latest from
+[Releases](https://github.com/adaptyteam/AdaptySDK-Unity/releases), and add
+`com.unity.nuget.newtonsoft-json` **before** importing. Until it is there the SDK assembly is skipped
+by a define constraint, so your calls into Adapty will not compile. **Adapty SDK > Install
+Dependencies** is what fixes that, and it lives in an Editor assembly carrying no such constraint —
+so it is available as long as the rest of your scripts still compile. Once they do not, because they
+are the code calling Adapty, Unity stops loading Editor assemblies and Newtonsoft has to come from
+Package Manager by hand. With Newtonsoft in place, that menu item adds whatever else is missing,
+including the OpenUPM scoped registry External Dependency Manager is published on.
+
+**Upgrading from 3.x: delete `Assets/AdaptySDK` before importing.** A `.unitypackage` never removes
+files, and 4.0 drops 62 sources that 3.x shipped — the whole `JSON/` folder among them. Left where
+they are, they compile into the same assembly as the new ones: 35 of them redeclare a type 4.0 also
+declares, and the rest reference types it no longer has. Either way the SDK does not
+compile, and because the assembly is gated on Newtonsoft the errors appear only once Newtonsoft is
+installed.
+
+It also upgrades an External Dependency Manager older than the SDK needs — but only one installed as
+a package. A copy imported from Google's own `.unitypackage` under `Assets/` has no version Package
+Manager can read, so the menu item leaves it alone and warns instead; update that one yourself.
+
+Already on 3.x? [MIGRATION-v3.17-to-v4.0.md](MIGRATION-v3.17-to-v4.0.md) covers the move to 4.0 — the renamed paywall API, the
+new Newtonsoft.Json dependency, and the order to install things in.
+
+Read the [release notes and known issues](Packages/com.adapty.unity-sdk/CHANGELOG.md) before you
+integrate: they carry the limitations of the pinned native SDKs, which no amount of configuration on
+your side will work around.
 
 ## Kids Mode on iOS
 
@@ -89,7 +145,8 @@ Apps in the App Store Kids Category must not link the advertising identifier. Ad
   AdSupport and AppTrackingTransparency are compiled out of the binary;
 - `apple_idfa_collection_disabled` is forced in the runtime configuration.
 
-Requires Xcode 26 or newer, which is where Swift package traits are supported.
+Swift package traits need Xcode 26 or newer, which is already the floor for v4 on iOS — Kids Mode
+adds no requirement of its own.
 
 Set the define in **Player Settings > Other Settings > Scripting Define Symbols**. The build step
 that enables the trait lives in an Editor assembly, and Player Settings is what Editor assemblies
@@ -116,4 +173,18 @@ So do we! Feel free to star the repo ⭐️⭐️⭐️ and make our developers 
 
 ## License
 
-Adapty is available under the MIT license. [Click here](https://github.com/adaptyteam/AdaptySDK-Unity/blob/master/LICENSE) for details.
+Adapty is available under the MIT license. [Click here](https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/LICENSE) for details.
+
+## Known issues
+
+What is open in this release, and what closing it waits on. The
+[changelog](Packages/com.adapty.unity-sdk/CHANGELOG.md) carries the full text of each under the
+version it was found in.
+
+- **Custom color and linear gradient assets are not rendered on iOS.** An asset built with
+  `AdaptyCustomAsset.Color` or `AdaptyCustomAsset.LinearGradient` and passed through
+  `AdaptyUICreateFlowViewParameters.SetCustomAssets` reaches the view as a transparent color and an
+  empty gradient: the pinned AdaptySDK-iOS 4.0.2 substitutes those for whatever it receives, and so
+  do 4.0.3 and 4.1.0, so there is no version to move the pin to. Custom image and video assets are
+  unaffected; whether Android is affected has not been established. Waiting on a native iOS
+  release, and on iOS acceptance after it.

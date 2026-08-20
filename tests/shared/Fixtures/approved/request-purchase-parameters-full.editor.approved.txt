@@ -1,0 +1,7 @@
+{
+  "is_offer_personalized": true,
+  "subscription_update_params": {
+    "old_sub_vendor_product_id": "com.adapty.sample.monthly",
+    "replacement_mode": "deferred"
+  }
+}

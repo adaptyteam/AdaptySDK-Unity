@@ -1,0 +1,7 @@
+{
+  "action": {
+    "element_id": "birthday",
+    "element_type": "date_picker",
+    "value": { "year": 2026 }
+  }
+}

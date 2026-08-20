@@ -1,17 +1,11 @@
 using System;
 using System.Collections.Generic;
-#if UNITY_IOS && !UNITY_EDITOR
-using _Adapty = AdaptySDK.iOS.AdaptyIOS;
-#elif UNITY_ANDROID && !UNITY_EDITOR
-using _Adapty = AdaptySDK.Android.AdaptyAndroid;
-#else
-using _Adapty = AdaptySDK.Noop.AdaptyNoop;
-#endif
+using System.Collections.ObjectModel;
+using AdaptySDK.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace AdaptySDK
 {
-    using AdaptySDK.SimpleJSON;
-
     /// <summary>
     /// The main class for interacting with the Adapty SDK.
     /// </summary>
@@ -20,7 +14,7 @@ namespace AdaptySDK
         /// <summary>
         /// The version of the Adapty SDK.
         /// </summary>
-        public static readonly string SDKVersion = "4.0.0";
+        public static readonly string SDKVersion = "4.0.0-beta.2";
 
         /// <summary>
         /// Use this method to initialize the Adapty SDK.
@@ -42,28 +36,10 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("configuration", configuration.ToJSONNode());
+            var parameters = new JObject();
+            parameters["configuration"] = AdaptyJson.ToNode(configuration);
 
-            Request.Send(
-                "activate",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Activate(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("activate", parameters, completionHandler);
         }
 
         /// <summary>
@@ -98,96 +74,27 @@ namespace AdaptySDK
             Action<AdaptyFlow, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("placement_id", placementId);
+            var parameters = new JObject();
+            parameters["placement_id"] = placementId;
 
             if (fetchPolicy != null)
             {
-                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+                parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
             if (loadTimeout.HasValue)
             {
-                parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
+                parameters["load_timeout"] = loadTimeout.Value.TotalSeconds;
             }
 
-            Request.Send(
-                "get_flow",
-                parameters,
-                JSONNodeExtensions.GetFlow,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlow(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
-        /// Adapty allows you remotely configure onboarding screens that will be displayed in your app.
-        /// This way you don't have to hardcode the onboarding content and can dynamically change it or run A/B tests without app releases.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the onboarding <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
-        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="loadTimeout">The timeout for the onboarding loading.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete("The legacy onboarding API is deprecated in favor of Flows. Use GetFlow instead.")]
-        public static void GetOnboarding(
-            string placementId,
-            string locale,
-            AdaptyPlacementFetchPolicy fetchPolicy,
-            TimeSpan? loadTimeout,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JSONObject();
-
-            parameters.Add("placement_id", placementId);
-
-            if (locale != null)
-            {
-                parameters.Add("locale", locale);
-            }
-
-            if (fetchPolicy != null)
-            {
-                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
-            }
-
-            if (loadTimeout.HasValue)
-            {
-                parameters.Add("load_timeout", loadTimeout.Value.TotalSeconds);
-            }
-
-            Request.Send(
-                "get_onboarding",
-                parameters,
-                JSONNodeExtensions.GetOnboarding,
-                (value, error) =>
-                {
-                    completionHandler?.Invoke(value, error);
-                }
-            );
+            AdaptyRequest.Send("get_flow", parameters, completionHandler);
         }
 
         /// <summary>
         /// This method enables you to retrieve the flow from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
         /// </summary>
         /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products#speed-up-paywall-fetching-with-default-audience-paywall">Adapty Documentation</see>
+        /// Read more at <see href="https://adapty.io/docs/fetch-paywalls-and-products#speed-up-flow-fetching-with-default-audience-flow">Adapty Documentation</see>
         /// </remarks>
         /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
         /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
@@ -198,87 +105,15 @@ namespace AdaptySDK
             Action<AdaptyFlow, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("placement_id", placementId);
+            var parameters = new JObject();
+            parameters["placement_id"] = placementId;
 
             if (fetchPolicy != null)
             {
-                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
+                parameters["fetch_policy"] = AdaptyJson.ToNode(fetchPolicy);
             }
 
-            Request.Send(
-                "get_flow_for_default_audience",
-                parameters,
-                JSONNodeExtensions.GetFlow,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyFlow,AdaptyError> completionHandler in Adapty.GetFlowForDefaultAudience(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
-        /// This method enables you to retrieve the onboarding from the Default Audience without having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
-        /// </summary>
-        /// <remarks>
-        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="placementId">The identifier of the desired placement. This is the value you specified when you created the placement in the Adapty Dashboard.</param>
-        /// <param name="locale">The identifier of the onboarding <a href="https://adapty.io/docs/add-remote-config-locale">localization</a>.</param>
-        /// <param name="fetchPolicy">By default SDK will try to load data from server and will return cached data in case of failure. Otherwise use `.returnCacheDataElseLoad` to return cached data if it exists.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use GetFlowForDefaultAudience instead."
-        )]
-        public static void GetOnboardingForDefaultAudience(
-            string placementId,
-            string locale,
-            AdaptyPlacementFetchPolicy fetchPolicy,
-            Action<AdaptyOnboarding, AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JSONObject();
-            parameters.Add("placement_id", placementId);
-
-            if (locale != null)
-            {
-                parameters.Add("locale", locale);
-            }
-
-            if (fetchPolicy != null)
-            {
-                parameters.Add("fetch_policy", fetchPolicy.ToJSONNode());
-            }
-
-            Request.Send(
-                "get_onboarding_for_default_audience",
-                parameters,
-                JSONNodeExtensions.GetOnboarding,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyOnboarding,AdaptyError> completionHandler in Adapty.GetOnboardingForDefaultAudience(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("get_flow_for_default_audience", parameters, completionHandler);
         }
 
         /// <summary>
@@ -292,30 +127,20 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains a list of <see cref="AdaptyPaywallProduct"/> objects.</param>
         public static void GetPaywallProducts(
             AdaptyFlow flow,
-            Action<IList<AdaptyPaywallProduct>, AdaptyError> completionHandler
+            Action<IReadOnlyList<AdaptyPaywallProduct>, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("flow", flow.ToJSONNode());
+            var parameters = new JObject();
+            parameters["flow"] = AdaptyJson.ToNode(flow);
 
-            Request.Send(
+            AdaptyRequest.Send<List<AdaptyPaywallProduct>>(
                 "get_paywall_products",
                 parameters,
-                JSONNodeExtensions.GetAdaptyPaywallProductList,
                 (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<IList<AdaptyPaywallProduct>,AdaptyError> completionHandler in Adapty.GetPaywallProducts(..)",
-                            e
-                        );
-                    }
-                }
+                    completionHandler?.Invoke(
+                        value is null ? null : new ReadOnlyCollection<AdaptyPaywallProduct>(value),
+                        error
+                    )
             );
         }
 
@@ -331,25 +156,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyProfile"/> object.</param>
         public static void GetProfile(Action<AdaptyProfile, AdaptyError> completionHandler)
         {
-            Request.Send(
-                "get_profile",
-                null,
-                JSONNodeExtensions.GetAdaptyProfile,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyProfile,AdaptyError> completionHandler in Adapty.GetProfile(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("get_profile", null, completionHandler);
         }
 
         /// <summary>
@@ -387,9 +194,9 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
+            var parameters = new JObject();
 
-            parameters.Add("customer_user_id", customerUserId);
+            parameters["customer_user_id"] = customerUserId;
 
             var customerIdentity = new AdaptyCustomerIdentity(
                 iosAppAccountToken,
@@ -398,28 +205,10 @@ namespace AdaptySDK
 
             if (!customerIdentity.IsEmpty)
             {
-                parameters.Add("parameters", customerIdentity.ToJSONNode());
+                parameters["parameters"] = AdaptyJson.ToNode(customerIdentity);
             }
 
-            Request.Send(
-                "identify",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Identify(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("identify", parameters, completionHandler);
         }
 
         /// <summary>
@@ -428,52 +217,16 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains a boolean value indicating whether the SDK is activated.</param>
         public static void IsActivated(Action<bool, AdaptyError> completionHandler)
         {
-            Request.Send(
-                "is_activated",
-                null,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<bool,AdaptyError> completionHandler in Adapty.IsActivated(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("is_activated", null, completionHandler);
         }
 
         /// <summary>
         /// Returns the current log level of the Adapty SDK.
         /// </summary>
         /// <param name="completionHandler">The action that will be called with the result. The result contains the current <see cref="AdaptyLogLevel"/> value.</param>
-        public static void GetLoglevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
+        public static void GetLogLevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
         {
-            Request.Send(
-                "get_log_level",
-                null,
-                JSONNodeExtensions.GetAdaptyLogLevel,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyLogLevel,AdaptyError> completionHandler in Adapty.GetLoglevel(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("get_log_level", null, completionHandler);
         }
 
         /// <summary>
@@ -486,28 +239,10 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void SetLogLevel(AdaptyLogLevel level, Action<AdaptyError> completionHandler)
         {
-            var parameters = new JSONObject();
-            parameters.Add("value", level.ToJSONNode());
+            var parameters = new JObject();
+            parameters["value"] = AdaptyJson.ToNode(level);
 
-            Request.Send(
-                "set_log_level",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetLogLevel(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("set_log_level", parameters, completionHandler);
         }
 
         /// <summary>
@@ -522,25 +257,7 @@ namespace AdaptySDK
             Action<AdaptyInstallationStatus, AdaptyError> completionHandler
         )
         {
-            Request.Send(
-                "get_current_installation_status",
-                null,
-                JSONNodeExtensions.GetInstallationStatus,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyInstallationDetails,AdaptyError> completionHandler in Adapty.GetCurrentInstallationStatus(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("get_current_installation_status", null, completionHandler);
         }
 
         /// <summary>
@@ -553,25 +270,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void Logout(Action<AdaptyError> completionHandler)
         {
-            Request.Send(
-                "logout",
-                null,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.Logout(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("logout", null, completionHandler);
         }
 
         /// <summary>
@@ -588,28 +287,10 @@ namespace AdaptySDK
             Action<string, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("paywall", paywall.ToJSONNode());
+            var parameters = new JObject();
+            parameters["paywall"] = AdaptyJson.ToNode(paywall);
 
-            Request.Send(
-                "create_web_paywall_url",
-                parameters,
-                JSONNodeExtensions.GetString,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.CreateWebPaywallUrl(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("create_web_paywall_url", parameters, completionHandler);
         }
 
         /// <summary>
@@ -626,28 +307,10 @@ namespace AdaptySDK
             Action<string, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("product", product.ToJSONNode());
+            var parameters = new JObject();
+            parameters["product"] = AdaptyJson.ToNode(new AdaptyPaywallProductRequest(product));
 
-            Request.Send(
-                "create_web_paywall_url",
-                parameters,
-                JSONNodeExtensions.GetString,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.CreateWebPaywallUrl(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("create_web_paywall_url", parameters, completionHandler);
         }
 
         /// <summary>
@@ -666,29 +329,11 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("paywall", paywall.ToJSONNode());
-            parameters.Add("open_in", openIn.ToJSONNode());
+            var parameters = new JObject();
+            parameters["paywall"] = AdaptyJson.ToNode(paywall);
+            parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.Send(
-                "open_web_paywall",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.OpenWebPaywall(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("open_web_paywall", parameters, completionHandler);
         }
 
         /// <summary>
@@ -707,29 +352,11 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("product", product.ToJSONNode());
-            parameters.Add("open_in", openIn.ToJSONNode());
+            var parameters = new JObject();
+            parameters["product"] = AdaptyJson.ToNode(new AdaptyPaywallProductRequest(product));
+            parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.Send(
-                "open_web_paywall",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.OpenWebPaywall(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("open_web_paywall", parameters, completionHandler);
         }
 
         /// <summary>
@@ -745,28 +372,10 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void LogShowFlow(AdaptyFlow flow, Action<AdaptyError> completionHandler)
         {
-            var parameters = new JSONObject();
-            parameters.Add("flow", flow.ToJSONNode());
+            var parameters = new JObject();
+            parameters["flow"] = AdaptyJson.ToNode(flow);
 
-            Request.Send(
-                "log_show_flow",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.LogShowFlow(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("log_show_flow", parameters, completionHandler);
         }
 
         /// <summary>
@@ -783,41 +392,16 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            var parameters = new JSONObject();
-            parameters.Add("consent", consent);
+#if UNITY_IOS || UNITY_EDITOR
+            var parameters = new JObject();
+            parameters["consent"] = consent;
 
-            Request.Send(
-                "update_collecting_refund_data_consent",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("update_collecting_refund_data_consent", parameters, completionHandler);
 #else
-            try
-            {
-                completionHandler?.Invoke(null);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(
-                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreCollectingRefundDataConsent(..)",
-                    e
-                );
-            }
+            AdaptyCallbacks.InvokeSafe(
+                () => completionHandler?.Invoke(null),
+                $"Failed to invoke completionHandler in {nameof(UpdateAppStoreCollectingRefundDataConsent)}(..)"
+            );
 #endif
         }
 
@@ -826,7 +410,7 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// This method is iOS-only and allows you to set how refunds should be handled for a specific user.
-        /// Read more on the <see href="https://adapty.io/docs/refund-saver#set-refund-behavior-for-a-specific-user-in-the-dashboard">Adapty Documentation</see>
+        /// Read more on the <see href="https://adapty.io/docs/refund-saver#set-refund-behavior-for-a-specific-user-in-the-sdk">Adapty Documentation</see>
         /// </remarks>
         /// <param name="refundPreference">The <see cref="AdaptyRefundPreference"/> value to set.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
@@ -835,41 +419,16 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            var parameters = new JSONObject();
-            parameters.Add("refund_preference", refundPreference.ToJSONNode());
+#if UNITY_IOS || UNITY_EDITOR
+            var parameters = new JObject();
+            parameters["refund_preference"] = AdaptyJson.ToNode(refundPreference);
 
-            Request.Send(
-                "update_refund_preference",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("update_refund_preference", parameters, completionHandler);
 #else
-            try
-            {
-                completionHandler?.Invoke(null);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(
-                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAppStoreRefundPreference(..)",
-                    e
-                );
-            }
+            AdaptyCallbacks.InvokeSafe(
+                () => completionHandler?.Invoke(null),
+                $"Failed to invoke completionHandler in {nameof(UpdateAppStoreRefundPreference)}(..)"
+            );
 #endif
         }
 
@@ -889,32 +448,14 @@ namespace AdaptySDK
             Action<AdaptyPurchaseResult, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("product", product.ToJSONNode());
+            var parameters = new JObject();
+            parameters["product"] = AdaptyJson.ToNode(new AdaptyPaywallProductRequest(product));
             if (purchaseParameters != null)
             {
-                parameters.Add("parameters", purchaseParameters.ToJSONNode());
+                parameters["parameters"] = AdaptyJson.ToNode(purchaseParameters);
             }
 
-            Request.Send(
-                "make_purchase",
-                parameters,
-                JSONNodeExtensions.GetAdaptyPurchaseResult,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyPurchaseResult, AdaptyError> completionHandler in Adapty.MakePurchase(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("make_purchase", parameters, completionHandler);
         }
 
         /// <summary>
@@ -927,38 +468,13 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void PresentCodeRedemptionSheet(Action<AdaptyError> completionHandler)
         {
-#if UNITY_IOS && !UNITY_EDITOR
-            Request.Send(
-                "present_code_redemption_sheet",
-                null,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)",
-                            e
-                        );
-                    }
-                }
-            );
+#if UNITY_IOS || UNITY_EDITOR
+            AdaptyRequest.SendVoid("present_code_redemption_sheet", null, completionHandler);
 #else
-            try
-            {
-                completionHandler?.Invoke(null);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(
-                    "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentCodeRedemptionSheet(..)",
-                    e
-                );
-            }
+            AdaptyCallbacks.InvokeSafe(
+                () => completionHandler?.Invoke(null),
+                $"Failed to invoke completionHandler in {nameof(PresentCodeRedemptionSheet)}(..)"
+            );
 #endif
         }
 
@@ -980,32 +496,14 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("transaction_id", transactionId);
+            var parameters = new JObject();
+            parameters["transaction_id"] = transactionId;
             if (variationId != null)
             {
-                parameters.Add("variation_id", variationId);
+                parameters["variation_id"] = variationId;
             }
 
-            Request.Send(
-                "report_transaction",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.ReportTransaction(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("report_transaction", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1019,25 +517,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyProfile"/> object.</param>
         public static void RestorePurchases(Action<AdaptyProfile, AdaptyError> completionHandler)
         {
-            Request.Send(
-                "restore_purchases",
-                null,
-                JSONNodeExtensions.GetAdaptyProfile,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyProfile, AdaptyError> completionHandler in Adapty.RestorePurchases(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("restore_purchases", null, completionHandler);
         }
 
         /// <summary>
@@ -1049,25 +529,7 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result. The result contains the native SDK version string.</param>
         public static void GetNativeSDKVersion(Action<string, AdaptyError> completionHandler)
         {
-            Request.Send(
-                "get_sdk_version",
-                null,
-                JSONNodeExtensions.GetString,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<string, AdaptyError> completionHandler in Adapty.GetNativeSDKVersion(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("get_sdk_version", null, completionHandler);
         }
 
         /// <summary>
@@ -1083,36 +545,15 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void SetFallback(string fileName, Action<AdaptyError> completionHandler)
         {
-            var parameters = new JSONObject();
+            var parameters = new JObject();
 
 #if UNITY_IOS && !UNITY_EDITOR
-            parameters.Add("path", UnityEngine.Application.dataPath + "/Raw/" + fileName);
+            parameters["path"] = UnityEngine.Application.dataPath + "/Raw/" + fileName;
 #elif UNITY_ANDROID && !UNITY_EDITOR
-            parameters.Add(
-                "path",
-                "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + fileName
-            );
+            parameters["path"] = "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + fileName;
 #endif
 
-            Request.Send(
-                "set_fallback",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetFallback(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("set_fallback", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1130,30 +571,11 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            var identifier = new JSONObject();
-            identifier.Add(key, value);
-            parameters.Add("key_values", identifier);
+            var parameters = new JObject();
+            var identifier = new JObject { [key] = value };
+            parameters["key_values"] = identifier;
 
-            Request.Send(
-                "set_integration_identifiers",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.SetIntegrationIdentifier(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("set_integration_identifiers", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1172,29 +594,11 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("attribution", jsonString);
-            parameters.Add("source", source);
+            var parameters = new JObject();
+            parameters["attribution"] = jsonString;
+            parameters["source"] = source;
 
-            Request.Send(
-                "update_attribution_data",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateAttribution(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("update_attribution_data", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1212,31 +616,16 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("params", param.ToJSONNode());
+            var parameters = new JObject();
+            parameters["params"] = AdaptyJson.ToNode(param);
 
-            Request.Send(
-                "update_profile",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.UpdateProfile(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("update_profile", parameters, completionHandler);
         }
     }
 
+    /// <summary>
+    /// Building, presenting and dismissing the views that render a flow.
+    /// </summary>
     public static partial class AdaptyUI
     {
         /// <summary>
@@ -1255,143 +644,20 @@ namespace AdaptySDK
             Action<AdaptyUIFlowView, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("flow", flow.ToJSONNode());
+            var parameters = new JObject();
+            parameters["flow"] = AdaptyJson.ToNode(flow);
 
             if (optionalParameters != null)
             {
-                if (optionalParameters.Locale != null)
+                // The optional parameters are contract members of the same request object, not a
+                // nested one, so the serialized form is merged in rather than added under a key.
+                foreach (var entry in (JObject)AdaptyJson.ToNode(optionalParameters))
                 {
-                    parameters.Add("locale", optionalParameters.Locale);
-                }
-
-                if (optionalParameters.LoadTimeout.HasValue)
-                {
-                    parameters.Add(
-                        "load_timeout",
-                        optionalParameters.LoadTimeout.Value.TotalSeconds
-                    );
-                }
-
-                if (optionalParameters.PreloadProducts.HasValue)
-                {
-                    parameters.Add("preload_products", optionalParameters.PreloadProducts.Value);
-                }
-
-                if (optionalParameters.CustomTags != null)
-                {
-                    var node = new JSONObject();
-                    foreach (KeyValuePair<string, string> entry in optionalParameters.CustomTags)
-                    {
-                        node.Add(entry.Key, entry.Value);
-                    }
-                    parameters.Add("custom_tags", node);
-                }
-                if (optionalParameters.CustomTimers != null)
-                {
-                    var node = new JSONObject();
-                    foreach (
-                        KeyValuePair<string, DateTime> entry in optionalParameters.CustomTimers
-                    )
-                    {
-                        node.Add(entry.Key, entry.Value.ToJSONNode());
-                    }
-                    parameters.Add("custom_timers", node);
-                }
-                if (optionalParameters.ProductPurchaseParameters != null)
-                {
-                    var parametersNode = new JSONObject();
-
-                    foreach (
-                        KeyValuePair<
-                            AdaptyProductIdentifier,
-                            AdaptyPurchaseParameters
-                        > entry in optionalParameters.ProductPurchaseParameters
-                    )
-                    {
-                        parametersNode.Add(entry.Key._AdaptyProductId, entry.Value.ToJSONNode());
-                    }
-
-                    parameters.Add("product_purchase_parameters", parametersNode);
-                }
-
-                if (optionalParameters.CustomAssets != null)
-                {
-                    parameters.Add("custom_assets", optionalParameters.CustomAssets.ToJSONNode());
-                }
-
-                if (optionalParameters.EnableSafeAreaPaddings.HasValue)
-                {
-                    parameters.Add(
-                        "enable_safe_area_paddings",
-                        optionalParameters.EnableSafeAreaPaddings.Value
-                    );
+                    parameters[entry.Key] = entry.Value;
                 }
             }
 
-            Request.Send(
-                "adapty_ui_create_flow_view",
-                parameters,
-                JSONNodeExtensions.GetAdaptyUIFlowView,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyUIFlowView, AdaptyError> completionHandler in Adapty.CreateFlowView(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
-        /// Creates an onboarding view from an AdaptyOnboarding object.
-        /// </summary>
-        /// <remarks>
-        /// Right after receiving an <see cref="AdaptyOnboarding"/>, you can create the corresponding <see cref="AdaptyUIOnboardingView"/> to present it afterwards.
-        /// Read more at <see href="https://adapty.io/docs/onboardings">Adapty Documentation</see>
-        /// </remarks>
-        /// <param name="onboarding">An <see cref="AdaptyOnboarding"/> object for which you are trying to create a view.</param>
-        /// <param name="externalUrlsPresentation">Controls how external URLs are presented in the onboarding (in-app browser vs external browser). Default is <see cref="AdaptyWebPresentation.ExternalBrowser"/>.</param>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyUIOnboardingView"/> object.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use CreateFlowView instead."
-        )]
-        public static void CreateOnboardingView(
-            AdaptyOnboarding onboarding,
-            AdaptyWebPresentation externalUrlsPresentation,
-            Action<AdaptyUIOnboardingView, AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JSONObject();
-            parameters.Add("onboarding", onboarding.ToJSONNode());
-            parameters.Add("external_urls_presentation", externalUrlsPresentation.ToJSONNode());
-
-            Request.Send(
-                "adapty_ui_create_onboarding_view",
-                parameters,
-                JSONNodeExtensions.GetAdaptyUIOnboardingView,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyUIOnboardingView, AdaptyError> completionHandler in Adapty.CreateOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("adapty_ui_create_flow_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1408,29 +674,11 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
-            parameters.Add("destroy", true);
+            var parameters = new JObject();
+            parameters["id"] = view.Id;
+            parameters["destroy"] = true;
 
-            Request.Send(
-                "adapty_ui_dismiss_flow_view",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissFlowView(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("adapty_ui_dismiss_flow_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1458,138 +706,11 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
-            parameters.Add("ios_presentation_style", iosPresentationStyle.ToJSONNode());
+            var parameters = new JObject();
+            parameters["id"] = view.Id;
+            parameters["ios_presentation_style"] = AdaptyJson.ToNode(iosPresentationStyle);
 
-            Request.Send(
-                "adapty_ui_present_flow_view",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentFlowView(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
-        /// Presents the onboarding view to the user.
-        /// </summary>
-        /// <remarks>
-        /// This method presents the onboarding view using the default full-screen presentation style.
-        /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to present.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use PresentFlowView instead."
-        )]
-        public static void PresentOnboardingView(
-            AdaptyUIOnboardingView view,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            PresentOnboardingView(view, AdaptyUIIOSPresentationStyle.FullScreen, completionHandler);
-        }
-
-        /// <summary>
-        /// Presents the onboarding view to the user with a specified presentation style.
-        /// </summary>
-        /// <remarks>
-        /// This method presents the onboarding view using the specified iOS presentation style (iOS only).
-        /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to present.</param>
-        /// <param name="iosPresentationStyle">An <see cref="AdaptyUIIOSPresentationStyle"/> object representing the iOS presentation style (iOS only).</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use PresentFlowView instead."
-        )]
-        public static void PresentOnboardingView(
-            AdaptyUIOnboardingView view,
-            AdaptyUIIOSPresentationStyle iosPresentationStyle,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
-            parameters.Add("ios_presentation_style", iosPresentationStyle.ToJSONNode());
-
-            Request.Send(
-                "adapty_ui_present_onboarding_view",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.PresentOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
-        }
-
-        /// <summary>
-        /// Dismisses the onboarding view.
-        /// </summary>
-        /// <remarks>
-        /// Call this method when you want to dismiss the onboarding view from the screen.
-        /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view to dismiss.</param>
-        /// <param name="completionHandler">The action that will be called with the result.</param>
-        [Obsolete(
-            "The legacy onboarding API is deprecated in favor of Flows. Use DismissFlowView instead."
-        )]
-        public static void DismissOnboardingView(
-            AdaptyUIOnboardingView view,
-            Action<AdaptyError> completionHandler
-        ) => DismissOnboardingView(view, false, completionHandler);
-
-        private static void DismissOnboardingView(
-            AdaptyUIOnboardingView view,
-            bool destroy,
-            Action<AdaptyError> completionHandler
-        )
-        {
-            var parameters = new JSONObject();
-            parameters.Add("id", view.Id);
-            parameters.Add("destroy", destroy);
-
-            Request.Send(
-                "adapty_ui_dismiss_onboarding_view",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in Adapty.DismissOnboardingView(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("adapty_ui_present_flow_view", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1610,53 +731,17 @@ namespace AdaptySDK
             ShowDialog(view.Id, configuration, completionHandler);
         }
 
-        /// <summary>
-        /// Presents a dialog on the onboarding view.
-        /// </summary>
-        /// <remarks>
-        /// This method shows a dialog with custom configuration on the onboarding view. The dialog can be used for various purposes like showing terms, privacy policy, or custom messages.
-        /// </remarks>
-        /// <param name="view">An <see cref="AdaptyUIOnboardingView"/> object representing the view on which to show the dialog.</param>
-        /// <param name="configuration">An <see cref="AdaptyUIDialogConfiguration"/> object that contains the dialog configuration.</param>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains the <see cref="AdaptyUIDialogActionType"/> indicating which action was taken.</param>
-        public static void ShowDialog(
-            AdaptyUIOnboardingView view,
-            AdaptyUIDialogConfiguration configuration,
-            Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
-        )
-        {
-            ShowDialog(view.Id, configuration, completionHandler);
-        }
-
         private static void ShowDialog(
             string viewId,
             AdaptyUIDialogConfiguration configuration,
             Action<AdaptyUIDialogActionType, AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("id", viewId);
-            parameters.Add("configuration", configuration.ToJSONNode());
+            var parameters = new JObject();
+            parameters["id"] = viewId;
+            parameters["configuration"] = AdaptyJson.ToNode(configuration);
 
-            Request.Send(
-                "adapty_ui_show_dialog",
-                parameters,
-                JSONNodeExtensions.GetAdaptyUIDialogActionType,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(value, error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyUIDialogActionType, AdaptyError> completionHandler in Adapty.ShowDialog(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.Send("adapty_ui_show_dialog", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1674,29 +759,11 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
-            var parameters = new JSONObject();
-            parameters.Add("url", url);
-            parameters.Add("open_in", openIn.ToJSONNode());
+            var parameters = new JObject();
+            parameters["url"] = url;
+            parameters["open_in"] = AdaptyJson.ToNode(openIn);
 
-            Request.Send(
-                "adapty_ui_open_url",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in AdaptyUI.OpenUrl(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("adapty_ui_open_url", parameters, completionHandler);
         }
 
         /// <summary>
@@ -1708,56 +775,41 @@ namespace AdaptySDK
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void RequestAppReview(Action<AdaptyError> completionHandler)
         {
-            Request.Send(
-                "adapty_ui_request_app_review",
-                null,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) =>
-                {
-                    try
-                    {
-                        completionHandler?.Invoke(error);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            "Failed to invoke Action<AdaptyError> completionHandler in AdaptyUI.RequestAppReview(..)",
-                            e
-                        );
-                    }
-                }
-            );
+            AdaptyRequest.SendVoid("adapty_ui_request_app_review", null, completionHandler);
         }
+
+        // The two senders behind the delegates the SDK hands to app code, which the app may invoke
+        // from any thread - hence the hop, see Adapty.RunOnMainThread.
 
         internal static void FlowViewAnswerPermission(string eventId, bool granted, string detail)
         {
-            var parameters = new JSONObject();
-            parameters.Add("event_id", eventId);
-            parameters.Add("status", granted ? "granted" : "denied");
-            if (detail != null)
+            Adapty.RunOnMainThread(() =>
             {
-                parameters.Add("detail", detail);
-            }
+                var parameters = new JObject();
+                parameters["event_id"] = eventId;
+                parameters["status"] = granted ? "granted" : "denied";
+                if (detail != null)
+                {
+                    parameters["detail"] = detail;
+                }
 
-            Request.Send(
-                "flow_view_did_answer_permission",
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) => LogRoundTripError("flow_view_did_answer_permission", error)
-            );
+                AdaptyRequest.SendVoid(
+                    "flow_view_did_answer_permission",
+                    parameters,
+                    (error) => LogRoundTripError("flow_view_did_answer_permission", error)
+                );
+            });
         }
 
         internal static void SendObserverEvent(string method, string eventId)
         {
-            var parameters = new JSONObject();
-            parameters.Add("event_id", eventId);
+            Adapty.RunOnMainThread(() =>
+            {
+                var parameters = new JObject();
+                parameters["event_id"] = eventId;
 
-            Request.Send(
-                method,
-                parameters,
-                JSONNodeExtensions.GetBoolean,
-                (value, error) => LogRoundTripError(method, error)
-            );
+                AdaptyRequest.SendVoid(method, parameters, (error) => LogRoundTripError(method, error));
+            });
         }
 
         private static void LogRoundTripError(string method, AdaptyError error)
@@ -1773,48 +825,6 @@ namespace AdaptySDK
                     method,
                     error
                 )
-            );
-        }
-    }
-
-    internal static class Request
-    {
-        internal static void Send<T>(
-            string method,
-            JSONObject request,
-            Func<JSONNode, T> mapResponseValue,
-            Action<T, AdaptyError> completionHandler
-        )
-        {
-            string stringJson;
-            try
-            {
-                if (request == null)
-                {
-                    request = new JSONObject();
-                }
-                request.Add("method", method);
-                stringJson = request.ToString();
-            }
-            catch (Exception ex)
-            {
-                var error = new AdaptyError(
-                    AdaptyErrorCode.EncodingFailed,
-                    $"Failed encoding request: {method}",
-                    $"AdaptyUnityError.EncodingFailed({ex})"
-                );
-                completionHandler(default(T), error);
-                return;
-            }
-
-            _Adapty.Invoke(
-                method,
-                stringJson,
-                (json) =>
-                {
-                    var result = json.GetAdaptyResult(mapResponseValue);
-                    completionHandler(result.Value, result.Error);
-                }
             );
         }
     }

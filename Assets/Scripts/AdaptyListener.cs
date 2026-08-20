@@ -156,7 +156,7 @@ namespace AdaptyExample
 
         public void GetPaywallProducts(
             AdaptyFlow flow,
-            Action<IList<AdaptyPaywallProduct>> completionHandler
+            Action<IReadOnlyList<AdaptyPaywallProduct>> completionHandler
         )
         {
             this.LogMethodRequest("GetPaywallProducts");
@@ -184,6 +184,9 @@ namespace AdaptyExample
                 {
                     this.LogMethodResult("MakePurchase", error);
                     completionHandler.Invoke(error);
+
+                    // No result on the error path.
+                    if (error != null) { return; }
 
                     switch (result.Type)
                     {
@@ -535,7 +538,7 @@ namespace AdaptyExample
                     + details.ToString()
             );
 
-            this.Router.SetInstallation(new AdaptyInstallationStatusDetermined(details));
+            this.Router.SetInstallationDetails(details);
         }
 
         public void OnInstallationDetailsFail(AdaptyError error)
@@ -865,7 +868,7 @@ namespace AdaptyExample
         public void FlowViewDidReceiveAnalyticEvent(
             AdaptyUIFlowView view,
             string name,
-            IDictionary<string, object> @params
+            IReadOnlyDictionary<string, object> parameters
         )
         {
             LogIncomingCall_AdaptyUIFlowView("FlowViewDidReceiveAnalyticEvent", view, name);
@@ -876,7 +879,7 @@ namespace AdaptyExample
         public void FlowViewDidAskPermission(
             AdaptyUIFlowView view,
             string permission,
-            IDictionary<string, string> customArgs,
+            IReadOnlyDictionary<string, string> customArgs,
             Action<bool, string> respond
         )
         {

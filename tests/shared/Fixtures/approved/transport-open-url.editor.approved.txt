@@ -1,0 +1,5 @@
+{
+  "method": "adapty_ui_open_url",
+  "open_in": "browser_out_app",
+  "url": "https://adapty.io"
+}

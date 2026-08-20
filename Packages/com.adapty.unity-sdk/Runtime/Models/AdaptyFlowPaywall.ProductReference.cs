@@ -1,25 +1,44 @@
-//
-//  AdaptyFlowPaywall.ProductReference.cs
-//  AdaptySDK
-//
+using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
-    public partial class AdaptyFlowPaywall
+    [Preserve]
+    public sealed partial class AdaptyFlowPaywall
     {
-        public partial class ProductReference
+        [DataContract]
+        internal class ProductReference
         {
-            internal readonly string FlowProductId; //nullable
-            internal readonly string VendorProductId;
-            internal readonly string AdaptyProductId;
-            internal readonly string AccessLevelId;
-            internal readonly string ProductType;
-            internal readonly string PromotionalOfferId; //nullable
-            internal readonly string WinBackOfferId; //nullable
-            internal readonly string AndroidBasePlanId; //nullable
-            internal readonly string AndroidOfferId; //nullable
+            private ProductReference() { }
 
-            public AdaptyProductIdentifier ToAdaptyProductIdentifier()
+            [DataMember(Name = "flow_product_id")]
+            internal readonly string FlowProductId;
+            [DataMember(Name = "vendor_product_id", IsRequired = true)]
+            internal readonly string VendorProductId;
+            [DataMember(Name = "adapty_product_id", IsRequired = true)]
+            internal readonly string AdaptyProductId;
+            [DataMember(Name = "access_level_id", IsRequired = true)]
+            internal readonly string AccessLevelId;
+            [DataMember(Name = "product_type", IsRequired = true)]
+            internal readonly string ProductType;
+#if UNITY_IOS
+            [DataMember(Name = "promotional_offer_id")]
+#endif
+            internal readonly string PromotionalOfferId;
+#if UNITY_IOS
+            [DataMember(Name = "win_back_offer_id")]
+#endif
+            internal readonly string WinBackOfferId;
+#if UNITY_ANDROID
+            [DataMember(Name = "base_plan_id")]
+#endif
+            internal readonly string AndroidBasePlanId;
+#if UNITY_ANDROID
+            [DataMember(Name = "offer_id")]
+#endif
+            internal readonly string AndroidOfferId;
+
+            internal AdaptyProductIdentifier ToAdaptyProductIdentifier()
             {
                 return new AdaptyProductIdentifier(
                     vendorProductId: VendorProductId,
@@ -28,6 +47,10 @@ namespace AdaptySDK
                 );
             }
 
+            /// <summary>
+            /// A description for logs and the debugger. The format is not part of the contract —
+            /// read the members rather than parsing it.
+            /// </summary>
             public override string ToString() =>
                 $"{nameof(FlowProductId)}: {FlowProductId}, "
                 + $"{nameof(VendorProductId)}: {VendorProductId}, "

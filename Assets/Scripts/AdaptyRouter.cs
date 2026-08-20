@@ -78,6 +78,14 @@ namespace AdaptyExample
             }
         }
 
+        public void SetInstallationDetails(AdaptyInstallationDetails details)
+        {
+            if (this.InstallationDetailsSection != null && details != null)
+            {
+                this.InstallationDetailsSection.SetInstallationDetails(details);
+            }
+        }
+
         public void SetProfile(AdaptyProfile profile)
         {
             if (this.ProfileInfoSection != null && profile != null)

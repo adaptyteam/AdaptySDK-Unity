@@ -1,0 +1,261 @@
+{
+  "$type": "AdaptyFlow",
+  "FlowVersionId": "flow-version-0001",
+  "InstanceIdentity": "flow-0001",
+  "Name": "Winter Flow",
+  "Paywalls (property)": [
+    {
+      "$type": "AdaptyFlowPaywall",
+      "InstanceIdentity": "paywall-0001",
+      "Name": "Winter Paywall",
+      "Placement": {
+        "$type": "AdaptyPlacement",
+        "ABTestName": "winter_test",
+        "AudienceName": "All Users",
+        "Id": "onboarding",
+        "IsTrackingPurchases": true,
+        "PlacementAudienceVersionId": "pav-0001",
+        "Revision": 7
+      },
+      "ProductIdentifiers (property)": [
+        {
+          "$type": "AdaptyProductIdentifier",
+          "BasePlanId": null,
+          "VendorProductId": "com.adapty.sample.monthly",
+          "_AdaptyProductId": "adapty-product-1"
+        },
+        {
+          "$type": "AdaptyProductIdentifier",
+          "BasePlanId": null,
+          "VendorProductId": "com.adapty.sample.yearly",
+          "_AdaptyProductId": "adapty-product-2"
+        }
+      ],
+      "VariationId": "variation-0001",
+      "VendorProductIds (property)": [
+        "com.adapty.sample.monthly",
+        "com.adapty.sample.yearly"
+      ],
+      "_Products": [
+        {
+          "$type": "ProductReference",
+          "AccessLevelId": "premium",
+          "AdaptyProductId": "adapty-product-1",
+          "AndroidBasePlanId": null,
+          "AndroidOfferId": null,
+          "FlowProductId": "flow-product-1",
+          "ProductType": "subscription",
+          "PromotionalOfferId": "promo-1",
+          "VendorProductId": "com.adapty.sample.monthly",
+          "WinBackOfferId": "winback-1"
+        },
+        {
+          "$type": "ProductReference",
+          "AccessLevelId": "premium",
+          "AdaptyProductId": "adapty-product-2",
+          "AndroidBasePlanId": null,
+          "AndroidOfferId": null,
+          "FlowProductId": null,
+          "ProductType": "subscription",
+          "PromotionalOfferId": null,
+          "VendorProductId": "com.adapty.sample.yearly",
+          "WinBackOfferId": null
+        }
+      ],
+      "_WebPurchaseUrl": "https://pay.adapty.io/checkout/abc"
+    }
+  ],
+  "Placement": {
+    "$type": "AdaptyPlacement",
+    "ABTestName": "winter_test",
+    "AudienceName": "All Users",
+    "Id": "onboarding",
+    "IsTrackingPurchases": true,
+    "PlacementAudienceVersionId": "pav-0001",
+    "Revision": 7
+  },
+  "ProductIdentifiers (property)": [
+    {
+      "$type": "AdaptyProductIdentifier",
+      "BasePlanId": null,
+      "VendorProductId": "com.adapty.sample.monthly",
+      "_AdaptyProductId": "adapty-product-1"
+    },
+    {
+      "$type": "AdaptyProductIdentifier",
+      "BasePlanId": null,
+      "VendorProductId": "com.adapty.sample.yearly",
+      "_AdaptyProductId": "adapty-product-2"
+    }
+  ],
+  "RemoteConfig (property)": {
+    "$type": "AdaptyRemoteConfig",
+    "Data": "{\"title\": \"Go premium\", \"discount\": 30, \"enabled\": true, \"nested\": {\"k\": \"v\"}, \"released_at\": \"2026-07-30T10:00:00.000Z\", \"tags\": [\"a\", \"b\"], \"mixed\": [1, true, null, {\"k\": \"v\"}], \"absent\": null}",
+    "Dictionary (property)": {
+      "absent": null,
+      "discount": 30,
+      "enabled": true,
+      "mixed": [
+        1,
+        true,
+        null,
+        {
+          "k": "v"
+        }
+      ],
+      "nested": {
+        "k": "v"
+      },
+      "released_at": "2026-07-30T10:00:00.000Z",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "title": "Go premium"
+    },
+    "Locale": "en"
+  },
+  "RemoteConfigs (property)": [
+    {
+      "$type": "AdaptyRemoteConfig",
+      "Data": "{\"title\": \"Go premium\", \"discount\": 30, \"enabled\": true, \"nested\": {\"k\": \"v\"}, \"released_at\": \"2026-07-30T10:00:00.000Z\", \"tags\": [\"a\", \"b\"], \"mixed\": [1, true, null, {\"k\": \"v\"}], \"absent\": null}",
+      "Dictionary (property)": {
+        "absent": null,
+        "discount": 30,
+        "enabled": true,
+        "mixed": [
+          1,
+          true,
+          null,
+          {
+            "k": "v"
+          }
+        ],
+        "nested": {
+          "k": "v"
+        },
+        "released_at": "2026-07-30T10:00:00.000Z",
+        "tags": [
+          "a",
+          "b"
+        ],
+        "title": "Go premium"
+      },
+      "Locale": "en"
+    },
+    {
+      "$type": "AdaptyRemoteConfig",
+      "Data": "{\"title\":\"Hazte premium\"}",
+      "Dictionary (property)": {
+        "title": "Hazte premium"
+      },
+      "Locale": "es"
+    }
+  ],
+  "VariationId": "variation-0001",
+  "VendorProductIds (property)": [
+    "com.adapty.sample.monthly",
+    "com.adapty.sample.yearly"
+  ],
+  "_PayloadData": "{\"custom\":\"payload\"}",
+  "_Paywalls": [
+    {
+      "$type": "AdaptyFlowPaywall",
+      "InstanceIdentity": "paywall-0001",
+      "Name": "Winter Paywall",
+      "Placement": {
+        "$type": "AdaptyPlacement",
+        "ABTestName": "winter_test",
+        "AudienceName": "All Users",
+        "Id": "onboarding",
+        "IsTrackingPurchases": true,
+        "PlacementAudienceVersionId": "pav-0001",
+        "Revision": 7
+      },
+      "ProductIdentifiers (property)": [
+        {
+          "$type": "AdaptyProductIdentifier",
+          "BasePlanId": null,
+          "VendorProductId": "com.adapty.sample.monthly",
+          "_AdaptyProductId": "adapty-product-1"
+        },
+        {
+          "$type": "AdaptyProductIdentifier",
+          "BasePlanId": null,
+          "VendorProductId": "com.adapty.sample.yearly",
+          "_AdaptyProductId": "adapty-product-2"
+        }
+      ],
+      "VariationId": "variation-0001",
+      "VendorProductIds (property)": [
+        "com.adapty.sample.monthly",
+        "com.adapty.sample.yearly"
+      ],
+      "_Products": [
+        {
+          "$type": "ProductReference",
+          "AccessLevelId": "premium",
+          "AdaptyProductId": "adapty-product-1",
+          "AndroidBasePlanId": null,
+          "AndroidOfferId": null,
+          "FlowProductId": "flow-product-1",
+          "ProductType": "subscription",
+          "PromotionalOfferId": "promo-1",
+          "VendorProductId": "com.adapty.sample.monthly",
+          "WinBackOfferId": "winback-1"
+        },
+        {
+          "$type": "ProductReference",
+          "AccessLevelId": "premium",
+          "AdaptyProductId": "adapty-product-2",
+          "AndroidBasePlanId": null,
+          "AndroidOfferId": null,
+          "FlowProductId": null,
+          "ProductType": "subscription",
+          "PromotionalOfferId": null,
+          "VendorProductId": "com.adapty.sample.yearly",
+          "WinBackOfferId": null
+        }
+      ],
+      "_WebPurchaseUrl": "https://pay.adapty.io/checkout/abc"
+    }
+  ],
+  "_RemoteConfigs": [
+    {
+      "$type": "AdaptyRemoteConfig",
+      "Data": "{\"title\": \"Go premium\", \"discount\": 30, \"enabled\": true, \"nested\": {\"k\": \"v\"}, \"released_at\": \"2026-07-30T10:00:00.000Z\", \"tags\": [\"a\", \"b\"], \"mixed\": [1, true, null, {\"k\": \"v\"}], \"absent\": null}",
+      "Dictionary (property)": {
+        "absent": null,
+        "discount": 30,
+        "enabled": true,
+        "mixed": [
+          1,
+          true,
+          null,
+          {
+            "k": "v"
+          }
+        ],
+        "nested": {
+          "k": "v"
+        },
+        "released_at": "2026-07-30T10:00:00.000Z",
+        "tags": [
+          "a",
+          "b"
+        ],
+        "title": "Go premium"
+      },
+      "Locale": "en"
+    },
+    {
+      "$type": "AdaptyRemoteConfig",
+      "Data": "{\"title\":\"Hazte premium\"}",
+      "Dictionary (property)": {
+        "title": "Hazte premium"
+      },
+      "Locale": "es"
+    }
+  ],
+  "_ResponseCreatedAt": 1753876800000
+}

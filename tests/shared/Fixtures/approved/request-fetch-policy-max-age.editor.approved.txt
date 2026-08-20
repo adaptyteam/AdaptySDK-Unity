@@ -1,0 +1,4 @@
+{
+  "max_age": 90,
+  "type": "return_cache_data_if_not_expired_else_load"
+}

@@ -1,31 +1,57 @@
-//
-//  AdaptyConfiguration.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 10.12.2024.
-//
+using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
-    public partial class AdaptyConfiguration
+    [DataContract]
+    public sealed partial class AdaptyConfiguration
     {
+        [DataMember(Name = "api_key", IsRequired = true)]
         private readonly string ApiKey;
-        private readonly string CustomerUserId; // nullable
-        private readonly AdaptyCustomerIdentity CustomerIdentity; // nullable
+        [DataMember(Name = "customer_user_id")]
+        private readonly string CustomerUserId;
+        [DataMember(Name = "customer_identity_parameters")]
+        private readonly AdaptyCustomerIdentity CustomerIdentity;
+        [DataMember(Name = "observer_mode")]
         private readonly bool? ObserverMode;
+        [DataMember(Name = "apple_idfa_collection_disabled")]
         private readonly bool? AppleIdfaCollectionDisabled;
+        [DataMember(Name = "google_adid_collection_disabled")]
         private readonly bool? GoogleAdvertisingIdCollectionDisabled;
+        [DataMember(Name = "google_enable_pending_prepaid_plans")]
         private readonly bool? GoogleEnablePendingPrepaidPlans;
+        [DataMember(Name = "google_local_access_level_allowed")]
         private readonly bool? GoogleLocalAccessLevelAllowed;
+        [DataMember(Name = "ip_address_collection_disabled")]
         private readonly bool? IpAddressCollectionDisabled;
+        [DataMember(Name = "clear_data_on_backup")]
         private readonly bool? AppleClearDataOnBackup;
+        [DataMember(Name = "server_cluster")]
         private readonly AdaptyServerCluster? ServerCluster;
-        private readonly string BackendProxyHost; // nullable
-        private readonly int? BackendProxyPort; // nullable
+        [DataMember(Name = "backend_proxy_host")]
+        private readonly string BackendProxyHost;
+        [DataMember(Name = "backend_proxy_port")]
+        private readonly int? BackendProxyPort;
+        [DataMember(Name = "log_level")]
         private readonly AdaptyLogLevel? LogLevel;
+        [DataMember(Name = "activate_ui")]
         private readonly bool? ActivateUI;
+        [DataMember(Name = "media_cache")]
         private AdaptyUIMediaCacheConfiguration AdaptyUIMediaCache;
 
+
+        [DataMember(Name = "cross_platform_sdk_name")]
+        [Preserve]
+        private string CrossPlatformSdkName => "unity";
+
+        [DataMember(Name = "cross_platform_sdk_version")]
+        [Preserve]
+        private string CrossPlatformSdkVersion => Adapty.SDKVersion;
+
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(ApiKey)}: {ApiKey}, "
             + $"{nameof(CustomerUserId)}: {CustomerUserId}, "

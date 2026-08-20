@@ -1,14 +1,32 @@
-//
-//  AdaptyUIFlowView.cs
-//  AdaptySDK
-//
+using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
-    public partial class AdaptyUIFlowView
+    /// <summary>
+    /// A flow view built by <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/>. Single use: once dismissed it
+    /// is destroyed, and showing the flow again means building another one.
+    /// </summary>
+    [DataContract]
+    [Preserve]
+    public sealed class AdaptyUIFlowView
     {
+        private AdaptyUIFlowView() { }
+
+        /// <summary>
+        /// The identifier of this view, which the events carry back.
+        /// </summary>
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id;
+        /// <summary>
+        /// The placement the flow behind this view was fetched for.
+        /// </summary>
+        [DataMember(Name = "placement_id", IsRequired = true)]
         public string PlacementId;
+        /// <summary>
+        /// The variation the flow resolved to. Purchases made here are attributed to it.
+        /// </summary>
+        [DataMember(Name = "variation_id", IsRequired = true)]
         public string VariationId;
 
         /// <summary>
@@ -19,8 +37,13 @@ namespace AdaptySDK
         /// localization exists, and the flow's default localization otherwise. It is null when the native SDK is
         /// older than iOS 4.0.2 / Android 4.0.1 and does not report it.
         /// </remarks>
+        [DataMember(Name = "locale")]
         public string Locale;
 
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString() =>
             $"{nameof(Id)}: {Id}, "
             + $"{nameof(PlacementId)}: {PlacementId}, "

@@ -1,0 +1,18 @@
+{
+  "$type": "AdaptyProfile",
+  "AccessLevels (property)": {},
+  "AppliedAttributionSources (property)": [],
+  "CustomAttributes (property)": {},
+  "CustomerUserId": null,
+  "IsTestUser": false,
+  "NonSubscriptions (property)": {},
+  "ProfileId": "d3f4a1b2-0000-4c8d-9e2f-111122223333",
+  "SegmentId": "8f14e45fceea167a",
+  "Subscriptions (property)": {},
+  "Version": 1753876800000,
+  "_AccessLevels": {},
+  "_AppliedAttributionSources": [],
+  "_CustomAttributes": {},
+  "_NonSubscriptions": {},
+  "_Subscriptions": {}
+}

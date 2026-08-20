@@ -1,0 +1,135 @@
+#if !UNITY_IOS && !UNITY_ANDROID
+
+using System.Linq;
+using System.Reflection;
+using AdaptySDK.TestSupport;
+using NUnit.Framework;
+using UnityEngine;
+
+namespace AdaptySDK.NextTests
+{
+    /// <summary>
+    /// With Domain Reload disabled — the default for fast iteration — statics survive leaving Play
+    /// Mode. Anything the SDK holds that a developer registered has to be gone before the next run,
+    /// or that run receives the previous one's callbacks.
+    /// </summary>
+    /// <remarks>
+    /// The reset is what Unity calls; the suites call it directly, which is the same thing minus
+    /// the Editor. What cannot be checked here is that Unity calls it at all — that is the two
+    /// consecutive Play Mode runs in the acceptance pass.
+    /// </remarks>
+    [TestFixture]
+    public class PlayModeStateTests
+    {
+        [TearDown]
+        public void TearDown() => Adapty.SetEventListener(null);
+
+        [Test]
+        public void AListenerDoesNotSurviveIntoTheNextRun()
+        {
+            Adapty.SetEventListener(new Listener());
+
+            Adapty.ResetListeners();
+
+            Adapty.OnMessage(
+                "did_load_latest_profile",
+                "{\"profile\":" + Snapshots.LoadResponse("profile-minimal") + "}"
+            );
+
+            Assert.That(Listener.Calls, Is.Zero, "a listener from the previous run was still called");
+        }
+
+        [Test]
+        public void TheNoopHandlerDoesNotSurviveEither()
+        {
+            AdaptySDK.Noop.AdaptyNoop.Handler = (method, request) => "{}";
+
+            AdaptySDK.Noop.AdaptyNoop.ResetHandler();
+
+            Assert.That(AdaptySDK.Noop.AdaptyNoop.Handler, Is.Null);
+        }
+
+        /// <summary>
+        /// Every reset has to be one Unity actually calls, and it only calls the ones carrying the
+        /// attribute. A method renamed or added without it would leave its state behind silently —
+        /// and so would one registered for a later moment, since `AfterSceneLoad` runs once a scene
+        /// has had the chance to hand the SDK a listener.
+        /// </summary>
+        [Test]
+        public void EveryResetIsRegisteredWithUnity()
+        {
+            var resets = typeof(Adapty)
+                .Assembly.GetTypes()
+                .SelectMany(type =>
+                    type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                )
+                .Where(method => method.Name.StartsWith("Reset"))
+                .ToList();
+
+            var unregistered = resets
+                .Where(method =>
+                    method.GetCustomAttribute<RuntimeInitializeOnLoadMethodAttribute>()?.LoadType
+                    != RuntimeInitializeLoadType.SubsystemRegistration
+                )
+                .Select(method => $"{method.DeclaringType.Name}.{method.Name}")
+                .ToList();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(resets, Is.Not.Empty, "no reset methods found - the rule matches nothing");
+                Assert.That(
+                    unregistered,
+                    Is.Empty,
+                    "these reset static state but are not registered for SubsystemRegistration:\n  "
+                        + string.Join("\n  ", unregistered)
+                );
+            });
+        }
+
+        /// <summary>
+        /// A different rule riding the same mechanism: this one registers the platform callback
+        /// transport rather than clearing anything. It is the only place that does, so the stage is
+        /// the whole of the guarantee - it has to precede the first scene, because a MonoBehaviour's
+        /// `Awake` is where an app calls the SDK. `AfterSceneLoad`, which is what the attribute
+        /// means with no argument at all, runs after that, and on a device every completion handler
+        /// would then go uncalled.
+        /// </summary>
+        [Test]
+        public void TheTransportIsRegisteredBeforeTheFirstScene()
+        {
+            var hook = typeof(Adapty).GetMethod(
+                nameof(Adapty.InitializeTransport),
+                BindingFlags.Static | BindingFlags.NonPublic
+            );
+
+            Assert.That(hook, Is.Not.Null, "Adapty.InitializeTransport is gone");
+
+            var attribute = hook.GetCustomAttribute<RuntimeInitializeOnLoadMethodAttribute>();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(attribute, Is.Not.Null, "Unity only calls it while it carries the attribute");
+                Assert.That(
+                    attribute?.LoadType,
+                    Is.Not.EqualTo(RuntimeInitializeLoadType.AfterSceneLoad),
+                    "the first scene has already had its chance to call the SDK by then"
+                );
+            });
+        }
+
+        private sealed class Listener : IAdaptyEventListener
+        {
+            internal static int Calls;
+
+            public Listener() => Calls = 0;
+
+            public void OnLoadLatestProfile(AdaptyProfile profile) => Calls += 1;
+
+            public void OnInstallationDetailsSuccess(AdaptyInstallationDetails details) { }
+
+            public void OnInstallationDetailsFail(AdaptyError error) { }
+        }
+    }
+}
+
+#endif

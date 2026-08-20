@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace AdaptySDK.Android
@@ -43,10 +43,13 @@ namespace AdaptySDK.Android
 
         internal static void InitializeOnce()
         {
-            lock(m_Lock) {  
+            lock(m_Lock) {
                 if (!m_IsInitialized) {
-                    m_IsInitialized = true;
+                    // Marked initialized only once registration has returned. Set before the call,
+                    // a throw would leave the flag standing and this method has one caller - a
+                    // [RuntimeInitializeOnLoadMethod] - so nothing would ever try again.
                     new AndroidJavaClass("com.adapty.unity.AdaptyAndroidWrapper").CallStatic("registerMessageHandler", new MessageHandler());
+                    m_IsInitialized = true;
                 }
             }
         }

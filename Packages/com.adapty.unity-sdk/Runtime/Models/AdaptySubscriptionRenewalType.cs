@@ -1,15 +1,23 @@
-﻿//
-//  AdaptySubscriptionRenewalType.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 07.09.2023.
-//
+using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
+    /// <summary>
+    /// Android only. Whether the subscription renews by itself.
+    /// </summary>
+    [Preserve]
     public enum AdaptySubscriptionRenewalType
     {
-        Prepaid,
-        Autorenewable,
+        /// <summary>
+        /// A prepaid plan: paid for a fixed span and not renewed unless the user tops it up.
+        /// </summary>
+        [EnumMember(Value = "prepaid")]
+        Prepaid = 0,
+        /// <summary>
+        /// Renews on its own until cancelled. The default for the contract.
+        /// </summary>
+        [EnumMember(Value = "autorenewable")]
+        Autorenewable = 1,
     }
 }

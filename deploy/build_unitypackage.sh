@@ -7,12 +7,18 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 DEPLOY_PATH="$SCRIPT_DIR/output"
 SOURCE_PATH="$PROJECT_ROOT/Packages/com.adapty.unity-sdk/Runtime"
+EDITOR_SOURCE_PATH="$PROJECT_ROOT/Packages/com.adapty.unity-sdk/Editor"
 PACKAGE_JSON="$PROJECT_ROOT/Packages/com.adapty.unity-sdk/package.json"
 STAGED_SDK_PATH="Assets/AdaptySDK"
 UNITY_PATH="${UNITY_PATH:-}"
 PACKAGE_NAME="${PACKAGE_NAME:-}"
 PACKAGE_VERSION="$(sed -n 's/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$PACKAGE_JSON" 2>/dev/null | head -n 1 || true)"
 DEFAULT_PACKAGE_NAME="adapty-unity-plugin-${PACKAGE_VERSION:-unknown}.unitypackage"
+
+# The key is anchored to the start of a line so the copies inside the _upm.changelog string, which
+# is one long line, cannot be read instead.
+NEWTONSOFT_ID="com.unity.nuget.newtonsoft-json"
+NEWTONSOFT_VERSION="$(sed -n "s|^[[:space:]]*\"$NEWTONSOFT_ID\"[[:space:]]*:[[:space:]]*\"\([^\"]*\)\".*|\1|p" "$PACKAGE_JSON" 2>/dev/null | head -n 1 || true)"
 
 PRODUCTION=0
 KEEP_STAGING=0
@@ -92,6 +98,11 @@ if [[ ! -d "$SOURCE_PATH" ]]; then
   exit 1
 fi
 
+if [[ ! -d "$EDITOR_SOURCE_PATH" ]]; then
+  echo "SDK editor sources not found: $EDITOR_SOURCE_PATH" >&2
+  exit 1
+fi
+
 if [[ ! -f "$PACKAGE_JSON" ]]; then
   echo "Package manifest not found: $PACKAGE_JSON" >&2
   exit 1
@@ -99,6 +110,11 @@ fi
 
 if [[ -z "$PACKAGE_VERSION" ]]; then
   echo "Package version not found in $PACKAGE_JSON" >&2
+  exit 1
+fi
+
+if [[ -z "$NEWTONSOFT_VERSION" ]]; then
+  echo "$NEWTONSOFT_ID not found in the dependencies of $PACKAGE_JSON" >&2
   exit 1
 fi
 
@@ -131,11 +147,21 @@ mkdir -p "$STAGING_PROJECT/Assets"
 mkdir -p "$STAGING_PROJECT/Packages"
 mkdir -p "$STAGING_PROJECT/ProjectSettings"
 
-printf '{ "dependencies": {} }\n' > "$STAGING_PROJECT/Packages/manifest.json"
+# The staged sources are compiled by the Editor during export, so the staging project has to
+# resolve what they import. Newtonsoft arrived with the JSON layer migration; without it the
+# export builds against a project that cannot compile the SDK. The version is read from the
+# manifest rather than written here, so the export cannot be built against a version the package
+# does not declare.
+printf '{ "dependencies": { "%s": "%s" } }\n' "$NEWTONSOFT_ID" "$NEWTONSOFT_VERSION" \
+  > "$STAGING_PROJECT/Packages/manifest.json"
 cp "$PROJECT_ROOT/ProjectSettings/ProjectVersion.txt" "$STAGING_PROJECT/ProjectSettings/ProjectVersion.txt"
 
 cp -R "$SOURCE_PATH" "$STAGING_PROJECT/$STAGED_SDK_PATH"
 cp "$SOURCE_PATH.meta" "$STAGING_PROJECT/$STAGED_SDK_PATH.meta"
+
+# The package keeps its editor-only code outside Runtime, so it needs a second copy. It merges into
+# the Editor folder Runtime already contributes, which carries AdaptySDKDependencies.xml.
+cp -R "$EDITOR_SOURCE_PATH/." "$STAGING_PROJECT/$STAGED_SDK_PATH/Editor/"
 
 EXPORT_PATH="$DEPLOY_PATH/$PACKAGE_NAME"
 LOG_PATH="$DEPLOY_PATH/build_unitypackage.log"

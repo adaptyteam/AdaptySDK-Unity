@@ -1,15 +1,23 @@
-//
-//  AdaptyUIIOSPresentationStyle.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 20.12.2024.
-//
+using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
+    /// <summary>
+    /// iOS only. How a flow view is presented. Ignored on Android.
+    /// </summary>
+    [Preserve]
     public enum AdaptyUIIOSPresentationStyle
     {
-        FullScreen,
-        PageSheet,
+        /// <summary>
+        /// Covers the screen.
+        /// </summary>
+        [EnumMember(Value = "full_screen")]
+        FullScreen = 0,
+        /// <summary>
+        /// A sheet over the current screen, which the user can swipe down.
+        /// </summary>
+        [EnumMember(Value = "page_sheet")]
+        PageSheet = 1,
     }
 }

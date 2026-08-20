@@ -1,0 +1,9 @@
+{
+  "fetch_policy": {
+    "max_age": 90,
+    "type": "return_cache_data_if_not_expired_else_load"
+  },
+  "load_timeout": 5,
+  "method": "get_flow",
+  "placement_id": "onboarding"
+}

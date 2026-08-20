@@ -1,0 +1,6 @@
+{
+  "$type": "AdaptyError",
+  "Code": "BadRequest (2003)",
+  "Detail": "AdaptyError.productNotFound(vendorProductId: \"com.adapty.sample.monthly\")",
+  "Message": "The product was not found"
+}

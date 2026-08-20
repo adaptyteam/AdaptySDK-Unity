@@ -1,0 +1,6 @@
+{
+  "$type": "AdaptyOnboardingsSelectParams",
+  "Id": "plan-1",
+  "Label": "Monthly",
+  "Value": "monthly"
+}

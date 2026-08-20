@@ -4,7 +4,9 @@
       "version": "file:com.adapty.unity-sdk",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
     },
     "com.google.external-dependency-manager": {
       "version": "1.2.188",

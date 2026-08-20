@@ -1,0 +1,59 @@
+{
+  "flow_id": "flow-0001",
+  "flow_name": "Winter Flow",
+  "flow_version_id": "flow-version-0001",
+  "payload_data": "{\"custom\":\"payload\"}",
+  "placement": {
+    "ab_test_name": "winter_test",
+    "audience_name": "All Users",
+    "developer_id": "onboarding",
+    "is_tracking_purchases": true,
+    "placement_audience_version_id": "pav-0001",
+    "revision": 7
+  },
+  "remote_configs": [
+    {
+      "data": "{\"title\": \"Go premium\", \"discount\": 30, \"enabled\": true, \"nested\": {\"k\": \"v\"}, \"released_at\": \"2026-07-30T10:00:00.000Z\", \"tags\": [\"a\", \"b\"], \"mixed\": [1, true, null, {\"k\": \"v\"}], \"absent\": null}",
+      "lang": "en"
+    },
+    {
+      "data": "{\"title\":\"Hazte premium\"}",
+      "lang": "es"
+    }
+  ],
+  "response_created_at": 1753876800000,
+  "variation_id": "variation-0001",
+  "variations": [
+    {
+      "paywall_id": "paywall-0001",
+      "paywall_name": "Winter Paywall",
+      "placement": {
+        "ab_test_name": "winter_test",
+        "audience_name": "All Users",
+        "developer_id": "onboarding",
+        "is_tracking_purchases": true,
+        "placement_audience_version_id": "pav-0001",
+        "revision": 7
+      },
+      "products": [
+        {
+          "access_level_id": "premium",
+          "adapty_product_id": "adapty-product-1",
+          "base_plan_id": "base-plan-1",
+          "flow_product_id": "flow-product-1",
+          "offer_id": "offer-1",
+          "product_type": "subscription",
+          "vendor_product_id": "com.adapty.sample.monthly"
+        },
+        {
+          "access_level_id": "premium",
+          "adapty_product_id": "adapty-product-2",
+          "product_type": "subscription",
+          "vendor_product_id": "com.adapty.sample.yearly"
+        }
+      ],
+      "variation_id": "variation-0001",
+      "web_purchase_url": "https://pay.adapty.io/checkout/abc"
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "$type": "AdaptyPaywallProduct",
+    "AccessLevelId": "premium",
+    "AdaptyProductId": "adapty-product-1",
+    "FlowProductId": "flow-product-1",
+    "IsFamilyShareable": false,
+    "LocalizedDescription": "Full access, billed monthly",
+    "LocalizedTitle": "Monthly",
+    "PaywallABTestName": "winter_test",
+    "PaywallName": "Winter Paywall",
+    "PaywallProductIndex": 0,
+    "PaywallVariationId": "variation-0001",
+    "Price": {
+      "$type": "AdaptyPrice",
+      "Amount": 9.99,
+      "CurrencyCode": "USD",
+      "CurrencySymbol": "$",
+      "LocalizedString": "$9.99"
+    },
+    "ProductType": "subscription",
+    "RegionCode": "US",
+    "Subscription": {
+      "$type": "AdaptySubscription",
+      "BasePlanId": null,
+      "GroupIdentifier": null,
+      "LocalizedPeriod": "1 month",
+      "Offer": {
+        "$type": "AdaptySubscriptionOffer",
+        "Identifier": "intro-1",
+        "OfferTags": null,
+        "Phases": [
+          {
+            "$type": "AdaptySubscriptionPhase",
+            "LocalizedNumberOfPeriods": "1 time",
+            "LocalizedSubscriptionPeriod": "1 week",
+            "NumberOfPeriods": 1,
+            "PaymentMode": "FreeTrial (2)",
+            "Price": {
+              "$type": "AdaptyPrice",
+              "Amount": 0,
+              "CurrencyCode": "USD",
+              "CurrencySymbol": "$",
+              "LocalizedString": "Free"
+            },
+            "SubscriptionPeriod": {
+              "$type": "AdaptySubscriptionPeriod",
+              "NumberOfUnits": 1,
+              "Unit": "Week (1)"
+            }
+          }
+        ],
+        "Type": "Introductory (0)"
+      },
+      "Period": {
+        "$type": "AdaptySubscriptionPeriod",
+        "NumberOfUnits": 1,
+        "Unit": "Month (2)"
+      },
+      "RenewalType": "Autorenewable (1)"
+    },
+    "VendorProductId": "com.adapty.sample.monthly",
+    "_PayloadData": "{\"custom\":\"product payload\"}",
+    "_WebPurchaseUrl": "https://pay.adapty.io/checkout/abc"
+  },
+  {
+    "$type": "AdaptyPaywallProduct",
+    "AccessLevelId": "premium",
+    "AdaptyProductId": "adapty-product-2",
+    "FlowProductId": null,
+    "IsFamilyShareable": false,
+    "LocalizedDescription": "One-time purchase",
+    "LocalizedTitle": "Lifetime",
+    "PaywallABTestName": "winter_test",
+    "PaywallName": "Winter Paywall",
+    "PaywallProductIndex": 1,
+    "PaywallVariationId": "variation-0001",
+    "Price": {
+      "$type": "AdaptyPrice",
+      "Amount": 99,
+      "CurrencyCode": "USD",
+      "CurrencySymbol": "$",
+      "LocalizedString": "$99.00"
+    },
+    "ProductType": "non_consumable",
+    "RegionCode": null,
+    "Subscription": null,
+    "VendorProductId": "com.adapty.sample.lifetime",
+    "_PayloadData": null,
+    "_WebPurchaseUrl": null
+  }
+]

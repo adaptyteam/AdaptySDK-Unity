@@ -1,0 +1,18 @@
+{
+  "onboarding_builder": {
+    "config_url": "https://cdn.adapty.io/onboardings/onboarding-0002.json"
+  },
+  "onboarding_id": "onboarding-0002",
+  "onboarding_name": "Short Onboarding",
+  "placement": {
+    "ab_test_name": "onboarding_test",
+    "audience_name": "All Users",
+    "developer_id": "welcome",
+    "is_tracking_purchases": false,
+    "placement_audience_version_id": "pav-0003",
+    "revision": 1
+  },
+  "request_locale": "es",
+  "response_created_at": 1754006401,
+  "variation_id": "variation-0003"
+}

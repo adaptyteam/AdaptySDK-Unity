@@ -1,0 +1,6 @@
+{
+  "$type": "AdaptyUIUserAction",
+  "OpenIn": null,
+  "Type": "Close (0)",
+  "Value": null
+}

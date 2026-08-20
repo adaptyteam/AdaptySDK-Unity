@@ -1,0 +1,5 @@
+{
+  "$type": "AdaptyOnboardingsAnalyticsEventScreenCompleted",
+  "ElementId": "gender_select",
+  "Reply": "female"
+}

@@ -1,0 +1,154 @@
+{
+  "$type": "AdaptyProfile",
+  "AccessLevels (property)": {
+    "premium": {
+      "$type": "AccessLevel",
+      "ActivatedAt": { "utc": "2026-01-15T09:30:00.0000000Z", "kind": "Local" },
+      "ActiveIntroductoryOfferType": "free_trial",
+      "ActivePromotionalOfferId": "promo-winter",
+      "ActivePromotionalOfferType": "promotional",
+      "BillingIssueDetectedAt": { "utc": "2026-07-19T10:00:00.0000000Z", "kind": "Local" },
+      "CancellationReason": "voluntarily_cancelled",
+      "ExpiresAt": { "utc": "2026-08-15T09:30:00.0000000Z", "kind": "Local" },
+      "Id": "premium",
+      "IsActive": true,
+      "IsInGracePeriod": false,
+      "IsLifetime": false,
+      "IsRefund": false,
+      "OfferId": "offer-1",
+      "RenewedAt": { "utc": "2026-07-15T09:30:00.0000000Z", "kind": "Local" },
+      "StartsAt": { "utc": "2026-01-15T09:30:00.0000000Z", "kind": "Local" },
+      "Store": "app_store",
+      "UnsubscribedAt": { "utc": "2026-07-20T10:00:00.0000000Z", "kind": "Local" },
+      "VendorProductId": "com.adapty.sample.monthly",
+      "WillRenew": true
+    }
+  },
+  "AppliedAttributionSources (property)": [
+    "appsflyer",
+    "adjust"
+  ],
+  "CustomAttributes (property)": {
+    "favourite_colour": "green",
+    "score": 12.5
+  },
+  "CustomerUserId": "user-42",
+  "IsTestUser": true,
+  "NonSubscriptions (property)": {
+    "com.adapty.sample.coins": [
+      {
+        "$type": "NonSubscription",
+        "IsConsumable": true,
+        "IsRefund": false,
+        "IsSandbox": true,
+        "PurchaseId": "a1b2c3d4-0000-4444-8888-999900001111",
+        "PurchasedAt": { "utc": "2026-06-01T12:00:00.0000000Z", "kind": "Local" },
+        "Store": "app_store",
+        "VendorProductId": "com.adapty.sample.coins",
+        "VendorTransactionId": "2000000987654321"
+      }
+    ]
+  },
+  "ProfileId": "d3f4a1b2-0000-4c8d-9e2f-111122223333",
+  "SegmentId": "8f14e45fceea167a",
+  "Subscriptions (property)": {
+    "com.adapty.sample.monthly": {
+      "$type": "Subscription",
+      "ActivatedAt": { "utc": "2026-01-15T09:30:00.0000000Z", "kind": "Local" },
+      "ActiveIntroductoryOfferType": "free_trial",
+      "ActivePromotionalOfferId": "promo-winter",
+      "ActivePromotionalOfferType": "promotional",
+      "BillingIssueDetectedAt": { "utc": "2026-07-19T10:00:00.0000000Z", "kind": "Local" },
+      "CancellationReason": "voluntarily_cancelled",
+      "ExpiresAt": { "utc": "2026-08-15T09:30:00.0000000Z", "kind": "Local" },
+      "IsActive": true,
+      "IsInGracePeriod": false,
+      "IsLifetime": false,
+      "IsRefund": false,
+      "IsSandbox": true,
+      "OfferId": "offer-1",
+      "RenewedAt": { "utc": "2026-07-15T09:30:00.0000000Z", "kind": "Local" },
+      "StartsAt": { "utc": "2026-01-15T09:30:00.0000000Z", "kind": "Local" },
+      "Store": "app_store",
+      "UnsubscribedAt": { "utc": "2026-07-20T10:00:00.0000000Z", "kind": "Local" },
+      "VendorOriginalTransactionId": "2000000000000001",
+      "VendorProductId": "com.adapty.sample.monthly",
+      "VendorTransactionId": "2000000123456789",
+      "WillRenew": true
+    }
+  },
+  "Version": 1753876800000,
+  "_AccessLevels": {
+    "premium": {
+      "$type": "AccessLevel",
+      "ActivatedAt": { "utc": "2026-01-15T09:30:00.0000000Z", "kind": "Local" },
+      "ActiveIntroductoryOfferType": "free_trial",
+      "ActivePromotionalOfferId": "promo-winter",
+      "ActivePromotionalOfferType": "promotional",
+      "BillingIssueDetectedAt": { "utc": "2026-07-19T10:00:00.0000000Z", "kind": "Local" },
+      "CancellationReason": "voluntarily_cancelled",
+      "ExpiresAt": { "utc": "2026-08-15T09:30:00.0000000Z", "kind": "Local" },
+      "Id": "premium",
+      "IsActive": true,
+      "IsInGracePeriod": false,
+      "IsLifetime": false,
+      "IsRefund": false,
+      "OfferId": "offer-1",
+      "RenewedAt": { "utc": "2026-07-15T09:30:00.0000000Z", "kind": "Local" },
+      "StartsAt": { "utc": "2026-01-15T09:30:00.0000000Z", "kind": "Local" },
+      "Store": "app_store",
+      "UnsubscribedAt": { "utc": "2026-07-20T10:00:00.0000000Z", "kind": "Local" },
+      "VendorProductId": "com.adapty.sample.monthly",
+      "WillRenew": true
+    }
+  },
+  "_AppliedAttributionSources": [
+    "appsflyer",
+    "adjust"
+  ],
+  "_CustomAttributes": {
+    "favourite_colour": "green",
+    "score": 12.5
+  },
+  "_NonSubscriptions": {
+    "com.adapty.sample.coins": [
+      {
+        "$type": "NonSubscription",
+        "IsConsumable": true,
+        "IsRefund": false,
+        "IsSandbox": true,
+        "PurchaseId": "a1b2c3d4-0000-4444-8888-999900001111",
+        "PurchasedAt": { "utc": "2026-06-01T12:00:00.0000000Z", "kind": "Local" },
+        "Store": "app_store",
+        "VendorProductId": "com.adapty.sample.coins",
+        "VendorTransactionId": "2000000987654321"
+      }
+    ]
+  },
+  "_Subscriptions": {
+    "com.adapty.sample.monthly": {
+      "$type": "Subscription",
+      "ActivatedAt": { "utc": "2026-01-15T09:30:00.0000000Z", "kind": "Local" },
+      "ActiveIntroductoryOfferType": "free_trial",
+      "ActivePromotionalOfferId": "promo-winter",
+      "ActivePromotionalOfferType": "promotional",
+      "BillingIssueDetectedAt": { "utc": "2026-07-19T10:00:00.0000000Z", "kind": "Local" },
+      "CancellationReason": "voluntarily_cancelled",
+      "ExpiresAt": { "utc": "2026-08-15T09:30:00.0000000Z", "kind": "Local" },
+      "IsActive": true,
+      "IsInGracePeriod": false,
+      "IsLifetime": false,
+      "IsRefund": false,
+      "IsSandbox": true,
+      "OfferId": "offer-1",
+      "RenewedAt": { "utc": "2026-07-15T09:30:00.0000000Z", "kind": "Local" },
+      "StartsAt": { "utc": "2026-01-15T09:30:00.0000000Z", "kind": "Local" },
+      "Store": "app_store",
+      "UnsubscribedAt": { "utc": "2026-07-20T10:00:00.0000000Z", "kind": "Local" },
+      "VendorOriginalTransactionId": "2000000000000001",
+      "VendorProductId": "com.adapty.sample.monthly",
+      "VendorTransactionId": "2000000123456789",
+      "WillRenew": true
+    }
+  }
+}

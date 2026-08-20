@@ -1,0 +1,5 @@
+{
+  "$type": "AdaptyOnboardingsAnalyticsEventScreenCompleted",
+  "ElementId": null,
+  "Reply": null
+}

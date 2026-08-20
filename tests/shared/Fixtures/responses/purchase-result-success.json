@@ -1,0 +1,11 @@
+{
+  "type": "success",
+  "apple_jws_transaction": "eyJhbGciOiJFUzI1NiJ9.payload.signature",
+  "google_purchase_token": "gpa.1234-5678-9012-34567",
+  "profile": {
+    "profile_id": "d3f4a1b2-0000-4c8d-9e2f-111122223333",
+    "segment_hash": "8f14e45fceea167a",
+    "timestamp": 1753876800000,
+    "is_test_user": false
+  }
+}

@@ -20,8 +20,9 @@ ls .ios-sdk/Sources 2>/dev/null
 ```bash
 git clone git@github.com:adaptyteam/AdaptySDK-iOS.git .ios-sdk
 ```
+If the machine's SSH config reaches GitHub through a host alias, use that host instead — check `git remote -v` in this repository for the form that works here.
 
-**Step 3:** Determine which version/branch to use. Parse the current dependency version from `Assets/AdaptySDK/Editor/AdaptySDKDependencies.xml` (look for `<iosPod name="Adapty" version="X.Y.Z">`). Then **ask the user** which tag or branch to checkout, suggesting the dependency version as default. The user may want an unreleased branch instead.
+**Step 3:** Determine which version/branch to use. Parse the current dependency version from `Packages/com.adapty.unity-sdk/Runtime/Editor/AdaptySDKDependencies.xml` (look for `<swiftPackage ... version="X.Y.Z">`). Then **ask the user** which tag or branch to checkout, suggesting the dependency version as default. The user may want an unreleased branch instead.
 
 **Step 4:** Checkout the confirmed version:
 ```bash
@@ -30,41 +31,53 @@ cd .ios-sdk && git fetch --all --tags && git checkout <tag-or-branch>
 
 ## iOS SDK Directory Map
 
+Verified against tag `4.0.2`. Re-check it after every checkout of a different tag — the layout moves between majors, and a map that lies is worse than no map.
+
 ```
 .ios-sdk/
 ├── Sources/                        # Core Adapty SDK
 │   ├── Adapty.swift                # Main SDK class
-│   ├── Adapty+*.swift              # Public API extensions (GetPaywall, MakePurchase, etc.)
+│   ├── Adapty+*.swift              # Only three: Activate, Completion, Shared
 │   ├── Backend/                    # HTTP API layer
 │   ├── Backend.HTTPSession/        # Network session
 │   ├── Configuration/              # SDK configuration
-│   ├── Environment/                # Device/environment info
+│   ├── Envoriment/                 # Device/environment info - misspelled upstream, glob it that way
+│   ├── Errors/                     # AdaptyError and its codes
 │   ├── Events/                     # Analytics events
+│   ├── Log/                        # Logging
 │   ├── Placements/                 # Paywall placements
 │   ├── Profile/                    # User profiles
-│   ├── StoreKit/                   # StoreKit integration
+│   ├── Storage/                    # Local caches
+│   ├── StoreKit/                   # StoreKit integration, and Adapty+MakePurchase.swift
+│   ├── UserAcquisition/            # Install attribution
+│   ├── WebPaywall/                 # Web paywall URLs
 │   └── LifecycleManager.swift      # App lifecycle
 │
 ├── Sources.AdaptyPlugin/           # Cross-platform bridge (THIS IS THE KEY DIRECTORY)
 │   ├── AdaptyPlugin.swift          # Main plugin entry: execute(method:withJson:)
 │   ├── cross_platform.yaml         # API contract schema (JSON formats)
-│   ├── Requests/                   # One file per SDK method (37+ handlers)
+│   ├── Requests/                   # One file per SDK method (42 files, incl. AdaptyPluginRequest.swift)
 │   │   ├── Request.Activate.swift
-│   │   ├── Request.GetPaywall.swift
-│   │   ├── Request.MakePurchase.swift
+│   │   ├── Request.AdaptyUICreateFlowView.swift
+│   │   ├── Request.GetPaywallProducts.swift
 │   │   └── ...
 │   ├── Codable/                    # JSON encoding/decoding for models
 │   └── Events/                     # Event definitions pushed to Unity
 │
 ├── Sources.AdaptyUI/               # Visual paywall rendering
 ├── Sources.UIBuilder/              # Paywall template builder
-├── Sources.KidsMode/               # Kids mode support
+├── Sources.Codable/                # Shared Codable helpers
 ├── Sources.Logger/                 # Logging framework
 ├── Sources.DeveloperTools/         # Debug tools
+├── Examples/                       # Sample apps
 ├── Tests/                          # Unit tests
-├── Adapty.podspec                  # CocoaPods spec
-└── Package.swift                   # Swift Package Manager manifest
+├── scripts/                        # Repo tooling
+└── Package.swift                   # Swift Package Manager manifest, and where the traits live
 ```
+
+There is no `Sources.KidsMode/`: Kids Mode is a **trait** declared in `Package.swift`, which turns on the `KidsMode` compilation condition. The code it guards is `#if KidsMode` in `Sources/Envoriment/Environment.Device.idfa.swift`, `Sources/Adapty+Activate.swift` and `Sources/Profile/Entities/AdaptyProfileParameters.Builder.swift`.
+
+There is no `Adapty.podspec` either — the package ships through SwiftPM only, which is why the Unity side declares it with `<swiftPackage>`.
 
 ## Common Lookup Patterns
 
@@ -73,8 +86,8 @@ cd .ios-sdk && git fetch --all --tags && git checkout <tag-or-branch>
 # In Sources.AdaptyPlugin/Requests/ — one file per method
 Glob: .ios-sdk/Sources.AdaptyPlugin/Requests/Request.*.swift
 
-# Example: how does GetPaywall work?
-Read: .ios-sdk/Sources.AdaptyPlugin/Requests/Request.GetPaywall.swift
+# Example: how does GetPaywallProducts work?
+Read: .ios-sdk/Sources.AdaptyPlugin/Requests/Request.GetPaywallProducts.swift
 ```
 
 ### Find JSON contract for a method
@@ -99,10 +112,13 @@ Glob: .ios-sdk/Sources.AdaptyPlugin/Events/*.swift
 
 ### Find the core SDK implementation (not bridge)
 ```
-# Public API methods are in Adapty+MethodName.swift
+# Only three files sit at the root: Adapty+Activate, Adapty+Completion, Adapty+Shared.
 Glob: .ios-sdk/Sources/Adapty+*.swift
+# The rest live under the feature directory they belong to.
 # Example: full purchase flow
-Read: .ios-sdk/Sources/Adapty+MakePurchase.swift
+Read: .ios-sdk/Sources/StoreKit/Adapty+MakePurchase.swift
+# When unsure which directory owns a method, search for it:
+Grep: pattern="func makePurchase" path=".ios-sdk/Sources/"
 ```
 
 ### Find model definitions in the core SDK
@@ -114,20 +130,23 @@ Grep: pattern="struct Adapty" path=".ios-sdk/Sources/"
 
 When working on the Unity side, the mapping is:
 
+Unity paths are relative to the repository root; everything in the package lives under `Packages/com.adapty.unity-sdk/`.
+
 | Unity (C#) | iOS Bridge | iOS Core |
 |---|---|---|
-| `Adapty.cs` methods | `Sources.AdaptyPlugin/Requests/Request.*.swift` | `Sources/Adapty+*.swift` |
-| `Models/AdaptyFoo.cs` | `Sources.AdaptyPlugin/Codable/` | `Sources/` model files |
-| `JSON/AdaptyFoo+JSON.cs` | `Sources.AdaptyPlugin/Codable/` | N/A |
+| `Runtime/Adapty.cs` methods | `Sources.AdaptyPlugin/Requests/Request.*.swift` | `Sources/<feature>/Adapty+*.swift` |
+| `Runtime/Models/AdaptyFoo.cs` | `Sources.AdaptyPlugin/Codable/` | `Sources/` model files |
+| `Runtime/Serialization/` (Newtonsoft layer) | `Sources.AdaptyPlugin/Codable/` | N/A |
 | `cross_platform.yaml` (Unity root) | `Sources.AdaptyPlugin/cross_platform.yaml` | N/A |
-| `AdaptyEventListener.cs` | `Sources.AdaptyPlugin/Events/` | `Sources/Events/` |
+| `Runtime/IAdaptyEventListener.cs` | `Sources.AdaptyPlugin/Events/` | `Sources/Events/` |
+| `Runtime/AdaptyRequest.cs` (transport) | `Sources.AdaptyPlugin/AdaptyPlugin.swift` | N/A |
 
 ## Version Alignment
 
 The iOS dependency version is declared in:
 ```
-Assets/AdaptySDK/Editor/AdaptySDKDependencies.xml
+Packages/com.adapty.unity-sdk/Runtime/Editor/AdaptySDKDependencies.xml
 ```
-Look for: `<iosPod name="Adapty" version="X.Y.Z">`
+Look for: `<swiftPackage ... version="X.Y.Z">`. It is a Swift Package Manager declaration read by External Dependency Manager, not a CocoaPods one.
 
 Always confirm with the user before checking out a tag — they may be working against an unreleased branch.

@@ -1,0 +1,6 @@
+{
+  "$type": "AdaptyUIUserAction",
+  "OpenIn": "ExternalBrowser (0)",
+  "Type": "OpenUrl (2)",
+  "Value": "https://adapty.io/terms"
+}

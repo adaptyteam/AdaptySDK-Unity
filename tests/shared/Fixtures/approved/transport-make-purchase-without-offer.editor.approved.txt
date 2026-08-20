@@ -1,0 +1,13 @@
+{
+  "method": "make_purchase",
+  "product": {
+    "access_level_id": "premium",
+    "adapty_product_id": "adapty-product-2",
+    "paywall_ab_test_name": "winter_test",
+    "paywall_name": "Winter Paywall",
+    "paywall_product_index": 1,
+    "paywall_variation_id": "variation-0001",
+    "product_type": "non_consumable",
+    "vendor_product_id": "com.adapty.sample.lifetime"
+  }
+}

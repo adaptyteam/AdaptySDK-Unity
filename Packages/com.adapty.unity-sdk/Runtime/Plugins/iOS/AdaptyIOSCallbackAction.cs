@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace AdaptySDK.iOS
 {
-    internal static class ExceptionGetFullMessage
+    internal static class AdaptyExceptionExtensions
     {
         internal static string GetFullMessage(this Exception ex)
         {

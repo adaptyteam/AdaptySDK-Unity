@@ -1,0 +1,5 @@
+{
+  "method": "report_transaction",
+  "transaction_id": "txn-1",
+  "variation_id": "variation-0001"
+}
