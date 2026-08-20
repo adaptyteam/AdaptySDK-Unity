@@ -95,10 +95,10 @@ so start new integrations on flows.
 does not sit at the repository root — and the version suffix, which pins the tag:
 
 ```
-https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.1.0-dev.1
+https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.1.0
 ```
 
-Drop `#4.1.0-dev.1` and Package Manager resolves the default branch, which carries the previous
+Drop `#4.1.0` and Package Manager resolves the default branch, which carries the previous
 major until a release merges this one into it — so an unpinned URL installs 3.17 and says nothing
 about it.
 

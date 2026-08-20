@@ -14,7 +14,7 @@ namespace AdaptySDK
         /// <summary>
         /// The version of the Adapty SDK.
         /// </summary>
-        public static readonly string SDKVersion = "4.1.0-dev.1";
+        public static readonly string SDKVersion = "4.1.0";
 
         /// <summary>
         /// Use this method to initialize the Adapty SDK.

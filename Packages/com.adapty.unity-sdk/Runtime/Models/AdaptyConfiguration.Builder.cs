@@ -120,6 +120,13 @@ namespace AdaptySDK
             /// Enables the <see href="https://adapty.io/docs/attribution-integration">Adapty
             /// Attribution</see> service. Null leaves the native default, which is off.
             /// </summary>
+            /// <remarks>
+            /// Installation details hang off this flag: while it is off, the 4.1 natives collect
+            /// none, so <see cref="IAdaptyEventListener.OnInstallationDetailsSuccess(AdaptyInstallationDetails)"/>
+            /// never fires and <see cref="Adapty.GetCurrentInstallationStatus(System.Action{AdaptySDK.AdaptyInstallationStatus, AdaptySDK.AdaptyError})"/> never reports
+            /// <see cref="AdaptyInstallationStatusType.Determined"/>. The 4.0 natives collected
+            /// them unconditionally.
+            /// </remarks>
             public bool? AdaptyAttributionEnabled;
 
             /// <summary>

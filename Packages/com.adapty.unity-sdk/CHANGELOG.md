@@ -4,13 +4,9 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.1.0-dev.1] - 2026-08-15
+## [4.1.0] - 2026-08-20
 
-> Unreleased iOS-integration snapshot — not for publishing. The Android SDK has no 4.1 release yet,
-> so this version pins native iOS 4.1.0 while Android stays on the 4.0.x line; the coordinated
-> release is cut once Android exposes the matching 4.1 contract.
-
-Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0-dev.1/MIGRATION-v4.0-to-v4.1.md).
+Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0/MIGRATION-v4.0-to-v4.1.md).
 
 ### Breaking Changes
 
@@ -21,15 +17,25 @@ Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptytea
   `AdaptyProfile.AppliedExternalAttributionProviders`. The wire key is unchanged.
 - `IAdaptyEventListener` gained `OnReceivePromotedPurchase(AdaptyPromotedProduct)`; implementations
   must add the method.
-- [iOS] The native 4.1 reads **fallback file format 11** and rejects the format 10 file v4.0 shipped
-  against: `Adapty.SetFallback` reports `DecodingFailed` (`adapty_code: 2006`, *"The fallback
-  paywalls version is not correct"*). Re-download the iOS fallback file from the Adapty Dashboard.
-  The Android fallback file is unaffected while Android stays on 4.0.x.
+- The 4.1 natives read **fallback file format 11** and reject the format 10 files v4.0 shipped
+  against, on both platforms: `Adapty.SetFallback` reports `DecodingFailed` (`adapty_code: 2006`,
+  *"The fallback paywalls version is not correct"*) on iOS, and `WrongParam` (`adapty_code: 3001`,
+  *"The fallback file version is not correct"*) on Android. Re-download both fallback files from
+  the Adapty Dashboard.
+- **Adapty Attribution is opt-in, and installation details come with it.** The 4.1 natives collect
+  installation details only when the configuration asks them to, where the 4.0 natives collected
+  them unconditionally: `IAdaptyEventListener.OnInstallationDetailsSuccess` stops firing and
+  `Adapty.GetCurrentInstallationStatus` stops reporting
+  `AdaptyInstallationStatusType.Determined` until the app activates with
+  `AdaptyConfiguration.Builder.SetAdaptyAttributionEnabled(true)`. Both platforms behave this way,
+  and nothing in the API changes shape — an app that reads installation details and does not set
+  the flag simply stops receiving them.
 
 ### Added
 
 - `AdaptyConfiguration.Builder.SetAdaptyAttributionEnabled(bool)` — enables the Adapty Attribution
-  service. Not sent unless set, leaving the native default (off).
+  service. Not sent unless set, leaving the native default (off), which in 4.1 is also what turns
+  installation details off; see the breaking entry above.
 - `Adapty.MakePromotedPurchase(AdaptyPromotedProduct, ...)` and
   `IAdaptyEventListener.OnReceivePromotedPurchase` — App Store promoted in-app purchases (iOS only;
   on other platforms the completion handler reports an error). At native iOS 4.1.0 the event is not
@@ -42,8 +48,12 @@ Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptytea
 
 ### Native and Protocol
 
-- [iOS] Native Adapty iOS SDK is pinned to 4.1.0, which includes the 4.0.3 hotfix. Android stays on
-  crossplatform 4.0.2 / android-sdk 4.0.1 until the Android 4.1 release.
+- The native dependencies are pinned to AdaptySDK-iOS 4.1.0, which includes the 4.0.3 hotfix, and
+  on Android to crossplatform 4.1.0 / android-sdk 4.1.0 / android-ui 4.1.0, with the bundled
+  unity-wrapper AAR rebuilt at 4.1.0 from `adaptyandroidwrapper/`.
+- [Android] `Adapty.RestorePurchases` no longer reports `NoPurchasesToRestore` (1004): the 4.1
+  native completes with the current profile when there is nothing to restore. iOS never produced
+  the code, so nothing sends it now; the `AdaptyErrorCode` member stays.
 - The cross-platform contract is 4.1.0: `update_external_attribution_data`,
   `make_promoted_purchase`, `did_receive_promoted_purchase`, `adapty_attribution_enabled` and
   `ui_schema` are new, and the offer identifier of a product request now travels nested as
@@ -52,7 +62,11 @@ Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptytea
 
 ## [4.0.0-beta.2] - 2026-08-15
 
-Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.0.0-beta.2/MIGRATION-v3.17-to-v4.0.md).
+> Never published on its own: 4.1.0 is the first release to carry these changes. The section stays
+> because the work of coming from 3.x is described here, and the 4.1.0 section above states only
+> what moved since 4.0.
+
+Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0/MIGRATION-v3.17-to-v4.0.md).
 If you install from a `.unitypackage`, delete `Assets/AdaptySDK` and add
 `com.unity.nuget.newtonsoft-json` **before** importing. A `.unitypackage` never removes files, so the
 62 sources this release drops would otherwise stay behind and compile alongside the new ones, which

@@ -1,27 +1,23 @@
 # Migrate Adapty Unity SDK to v4.1
 
 The good news first: this is a small migration, and the compiler does most of it for you. Plan for
-three renames it will point out, one new interface method it will demand, and one file to
-re-download that it cannot know about — that last one is the only step you can genuinely forget, so
-if you read just one section, read
-[Re-download your fallback file](#re-download-your-fallback-file).
+three renames it will point out, one new interface method it will demand, and two things it cannot
+know about: the fallback files both natives now reject, and the flag installation details now need.
+Those two are the steps you can genuinely forget, so if you read just two sections, read
+[Re-download your fallback files](#re-download-your-fallback-files) and
+[Turn Adapty Attribution on if you read installation details](#turn-adapty-attribution-on-if-you-read-installation-details).
 
-Under the hood, v4.1 moves the native iOS dependency to AdaptySDK-iOS 4.1.0, renames the external
-attribution API to match it, and adds App Store promoted purchases. The why behind each change, and
-what was fixed along the way, is in
-[CHANGELOG.md](Packages/com.adapty.unity-sdk/CHANGELOG.md).
-
-> **One honest caveat before you start.** This version is an iOS-integration snapshot: the Android
-> SDK has no 4.1 release yet, so the Android side stays on the 4.0.x natives (crossplatform 4.0.2 /
-> android-sdk 4.0.1) and behaves exactly as it did in v4.0. Nothing here breaks your Android build —
-> the new APIs compile everywhere — but the 4.1 features arrive on iOS first. The coordinated
-> release follows once Android ships its 4.1.
+Under the hood, v4.1 moves the native dependencies to AdaptySDK-iOS 4.1.0 and AdaptySDK-Android
+4.1.0, renames the external attribution API to match them, makes Adapty Attribution opt-in, and
+adds App Store promoted purchases. The why behind each change, and what was fixed along the way, is
+in [CHANGELOG.md](Packages/com.adapty.unity-sdk/CHANGELOG.md).
 
 1. [Before you upgrade](#before-you-upgrade)
 2. [Rename the attribution API](#rename-the-attribution-api)
 3. [Implement the new listener method](#implement-the-new-listener-method)
-4. [Re-download your fallback file](#re-download-your-fallback-file)
-5. [Optional](#optional)
+4. [Re-download your fallback files](#re-download-your-fallback-files)
+5. [Turn Adapty Attribution on if you read installation details](#turn-adapty-attribution-on-if-you-read-installation-details)
+6. [Optional](#optional)
 
 ## Before you upgrade
 
@@ -33,9 +29,10 @@ Coming from 3.x? Take [MIGRATION-v3.17-to-v4.0.md](MIGRATION-v3.17-to-v4.0.md) f
 the parts that actually hurt (the paywall-to-flow rename, the Newtonsoft dependency, the install
 order). This guide starts where it ends.
 
-The native iOS dependency moves to AdaptySDK-iOS 4.1.0 on its own: it is declared inside the
-package and External Dependency Manager resolves it at build time. There is nothing for you to
-update by hand.
+Both native dependencies move on their own. iOS is declared inside the package as a Swift package
+and External Dependency Manager resolves it at build time; Android ships in the bundled
+`.androidlib` that Unity adds to the Gradle build itself. There is nothing for you to update by
+hand on either platform.
 
 ## Rename the attribution API
 
@@ -81,26 +78,44 @@ your build on its own. The handler starts receiving purchases once a future Unit
 that pin to a native that reports them; implementing it now means your code is ready the day you
 take that update.
 
-## Re-download your fallback file
+## Re-download your fallback files
 
 This is the step the compiler cannot catch, and the symptom shows up at runtime looking like a
-broken integration: right after upgrading, `Adapty.SetFallback` reports `DecodingFailed`
-(`adapty_code: 2006`, *"The fallback paywalls version is not correct. Download a new one from the
-Adapty Dashboard."*). Your integration is fine — the file is stale.
+broken integration: right after upgrading, `Adapty.SetFallback` fails. On iOS it reports
+`DecodingFailed` (`adapty_code: 2006`, *"The fallback paywalls version is not correct. Download a
+new one from the Adapty Dashboard."*); on Android, `WrongParam` (`adapty_code: 3001`, *"The
+fallback file version is not correct. Download a new one from the Adapty Dashboard."*). Your
+integration is fine — the file is stale.
 
-AdaptySDK-iOS 4.1 reworked how fallback placements are read and now expects **fallback file format
-11**; the format 10 file you exported for v4.0 no longer passes. The fix is exactly what the error
-says: download a fresh iOS fallback file from the Adapty Dashboard and replace the one in
-`Assets/StreamingAssets/`.
+Both natives reworked how fallback placements are read in 4.1 and now expect **fallback file format
+11**; the format 10 files you exported for v4.0 no longer pass. The fix is exactly what the error
+says: download fresh fallback files for both platforms from the Adapty Dashboard and replace the
+ones in `Assets/StreamingAssets/`.
 
-Leave the Android fallback file alone: the Android native stays on 4.0.x in this release and keeps
-reading the format it always did.
+## Turn Adapty Attribution on if you read installation details
+
+The other step nothing warns you about, and the one that looks least like a migration: in 4.1 the
+natives collect installation details only when you ask them to. In v4.0 they always did.
+
+So if your app implements `IAdaptyEventListener.OnInstallationDetailsSuccess` or calls
+`Adapty.GetCurrentInstallationStatus`, the callback stops arriving and the status stops reporting
+`AdaptyInstallationStatusType.Determined` — on both platforms — until you activate the service:
+
+```csharp
+var builder = new AdaptyConfiguration.Builder("PUBLIC_SDK_KEY")
+    .SetAdaptyAttributionEnabled(true);
+```
+
+Nothing else about it changed: the same details arrive in the same shape, on the same callback. If
+your app never looked at installation details, there is nothing to do here — leaving the flag unset
+is the same as before, minus the collection you were not using.
 
 ## Optional
 
-- `AdaptyConfiguration.Builder.SetAdaptyAttributionEnabled(true)` turns on the new
+- `AdaptyConfiguration.Builder.SetAdaptyAttributionEnabled(true)` turns on the
   [Adapty Attribution](https://adapty.io/docs/attribution-integration) service. It is off by
-  default and not even sent unless you set it, so ignoring it changes nothing.
+  default and not even sent unless you set it — the one thing that hangs off it is the installation
+  details covered above.
 - That is the whole list. The v4.0 additions (`AdaptyUICreateFlowViewParameters.Locale`,
   `AdaptyUIFlowView.Locale`) are now officially part of the cross-platform contract, and the rest
   of the 4.1 wire-format changes — the nested offer identifier a purchase sends back, the

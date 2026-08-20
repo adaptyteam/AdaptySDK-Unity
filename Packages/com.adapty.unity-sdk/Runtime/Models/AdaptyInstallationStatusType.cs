@@ -10,8 +10,10 @@ namespace AdaptySDK
     public enum AdaptyInstallationStatusType
     {
         /// <summary>
-        /// The details are not available. Reported when the platform has nothing to report, and on iOS
-        /// also when the install time or the launch count could not be obtained.
+        /// The details are not available. Reported when the platform has nothing to report — which
+        /// includes the case of Adapty Attribution being off, its default, since the 4.1 natives
+        /// collect nothing until it is on — and on iOS also when the install time or the launch
+        /// count could not be obtained.
         /// </summary>
         [EnumMember(Value = "not_available")]
         NotAvailable = 0,
