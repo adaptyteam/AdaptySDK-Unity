@@ -46,6 +46,16 @@ namespace AdaptySDK.NextTests
                 ModelSnapshot.Render(AdaptyJson.Deserialize<AdaptyFlow>(Snapshots.LoadResponse(fixture)))
             );
 
+        [TestCase("promoted-product-full")]
+        [TestCase("promoted-product-minimal")]
+        public void PromotedProduct(string fixture) =>
+            Snapshots.Matches(
+                fixture,
+                ModelSnapshot.Render(
+                    AdaptyJson.Deserialize<AdaptyPromotedProduct>(Snapshots.LoadResponse(fixture))
+                )
+            );
+
         [TestCase("onboarding-full")]
         [TestCase("onboarding-minimal")]
         public void Onboarding(string fixture) =>

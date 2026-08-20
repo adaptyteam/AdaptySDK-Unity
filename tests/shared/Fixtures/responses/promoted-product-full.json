@@ -1,0 +1,48 @@
+{
+  "vendor_product_id": "com.adapty.sample.monthly",
+  "localized_description": "Full access, billed monthly",
+  "localized_title": "Monthly",
+  "is_family_shareable": true,
+  "region_code": "US",
+  "price": {
+    "amount": 9.99,
+    "currency_code": "USD",
+    "currency_symbol": "$",
+    "localized_string": "$9.99"
+  },
+  "subscription": {
+    "group_identifier": "group-1",
+    "period": {
+      "unit": "month",
+      "number_of_units": 1
+    },
+    "localized_period": "1 month",
+    "renewal_type": "autorenewable",
+    "base_plan_id": "base-plan-1",
+    "offer": {
+      "offer_identifier": {
+        "id": "promo-1",
+        "type": "promotional"
+      },
+      "phases": [
+        {
+          "price": {
+            "amount": 0.0,
+            "currency_code": "USD",
+            "currency_symbol": "$",
+            "localized_string": "Free"
+          },
+          "number_of_periods": 1,
+          "payment_mode": "free_trial",
+          "subscription_period": {
+            "unit": "week",
+            "number_of_units": 1
+          },
+          "localized_subscription_period": "1 week",
+          "localized_number_of_periods": "1 time"
+        }
+      ]
+    }
+  },
+  "payload_data": "{\"custom\":\"promoted payload\"}"
+}

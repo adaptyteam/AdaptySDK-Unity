@@ -24,7 +24,7 @@
 Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/adaptyteam/AdaptySDK-iOS) and [Adapty Android SDK](https://github.com/adaptyteam/AdaptySDK-Android). Both SDKs are written in pure Swift/Kotlin, all wrapped into a C# lib.
 
 Requires Unity 2022.3 or newer and Android API 21 or newer. iOS builds require **Xcode 26 or newer**
-and a deployment target of 15.0 or newer: AdaptySDK-iOS 4.0 is a `swift-tools-version: 6.2` package,
+and a deployment target of 15.0 or newer: AdaptySDK-iOS 4.x is a `swift-tools-version: 6.2` package,
 and an older toolchain refuses to resolve it. Open the exported project as
 **`Unity-iPhone.xcworkspace`** — building `Unity-iPhone.xcodeproj` directly fails at link time with
 `ld: framework 'Pods_UnityFramework' not found`.
@@ -95,10 +95,10 @@ so start new integrations on flows.
 does not sit at the repository root — and the version suffix, which pins the tag:
 
 ```
-https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.0.0-beta.2
+https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.1.0
 ```
 
-Drop `#4.0.0-beta.2` and Package Manager resolves the default branch, which carries the previous
+Drop `#4.1.0` and Package Manager resolves the default branch, which carries the previous
 major until a release merges this one into it — so an unpinned URL installs 3.17 and says nothing
 about it.
 
@@ -131,6 +131,10 @@ Manager can read, so the menu item leaves it alone and warns instead; update tha
 
 Already on 3.x? [MIGRATION-v3.17-to-v4.0.md](MIGRATION-v3.17-to-v4.0.md) covers the move to 4.0 — the renamed paywall API, the
 new Newtonsoft.Json dependency, and the order to install things in.
+
+Coming from 4.0? [MIGRATION-v4.0-to-v4.1.md](MIGRATION-v4.0-to-v4.1.md) covers the move to 4.1 —
+the renamed attribution API, the new promoted-purchase listener method, and the fallback file the
+native iOS 4.1 expects you to re-download.
 
 Read the [release notes and known issues](Packages/com.adapty.unity-sdk/CHANGELOG.md) before you
 integrate: they carry the limitations of the pinned native SDKs, which no amount of configuration on
@@ -184,7 +188,7 @@ version it was found in.
 - **Custom color and linear gradient assets are not rendered on iOS.** An asset built with
   `AdaptyCustomAsset.Color` or `AdaptyCustomAsset.LinearGradient` and passed through
   `AdaptyUICreateFlowViewParameters.SetCustomAssets` reaches the view as a transparent color and an
-  empty gradient: the pinned AdaptySDK-iOS 4.0.2 substitutes those for whatever it receives, and so
-  do 4.0.3 and 4.1.0, so there is no version to move the pin to. Custom image and video assets are
-  unaffected; whether Android is affected has not been established. Waiting on a native iOS
+  empty gradient: the pinned AdaptySDK-iOS 4.1.0 substitutes those for whatever it receives, exactly
+  as 4.0.2 and 4.0.3 did, so there is no version to move the pin to. Custom image and video assets
+  are unaffected; whether Android is affected has not been established. Waiting on a native iOS
   release, and on iOS acceptance after it.

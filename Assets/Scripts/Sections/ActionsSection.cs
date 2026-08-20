@@ -75,10 +75,10 @@ public class ActionsSection : MonoBehaviour
         );
     }
 
-    public void UpdateAttributionPressed()
+    public void UpdateExternalAttributionPressed()
     {
         this.Router.SetIsLoading(true);
-        this.Listener.UpdateAttribution(
+        this.Listener.UpdateExternalAttribution(
             (error) =>
             {
                 this.Router.SetIsLoading(false);

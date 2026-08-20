@@ -369,16 +369,16 @@ namespace AdaptyExample
             );
         }
 
-        public void UpdateAttribution(Action<AdaptyError> completionHandler)
+        public void UpdateExternalAttribution(Action<AdaptyError> completionHandler)
         {
-            this.LogMethodRequest("UpdateAttribution");
+            this.LogMethodRequest("UpdateExternalAttribution");
 
-            Adapty.UpdateAttribution(
+            Adapty.UpdateExternalAttribution(
                 "{\"test_key\": \"test_value\"}",
                 "custom",
                 (error) =>
                 {
-                    this.LogMethodResult("UpdateAttribution", error);
+                    this.LogMethodResult("UpdateExternalAttribution", error);
                     completionHandler.Invoke(error);
                 }
             );
@@ -529,6 +529,22 @@ namespace AdaptyExample
             Debug.Log("#AdaptyListener# OnReceiveUpdatedProfile called");
 
             this.Router.SetProfile(profile);
+        }
+
+        public void OnReceivePromotedPurchase(AdaptyPromotedProduct product)
+        {
+            Debug.Log(
+                "#AdaptyListener# OnReceivePromotedPurchase called, product = "
+                    + product.VendorProductId
+            );
+
+            Adapty.MakePromotedPurchase(
+                product,
+                (result, error) =>
+                {
+                    this.LogMethodResult("MakePromotedPurchase", error);
+                }
+            );
         }
 
         public void OnInstallationDetailsSuccess(AdaptyInstallationDetails details)

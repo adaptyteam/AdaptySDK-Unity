@@ -9,8 +9,10 @@ namespace AdaptySDK
     /// Almost every value is the native SDK's own, so a code always arrives whether or not this
     /// enum names it. Most of those are produced by one platform only, and each member says which;
     /// where both produce a number, both meanings are given, because they are not always the same
-    /// one. Verified against AdaptySDK-iOS 4.0.2 and AdaptySDK-Android 4.0.1, the pinned
-    /// dependencies. Two are different: <see cref="EncodingFailed"/> and
+    /// one. Each was traced to its throw site in AdaptySDK-iOS 4.0.2 and AdaptySDK-Android 4.0.1;
+    /// the pinned 4.1.0 natives declare the same set of codes, with the one behavioural change
+    /// noted on <see cref="NoPurchasesToRestore"/>. Two are different:
+    /// <see cref="EncodingFailed"/> and
     /// <see cref="DecodingFailed"/> are also raised by this SDK itself, on either platform, when a
     /// request cannot be encoded or a reply cannot be read — the native side is never reached in
     /// the first case and has already answered in the second.
@@ -188,8 +190,10 @@ namespace AdaptySDK
         CantMakePayments = 1003,
 
         /// <summary>
-        /// Android only. <see cref="Adapty.RestorePurchases(System.Action{AdaptySDK.AdaptyProfile, AdaptySDK.AdaptyError})"/> found nothing to restore. iOS does
-        /// not produce this code.
+        /// Nothing to restore. No pinned native produces it any more: iOS never did, and the
+        /// Android 4.1 native handles it internally — <see cref="Adapty.RestorePurchases(System.Action{AdaptySDK.AdaptyProfile, AdaptySDK.AdaptyError})"/> completes with the
+        /// current profile instead. The member stays because the code is still the native SDKs'
+        /// own and an older native, or a future one, may send it.
         /// </summary>
         NoPurchasesToRestore = 1004,
 

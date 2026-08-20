@@ -3,6 +3,7 @@ protected AdaptySDK.AdaptyOnboardingsAnalyticsEvent.ctor()
 protected AdaptySDK.AdaptyOnboardingsInput.ctor()
 protected AdaptySDK.AdaptyOnboardingsStateUpdatedParams.ctor()
 public AdaptySDK.AdaptyConfiguration+Builder.ActivateUI : System.Boolean
+public AdaptySDK.AdaptyConfiguration+Builder.AdaptyAttributionEnabled : System.Nullable<System.Boolean>
 public AdaptySDK.AdaptyConfiguration+Builder.AdaptyUIMediaCache : AdaptySDK.AdaptyUIMediaCacheConfiguration
 public AdaptySDK.AdaptyConfiguration+Builder.ApiKey : System.String
 public AdaptySDK.AdaptyConfiguration+Builder.AppleClearDataOnBackup : System.Nullable<System.Boolean>
@@ -21,6 +22,7 @@ public AdaptySDK.AdaptyConfiguration+Builder.ObserverMode : System.Nullable<Syst
 public AdaptySDK.AdaptyConfiguration+Builder.ServerCluster : System.Nullable<AdaptySDK.AdaptyServerCluster>
 public AdaptySDK.AdaptyConfiguration+Builder.SetAPIKey(System.String apiKey) : AdaptySDK.Builder
 public AdaptySDK.AdaptyConfiguration+Builder.SetActivateUI(System.Boolean activate) : AdaptySDK.Builder
+public AdaptySDK.AdaptyConfiguration+Builder.SetAdaptyAttributionEnabled(System.Boolean adaptyAttributionEnabled) : AdaptySDK.Builder
 public AdaptySDK.AdaptyConfiguration+Builder.SetAdaptyUIMediaCache(System.Nullable<System.Int32> memoryStorageTotalCostLimit, System.Nullable<System.Int32> memoryStorageCountLimit, System.Nullable<System.Int32> diskStorageSizeLimit) : AdaptySDK.Builder
 public AdaptySDK.AdaptyConfiguration+Builder.SetAppleClearDataOnBackup(System.Boolean appleClearDataOnBackup) : AdaptySDK.Builder
 public AdaptySDK.AdaptyConfiguration+Builder.SetAppleIDFACollectionDisabled(System.Boolean appleIdfaCollectionDisabled) : AdaptySDK.Builder
@@ -73,7 +75,7 @@ public AdaptySDK.AdaptyOnboardingsTextInput.ctor(System.String value)
 public AdaptySDK.AdaptyPaymentMode.value__ : System.Int32
 public AdaptySDK.AdaptyProductIdentifier.ctor(System.String vendorProductId, System.String adaptyProductId, System.String basePlanId)
 public AdaptySDK.AdaptyProfile.AccessLevels : System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.AccessLevel> { get; }
-public AdaptySDK.AdaptyProfile.AppliedAttributionSources : System.Collections.Generic.IReadOnlyList<System.String> { get; }
+public AdaptySDK.AdaptyProfile.AppliedExternalAttributionProviders : System.Collections.Generic.IReadOnlyList<System.String> { get; }
 public AdaptySDK.AdaptyProfile.CustomAttributes : System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> { get; }
 public AdaptySDK.AdaptyProfile.NonSubscriptions : System.Collections.Generic.IReadOnlyDictionary<System.String, System.Collections.Generic.IReadOnlyList<AdaptySDK.NonSubscription>> { get; }
 public AdaptySDK.AdaptyProfile.Subscriptions : System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.Subscription> { get; }
@@ -174,6 +176,7 @@ public AdaptySDK.AppTrackingTransparencyStatus.value__ : System.Int32
 public abstract AdaptySDK.IAdaptyEventListener.OnInstallationDetailsFail(AdaptySDK.AdaptyError error) : System.Void
 public abstract AdaptySDK.IAdaptyEventListener.OnInstallationDetailsSuccess(AdaptySDK.AdaptyInstallationDetails details) : System.Void
 public abstract AdaptySDK.IAdaptyEventListener.OnLoadLatestProfile(AdaptySDK.AdaptyProfile profile) : System.Void
+public abstract AdaptySDK.IAdaptyEventListener.OnReceivePromotedPurchase(AdaptySDK.AdaptyPromotedProduct product) : System.Void
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidAppear(AdaptySDK.AdaptyUIFlowView view) : System.Void
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidDisappear(AdaptySDK.AdaptyUIFlowView view) : System.Void
 public abstract AdaptySDK.IAdaptyFlowsEventsListener.FlowViewDidFailLoadingProducts(AdaptySDK.AdaptyUIFlowView view, AdaptySDK.AdaptyError error) : System.Void
@@ -249,6 +252,7 @@ public override AdaptySDK.AdaptyProfile+NonSubscription.ToString() : System.Stri
 public override AdaptySDK.AdaptyProfile+Subscription.ToString() : System.String
 public override AdaptySDK.AdaptyProfile.ToString() : System.String
 public override AdaptySDK.AdaptyProfileParameters.ToString() : System.String
+public override AdaptySDK.AdaptyPromotedProduct.ToString() : System.String
 public override AdaptySDK.AdaptyPurchaseParameters.ToString() : System.String
 public override AdaptySDK.AdaptyPurchaseResult.ToString() : System.String
 public override AdaptySDK.AdaptySubscription.ToString() : System.String
@@ -378,6 +382,13 @@ public readonly AdaptySDK.AdaptyProfile+Subscription.VendorTransactionId : Syste
 public readonly AdaptySDK.AdaptyProfile+Subscription.WillRenew : System.Boolean
 public readonly AdaptySDK.AdaptyProfile.CustomerUserId : System.String
 public readonly AdaptySDK.AdaptyProfile.ProfileId : System.String
+public readonly AdaptySDK.AdaptyPromotedProduct.IsFamilyShareable : System.Boolean
+public readonly AdaptySDK.AdaptyPromotedProduct.LocalizedDescription : System.String
+public readonly AdaptySDK.AdaptyPromotedProduct.LocalizedTitle : System.String
+public readonly AdaptySDK.AdaptyPromotedProduct.Price : AdaptySDK.AdaptyPrice
+public readonly AdaptySDK.AdaptyPromotedProduct.RegionCode : System.String
+public readonly AdaptySDK.AdaptyPromotedProduct.Subscription : AdaptySDK.AdaptySubscription
+public readonly AdaptySDK.AdaptyPromotedProduct.VendorProductId : System.String
 public readonly AdaptySDK.AdaptyPurchaseParameters.IsOfferPersonalized : System.Nullable<System.Boolean>
 public readonly AdaptySDK.AdaptyPurchaseParameters.SubscriptionUpdateParams : AdaptySDK.AdaptySubscriptionUpdateParameters
 public readonly AdaptySDK.AdaptyPurchaseResult.AppleJWSTransaction : System.String
@@ -451,6 +462,7 @@ public sealed class AdaptySDK.AdaptyProfile+NonSubscription
 public sealed class AdaptySDK.AdaptyProfile+Subscription
 public sealed class AdaptySDK.AdaptyProfileParameters
 public sealed class AdaptySDK.AdaptyProfileParameters+Builder
+public sealed class AdaptySDK.AdaptyPromotedProduct
 public sealed class AdaptySDK.AdaptyPurchaseParameters
 public sealed class AdaptySDK.AdaptyPurchaseParametersBuilder
 public sealed class AdaptySDK.AdaptyPurchaseResult
@@ -491,6 +503,7 @@ public static AdaptySDK.Adapty.Identify(System.String customerUserId, System.Gui
 public static AdaptySDK.Adapty.IsActivated(System.Action<System.Boolean, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.LogShowFlow(AdaptySDK.AdaptyFlow flow, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.Logout(System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.MakePromotedPurchase(AdaptySDK.AdaptyPromotedProduct product, System.Action<AdaptySDK.AdaptyPurchaseResult, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.MakePurchase(AdaptySDK.AdaptyPaywallProduct product, AdaptySDK.AdaptyPurchaseParameters purchaseParameters, System.Action<AdaptySDK.AdaptyPurchaseResult, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.MakePurchase(AdaptySDK.AdaptyPaywallProduct product, System.Action<AdaptySDK.AdaptyPurchaseResult, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.OpenWebPaywall(AdaptySDK.AdaptyFlowPaywall paywall, AdaptySDK.AdaptyWebPresentation openIn, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
@@ -511,8 +524,8 @@ public static AdaptySDK.Adapty.SetOnboardingsEventsListener(AdaptySDK.IAdaptyOnb
 public static AdaptySDK.Adapty.SetSystemRequestsHandler(AdaptySDK.IAdaptyUISystemRequestsHandler handler) : System.Void
 public static AdaptySDK.Adapty.UpdateAppStoreCollectingRefundDataConsent(System.Boolean consent, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.UpdateAppStoreRefundPreference(AdaptySDK.AdaptyRefundPreference refundPreference, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
-public static AdaptySDK.Adapty.UpdateAttribution(System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> attribution, System.String source, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
-public static AdaptySDK.Adapty.UpdateAttribution(System.String jsonString, System.String source, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.UpdateExternalAttribution(System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> attribution, System.String provider, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.UpdateExternalAttribution(System.String jsonString, System.String provider, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.UpdateProfile(AdaptySDK.AdaptyProfileParameters param, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyCustomAsset.Color(UnityEngine.Color color) : AdaptySDK.AdaptyCustomAsset
 public static AdaptySDK.AdaptyCustomAsset.LinearGradient(UnityEngine.Gradient gradient) : AdaptySDK.AdaptyCustomAsset

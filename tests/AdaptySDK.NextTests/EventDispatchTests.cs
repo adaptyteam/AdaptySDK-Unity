@@ -47,6 +47,21 @@ namespace AdaptySDK.NextTests
             Assert.That(_listener.Profile.ProfileId, Is.Not.Null);
         }
 
+        [Test]
+        public void PromotedPurchasesReachTheListener()
+        {
+            Adapty.OnMessage(
+                "did_receive_promoted_purchase",
+                "{\"product\":" + Snapshots.LoadResponse("promoted-product-full") + "}"
+            );
+
+            Assert.That(_listener.PromotedProduct, Is.Not.Null);
+            Assert.That(
+                _listener.PromotedProduct.VendorProductId,
+                Is.EqualTo("com.adapty.sample.monthly")
+            );
+        }
+
         /// <summary>
         /// The wire is UTC and the public API is local, on this path too: an event is a document
         /// parsed before anything typed is built out of it.
@@ -396,6 +411,7 @@ namespace AdaptySDK.NextTests
         private sealed class Listener : IAdaptyEventListener
         {
             internal AdaptyProfile Profile;
+            internal AdaptyPromotedProduct PromotedProduct;
             internal bool Throw;
 
             public void OnLoadLatestProfile(AdaptyProfile profile)
@@ -407,6 +423,9 @@ namespace AdaptySDK.NextTests
 
                 Profile = profile;
             }
+
+            public void OnReceivePromotedPurchase(AdaptyPromotedProduct product) =>
+                PromotedProduct = product;
 
             public void OnInstallationDetailsSuccess(AdaptyInstallationDetails details) { }
 

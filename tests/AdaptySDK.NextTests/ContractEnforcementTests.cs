@@ -441,7 +441,7 @@ namespace AdaptySDK.NextTests
                     Throws.InstanceOf<NotSupportedException>()
                 );
                 Assert.That(
-                    () => ((IList<string>)profile.AppliedAttributionSources).Add("x"),
+                    () => ((IList<string>)profile.AppliedExternalAttributionProviders).Add("x"),
                     Throws.InstanceOf<NotSupportedException>()
                 );
 

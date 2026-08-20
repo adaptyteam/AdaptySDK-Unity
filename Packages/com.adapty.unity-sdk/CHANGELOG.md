@@ -4,9 +4,69 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-08-20
+
+Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0/MIGRATION-v4.0-to-v4.1.md).
+
+### Breaking Changes
+
+- `Adapty.UpdateAttribution(...)` is renamed to `Adapty.UpdateExternalAttribution(...)`, with the
+  `source` parameter renamed to `provider`, matching the native 4.1 attribution API rename. The old
+  name is removed without a deprecated alias.
+- `AdaptyProfile.AppliedAttributionSources` is renamed to
+  `AdaptyProfile.AppliedExternalAttributionProviders`. The wire key is unchanged.
+- `IAdaptyEventListener` gained `OnReceivePromotedPurchase(AdaptyPromotedProduct)`; implementations
+  must add the method.
+- The 4.1 natives read **fallback file format 11** and reject the format 10 files v4.0 shipped
+  against, on both platforms: `Adapty.SetFallback` reports `DecodingFailed` (`adapty_code: 2006`,
+  *"The fallback paywalls version is not correct"*) on iOS, and `WrongParam` (`adapty_code: 3001`,
+  *"The fallback file version is not correct"*) on Android. Re-download both fallback files from
+  the Adapty Dashboard.
+- **Adapty Attribution is opt-in, and installation details come with it.** The 4.1 natives collect
+  installation details only when the configuration asks them to, where the 4.0 natives collected
+  them unconditionally: `IAdaptyEventListener.OnInstallationDetailsSuccess` stops firing and
+  `Adapty.GetCurrentInstallationStatus` stops reporting
+  `AdaptyInstallationStatusType.Determined` until the app activates with
+  `AdaptyConfiguration.Builder.SetAdaptyAttributionEnabled(true)`. Both platforms behave this way,
+  and nothing in the API changes shape — an app that reads installation details and does not set
+  the flag simply stops receiving them.
+
+### Added
+
+- `AdaptyConfiguration.Builder.SetAdaptyAttributionEnabled(bool)` — enables the Adapty Attribution
+  service. Not sent unless set, leaving the native default (off), which in 4.1 is also what turns
+  installation details off; see the breaking entry above.
+- `Adapty.MakePromotedPurchase(AdaptyPromotedProduct, ...)` and
+  `IAdaptyEventListener.OnReceivePromotedPurchase` — App Store promoted in-app purchases (iOS only;
+  on other platforms the completion handler reports an error). At native iOS 4.1.0 the event is not
+  yet emitted — the native SDK still completes promoted purchases by itself, and the exact pin keeps
+  it that way — so the listener method starts firing only once a future SDK release moves the pin to
+  a native that reports them.
+- `AdaptyFlow` carries the 4.1 `ui_schema` (custom flow layouts, UIBuilder 5.1) through to the
+  renderer. It is not public API: the schema is the renderer's own data, and the SDK only makes sure
+  a flow handed back to the native side keeps it.
+
+### Native and Protocol
+
+- The native dependencies are pinned to AdaptySDK-iOS 4.1.0, which includes the 4.0.3 hotfix, and
+  on Android to crossplatform 4.1.0 / android-sdk 4.1.0 / android-ui 4.1.0, with the bundled
+  unity-wrapper AAR rebuilt at 4.1.0 from `adaptyandroidwrapper/`.
+- [Android] `Adapty.RestorePurchases` no longer reports `NoPurchasesToRestore` (1004): the 4.1
+  native completes with the current profile when there is nothing to restore. iOS never produced
+  the code, so nothing sends it now; the `AdaptyErrorCode` member stays.
+- The cross-platform contract is 4.1.0: `update_external_attribution_data`,
+  `make_promoted_purchase`, `did_receive_promoted_purchase`, `adapty_attribution_enabled` and
+  `ui_schema` are new, and the offer identifier of a product request now travels nested as
+  `subscription.offer.offer_identifier` — the natives read both forms, the flat
+  `subscription_offer_identifier` is no longer written.
+
 ## [4.0.0-beta.2] - 2026-08-15
 
-Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.0.0-beta.2/MIGRATION-v3.17-to-v4.0.md).
+> Never published on its own: 4.1.0 is the first release to carry these changes. The section stays
+> because the work of coming from 3.x is described here, and the 4.1.0 section above states only
+> what moved since 4.0.
+
+Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0/MIGRATION-v3.17-to-v4.0.md).
 If you install from a `.unitypackage`, delete `Assets/AdaptySDK` and add
 `com.unity.nuget.newtonsoft-json` **before** importing. A `.unitypackage` never removes files, so the
 62 sources this release drops would otherwise stay behind and compile alongside the new ones, which

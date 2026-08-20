@@ -14,7 +14,7 @@ namespace AdaptySDK
         /// <summary>
         /// The version of the Adapty SDK.
         /// </summary>
-        public static readonly string SDKVersion = "4.0.0-beta.2";
+        public static readonly string SDKVersion = "4.1.0";
 
         /// <summary>
         /// Use this method to initialize the Adapty SDK.
@@ -459,6 +459,27 @@ namespace AdaptySDK
         }
 
         /// <summary>
+        /// Completes a promoted purchase the user started from the App Store product page. iOS only.
+        /// </summary>
+        /// <remarks>
+        /// Promoted in-app purchases are an App Store feature; on other platforms the completion
+        /// handler reports an error.
+        /// Read more on the <see href="https://adapty.io/docs/promoted-purchases">Adapty Documentation</see>
+        /// </remarks>
+        /// <param name="product">An <see cref="AdaptyPromotedProduct"/> object received through <see cref="IAdaptyEventListener.OnReceivePromotedPurchase(AdaptyPromotedProduct)"/>.</param>
+        /// <param name="completionHandler">The action that will be called with the result. The result contains an <see cref="AdaptyPurchaseResult"/> object.</param>
+        public static void MakePromotedPurchase(
+            AdaptyPromotedProduct product,
+            Action<AdaptyPurchaseResult, AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JObject();
+            parameters["product"] = AdaptyJson.ToNode(new AdaptyPromotedProductRequest(product));
+
+            AdaptyRequest.Send("make_promoted_purchase", parameters, completionHandler);
+        }
+
+        /// <summary>
         /// Presents the App Store code redemption sheet, enabling the user to redeem promotional codes.
         /// </summary>
         /// <remarks>
@@ -579,26 +600,26 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Updates attribution data for the profile to track user acquisition sources.
+        /// Updates external attribution data for the profile to track user acquisition sources.
         /// </summary>
         /// <remarks>
-        /// This method allows you to send attribution data from various sources (e.g., AppsFlyer, Adjust, Branch) to Adapty.
+        /// This method allows you to send attribution data from external providers (e.g., AppsFlyer, Adjust, Branch) to Adapty.
         /// Read more on the <see href="https://adapty.io/docs/attribution-integration">Adapty Documentation</see>
         /// </remarks>
         /// <param name="jsonString">A serialized JSON string containing attribution (conversion) data from the attribution provider.</param>
-        /// <param name="source">The source of attribution (e.g., "appsflyer", "adjust", "branch", "custom").</param>
+        /// <param name="provider">The external attribution provider (e.g., "appsflyer", "adjust", "branch", "custom").</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void UpdateAttribution(
+        public static void UpdateExternalAttribution(
             string jsonString,
-            string source,
+            string provider,
             Action<AdaptyError> completionHandler
         )
         {
             var parameters = new JObject();
             parameters["attribution"] = jsonString;
-            parameters["source"] = source;
+            parameters["provider"] = provider;
 
-            AdaptyRequest.SendVoid("update_attribution_data", parameters, completionHandler);
+            AdaptyRequest.SendVoid("update_external_attribution_data", parameters, completionHandler);
         }
 
         /// <summary>

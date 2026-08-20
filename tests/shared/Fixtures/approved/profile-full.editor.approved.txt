@@ -24,7 +24,7 @@
       "WillRenew": true
     }
   },
-  "AppliedAttributionSources (property)": [
+  "AppliedExternalAttributionProviders (property)": [
     "appsflyer",
     "adjust"
   ],
@@ -102,7 +102,7 @@
       "WillRenew": true
     }
   },
-  "_AppliedAttributionSources": [
+  "_AppliedExternalAttributionProviders": [
     "appsflyer",
     "adjust"
   ],

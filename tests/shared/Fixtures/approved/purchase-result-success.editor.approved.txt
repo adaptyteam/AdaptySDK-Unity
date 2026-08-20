@@ -5,7 +5,7 @@
   "Profile": {
     "$type": "AdaptyProfile",
     "AccessLevels (property)": {},
-    "AppliedAttributionSources (property)": [],
+    "AppliedExternalAttributionProviders (property)": [],
     "CustomAttributes (property)": {},
     "CustomerUserId": null,
     "IsTestUser": false,
@@ -15,7 +15,7 @@
     "Subscriptions (property)": {},
     "Version": 1753876800000,
     "_AccessLevels": {},
-    "_AppliedAttributionSources": [],
+    "_AppliedExternalAttributionProviders": [],
     "_CustomAttributes": {},
     "_NonSubscriptions": {},
     "_Subscriptions": {}

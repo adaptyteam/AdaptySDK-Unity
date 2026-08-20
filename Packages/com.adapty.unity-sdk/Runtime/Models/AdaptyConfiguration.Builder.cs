@@ -27,6 +27,7 @@ namespace AdaptySDK
             GoogleEnablePendingPrepaidPlans = builder.GoogleEnablePendingPrepaidPlans;
             GoogleLocalAccessLevelAllowed = builder.GoogleLocalAccessLevelAllowed;
             IpAddressCollectionDisabled = builder.IpAddressCollectionDisabled;
+            AdaptyAttributionEnabled = builder.AdaptyAttributionEnabled;
             AppleClearDataOnBackup = builder.AppleClearDataOnBackup;
             ServerCluster = builder.ServerCluster;
             BackendProxyHost = builder.BackendProxyHost;
@@ -49,6 +50,7 @@ namespace AdaptySDK
         /// <remarks>
         /// Only the API key is required, but "not set" does not mean "not sent". The nullable
         /// members — <see cref="ObserverMode"/>, <see cref="GoogleLocalAccessLevelAllowed"/>,
+        /// <see cref="AdaptyAttributionEnabled"/>,
         /// <see cref="AppleClearDataOnBackup"/>, <see cref="ServerCluster"/>,
         /// <see cref="CustomerUserId"/>, <see cref="CustomerIdentity"/>,
         /// <see cref="BackendProxyHost"/> and <see cref="AdaptyUIMediaCache"/> — are left out of
@@ -115,6 +117,19 @@ namespace AdaptySDK
             public bool IpAddressCollectionDisabled;
 
             /// <summary>
+            /// Enables the <see href="https://adapty.io/docs/attribution-integration">Adapty
+            /// Attribution</see> service. Null leaves the native default, which is off.
+            /// </summary>
+            /// <remarks>
+            /// Installation details hang off this flag: while it is off, the 4.1 natives collect
+            /// none, so <see cref="IAdaptyEventListener.OnInstallationDetailsSuccess(AdaptyInstallationDetails)"/>
+            /// never fires and <see cref="Adapty.GetCurrentInstallationStatus(System.Action{AdaptySDK.AdaptyInstallationStatus, AdaptySDK.AdaptyError})"/> never reports
+            /// <see cref="AdaptyInstallationStatusType.Determined"/>. The 4.0 natives collected
+            /// them unconditionally.
+            /// </remarks>
+            public bool? AdaptyAttributionEnabled;
+
+            /// <summary>
             /// iOS only. Clears the SDK's stored data when the app is restored from an iCloud
             /// backup, so a restored device does not carry the previous one's profile. Null
             /// leaves the native default, which is off.
@@ -179,6 +194,7 @@ namespace AdaptySDK
                 + $"{nameof(GoogleEnablePendingPrepaidPlans)}: {GoogleEnablePendingPrepaidPlans}, "
                 + $"{nameof(GoogleLocalAccessLevelAllowed)}: {GoogleLocalAccessLevelAllowed}, "
                 + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
+                + $"{nameof(AdaptyAttributionEnabled)}: {AdaptyAttributionEnabled}, "
                 + $"{nameof(AppleClearDataOnBackup)}: {AppleClearDataOnBackup}, "
                 + $"{nameof(ServerCluster)}: {ServerCluster}, "
                 + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "
@@ -292,6 +308,16 @@ namespace AdaptySDK
             public Builder SetIPAddressCollectionDisabled(bool ipAddressCollectionDisabled)
             {
                 IpAddressCollectionDisabled = ipAddressCollectionDisabled;
+                return this;
+            }
+
+            /// <summary>
+            /// Sets <see cref="AdaptyAttributionEnabled"/>.
+            /// </summary>
+            /// <param name="adaptyAttributionEnabled">True to enable the Adapty Attribution service.</param>
+            public Builder SetAdaptyAttributionEnabled(bool adaptyAttributionEnabled)
+            {
+                AdaptyAttributionEnabled = adaptyAttributionEnabled;
                 return this;
             }
 

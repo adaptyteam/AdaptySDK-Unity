@@ -24,6 +24,8 @@ namespace AdaptySDK
         private readonly bool? GoogleLocalAccessLevelAllowed;
         [DataMember(Name = "ip_address_collection_disabled")]
         private readonly bool? IpAddressCollectionDisabled;
+        [DataMember(Name = "adapty_attribution_enabled")]
+        private readonly bool? AdaptyAttributionEnabled;
         [DataMember(Name = "clear_data_on_backup")]
         private readonly bool? AppleClearDataOnBackup;
         [DataMember(Name = "server_cluster")]
@@ -62,6 +64,7 @@ namespace AdaptySDK
             + $"{nameof(GoogleEnablePendingPrepaidPlans)}: {GoogleEnablePendingPrepaidPlans}, "
             + $"{nameof(GoogleLocalAccessLevelAllowed)}: {GoogleLocalAccessLevelAllowed}, "
             + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
+            + $"{nameof(AdaptyAttributionEnabled)}: {AdaptyAttributionEnabled}, "
             + $"{nameof(AppleClearDataOnBackup)}: {AppleClearDataOnBackup}, "
             + $"{nameof(ServerCluster)}: {ServerCluster}, "
             + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "

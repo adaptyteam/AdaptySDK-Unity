@@ -50,18 +50,18 @@ namespace AdaptySDK
         ) => ReportTransaction(transactionId, null, completionHandler);
 
         /// <summary>
-        /// Updates attribution data for the profile to track user acquisition sources.
+        /// Updates external attribution data for the profile to track user acquisition sources.
         /// </summary>
         /// <remarks>
-        /// This method allows you to send attribution data from various sources (e.g., AppsFlyer, Adjust, Branch) to Adapty.
+        /// This method allows you to send attribution data from external providers (e.g., AppsFlyer, Adjust, Branch) to Adapty.
         /// Read more on the <see href="https://adapty.io/docs/attribution-integration">Adapty Documentation</see>
         /// </remarks>
         /// <param name="attribution">A dictionary containing attribution (conversion) data from the attribution provider.</param>
-        /// <param name="source">The source of attribution (e.g., "appsflyer", "adjust", "branch", "custom").</param>
+        /// <param name="provider">The external attribution provider (e.g., "appsflyer", "adjust", "branch", "custom").</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
-        public static void UpdateAttribution(
+        public static void UpdateExternalAttribution(
             IReadOnlyDictionary<string, object> attribution,
-            string source,
+            string provider,
             Action<AdaptyError> completionHandler
         )
         {
@@ -77,14 +77,14 @@ namespace AdaptySDK
             catch (Exception exception)
             {
                 AdaptyRequest.FailEncoding(
-                    "update_attribution_data",
+                    "update_external_attribution_data",
                     exception,
                     completionHandler
                 );
                 return;
             }
 
-            UpdateAttribution(json, source, completionHandler);
+            UpdateExternalAttribution(json, provider, completionHandler);
         }
 
         /// <summary>

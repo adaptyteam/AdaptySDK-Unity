@@ -10,9 +10,13 @@
     "paywall_product_index": 0,
     "paywall_variation_id": "variation-0001",
     "product_type": "subscription",
-    "subscription_offer_identifier": {
-      "id": "intro-1",
-      "type": "introductory"
+    "subscription": {
+      "offer": {
+        "offer_identifier": {
+          "id": "intro-1",
+          "type": "introductory"
+        }
+      }
     },
     "vendor_product_id": "com.adapty.sample.monthly",
     "web_purchase_url": "https://pay.adapty.io/checkout/abc"

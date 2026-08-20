@@ -16,6 +16,16 @@ namespace AdaptySDK
         void OnLoadLatestProfile(AdaptyProfile profile);
 
         /// <summary>
+        /// Called when the user starts a promoted in-app purchase from the App Store product page. iOS only.
+        /// </summary>
+        /// <remarks>
+        /// Complete the purchase by passing the product to
+        /// <see cref="Adapty.MakePromotedPurchase(AdaptyPromotedProduct, System.Action{AdaptyPurchaseResult, AdaptyError})"/>.
+        /// </remarks>
+        /// <param name="product">The <see cref="AdaptyPromotedProduct"/> the user chose.</param>
+        void OnReceivePromotedPurchase(AdaptyPromotedProduct product);
+
+        /// <summary>
         /// Called when installation details are successfully retrieved.
         /// </summary>
         /// <param name="details">The <see cref="AdaptyInstallationDetails"/> object containing installation information.</param>
