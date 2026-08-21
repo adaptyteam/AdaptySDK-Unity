@@ -9,6 +9,7 @@ namespace AdaptyExample
         : MonoBehaviour,
             IAdaptyEventListener,
             IAdaptyFlowsEventsListener,
+            IAdaptyOnboardingsEventsListener,
             IAdaptyUISystemRequestsHandler,
             IAdaptyUIObserverModeResolver
     {
@@ -33,6 +34,7 @@ namespace AdaptyExample
         {
             Adapty.SetEventListener(this);
             Adapty.SetFlowsEventsListener(this);
+            Adapty.SetOnboardingsEventsListener(this);
             Adapty.SetSystemRequestsHandler(this);
             Adapty.SetObserverModeResolver(this);
 
@@ -522,6 +524,22 @@ namespace AdaptyExample
             );
         }
 
+        private void LogIncomingCall_AdaptyUIOnboardingView(
+            string methodName,
+            AdaptyUIOnboardingView view,
+            string meta
+        )
+        {
+            Debug.Log(
+                string.Format(
+                    "#AdaptyListener# <-- {0}, viewId = {1}, meta = {2}",
+                    methodName,
+                    view.Id,
+                    meta
+                )
+            );
+        }
+
         // – IAdaptyEventListener
 
         public void OnLoadLatestProfile(AdaptyProfile profile)
@@ -629,6 +647,29 @@ namespace AdaptyExample
                         this.Router.ShowAlertPanel(error.ToString());
                     }
                     else
+                    {
+                        completionHandler.Invoke(view);
+                    }
+                }
+            );
+        }
+
+        public void CreateOnboardingView(
+            AdaptyOnboarding onboarding,
+            AdaptyWebPresentation externalUrlsPresentation,
+            Action<AdaptyUIOnboardingView> completionHandler
+        )
+        {
+            this.LogMethodRequest("CreateOnboardingView");
+
+            AdaptyUI.CreateOnboardingView(
+                onboarding,
+                externalUrlsPresentation,
+                (view, error) =>
+                {
+                    this.LogMethodResult("CreateOnboardingView", error);
+
+                    if (error == null)
                     {
                         completionHandler.Invoke(view);
                     }
@@ -888,6 +929,84 @@ namespace AdaptyExample
         )
         {
             LogIncomingCall_AdaptyUIFlowView("FlowViewDidReceiveAnalyticEvent", view, name);
+        }
+
+        // - IAdaptyOnboardingsEventsListener
+
+        public void OnboardingViewDidFailWithError(AdaptyUIOnboardingView view, AdaptyError error)
+        {
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewDidFailWithError",
+                view,
+                error.ToString()
+            );
+        }
+
+        public void OnboardingViewDidFinishLoading(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewDidFinishLoading",
+                view,
+                meta.ToString()
+            );
+        }
+
+        public void OnboardingViewOnCloseAction(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            string actionId
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnCloseAction", view, actionId);
+            view.Dismiss(null);
+        }
+
+        public void OnboardingViewOnPaywallAction(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            string actionId
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnPaywallAction", view, actionId);
+        }
+
+        public void OnboardingViewOnCustomAction(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            string actionId
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnCustomAction", view, actionId);
+        }
+
+        public void OnboardingViewOnStateUpdatedAction(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            string elementId,
+            AdaptyOnboardingsStateUpdatedParams @params
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewOnStateUpdatedAction",
+                view,
+                string.Format("elementId = {0}, params = {1}", elementId, @params)
+            );
+        }
+
+        public void OnboardingViewOnAnalyticsEvent(
+            AdaptyUIOnboardingView view,
+            AdaptyUIOnboardingMeta meta,
+            AdaptyOnboardingsAnalyticsEvent analyticsEvent
+        )
+        {
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewOnAnalyticsEvent",
+                view,
+                analyticsEvent.ToString()
+            );
         }
 
         // - IAdaptyUISystemRequestsHandler
