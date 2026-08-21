@@ -13,6 +13,14 @@ namespace AdaptyExample
         public RectTransform ContentViewTransform;
         public GameObject OnboardingItemPrefab;
 
+        /// <summary>
+        /// Used when the placement field is left empty.
+        /// </summary>
+        /// <remarks>
+        /// The iOS keyboard autocapitalises the first letter, so typing a placement id by hand on
+        /// a device produces one that does not exist and a fetch failure that looks like an SDK
+        /// problem. Leaving the field blank uses this instead.
+        /// </remarks>
         public const string DefaultPlacementId = "4681-onboarding-animate";
 
         private PlacementLoadStrategy m_loadStrategy = PlacementLoadStrategy.LoadElseCache;
