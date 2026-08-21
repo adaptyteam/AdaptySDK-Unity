@@ -18,7 +18,7 @@ namespace AdaptyExample
         /// a device produces one that does not exist and a fetch failure that looks like an SDK
         /// problem. Leaving the field blank uses this instead.
         /// </remarks>
-        public const string DefaultPlacementId = "calm10";
+        public const string DefaultPlacementId = "rt.RegTestPaywall1";
 
         /// <summary>
         /// The localization the flow view is built with. A flow itself is not localized at fetch time,
