@@ -375,7 +375,7 @@ namespace AdaptyExample
 
             Adapty.UpdateExternalAttribution(
                 "{\"test_key\": \"test_value\"}",
-                "custom",
+                AdaptyExternalAttributionProvider.Custom,
                 (error) =>
                 {
                     this.LogMethodResult("UpdateExternalAttribution", error);

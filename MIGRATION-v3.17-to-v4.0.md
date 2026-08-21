@@ -105,8 +105,8 @@ includes in the Gradle build on its own.
 | `AdaptyUICreatePaywallViewParameters` | `AdaptyUICreateFlowViewParameters` — same fields, plus `Locale` and `EnableSafeAreaPaddings` (Android only, defaults to `true`) |
 | `paywall.RemoteConfig` | `flow.RemoteConfigs`, one per configured language. `RemoteConfig` still exists and returns the first |
 | `paywall.Products` | `flow.ProductIdentifiers`, or `GetPaywallProducts(flow, ...)` |
-| `paywall.HasViewConfiguration` | removed — `CreateFlowView` returns an error instead |
-| — | `flow.Paywalls`, the paywall variations; `flow.FlowVersionId`, nullable |
+| `paywall.HasViewConfiguration` | `flow.HasViewConfiguration` — gone in 4.0, where `CreateFlowView` returning an error was the only way to ask; back since 4.1 |
+| — | `flow.Paywalls`, the paywall variations |
 | — | `AdaptyUI.OpenUrl` and `AdaptyUI.RequestAppReview` are new |
 
 `Placement`, `InstanceIdentity`, `Name`, `VariationId`, `ProductIdentifiers` and `VendorProductIds`

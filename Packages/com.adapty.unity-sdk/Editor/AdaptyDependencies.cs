@@ -26,6 +26,10 @@ namespace AdaptySDK.Editor
 
         private static AddAndRemoveRequest m_Request;
 
+        // Whether the run behind m_Request had to write the registry into the manifest first -
+        // the one failure mode where trying again is itself the fix.
+        private static bool m_RegistryJustWritten;
+
         /// <summary>
         /// The Editor assembly is out of reach of the runtime resets, and with Domain Reload
         /// disabled a subscription outlives entering Play Mode.
@@ -104,10 +108,11 @@ namespace AdaptySDK.Editor
 
             // EDM is published on OpenUPM, and a scoped registry has no public API - the project
             // manifest is the only way in.
+            m_RegistryJustWritten = false;
             if (missing.Any(package =>
                     package.StartsWith(AdaptyDependencyPlan.EdmId, StringComparison.Ordinal)
                 )
-                && !EnsureRegistry())
+                && !EnsureRegistry(out m_RegistryJustWritten))
             {
                 return;
             }
@@ -237,17 +242,27 @@ namespace AdaptySDK.Editor
             }
             else
             {
-                Debug.LogError($"[Adapty] Package Manager failed: {request.Error?.message}");
+                Debug.LogError(
+                    $"[Adapty] Package Manager failed: {request.Error?.message}"
+                        + (m_RegistryJustWritten
+                            ? $" The \"{AdaptyManifest.RegistryName}\" registry was only just "
+                                + $"added to the project manifest, so run \"{MenuPath}\" again - "
+                                + "on the second run it is already there."
+                            : "")
+                );
             }
         }
 
         /// <summary>
         /// Writes the OpenUPM registry into the project manifest. No Resolve afterwards: Package
-        /// Manager operations have to run one at a time, and the AddAndRemove that follows reads
-        /// the manifest itself.
+        /// Manager operations have to run one at a time, and on Unity 6000.4 the AddAndRemove
+        /// that follows was observed to read the just-written manifest. An observation, not a
+        /// guarantee - which is why a failure right after a write asks for a second run.
         /// </summary>
-        private static bool EnsureRegistry()
+        /// <param name="wrote">Whether this call changed the manifest on disk.</param>
+        private static bool EnsureRegistry(out bool wrote)
         {
+            wrote = false;
             var path = Path.GetFullPath(
                 Path.Combine(Application.dataPath, "..", "Packages", "manifest.json")
             );
@@ -290,6 +305,7 @@ namespace AdaptySDK.Editor
                 return false;
             }
 
+            wrote = true;
             Debug.Log(
                 $"[Adapty] Added the \"{AdaptyManifest.RegistryName}\" registry to the project "
                     + "manifest."

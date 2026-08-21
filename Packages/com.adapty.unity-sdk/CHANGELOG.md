@@ -11,10 +11,18 @@ Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptytea
 ### Breaking Changes
 
 - `Adapty.UpdateAttribution(...)` is renamed to `Adapty.UpdateExternalAttribution(...)`, with the
-  `source` parameter renamed to `provider`, matching the native 4.1 attribution API rename. The old
-  name is removed without a deprecated alias.
+  `source` parameter renamed to `provider` and typed `AdaptyExternalAttributionProvider` — the
+  shape of the native 4.1 attribution API. The known providers are shared instances
+  (`AdaptyExternalAttributionProvider.Appsflyer`, `.Adjust`, `.AppleAds`, ...); a provider the
+  backend added after this release is constructed from its identifier. The old name is removed
+  without a deprecated alias.
 - `AdaptyProfile.AppliedAttributionSources` is renamed to
-  `AdaptyProfile.AppliedExternalAttributionProviders`. The wire key is unchanged.
+  `AdaptyProfile.AppliedExternalAttributionProviders`, typed
+  `IReadOnlyList<AdaptyExternalAttributionProvider>` as on the natives. The wire key is unchanged.
+- `AdaptyFlow.FlowVersionId` is no longer public. It named the renderer-internal version of the
+  view configuration, which both 4.1 natives keep to themselves; the flow still carries it on the
+  wire. The question that member answered badly — can this flow be rendered? — is now answered by
+  `AdaptyFlow.HasViewConfiguration`, see Added.
 - `IAdaptyEventListener` gained `OnReceivePromotedPurchase(AdaptyPromotedProduct)`; implementations
   must add the method.
 - The 4.1 natives read **fallback file format 11** and reject the format 10 files v4.0 shipped
@@ -46,9 +54,23 @@ Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptytea
 - `AdaptyFlow` carries the 4.1 `ui_schema` (custom flow layouts, UIBuilder 5.1) through to the
   renderer. It is not public API: the schema is the renderer's own data, and the SDK only makes sure
   a flow handed back to the native side keeps it.
+- `AdaptyFlow.HasViewConfiguration` — whether the flow carries a view configuration and can be
+  rendered with `AdaptyUI.CreateFlowView`, answered without calling it and parsing the error. The
+  same flag both natives expose.
 
 ### Fixed
 
+- A wrong argument the SDK can catch before sending — a null `placementId`, a null integration
+  `key`, a null `provider`, or attribution data the serializer cannot write — is reported through
+  the completion handler as `WrongParam` (`adapty_code: 3001`), the code the natives answer a wrong
+  argument with. Such a call used to throw at the call site or ride to the native side as a null;
+  nothing reaches the bridge now.
+- [Android] An exception thrown by the app's completion handler is caught and logged at the bridge
+  boundary, as it always was on iOS, instead of leaving the SDK through JNI.
+- The custom-attribute validation of `AdaptyProfileParameters` throws `ArgumentException` instead
+  of a bare `Exception`, and `AdaptyUICreateFlowViewParameters.SetProductPurchaseParameters`
+  rejects two identifiers sharing one `adapty_product_id` instead of silently collapsing them into
+  a single request entry.
 - **Custom color and linear gradient assets are now rendered on iOS.** An asset built with
   `AdaptyCustomAsset.Color` or `AdaptyCustomAsset.LinearGradient` and passed through
   `AdaptyUICreateFlowViewParameters.SetCustomAssets` used to reach the view as a transparent color

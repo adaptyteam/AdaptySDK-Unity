@@ -28,7 +28,14 @@ namespace AdaptySDK.Android
             public void onHandleResult(string result)
             {
                 if (_resultHandler == null) return;
-                _resultHandler.Invoke(result);
+                try
+                {
+                    _resultHandler.Invoke(result);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Failed to invoke callback with arg " + result + ": " + e);
+                }
             }
         }
 

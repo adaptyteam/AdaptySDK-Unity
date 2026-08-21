@@ -74,8 +74,8 @@ namespace AdaptySDK.iOS
             {
                 if (!m_IsInitialized)
                 {
-                    m_IsInitialized = true;
                     RegisterCallbackDelegate(OnMessage, OnCallback);
+                    m_IsInitialized = true;
                 }
             }
         }

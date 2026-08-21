@@ -1,9 +1,10 @@
 # Migrate Adapty Unity SDK to v4.1
 
 The good news first: this is a small migration, and the compiler does most of it for you. Plan for
-three renames it will point out, one new interface method it will demand, and two things it cannot
-know about: the fallback files both natives now reject, and the flag installation details now need.
-Those two are the steps you can genuinely forget, so if you read just two sections, read
+three renames and one removed member it will point out, one new interface method it will demand,
+and two things it cannot know about: the fallback files both natives now reject, and the flag
+installation details now need. Those two are the steps you can genuinely forget, so if you read
+just two sections, read
 [Re-download your fallback files](#re-download-your-fallback-files) and
 [Turn Adapty Attribution on if you read installation details](#turn-adapty-attribution-on-if-you-read-installation-details).
 
@@ -14,10 +15,11 @@ in [CHANGELOG.md](Packages/com.adapty.unity-sdk/CHANGELOG.md).
 
 1. [Before you upgrade](#before-you-upgrade)
 2. [Rename the attribution API](#rename-the-attribution-api)
-3. [Implement the new listener method](#implement-the-new-listener-method)
-4. [Re-download your fallback files](#re-download-your-fallback-files)
-5. [Turn Adapty Attribution on if you read installation details](#turn-adapty-attribution-on-if-you-read-installation-details)
-6. [Optional](#optional)
+3. [Replace `FlowVersionId` with `HasViewConfiguration`](#replace-flowversionid-with-hasviewconfiguration)
+4. [Implement the new listener method](#implement-the-new-listener-method)
+5. [Re-download your fallback files](#re-download-your-fallback-files)
+6. [Turn Adapty Attribution on if you read installation details](#turn-adapty-attribution-on-if-you-read-installation-details)
+7. [Optional](#optional)
 
 ## Before you upgrade
 
@@ -38,7 +40,7 @@ hand on either platform.
 
 The native SDKs renamed their attribution APIs in 4.1, and the Unity SDK follows. There are no
 deprecated aliases — deliberately: the old and new names would otherwise sit side by side in
-autocomplete for a release cycle, and every existing call site is a two-word edit the compiler
+autocomplete for a release cycle, and every existing call site is a small edit the compiler
 finds for you anyway.
 
 | v4.0 | v4.1 |
@@ -47,9 +49,37 @@ finds for you anyway.
 | `Adapty.UpdateAttribution(dictionary, source, handler)` | `Adapty.UpdateExternalAttribution(dictionary, provider, handler)` |
 | `AdaptyProfile.AppliedAttributionSources` | `AdaptyProfile.AppliedExternalAttributionProviders` |
 
-Only the names move. The provider is the same open `string` it always was (`"appsflyer"`,
-`"adjust"`, `"branch"`, `"tenjin"`, `"apple_search_ads"`, `"custom"`), the profile member is still
-an `IReadOnlyList<string>`, and the data you were sending keeps working unchanged.
+The names are not the only move: the provider is now a value of its own,
+`AdaptyExternalAttributionProvider`, mirroring the native 4.1 API. Where you passed `"appsflyer"`,
+pass `AdaptyExternalAttributionProvider.Appsflyer` — the providers the backend knew at release are
+shared instances, and one it added later is a constructor call away:
+
+```csharp
+Adapty.UpdateExternalAttribution(conversionData, AdaptyExternalAttributionProvider.Appsflyer, handler);
+// a provider the backend added after this release:
+Adapty.UpdateExternalAttribution(conversionData, new AdaptyExternalAttributionProvider("singular"), handler);
+```
+
+`AppliedExternalAttributionProviders` on the profile is typed the same way, so compare its entries
+against the shared instances rather than string literals. On the wire nothing changed: the same
+strings travel, and the data you were sending keeps working unchanged.
+
+## Replace `FlowVersionId` with `HasViewConfiguration`
+
+`AdaptyFlow.FlowVersionId` is no longer public. It named a renderer-internal version identifier
+both 4.1 natives keep to themselves, and there was nothing an app could correctly do with the
+value. If the compiler flags a use of it, that code was almost certainly asking a different
+question — *can this flow be rendered?* — which is now a member of its own:
+
+```csharp
+if (flow.HasViewConfiguration)
+{
+    AdaptyUI.CreateFlowView(flow, (view, error) => { /* ... */ });
+}
+```
+
+The flow still carries the identifier internally, so nothing changes on the wire or in what the
+renderer receives.
 
 ## Implement the new listener method
 
@@ -65,10 +95,17 @@ public void OnReceivePromotedPurchase(AdaptyPromotedProduct product)
 }
 ```
 
-Not sure whether you need this? Then you don't — promoted purchases are the ones you set up
-manually in App Store Connect to appear on your App Store product page, and if you had, you would
-know. An empty body is a perfectly honest implementation in that case, and the method is never
-called on Android either way.
+The body above is the right default even if you have never set up a promoted purchase — they are
+the ones you configure in App Store Connect to appear on your App Store product page. It does what
+the native iOS SDK does when an app leaves the choice to it: completes the purchase the user
+already started by tapping buy on that page. With this release the event *is* the purchase, so an
+empty body silently drops something the user explicitly asked for — leave it empty only as a
+deliberate decision to ignore promoted purchases. If a purchase must wait for your own flow — a
+sign-in, a parental gate — hold on to the product and call `MakePromotedPurchase` when the flow
+allows it. On Android the method is never called.
+
+The same applies one level up: an app that never calls `Adapty.SetEventListener` has no handler
+for the event, and a promoted purchase is dropped silently there too.
 
 One thing worth knowing: this works because the pin is AdaptySDK-iOS 4.1.1. Native 4.1.0 completed
 promoted purchases by itself, without telling anyone, so on that version the handler was never

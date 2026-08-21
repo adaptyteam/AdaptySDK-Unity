@@ -56,12 +56,12 @@ namespace AdaptySDK
         /// This method allows you to send attribution data from external providers (e.g., AppsFlyer, Adjust, Branch) to Adapty.
         /// Read more on the <see href="https://adapty.io/docs/attribution-integration">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="attribution">A dictionary containing attribution (conversion) data from the attribution provider.</param>
-        /// <param name="provider">The external attribution provider (e.g., "appsflyer", "adjust", "branch", "custom").</param>
+        /// <param name="attribution">A dictionary containing attribution (conversion) data from the attribution provider. This overload is the default path; the string one is for providers that hand the data over already serialized.</param>
+        /// <param name="provider">The external attribution provider: one of the <see cref="AdaptyExternalAttributionProvider"/> instances, or one constructed for a provider the backend added later.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateExternalAttribution(
             IReadOnlyDictionary<string, object> attribution,
-            string provider,
+            AdaptyExternalAttributionProvider provider,
             Action<AdaptyError> completionHandler
         )
         {
@@ -76,9 +76,9 @@ namespace AdaptySDK
             }
             catch (Exception exception)
             {
-                AdaptyRequest.FailEncoding(
+                AdaptyRequest.FailWrongParam(
                     "update_external_attribution_data",
-                    exception,
+                    exception.ToString(),
                     completionHandler
                 );
                 return;

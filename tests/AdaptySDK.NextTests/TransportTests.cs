@@ -119,7 +119,7 @@ namespace AdaptySDK.NextTests
                     { "tags", new List<string> { "a", "b" } },
                     { "nested", new Dictionary<string, object> { { "k", "v" } } },
                 },
-                "appsflyer",
+                AdaptyExternalAttributionProvider.Appsflyer,
                 _ => { }
             );
 
@@ -141,13 +141,44 @@ namespace AdaptySDK.NextTests
             AdaptyError reported = null;
 
             Assert.DoesNotThrow(
-                () => Adapty.UpdateExternalAttribution(loop, "custom", error => reported = error)
+                () =>
+                    Adapty.UpdateExternalAttribution(
+                        loop,
+                        AdaptyExternalAttributionProvider.Custom,
+                        error => reported = error
+                    )
             );
 
             Assert.Multiple(() =>
             {
                 Assert.That(reported, Is.Not.Null, "the completion handler was never called");
-                Assert.That(reported?.Code, Is.EqualTo(AdaptyErrorCode.EncodingFailed));
+                Assert.That(reported?.Code, Is.EqualTo(AdaptyErrorCode.WrongParam));
+                Assert.That(_method, Is.Null, "nothing should have reached the bridge");
+            });
+        }
+
+        /// <summary>
+        /// A wrong argument the SDK can see before sending — a null a request cannot carry — is
+        /// reported through the completion handler with the code the native side answers a wrong
+        /// argument with, and nothing reaches the bridge.
+        /// </summary>
+        [Test]
+        public void ANullArgumentReportsWrongParamAndSendsNothing()
+        {
+            var reported = new List<AdaptyError>();
+
+            Adapty.GetFlow(null, null, null, (_, error) => reported.Add(error));
+            Adapty.GetFlowForDefaultAudience(null, null, (_, error) => reported.Add(error));
+            Adapty.SetIntegrationIdentifier(null, "af-1", error => reported.Add(error));
+            Adapty.UpdateExternalAttribution("{}", null, error => reported.Add(error));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(reported, Has.Count.EqualTo(4), "a completion handler was never called");
+                Assert.That(
+                    reported,
+                    Has.All.Matches<AdaptyError>(error => error?.Code == AdaptyErrorCode.WrongParam)
+                );
                 Assert.That(_method, Is.Null, "nothing should have reached the bridge");
             });
         }

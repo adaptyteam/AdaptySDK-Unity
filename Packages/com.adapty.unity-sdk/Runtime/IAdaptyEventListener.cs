@@ -21,6 +21,7 @@ namespace AdaptySDK
         /// <remarks>
         /// Complete the purchase by passing the product to
         /// <see cref="Adapty.MakePromotedPurchase(AdaptyPromotedProduct, System.Action{AdaptyPurchaseResult, AdaptyError})"/>.
+        /// The event is the purchase: leaving it unhandled drops a purchase the user started.
         /// </remarks>
         /// <param name="product">The <see cref="AdaptyPromotedProduct"/> the user chose.</param>
         void OnReceivePromotedPurchase(AdaptyPromotedProduct product);

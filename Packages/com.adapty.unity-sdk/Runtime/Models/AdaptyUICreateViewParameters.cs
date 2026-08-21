@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine.Scripting;
 
@@ -138,15 +139,22 @@ namespace AdaptySDK
         /// A description for logs and the debugger. The format is not part of the contract —
         /// read the members rather than parsing it.
         /// </summary>
-        public override string ToString() =>
-            $"{nameof(Locale)}: {Locale}, "
-            + $"{nameof(LoadTimeout)}: {LoadTimeout}, "
-            + $"{nameof(PreloadProducts)}: {PreloadProducts}, "
-            + $"{nameof(CustomTags)}: {CustomTags}, "
-            + $"{nameof(CustomTimers)}: {CustomTimers}, "
-            + $"{nameof(CustomAssets)}: {CustomAssets}, "
-            + $"{nameof(ProductPurchaseParameters)}: {ProductPurchaseParameters}, "
-            + $"{nameof(EnableSafeAreaPaddings)}: {EnableSafeAreaPaddings}";
+        public override string ToString()
+        {
+            string Render<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary) =>
+                dictionary == null
+                    ? "null"
+                    : "{" + string.Join(", ", dictionary.Select(kv => $"{kv.Key}: {kv.Value}")) + "}";
+
+            return $"{nameof(Locale)}: {Locale}, "
+                + $"{nameof(LoadTimeout)}: {LoadTimeout}, "
+                + $"{nameof(PreloadProducts)}: {PreloadProducts}, "
+                + $"{nameof(CustomTags)}: {Render(CustomTags)}, "
+                + $"{nameof(CustomTimers)}: {Render(CustomTimers)}, "
+                + $"{nameof(CustomAssets)}: {Render(CustomAssets)}, "
+                + $"{nameof(ProductPurchaseParameters)}: {Render(ProductPurchaseParameters)}, "
+                + $"{nameof(EnableSafeAreaPaddings)}: {EnableSafeAreaPaddings}";
+        }
 
         /// <summary>
         /// Sets <see cref="Locale"/>.
@@ -242,10 +250,26 @@ namespace AdaptySDK
         /// Sets <see cref="ProductPurchaseParameters"/>, copying the dictionary. Android only.
         /// </summary>
         /// <param name="productPurchaseParameters">The purchase extras for each product.</param>
+        /// <exception cref="ArgumentException">Two identifiers share one <c>adapty_product_id</c>.</exception>
         public AdaptyUICreateFlowViewParameters SetProductPurchaseParameters(
             IReadOnlyDictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters> productPurchaseParameters
         )
         {
+            if (productPurchaseParameters != null)
+            {
+                var seen = new HashSet<string>();
+                foreach (var entry in productPurchaseParameters)
+                {
+                    if (!seen.Add(entry.Key._AdaptyProductId))
+                    {
+                        throw new ArgumentException(
+                            $"Two product identifiers share adapty_product_id \"{entry.Key._AdaptyProductId}\".",
+                            nameof(productPurchaseParameters)
+                        );
+                    }
+                }
+            }
+
             _ProductPurchaseParameters = Copy(productPurchaseParameters);
             return this;
         }

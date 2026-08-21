@@ -44,15 +44,6 @@ namespace AdaptySDK
         public readonly string VariationId;
 
         /// <summary>
-        /// The identifier of the flow version.
-        /// </summary>
-        /// <remarks>
-        /// This can be null if the version identifier is not available.
-        /// </remarks>
-        [DataMember(Name = "flow_version_id")]
-        public readonly string FlowVersionId;
-
-        /// <summary>
         /// Array of custom JSON formatted data configured in the Adapty Dashboard, one entry per locale.
         /// </summary>
         [DataMember(Name = "remote_configs")]
@@ -89,6 +80,13 @@ namespace AdaptySDK
         public IReadOnlyList<AdaptyFlowPaywall> Paywalls { get; private set; }
 
         /// <summary>
+        /// The renderer-internal version of the flow's view configuration. Opaque to the app:
+        /// carried only so a flow handed back to the native side keeps it.
+        /// </summary>
+        [DataMember(Name = "flow_version_id")]
+        private readonly string _FlowVersionId;
+
+        /// <summary>
         /// The renderer's custom-layout schema. Opaque to the app: carried only so a flow handed
         /// back to the native side keeps it.
         /// </summary>
@@ -112,6 +110,16 @@ namespace AdaptySDK
                     ? null
                     : new ReadOnlyCollection<AdaptyFlowPaywall>(_Paywalls);
         }
+
+        /// <summary>
+        /// Whether this flow carries a view configuration and can be rendered with
+        /// <see cref="AdaptyUI.CreateFlowView(AdaptyFlow, AdaptyUICreateFlowViewParameters, System.Action{AdaptyUIFlowView, AdaptyError})"/>.
+        /// </summary>
+        /// <remarks>
+        /// Both natives treat the configuration as present only when the version identifier and
+        /// the schema arrive together, and send them that way or not at all.
+        /// </remarks>
+        public bool HasViewConfiguration => _UiSchema is not null && _FlowVersionId is not null;
 
         /// <summary>
         /// Array of vendor product IDs (App Store or Google Play product identifiers) aggregated across all paywall variations of this flow.
@@ -168,10 +176,10 @@ namespace AdaptySDK
             + $"{nameof(InstanceIdentity)}: {InstanceIdentity}, "
             + $"{nameof(Name)}: {Name}, "
             + $"{nameof(VariationId)}: {VariationId}, "
-            + $"{nameof(FlowVersionId)}: {FlowVersionId}, "
-            + $"{nameof(RemoteConfigs)}: {RemoteConfigs}, "
-            + $"{nameof(Paywalls)}: {Paywalls}, "
-            + $"{nameof(_UiSchema)}: {_UiSchema?.ToString(Newtonsoft.Json.Formatting.None)}, "
+            + $"{nameof(_FlowVersionId)}: {_FlowVersionId}, "
+            + $"{nameof(RemoteConfigs)}: [{string.Join(", ", RemoteConfigs)}], "
+            + $"{nameof(Paywalls)}: {(Paywalls is null ? "null" : "[" + string.Join(", ", Paywalls) + "]")}, "
+            + $"{nameof(HasViewConfiguration)}: {HasViewConfiguration}, "
             + $"{nameof(_ResponseCreatedAt)}: {_ResponseCreatedAt}, "
             + $"{nameof(_PayloadData)}: {_PayloadData}";
     }
