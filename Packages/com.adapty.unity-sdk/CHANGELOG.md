@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.1.0] - 2026-08-20
 
-Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0/MIGRATION-v4.0-to-v4.1.md).
+Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0/MIGRATION-v3.17-to-v4.1.md).
 
 ### Breaking Changes
 
@@ -106,7 +106,7 @@ Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptytea
 > because the work of coming from 3.x is described here, and the 4.1.0 section above states only
 > what moved since 4.0.
 
-Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.0.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0/MIGRATION-v3.17-to-v4.0.md).
+Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyteam/AdaptySDK-Unity/blob/4.1.0/MIGRATION-v3.17-to-v4.1.md).
 If you install from a `.unitypackage`, delete `Assets/AdaptySDK` and add
 `com.unity.nuget.newtonsoft-json` **before** importing. A `.unitypackage` never removes files, so the
 62 sources this release drops would otherwise stay behind and compile alongside the new ones, which

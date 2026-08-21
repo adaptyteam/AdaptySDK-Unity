@@ -1,22 +1,31 @@
-# Migrate Adapty Unity SDK to v4.0
+# Migrate Adapty Unity SDK to v4.1
 
-v4.0 introduces flows and renames the paywall APIs accordingly. The new APIs work with both the new
-Flow Builder and the existing Paywall Builder, and nothing changes on the Adapty Dashboard side.
+v4 introduces flows and renames the paywall APIs accordingly; 4.1 renames the attribution API after
+the natives, adds App Store promoted purchases, and makes Adapty Attribution opt-in. No stable 4.0
+was ever published, so this is the one guide: it takes a v3.17 project straight to v4.1. The new
+APIs work with both the new Flow Builder and the existing Paywall Builder, and nothing changes on
+the Adapty Dashboard side.
 
-This guide is the move from v3.17 to v4.0. Read **Before you upgrade** first and sort its
-prerequisites by when they bite: Unity and Newtonsoft.Json have to be in place before your C#
-compiles at all, while External Dependency Manager, Xcode and the iOS deployment target are only
-needed by the time you build for iOS. The other sections are independent of each other; take them
-in whatever order suits your project. Everything
+Read **Before you upgrade** first and sort its prerequisites by when they bite: Unity and
+Newtonsoft.Json have to be in place before your C# compiles at all, while External Dependency
+Manager, Xcode and the iOS deployment target are only needed by the time you build for iOS. The
+sections after it are independent of each other; take them in whatever order suits your project,
+but do not stop at the last compile error:
+[Re-download your fallback files](#re-download-your-fallback-files) and
+[Turn Adapty Attribution on if you read installation details](#turn-adapty-attribution-on-if-you-read-installation-details)
+are the two steps the compiler cannot know about, and the ones you can genuinely forget. Everything
 this guide does not cover — why each change was made, and what was fixed along the way — is in
 [CHANGELOG.md](Packages/com.adapty.unity-sdk/CHANGELOG.md).
 
 1. [Before you upgrade](#before-you-upgrade)
 2. [Rename the paywall APIs to flows](#rename-the-paywall-apis-to-flows)
-3. [Update listeners and handlers](#update-listeners-and-handlers)
-4. [Fix the compile errors](#fix-the-compile-errors)
-5. [Review the runtime behavior changes](#review-the-runtime-behavior-changes)
-6. [Optional](#optional)
+3. [Rename the attribution API](#rename-the-attribution-api)
+4. [Update listeners and handlers](#update-listeners-and-handlers)
+5. [Fix the compile errors](#fix-the-compile-errors)
+6. [Review the runtime behavior changes](#review-the-runtime-behavior-changes)
+7. [Re-download your fallback files](#re-download-your-fallback-files)
+8. [Turn Adapty Attribution on if you read installation details](#turn-adapty-attribution-on-if-you-read-installation-details)
+9. [Optional](#optional)
 
 ## Before you upgrade
 
@@ -27,7 +36,7 @@ this guide does not cover — why each change was made, and what was fixed along
 | `com.unity.nuget.newtonsoft-json` 3.2.2 | Unity registry | Yes, with Package Manager | compile time — the SDK assembly is gated on it |
 | `com.google.external-dependency-manager` 1.2.188 | OpenUPM | No — a peer dependency, as in v3 | iOS build — it resolves the Swift package. Android does not go through it |
 
-Newtonsoft.Json replaces the JSON parser that used to ship inside the SDK, so it is new in v4.0. One
+Newtonsoft.Json replaces the JSON parser that used to ship inside the SDK, so it is new in v4. One
 menu item installs whichever is missing, adds the OpenUPM registry, and upgrades an External
 Dependency Manager below 1.2.188 — v3 declared 1.2.187, so a project coming from it has one:
 
@@ -47,11 +56,11 @@ dropped into `Assets/` does not satisfy the SDK, and installing the package on t
 copies. Delete the DLL first.
 
 **Installing from a `.unitypackage`: delete `Assets/AdaptySDK` before you import.** A
-`.unitypackage` never removes files, and 4.0 drops 62 sources that 3.17 shipped — the whole
+`.unitypackage` never removes files, and v4 drops 62 sources that 3.17 shipped — the whole
 `Assets/AdaptySDK/JSON/` folder, plus `AdaptyPaywall.cs` and its neighbours. Importing over them
 keeps the folder and the assembly definition GUIDs, so the leftovers compile into the same assembly
 as the new sources: 35 of them declare a `partial` half of a type the new sources also declare —
-`AdaptyPlacement`, `AdaptyProfile`, `AdaptyPaywallProduct` among them, and 4.0 declares most of
+`AdaptyPlacement`, `AdaptyProfile`, `AdaptyPaywallProduct` among them, and v4 declares most of
 those `sealed` — while the rest call constructors and a `SimpleJSON` namespace that are gone. The
 errors do not appear at import — the assembly is gated on Newtonsoft — but the
 moment Newtonsoft is in place the project stops compiling, and from there the menu item above is out
@@ -73,8 +82,10 @@ no pod of ours appears in the Podfile any more. **Keep building
 still wires `Pods_UnityFramework` into the Unity target, so building `Unity-iPhone.xcodeproj`
 directly fails with `ld: framework 'Pods_UnityFramework' not found`.
 
-Android needs nothing from you: the dependencies are declared in an `.androidlib` module Unity
-includes in the Gradle build on its own.
+Both native dependencies come with the package and move on their own: iOS is declared inside the
+package as a Swift package — AdaptySDK-iOS 4.1.1 — and External Dependency Manager resolves it at
+build time; Android ships its 4.1.0 dependencies in an `.androidlib` module that Unity includes in
+the Gradle build on its own. There is nothing for you to update by hand on either platform.
 
 ## Rename the paywall APIs to flows
 
@@ -105,13 +116,12 @@ includes in the Gradle build on its own.
 | `AdaptyUICreatePaywallViewParameters` | `AdaptyUICreateFlowViewParameters` — same fields, plus `Locale` and `EnableSafeAreaPaddings` (Android only, defaults to `true`) |
 | `paywall.RemoteConfig` | `flow.RemoteConfigs`, one per configured language. `RemoteConfig` still exists and returns the first |
 | `paywall.Products` | `flow.ProductIdentifiers`, or `GetPaywallProducts(flow, ...)` |
-| `paywall.HasViewConfiguration` | `flow.HasViewConfiguration` — gone in 4.0, where `CreateFlowView` returning an error was the only way to ask; back since 4.1 |
 | — | `flow.Paywalls`, the paywall variations |
 | — | `AdaptyUI.OpenUrl` and `AdaptyUI.RequestAppReview` are new |
 
-`Placement`, `InstanceIdentity`, `Name`, `VariationId`, `ProductIdentifiers` and `VendorProductIds`
-keep their names on `AdaptyFlow`. `AdaptyPaywallProduct` keeps its name and gains `FlowProductId`,
-nullable.
+`Placement`, `InstanceIdentity`, `Name`, `VariationId`, `HasViewConfiguration`,
+`ProductIdentifiers` and `VendorProductIds` keep their names on `AdaptyFlow`.
+`AdaptyPaywallProduct` keeps its name and gains `FlowProductId`, nullable.
 
 The members deprecated in v3.14 are gone with the type:
 
@@ -151,6 +161,34 @@ the fetched product.
 
 The overloads taking an `AdaptyPaywallProduct` are unchanged.
 
+## Rename the attribution API
+
+The native SDKs renamed their attribution APIs in 4.1, and the Unity SDK follows. There are no
+deprecated aliases — deliberately: the old and new names would otherwise sit side by side in
+autocomplete for a release cycle, and every existing call site is a small edit the compiler
+finds for you anyway.
+
+| v3 | v4.1 |
+|---|---|
+| `Adapty.UpdateAttribution(jsonString, source, handler)` | `Adapty.UpdateExternalAttribution(jsonString, provider, handler)` |
+| `Adapty.UpdateAttribution(dictionary, source, handler)` | `Adapty.UpdateExternalAttribution(dictionary, provider, handler)` |
+| `AdaptyProfile.AppliedAttributionSources` | `AdaptyProfile.AppliedExternalAttributionProviders` |
+
+The names are not the only move: the provider is now a value of its own,
+`AdaptyExternalAttributionProvider`, mirroring the native 4.1 API. Where you passed `"appsflyer"`,
+pass `AdaptyExternalAttributionProvider.Appsflyer` — the providers the backend knew at release are
+shared instances, and one it added later is a constructor call away:
+
+```csharp
+Adapty.UpdateExternalAttribution(conversionData, AdaptyExternalAttributionProvider.Appsflyer, handler);
+// a provider the backend added after this release:
+Adapty.UpdateExternalAttribution(conversionData, new AdaptyExternalAttributionProvider("singular"), handler);
+```
+
+`AppliedExternalAttributionProviders` on the profile is typed the same way, so compare its entries
+against the shared instances rather than string literals. The provider identifiers are the strings
+you were already using, and the data you were sending keeps working unchanged.
+
 ## Update listeners and handlers
 
 The interfaces carry the C# `I` prefix, and the paywall one is about flows:
@@ -168,6 +206,40 @@ The interfaces carry the C# `I` prefix, and the paywall one is about flows:
 | `Adapty.SetPaywallsEventsListener` | `Adapty.SetFlowsEventsListener` |
 | `void PaywallViewDid…(AdaptyUIPaywallView view, …)` | `void FlowViewDid…(AdaptyUIFlowView view, …)` — every callback |
 | `PaywallViewDidFailRendering` | `FlowViewDidReceiveError`, which also fires for other runtime errors |
+
+### Implement `OnReceivePromotedPurchase`
+
+`IAdaptyEventListener` also has one member its v3 predecessor did not, so the listener you just
+renamed stops compiling until you add:
+
+```csharp
+public void OnReceivePromotedPurchase(AdaptyPromotedProduct product)
+{
+    // The user tapped one of your in-app purchases on your App Store product page.
+    // Hand it back to Adapty to complete the purchase:
+    Adapty.MakePromotedPurchase(product, (result, error) => { /* ... */ });
+}
+```
+
+The body above is the right default even if you have never set up a promoted purchase — they are
+the ones you configure in App Store Connect to appear on your App Store product page. It does what
+the native iOS SDK does when an app leaves the choice to it: completes the purchase the user
+already started by tapping buy on that page. The event *is* the purchase, so an empty body silently
+drops something the user explicitly asked for — leave it empty only as a deliberate decision to
+ignore promoted purchases. If a purchase must wait for your own flow — a sign-in, a parental gate —
+hold on to the product and call `MakePromotedPurchase` when the flow allows it. On Android the
+method is never called.
+
+The same applies one level up: an app that never calls `Adapty.SetEventListener` has no handler
+for the event, and a promoted purchase is dropped silently there too.
+
+One thing worth knowing: this works because the pin is AdaptySDK-iOS 4.1.1. Native 4.1.0 completed
+promoted purchases by itself, without telling anyone, so on that version the handler was never
+called; 4.1.1 hands the purchase to the wrapper and expects `MakePromotedPurchase` to finish it.
+The native dependency is pinned to exactly 4.1.1 — deliberately, so native behaviour never changes
+underneath a wrapper that was not built for it.
+
+### The new handler interfaces
 
 Two handler interfaces are new, each with two callbacks you implement, plus one new callback on the
 flows listener:
@@ -217,7 +289,7 @@ Changed types and shapes:
 | Member | Change |
 |---|---|
 | Collections on `AdaptyProfile`, `AdaptyFlow`, `AdaptyFlowPaywall`, `AdaptySubscriptionOffer`, `AdaptyRemoteConfig`, and the `GetPaywallProducts` callback | `IList<T>` → `IReadOnlyList<T>`, `IDictionary<K, V>` → `IReadOnlyDictionary<K, V>`. `AdaptyProfile.NonSubscriptions` is read-only at both levels |
-| The four `AdaptyUICreateFlowViewParameters` setters and `UpdateAttribution` | take an `IReadOnlyDictionary` and **copy** it, so filling your dictionary afterwards no longer changes the view. The four matching members are read-only properties — assign through the setters |
+| The four `AdaptyUICreateFlowViewParameters` setters and `UpdateExternalAttribution` | take an `IReadOnlyDictionary` and **copy** it, so filling your dictionary afterwards no longer changes the view. The four matching members are read-only properties — assign through the setters |
 | `AdaptyProfileParameters.CustomAttributes` | was a `Dictionary` you could write into and is now a read-only view over the builder's own storage. There is no setter taking a dictionary: use `SetCustomStringAttribute`, `SetCustomDoubleAttribute` and `RemoveCustomAttribute`. Copying this one does not reach the request |
 | `FlowViewDidReceiveAnalyticEvent`, `FlowViewDidAskPermission` | take `IReadOnlyDictionary` instead of `IDictionary`. The analytics parameter is renamed `@params` → `parameters`, which matters only for a named argument |
 | Every concrete public class | `sealed`. If you derived from one, hold it as a field instead of inheriting it |
@@ -277,6 +349,40 @@ out:
   `FlowViewDidPerformAction` as a `SystemBack` action, which is what iOS already did.
 - **`AdaptySubscriptionOfferType` gained `Code`** (iOS only). Existing members keep their values, but
   a `switch` that was exhaustive in v3 is not exhaustive now — give it a default branch.
+- **`Adapty.RestorePurchases` never reports `NoPurchasesToRestore` (1004) at the 4.1 pins.** The
+  Android native completes with the current profile when there is nothing to restore, and iOS never
+  produced the code, so a branch checking for it is dead. The `AdaptyErrorCode` member stays.
+
+## Re-download your fallback files
+
+This is a step the compiler cannot catch, and the symptom shows up at runtime looking like a
+broken integration: right after upgrading, `Adapty.SetFallback` — `SetFallbackPaywalls`, renamed —
+fails. On iOS it reports `DecodingFailed` (`adapty_code: 2006`, *"The fallback paywalls version is
+not correct. Download a new one from the Adapty Dashboard."*); on Android, `WrongParam`
+(`adapty_code: 3001`, *"The fallback file version is not correct. Download a new one from the
+Adapty Dashboard."*). Your integration is fine — the file is stale.
+
+The 4.1 natives expect **fallback file format 11**, and the files you exported for 3.x no longer
+pass. The fix is exactly what the error says: download fresh fallback files for both platforms from
+the Adapty Dashboard and replace the ones in `Assets/StreamingAssets/`.
+
+## Turn Adapty Attribution on if you read installation details
+
+The other step nothing warns you about, and the one that looks least like a migration: in 4.1 the
+natives collect installation details only when you ask them to. In v3 they always did.
+
+So if your app implements `IAdaptyEventListener.OnInstallationDetailsSuccess` or calls
+`Adapty.GetCurrentInstallationStatus`, the callback stops arriving and the status stops reporting
+`AdaptyInstallationStatusType.Determined` — on both platforms — until you activate the service:
+
+```csharp
+var builder = new AdaptyConfiguration.Builder("PUBLIC_SDK_KEY")
+    .SetAdaptyAttributionEnabled(true);
+```
+
+Nothing else about it changed: the same details arrive in the same shape, on the same callback. If
+your app never looked at installation details, there is nothing to do here — leaving the flag unset
+is the same as before, minus the collection you were not using.
 
 ## Optional
 
@@ -289,6 +395,6 @@ success. The full list of fixes is in the changelog.
 **Move off the legacy onboarding API.** `GetOnboarding`, `AdaptyUI.CreateOnboardingView` and the
 rest still work and now warn at compile time. Build onboardings as flows instead.
 
-**Kids Mode.** If your app ships in the App Store Kids Category, v4.0 adds the `ADAPTY_KIDS_MODE`
+**Kids Mode.** If your app ships in the App Store Kids Category, v4 adds the `ADAPTY_KIDS_MODE`
 scripting define, which compiles IDFA, AdSupport and AppTrackingTransparency out of the iOS binary.
 See the [README](README.md#kids-mode-on-ios) for how to set it.

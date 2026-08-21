@@ -129,12 +129,9 @@ It also upgrades an External Dependency Manager older than the SDK needs — but
 a package. A copy imported from Google's own `.unitypackage` under `Assets/` has no version Package
 Manager can read, so the menu item leaves it alone and warns instead; update that one yourself.
 
-Already on 3.x? [MIGRATION-v3.17-to-v4.0.md](MIGRATION-v3.17-to-v4.0.md) covers the move to 4.0 — the renamed paywall API, the
-new Newtonsoft.Json dependency, and the order to install things in.
-
-Coming from 4.0? [MIGRATION-v4.0-to-v4.1.md](MIGRATION-v4.0-to-v4.1.md) covers the move to 4.1 —
-the renamed attribution API, the new promoted-purchase listener method, and the fallback file the
-native iOS 4.1 expects you to re-download.
+Upgrading? [MIGRATION-v3.17-to-v4.1.md](MIGRATION-v3.17-to-v4.1.md) takes a 3.x project straight
+to 4.1 — the renamed paywall and attribution APIs, the new Newtonsoft.Json dependency, the order to
+install things in, and the fallback files the 4.1 natives expect you to re-download.
 
 Read the [release notes and known issues](Packages/com.adapty.unity-sdk/CHANGELOG.md) before you
 integrate: they carry the limitations of the pinned native SDKs, which no amount of configuration on
