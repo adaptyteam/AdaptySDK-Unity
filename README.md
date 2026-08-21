@@ -178,17 +178,3 @@ So do we! Feel free to star the repo ⭐️⭐️⭐️ and make our developers 
 ## License
 
 Adapty is available under the MIT license. [Click here](https://github.com/adaptyteam/AdaptySDK-Unity/blob/main/LICENSE) for details.
-
-## Known issues
-
-What is open in this release, and what closing it waits on. The
-[changelog](Packages/com.adapty.unity-sdk/CHANGELOG.md) carries the full text of each under the
-version it was found in.
-
-- **Custom color and linear gradient assets are not rendered on iOS.** An asset built with
-  `AdaptyCustomAsset.Color` or `AdaptyCustomAsset.LinearGradient` and passed through
-  `AdaptyUICreateFlowViewParameters.SetCustomAssets` reaches the view as a transparent color and an
-  empty gradient: the pinned AdaptySDK-iOS 4.1.0 substitutes those for whatever it receives, exactly
-  as 4.0.2 and 4.0.3 did, so there is no version to move the pin to. Custom image and video assets
-  are unaffected; whether Android is affected has not been established. Waiting on a native iOS
-  release, and on iOS acceptance after it.

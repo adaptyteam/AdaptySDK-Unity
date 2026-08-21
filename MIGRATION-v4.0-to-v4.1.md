@@ -7,7 +7,7 @@ Those two are the steps you can genuinely forget, so if you read just two sectio
 [Re-download your fallback files](#re-download-your-fallback-files) and
 [Turn Adapty Attribution on if you read installation details](#turn-adapty-attribution-on-if-you-read-installation-details).
 
-Under the hood, v4.1 moves the native dependencies to AdaptySDK-iOS 4.1.0 and AdaptySDK-Android
+Under the hood, v4.1 moves the native dependencies to AdaptySDK-iOS 4.1.1 and AdaptySDK-Android
 4.1.0, renames the external attribution API to match them, makes Adapty Attribution opt-in, and
 adds App Store promoted purchases. The why behind each change, and what was fixed along the way, is
 in [CHANGELOG.md](Packages/com.adapty.unity-sdk/CHANGELOG.md).
@@ -70,13 +70,12 @@ manually in App Store Connect to appear on your App Store product page, and if y
 know. An empty body is a perfectly honest implementation in that case, and the method is never
 called on Android either way.
 
-One thing worth knowing before you rely on it: the pinned AdaptySDK-iOS 4.1.0 does not yet hand
-promoted purchases to wrappers — it completes them by itself, natively, without telling anyone. And
-because the native dependency is pinned to exactly 4.1.0 — deliberately, so native behaviour never
-changes underneath a wrapper that was not built for it — a future native release will not slip into
-your build on its own. The handler starts receiving purchases once a future Unity SDK release moves
-that pin to a native that reports them; implementing it now means your code is ready the day you
-take that update.
+One thing worth knowing: this works because the pin is AdaptySDK-iOS 4.1.1. Native 4.1.0 completed
+promoted purchases by itself, without telling anyone, so on that version the handler was never
+called; 4.1.1 hands the purchase to the wrapper and expects `MakePromotedPurchase` to finish it. The
+native dependency is pinned to exactly 4.1.1 — deliberately, so native behaviour never changes
+underneath a wrapper that was not built for it — which is also why the handler was worth
+implementing before there was a native that called it.
 
 ## Re-download your fallback files
 

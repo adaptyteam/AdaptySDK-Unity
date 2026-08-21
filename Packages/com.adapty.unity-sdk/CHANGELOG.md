@@ -38,23 +38,41 @@ Upgrading from 4.0: see [MIGRATION-v4.0-to-v4.1.md](https://github.com/adaptytea
   installation details off; see the breaking entry above.
 - `Adapty.MakePromotedPurchase(AdaptyPromotedProduct, ...)` and
   `IAdaptyEventListener.OnReceivePromotedPurchase` — App Store promoted in-app purchases (iOS only;
-  on other platforms the completion handler reports an error). At native iOS 4.1.0 the event is not
-  yet emitted — the native SDK still completes promoted purchases by itself, and the exact pin keeps
-  it that way — so the listener method starts firing only once a future SDK release moves the pin to
-  a native that reports them.
+  on other platforms the completion handler reports an error). The pinned AdaptySDK-iOS 4.1.1 hands
+  the purchase to the wrapper instead of completing it natively, so the listener method is called
+  and `MakePromotedPurchase` is what finishes the purchase. The event was not emitted by 4.1.0, the
+  native this release was first built against, which is why moving the pin to 4.1.1 is what makes
+  the pair usable at all.
 - `AdaptyFlow` carries the 4.1 `ui_schema` (custom flow layouts, UIBuilder 5.1) through to the
   renderer. It is not public API: the schema is the renderer's own data, and the SDK only makes sure
   a flow handed back to the native side keeps it.
 
+### Fixed
+
+- **Custom color and linear gradient assets are now rendered on iOS.** An asset built with
+  `AdaptyCustomAsset.Color` or `AdaptyCustomAsset.LinearGradient` and passed through
+  `AdaptyUICreateFlowViewParameters.SetCustomAssets` used to reach the view as a transparent color
+  and an empty gradient: the native side had a placeholder where the conversion belonged and
+  substituted those for whatever it received. AdaptySDK-iOS 4.1.1 implements it, mapping a
+  cross-platform color and gradient exactly as it maps the same asset coming from the backend, and
+  moving the pin there is the whole of the fix — nothing on the Unity side changed, and the JSON it
+  writes is what the native decoding tests are written against. This closes the known issue filed
+  under 4.0.0-beta.2. Custom image and video assets were never affected; whether Android was has
+  still not been established.
+
 ### Native and Protocol
 
-- The native dependencies are pinned to AdaptySDK-iOS 4.1.0, which includes the 4.0.3 hotfix, and
+- The native dependencies are pinned to AdaptySDK-iOS 4.1.1, which includes the 4.0.3 hotfix, and
   on Android to crossplatform 4.1.0 / android-sdk 4.1.0 / android-ui 4.1.0, with the bundled
-  unity-wrapper AAR rebuilt at 4.1.0 from `adaptyandroidwrapper/`.
+  unity-wrapper AAR rebuilt at 4.1.0 from `adaptyandroidwrapper/`. What 4.1.1 adds over 4.1.0 is
+  the promoted-purchase event and the custom-asset fix noted above; the rest of it is the visionOS
+  build, which no Unity player targets.
 - [Android] `Adapty.RestorePurchases` no longer reports `NoPurchasesToRestore` (1004): the 4.1
   native completes with the current profile when there is nothing to restore. iOS never produced
   the code, so nothing sends it now; the `AdaptyErrorCode` member stays.
-- The cross-platform contract is 4.1.0: `update_external_attribution_data`,
+- The cross-platform contract is 4.1.1, which is 4.1.0 with its version raised — AdaptySDK-iOS
+  4.1.1 changed no request, response or type, so the Android crossplatform 4.1.0 pinned above
+  implements the same contract. Against 4.0: `update_external_attribution_data`,
   `make_promoted_purchase`, `did_receive_promoted_purchase`, `adapty_attribution_enabled` and
   `ui_schema` are new, and the offer identifier of a product request now travels nested as
   `subscription.offer.offer_identifier` — the natives read both forms, the flat
