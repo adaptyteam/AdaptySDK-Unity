@@ -38,8 +38,7 @@ namespace AdaptySDK
         /// <remarks>
         /// The id is the one the layout carries in the flow's schema, so a value naming no layout
         /// there fails view creation rather than falling back to the resolved one. Requires the
-        /// native iOS 4.1.2 SDK or newer; the pinned Android native does not read the key yet and
-        /// resolves the layout for the device as before.
+        /// native iOS 4.1.2 SDK or newer; on Android the pinned crossplatform 4.1.1 reads the key.
         /// </remarks>
         [DataMember(Name = "custom_layout_id")]
         public string CustomLayoutId;
