@@ -57,6 +57,12 @@ Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyte
 - `AdaptyFlow.HasViewConfiguration` — whether the flow carries a view configuration and can be
   rendered with `AdaptyUI.CreateFlowView`, answered without calling it and parsing the error. The
   same flag both natives expose.
+- `AdaptyUICreateFlowViewParameters.SetCustomLayoutId(string)` — renders the layout the flow's
+  schema names, instead of the one resolved for the current device. Both natives have carried the
+  parameter in their own UI APIs since 4.1.0, but nothing exposed it to the wrappers;
+  AdaptySDK-iOS 4.1.2 is the first native to forward `custom_layout_id` through its plugin layer,
+  so it is the pin this needs. The pinned Android native does not read the key yet and keeps
+  resolving the layout for the device.
 
 ### Fixed
 
@@ -92,11 +98,13 @@ Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyte
 - [Android] `Adapty.RestorePurchases` no longer reports `NoPurchasesToRestore` (1004): the 4.1
   native completes with the current profile when there is nothing to restore. iOS never produced
   the code, so nothing sends it now; the `AdaptyErrorCode` member stays.
-- The cross-platform contract is 4.1.1, which is 4.1.0 with its version raised — AdaptySDK-iOS
-  4.1.1 changed no request, response or type, so the Android crossplatform 4.1.0 pinned above
-  implements the same contract. Against 4.0: `update_external_attribution_data`,
-  `make_promoted_purchase`, `did_receive_promoted_purchase`, `adapty_attribution_enabled` and
-  `ui_schema` are new, and the offer identifier of a product request now travels nested as
+- The cross-platform contract is 4.1.2. Over 4.1.1 it adds one optional key, `custom_layout_id` on
+  `adapty_ui_create_flow_view`, and changes nothing else; 4.1.1 was itself 4.1.0 with its version
+  raised, since AdaptySDK-iOS 4.1.1 changed no request, response or type. The Android crossplatform
+  4.1.0 pinned above implements everything but that one key, which it ignores. Against 4.0:
+  `update_external_attribution_data`, `make_promoted_purchase`, `did_receive_promoted_purchase`,
+  `adapty_attribution_enabled` and `ui_schema` are new, and the offer identifier of a product
+  request now travels nested as
   `subscription.offer.offer_identifier` — the natives read both forms, the flat
   `subscription_offer_identifier` is no longer written.
 

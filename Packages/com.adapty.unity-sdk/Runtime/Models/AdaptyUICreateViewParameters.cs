@@ -8,8 +8,9 @@ using UnityEngine.Scripting;
 namespace AdaptySDK
 {
     /// <summary>
-    /// The optional extras of <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/>: which localization to render,
-    /// how long to wait, and the tags, timers and assets the flow substitutes into its layout.
+    /// The optional extras of <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/>: which localization
+    /// and layout to render, how long to wait, and the tags, timers and assets the flow substitutes
+    /// into its layout.
     /// </summary>
     /// <remarks>
     /// A dictionary handed to a setter is copied, so writing into your own copy afterwards does
@@ -29,6 +30,19 @@ namespace AdaptySDK
         /// </remarks>
         [DataMember(Name = "locale")]
         public string Locale;
+
+        /// <summary>
+        /// The identifier of the layout to render, instead of the one the flow resolves for the
+        /// current device. When null, the flow picks the layout itself.
+        /// </summary>
+        /// <remarks>
+        /// The id is the one the layout carries in the flow's schema, so a value naming no layout
+        /// there fails view creation rather than falling back to the resolved one. Requires the
+        /// native iOS 4.1.2 SDK or newer; the pinned Android native does not read the key yet and
+        /// resolves the layout for the device as before.
+        /// </remarks>
+        [DataMember(Name = "custom_layout_id")]
+        public string CustomLayoutId;
 
         /// <summary>
         /// How long to wait for the flow's assets before giving up. Null leaves the native
@@ -147,6 +161,7 @@ namespace AdaptySDK
                     : "{" + string.Join(", ", dictionary.Select(kv => $"{kv.Key}: {kv.Value}")) + "}";
 
             return $"{nameof(Locale)}: {Locale}, "
+                + $"{nameof(CustomLayoutId)}: {CustomLayoutId}, "
                 + $"{nameof(LoadTimeout)}: {LoadTimeout}, "
                 + $"{nameof(PreloadProducts)}: {PreloadProducts}, "
                 + $"{nameof(CustomTags)}: {Render(CustomTags)}, "
@@ -163,6 +178,16 @@ namespace AdaptySDK
         public AdaptyUICreateFlowViewParameters SetLocale(string locale)
         {
             Locale = locale;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets <see cref="CustomLayoutId"/>.
+        /// </summary>
+        /// <param name="customLayoutId">The id of the layout to render, as the flow's schema names it.</param>
+        public AdaptyUICreateFlowViewParameters SetCustomLayoutId(string customLayoutId)
+        {
+            CustomLayoutId = customLayoutId;
             return this;
         }
 

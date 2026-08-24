@@ -55,6 +55,7 @@
       ]
     }
   ],
+  "custom_layout_id": "tablet_wide",
   "custom_tags": {
     "NAME": "Ada"
   },

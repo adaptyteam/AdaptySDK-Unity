@@ -125,6 +125,7 @@ public AdaptySDK.AdaptySubscriptionUpdateParameters.ReplacementMode : AdaptySDK.
 public AdaptySDK.AdaptySubscriptionUpdateParameters.ctor(System.String oldSubVendorProductId, AdaptySDK.AdaptySubscriptionUpdateReplacementMode replacementMode)
 public AdaptySDK.AdaptySubscriptionUpdateReplacementMode.value__ : System.Int32
 public AdaptySDK.AdaptyUICreateFlowViewParameters.CustomAssets : System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.AdaptyCustomAsset> { get; }
+public AdaptySDK.AdaptyUICreateFlowViewParameters.CustomLayoutId : System.String
 public AdaptySDK.AdaptyUICreateFlowViewParameters.CustomTags : System.Collections.Generic.IReadOnlyDictionary<System.String, System.String> { get; }
 public AdaptySDK.AdaptyUICreateFlowViewParameters.CustomTimers : System.Collections.Generic.IReadOnlyDictionary<System.String, System.DateTime> { get; }
 public AdaptySDK.AdaptyUICreateFlowViewParameters.EnableSafeAreaPaddings : System.Nullable<System.Boolean>
@@ -133,6 +134,7 @@ public AdaptySDK.AdaptyUICreateFlowViewParameters.Locale : System.String
 public AdaptySDK.AdaptyUICreateFlowViewParameters.PreloadProducts : System.Nullable<System.Boolean>
 public AdaptySDK.AdaptyUICreateFlowViewParameters.ProductPurchaseParameters : System.Collections.Generic.IReadOnlyDictionary<AdaptySDK.AdaptyProductIdentifier, AdaptySDK.AdaptyPurchaseParameters> { get; }
 public AdaptySDK.AdaptyUICreateFlowViewParameters.SetCustomAssets(System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.AdaptyCustomAsset> customAssets) : AdaptySDK.AdaptyUICreateFlowViewParameters
+public AdaptySDK.AdaptyUICreateFlowViewParameters.SetCustomLayoutId(System.String customLayoutId) : AdaptySDK.AdaptyUICreateFlowViewParameters
 public AdaptySDK.AdaptyUICreateFlowViewParameters.SetCustomTags(System.Collections.Generic.IReadOnlyDictionary<System.String, System.String> customTags) : AdaptySDK.AdaptyUICreateFlowViewParameters
 public AdaptySDK.AdaptyUICreateFlowViewParameters.SetCustomTimers(System.Collections.Generic.IReadOnlyDictionary<System.String, System.DateTime> customTimers) : AdaptySDK.AdaptyUICreateFlowViewParameters
 public AdaptySDK.AdaptyUICreateFlowViewParameters.SetEnableSafeAreaPaddings(System.Nullable<System.Boolean> enableSafeAreaPaddings) : AdaptySDK.AdaptyUICreateFlowViewParameters

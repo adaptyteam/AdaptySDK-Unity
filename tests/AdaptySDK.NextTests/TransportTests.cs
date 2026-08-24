@@ -86,6 +86,7 @@ namespace AdaptySDK.NextTests
                 flow,
                 new AdaptyUICreateFlowViewParameters()
                     .SetLocale("es")
+                    .SetCustomLayoutId("tablet_wide")
                     .SetLoadTimeout(TimeSpan.FromSeconds(12))
                     .SetPreloadProducts(true)
                     .SetCustomTags(new Dictionary<string, string> { { "NAME", "Ada" } })
