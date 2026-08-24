@@ -61,7 +61,7 @@ Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyte
   schema names, instead of the one resolved for the current device. Both natives have carried the
   parameter in their own UI APIs since 4.1.0, but nothing exposed it to the wrappers;
   AdaptySDK-iOS 4.1.2 is the first native to forward `custom_layout_id` through its plugin layer,
-  so it is the pin this needs. The pinned Android crossplatform 4.1.1 reads the key, on both the
+  so it is the pin this needs. The pinned Android crossplatform 4.1.2 reads the key, on both the
   imperative and the embedded view path.
 
 ### Fixed
@@ -91,19 +91,19 @@ Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyte
 ### Native and Protocol
 
 - The native dependencies are pinned to AdaptySDK-iOS 4.1.1, which includes the 4.0.3 hotfix, and
-  on Android to crossplatform 4.1.1 / android-sdk 4.1.0 / android-ui 4.1.0, with the bundled
+  on Android to crossplatform 4.1.2 / android-sdk 4.1.0 / android-ui 4.1.0, with the bundled
   unity-wrapper AAR rebuilt at 4.1.0 from `adaptyandroidwrapper/`. What iOS 4.1.1 adds over 4.1.0
   is the promoted-purchase event and the custom-asset fix noted above; the rest of it is the
-  visionOS build, which no Unity player targets. The Android crossplatform is a patch ahead of the
-  other two at 4.1.1: it adds the `custom_layout_id` plumbing noted above and changes nothing the
-  bundled wrapper links against, so that AAR is not rebuilt.
+  visionOS build, which no Unity player targets. The Android crossplatform is two patches ahead of
+  the other two at 4.1.2: it adds the `custom_layout_id` plumbing noted above and changes nothing
+  the bundled wrapper links against, so that AAR is not rebuilt.
 - [Android] `Adapty.RestorePurchases` no longer reports `NoPurchasesToRestore` (1004): the 4.1
   native completes with the current profile when there is nothing to restore. iOS never produced
   the code, so nothing sends it now; the `AdaptyErrorCode` member stays.
 - The cross-platform contract is 4.1.2. Over 4.1.1 it adds one optional key, `custom_layout_id` on
   `adapty_ui_create_flow_view`, and changes nothing else; 4.1.1 was itself 4.1.0 with its version
   raised, since AdaptySDK-iOS 4.1.1 changed no request, response or type. The Android crossplatform
-  4.1.1 pinned above implements the whole of it, `custom_layout_id` included. Against 4.0:
+  4.1.2 pinned above implements the whole of it, `custom_layout_id` included. Against 4.0:
   `update_external_attribution_data`, `make_promoted_purchase`, `did_receive_promoted_purchase`,
   `adapty_attribution_enabled` and `ui_schema` are new, and the offer identifier of a product
   request now travels nested as
