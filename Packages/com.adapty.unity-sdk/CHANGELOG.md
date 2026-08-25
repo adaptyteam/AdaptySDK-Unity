@@ -46,11 +46,11 @@ Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyte
   installation details off; see the breaking entry above.
 - `Adapty.MakePromotedPurchase(AdaptyPromotedProduct, ...)` and
   `IAdaptyEventListener.OnReceivePromotedPurchase` — App Store promoted in-app purchases (iOS only;
-  on other platforms the completion handler reports an error). The pinned AdaptySDK-iOS 4.1.1 hands
-  the purchase to the wrapper instead of completing it natively, so the listener method is called
-  and `MakePromotedPurchase` is what finishes the purchase. The event was not emitted by 4.1.0, the
-  native this release was first built against, which is why moving the pin to 4.1.1 is what makes
-  the pair usable at all.
+  on other platforms the completion handler reports an error). AdaptySDK-iOS 4.1.1 hands the
+  purchase to the wrapper instead of completing it natively, so the listener method is called and
+  `MakePromotedPurchase` is what finishes the purchase. The event was not emitted by 4.1.0, the
+  native this release was first built against, which is why moving the pin off it is what makes the
+  pair usable at all.
 - `AdaptyFlow` carries the 4.1 `ui_schema` (custom flow layouts, UIBuilder 5.1) through to the
   renderer. It is not public API: the schema is the renderer's own data, and the SDK only makes sure
   a flow handed back to the native side keeps it.
@@ -61,7 +61,7 @@ Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyte
   schema names, instead of the one resolved for the current device. Both natives have carried the
   parameter in their own UI APIs since 4.1.0, but nothing exposed it to the wrappers;
   AdaptySDK-iOS 4.1.2 is the first native to forward `custom_layout_id` through its plugin layer,
-  so it is the pin this needs. The pinned Android crossplatform 4.1.2 reads the key, on both the
+  which is what this release pins. The pinned Android crossplatform 4.1.2 reads the key, on both the
   imperative and the embedded view path.
 
 ### Fixed
@@ -77,24 +77,31 @@ Upgrading from 3.x: see [MIGRATION-v3.17-to-v4.1.md](https://github.com/adaptyte
   of a bare `Exception`, and `AdaptyUICreateFlowViewParameters.SetProductPurchaseParameters`
   rejects two identifiers sharing one `adapty_product_id` instead of silently collapsing them into
   a single request entry.
+- **`SetPreloadProducts(true)` is honoured on iOS.** The flag rode the request and the native side
+  dropped it: the Paywall to Flow rename in AdaptySDK-iOS left the preload branch commented out, so
+  the products were fetched only once the view's own model asked for them, and the first frame could
+  show a paywall without prices. AdaptySDK-iOS 4.1.2 restores the branch, logging a failed preload
+  rather than failing view creation; moving the pin there is the whole of the fix, nothing on the
+  Unity side changed. Android honoured the flag all along.
 - **Custom color and linear gradient assets are now rendered on iOS.** An asset built with
   `AdaptyCustomAsset.Color` or `AdaptyCustomAsset.LinearGradient` and passed through
   `AdaptyUICreateFlowViewParameters.SetCustomAssets` used to reach the view as a transparent color
   and an empty gradient: the native side had a placeholder where the conversion belonged and
   substituted those for whatever it received. AdaptySDK-iOS 4.1.1 implements it, mapping a
   cross-platform color and gradient exactly as it maps the same asset coming from the backend, and
-  moving the pin there is the whole of the fix — nothing on the Unity side changed, and the JSON it
+  moving the pin off 4.1.0 is the whole of the fix — nothing on the Unity side changed, and the JSON it
   writes is what the native decoding tests are written against. This closes the known issue filed
   under 4.0.0-beta.2. Custom image and video assets were never affected; whether Android was has
   still not been established.
 
 ### Native and Protocol
 
-- The native dependencies are pinned to AdaptySDK-iOS 4.1.1, which includes the 4.0.3 hotfix, and
+- The native dependencies are pinned to AdaptySDK-iOS 4.1.2, which includes the 4.0.3 hotfix, and
   on Android to crossplatform 4.1.2 / android-sdk 4.1.0 / android-ui 4.1.0, with the bundled
-  unity-wrapper AAR rebuilt at 4.1.0 from `adaptyandroidwrapper/`. What iOS 4.1.1 adds over 4.1.0
-  is the promoted-purchase event and the custom-asset fix noted above; the rest of it is the
-  visionOS build, which no Unity player targets. The Android crossplatform is two patches ahead of
+  unity-wrapper AAR rebuilt at 4.1.0 from `adaptyandroidwrapper/`. What iOS 4.1.1 added over 4.1.0
+  is the promoted-purchase event and the custom-asset fix noted above, plus the visionOS build,
+  which no Unity player targets; 4.1.2 adds the `custom_layout_id` plumbing `SetCustomLayoutId`
+  needs and the `preload_products` fix, both noted above. The Android crossplatform is two patches ahead of
   the other two at 4.1.2: it adds the `custom_layout_id` plumbing noted above and changes nothing
   the bundled wrapper links against, so that AAR is not rebuilt.
 - [Android] `Adapty.RestorePurchases` no longer reports `NoPurchasesToRestore` (1004): the 4.1

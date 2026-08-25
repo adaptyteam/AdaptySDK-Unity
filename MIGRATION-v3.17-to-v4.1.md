@@ -83,7 +83,7 @@ still wires `Pods_UnityFramework` into the Unity target, so building `Unity-iPho
 directly fails with `ld: framework 'Pods_UnityFramework' not found`.
 
 Both native dependencies come with the package and move on their own: iOS is declared inside the
-package as a Swift package — AdaptySDK-iOS 4.1.1 — and External Dependency Manager resolves it at
+package as a Swift package — AdaptySDK-iOS 4.1.2 — and External Dependency Manager resolves it at
 build time; Android ships its 4.1.0 dependencies in an `.androidlib` module that Unity includes in
 the Gradle build on its own. There is nothing for you to update by hand on either platform.
 
@@ -233,11 +233,11 @@ method is never called.
 The same applies one level up: an app that never calls `Adapty.SetEventListener` has no handler
 for the event, and a promoted purchase is dropped silently there too.
 
-One thing worth knowing: this works because the pin is AdaptySDK-iOS 4.1.1. Native 4.1.0 completed
+One thing worth knowing: this works because the pin is AdaptySDK-iOS 4.1.2. Native 4.1.0 completed
 promoted purchases by itself, without telling anyone, so on that version the handler was never
-called; 4.1.1 hands the purchase to the wrapper and expects `MakePromotedPurchase` to finish it.
-The native dependency is pinned to exactly 4.1.1 — deliberately, so native behaviour never changes
-underneath a wrapper that was not built for it.
+called; 4.1.1 changed it to hand the purchase to the wrapper and expect `MakePromotedPurchase` to
+finish it, and 4.1.2 keeps that. The native dependency is pinned to exactly 4.1.2 — deliberately,
+so native behaviour never changes underneath a wrapper that was not built for it.
 
 ### The new handler interfaces
 
