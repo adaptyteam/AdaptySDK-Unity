@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using AdaptySDK;
-using AdaptySDK.TestSupport;
 using AdaptySDK.Serialization;
+using AdaptySDK.TestSupport;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace AdaptySDK.NextTests
@@ -45,6 +46,29 @@ namespace AdaptySDK.NextTests
                 fixture,
                 ModelSnapshot.Render(AdaptyJson.Deserialize<AdaptyFlow>(Snapshots.LoadResponse(fixture)))
             );
+
+        /// <summary>
+        /// Both natives treat the view configuration as present only when the version identifier
+        /// and the schema arrive together, so the flag checks the pair. The platform legs cannot
+        /// cover the formula — every leg reads the same fixture — so the four forms live here.
+        /// </summary>
+        [TestCase(true, true, ExpectedResult = true)]
+        [TestCase(true, false, ExpectedResult = false)]
+        [TestCase(false, true, ExpectedResult = false)]
+        [TestCase(false, false, ExpectedResult = false)]
+        public bool FlowHasViewConfigurationChecksThePair(bool withVersion, bool withSchema)
+        {
+            var payload = JObject.Parse(Snapshots.LoadResponse("flow-minimal"));
+            if (withVersion)
+            {
+                payload["flow_version_id"] = "flow-version-0001";
+            }
+            if (withSchema)
+            {
+                payload["ui_schema"] = new JObject();
+            }
+            return AdaptyJson.Deserialize<AdaptyFlow>(payload.ToString()).HasViewConfiguration;
+        }
 
         [TestCase("promoted-product-full")]
         [TestCase("promoted-product-minimal")]

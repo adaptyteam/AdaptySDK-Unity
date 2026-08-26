@@ -1,6 +1,6 @@
 {
   "$type": "AdaptyFlow",
-  "FlowVersionId": null,
+  "HasViewConfiguration (property)": false,
   "InstanceIdentity": "flow-0002",
   "Name": "Minimal Flow",
   "Paywalls (property)": [],
@@ -18,6 +18,7 @@
   "RemoteConfigs (property)": [],
   "VariationId": "variation-0002",
   "VendorProductIds (property)": [],
+  "_FlowVersionId": null,
   "_PayloadData": null,
   "_Paywalls": [],
   "_RemoteConfigs": [],

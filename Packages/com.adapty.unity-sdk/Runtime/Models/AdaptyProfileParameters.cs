@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using UnityEngine.Scripting;
@@ -99,7 +100,7 @@ namespace AdaptySDK
         /// Up to 30 characters of letters, digits, dashes, points and underscores.
         /// </param>
         /// <param name="value">Between 1 and 50 characters.</param>
-        /// <exception cref="Exception">
+        /// <exception cref="ArgumentException">
         /// The key or the value breaks those limits, or the profile would end up with more than 30
         /// custom attributes.
         /// </exception>
@@ -107,14 +108,13 @@ namespace AdaptySDK
         {
             if (string.IsNullOrEmpty(value) || value.Length > 50)
             {
-                throw new Exception($"The value must not be empty and not more than 50 characters.");
+                throw new ArgumentException(
+                    "The value must not be empty and not more than 50 characters.",
+                    nameof(value)
+                );
             }
-            if (!_validateCustomAttributeKey(key, true))
-            {
-                return;
-            }
+            _validateCustomAttributeKey(key, true);
             _CustomAttributes[key] = value;
-
         }
 
         /// <summary>
@@ -124,16 +124,13 @@ namespace AdaptySDK
         /// Up to 30 characters of letters, digits, dashes, points and underscores.
         /// </param>
         /// <param name="value">The value to store.</param>
-        /// <exception cref="Exception">
+        /// <exception cref="ArgumentException">
         /// The key breaks those limits, or the profile would end up with more than 30 custom
         /// attributes.
         /// </exception>
         public void SetCustomDoubleAttribute(string key, double value)
         {
-            if (!_validateCustomAttributeKey(key, true))
-            {
-                return;
-            }
+            _validateCustomAttributeKey(key, true);
             _CustomAttributes[key] = value;
         }
 
@@ -142,27 +139,23 @@ namespace AdaptySDK
         /// the server removes it instead of leaving it as it was.
         /// </summary>
         /// <param name="key">The key to clear.</param>
-        /// <exception cref="Exception">The key is not a valid custom attribute key.</exception>
+        /// <exception cref="ArgumentException">The key is not a valid custom attribute key.</exception>
         public void RemoveCustomAttribute(string key)
         {
-            if (!_validateCustomAttributeKey(key, false))
-            {
-                return;
-            }
+            _validateCustomAttributeKey(key, false);
             _CustomAttributes[key] = null;
         }
 
-        bool _validateCustomAttributeKey(String addingKey, bool testCount)
+        void _validateCustomAttributeKey(String addingKey, bool testCount)
         {
-
             if (string.IsNullOrEmpty(addingKey) || addingKey.Length > 30 || !Regex.IsMatch(addingKey, "^[A-Za-z0-9._-]+$"))
             {
-                throw new Exception("The key must be string not more than 30 characters. Only letters, numbers, dashes, points and underscores allowed");
+                throw new ArgumentException("The key must be string not more than 30 characters. Only letters, numbers, dashes, points and underscores allowed");
             }
 
             if (!testCount)
             {
-                return true;
+                return;
             }
 
             var count = 1;
@@ -174,10 +167,8 @@ namespace AdaptySDK
 
             if (count > 30)
             {
-                throw new Exception("The total number of custom attributes must be no more than 30");
+                throw new ArgumentException("The total number of custom attributes must be no more than 30");
             }
-
-            return true;
         }
 
         /// <summary>
@@ -193,7 +184,8 @@ namespace AdaptySDK
             $"{nameof(PhoneNumber)}: {PhoneNumber}, " +
             $"{nameof(AppTrackingTransparencyStatus)}: {AppTrackingTransparencyStatus}, " +
             $"{nameof(AnalyticsDisabled)}: {AnalyticsDisabled}, " +
-            $"{nameof(CustomAttributes)}: {CustomAttributes}";
+            $"{nameof(CustomAttributes)}: " +
+            "{" + string.Join(", ", CustomAttributes.Select(kv => $"{kv.Key}: {kv.Value}")) + "}";
     }
 
 }

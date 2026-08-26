@@ -50,7 +50,7 @@ namespace AdaptySDK
         /// The external attribution providers applied to this profile.
         /// </summary>
         [Preserve]
-        public IReadOnlyList<string> AppliedExternalAttributionProviders { get; private set; }
+        public IReadOnlyList<AdaptyExternalAttributionProvider> AppliedExternalAttributionProviders { get; private set; }
 
         /// <summary>
         /// Previously set user custom attributes with <see cref="Adapty.UpdateProfile(AdaptyProfileParameters, Action{AdaptyError})"/> method.
@@ -132,7 +132,18 @@ namespace AdaptySDK
 
         private void Freeze()
         {
-            AppliedExternalAttributionProviders = new ReadOnlyCollection<string>(_AppliedExternalAttributionProviders);
+            // A null entry would fail the constructor and a blank one would come out as a
+            // provider with an empty identifier, so both are skipped.
+            var providers = new List<AdaptyExternalAttributionProvider>();
+            foreach (var value in _AppliedExternalAttributionProviders)
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    continue;
+                }
+                providers.Add(new AdaptyExternalAttributionProvider(value));
+            }
+            AppliedExternalAttributionProviders = new ReadOnlyCollection<AdaptyExternalAttributionProvider>(providers);
             CustomAttributes = new ReadOnlyDictionary<string, object>(_CustomAttributes);
             AccessLevels = new ReadOnlyDictionary<string, AccessLevel>(_AccessLevels);
             Subscriptions = new ReadOnlyDictionary<string, Subscription>(_Subscriptions);

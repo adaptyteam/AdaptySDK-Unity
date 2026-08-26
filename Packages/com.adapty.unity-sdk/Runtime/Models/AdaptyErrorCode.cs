@@ -10,12 +10,12 @@ namespace AdaptySDK
     /// enum names it. Most of those are produced by one platform only, and each member says which;
     /// where both produce a number, both meanings are given, because they are not always the same
     /// one. Each was traced to its throw site in AdaptySDK-iOS 4.0.2 and AdaptySDK-Android 4.0.1;
-    /// the pinned 4.1.0 natives declare the same set of codes, with the one behavioural change
-    /// noted on <see cref="NoPurchasesToRestore"/>. Two are different:
-    /// <see cref="EncodingFailed"/> and
+    /// the pinned iOS 4.1.2 and Android 4.1.0 natives declare the same set of codes, with the one
+    /// behavioural change noted on <see cref="NoPurchasesToRestore"/>. Two are different:
+    /// <see cref="WrongParam"/> and
     /// <see cref="DecodingFailed"/> are also raised by this SDK itself, on either platform, when a
-    /// request cannot be encoded or a reply cannot be read — the native side is never reached in
-    /// the first case and has already answered in the second.
+    /// wrong argument is caught before sending or a reply cannot be read — the native side is
+    /// never reached in the first case and has already answered in the second.
     /// </remarks>
     [Preserve]
     public enum AdaptyErrorCode
@@ -259,13 +259,12 @@ namespace AdaptySDK
         DecodingFailed = 2006,
 
         /// <summary>
-        /// The parameters of a request could not be encoded, so the call never left this SDK.
+        /// The parameters of a request could not be encoded.
         /// </summary>
         /// <remarks>
-        /// Raised on either platform, not only iOS: the request is built and encoded in managed
-        /// code, before the native bridge is reached. A value the serializer cannot write is what
-        /// produces it — a reference loop or a throwing getter in something the app passed in.
-        /// The native iOS SDK declares the same number for its own encoding failures.
+        /// Declared by the native iOS SDK for its own encoding failures. This SDK does not raise
+        /// it: a request it cannot encode is reported as <see cref="WrongParam"/> — the code the
+        /// native side answers a wrong argument with.
         /// </remarks>
         EncodingFailed = 2009,
 
@@ -277,6 +276,11 @@ namespace AdaptySDK
         /// <summary>
         /// A parameter of the call was not valid.
         /// </summary>
+        /// <remarks>
+        /// Also raised by this SDK itself, on either platform, when it can see the argument is
+        /// wrong before sending — a null the request cannot carry, or a value the serializer
+        /// cannot write. The call never leaves the SDK in that case.
+        /// </remarks>
         WrongParam = 3001,
 
         /// <summary>

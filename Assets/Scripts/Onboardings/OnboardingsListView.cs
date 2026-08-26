@@ -3,12 +3,15 @@ using UnityEngine;
 
 namespace AdaptyExample
 {
-    public class FlowsListView : MonoBehaviour
+    public class OnboardingsListView : MonoBehaviour
     {
         [HideInInspector]
         public AdaptyListener Listener;
 
         public TMP_InputField PlacementIdTextField;
+        public TMP_InputField PlacementLocaleTextField;
+        public RectTransform ContentViewTransform;
+        public GameObject OnboardingItemPrefab;
 
         /// <summary>
         /// Used when the placement field is left empty.
@@ -18,29 +21,14 @@ namespace AdaptyExample
         /// a device produces one that does not exist and a fetch failure that looks like an SDK
         /// problem. Leaving the field blank uses this instead.
         /// </remarks>
-        public const string DefaultPlacementId = "rt.RegTestPaywall1";
-
-        /// <summary>
-        /// The localization the flow view is built with. A flow itself is not localized at fetch time,
-        /// so this is passed to AdaptyUICreateFlowViewParameters, not to GetFlow.
-        /// </summary>
-        public TMP_InputField PlacementLocaleTextField;
-
-        public RectTransform ContentViewTransform;
-
-        public GameObject FlowsItemPrefab;
+        public const string DefaultPlacementId = "4681-onboarding-animate";
 
         private PlacementLoadStrategy m_loadStrategy = PlacementLoadStrategy.LoadElseCache;
-
-        void Update() { }
 
         public void OnDropdownValueChanged(int value)
         {
             switch (value)
             {
-                case 0:
-                    this.m_loadStrategy = PlacementLoadStrategy.LoadElseCache;
-                    break;
                 case 1:
                     this.m_loadStrategy = PlacementLoadStrategy.CacheElseLoad;
                     break;
@@ -61,43 +49,31 @@ namespace AdaptyExample
 
         public void AddPlacementPressed()
         {
-            var placementId = string.IsNullOrEmpty(this.PlacementIdTextField.text)
-                ? DefaultPlacementId
-                : this.PlacementIdTextField.text;
-            var placementLocale = this.PlacementLocaleTextField.text;
-
-            this.AddPlacement(placementId, placementLocale, false);
-
-            this.PlacementIdTextField.text = "";
-            this.PlacementLocaleTextField.text = "";
+            this.AddPlacement(false);
         }
 
         public void AddPlacementDefaultAudiencePressed()
         {
+            this.AddPlacement(true);
+        }
+
+        private void AddPlacement(bool isDefaultAudience)
+        {
             var placementId = string.IsNullOrEmpty(this.PlacementIdTextField.text)
                 ? DefaultPlacementId
                 : this.PlacementIdTextField.text;
             var placementLocale = this.PlacementLocaleTextField.text;
 
-            this.AddPlacement(placementId, placementLocale, true);
+            var item = Instantiate(this.OnboardingItemPrefab, this.ContentViewTransform);
+            var itemView = item.GetComponent<OnboardingsItemView>();
+
+            itemView.Listener = this.Listener;
+            itemView.PlacementId = placementId;
+            itemView.PlacementLocale = placementLocale;
+            itemView.LoadOnboarding(this.m_loadStrategy, isDefaultAudience);
 
             this.PlacementIdTextField.text = "";
             this.PlacementLocaleTextField.text = "";
-        }
-
-        private void AddPlacement(
-            string placementId,
-            string placementLocale,
-            bool isDefaultAudience
-        )
-        {
-            var flowItem = Instantiate(this.FlowsItemPrefab, this.ContentViewTransform);
-            var flowItemView = flowItem.GetComponent<FlowsItemView>();
-
-            flowItemView.Listener = this.Listener;
-            flowItemView.PlacementId = placementId;
-            flowItemView.PlacementLocale = placementLocale;
-            flowItemView.LoadFlow(this.m_loadStrategy, isDefaultAudience);
         }
     }
 }

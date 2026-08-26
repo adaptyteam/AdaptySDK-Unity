@@ -74,6 +74,12 @@ namespace AdaptySDK
             Action<AdaptyFlow, AdaptyError> completionHandler
         )
         {
+            if (placementId is null)
+            {
+                AdaptyRequest.FailWrongParam("get_flow", "placementId is null", completionHandler);
+                return;
+            }
+
             var parameters = new JObject();
             parameters["placement_id"] = placementId;
 
@@ -105,6 +111,16 @@ namespace AdaptySDK
             Action<AdaptyFlow, AdaptyError> completionHandler
         )
         {
+            if (placementId is null)
+            {
+                AdaptyRequest.FailWrongParam(
+                    "get_flow_for_default_audience",
+                    "placementId is null",
+                    completionHandler
+                );
+                return;
+            }
+
             var parameters = new JObject();
             parameters["placement_id"] = placementId;
 
@@ -383,6 +399,7 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// This method is iOS-only and allows you to manage user consent for refund data collection.
+        /// On other platforms the call does nothing and completes without an error.
         /// Read more on the <see href="https://adapty.io/docs/refund-saver#obtain-user-consent">Adapty Documentation</see>
         /// </remarks>
         /// <param name="consent">A boolean value indicating whether the user gave consent for refund data collection.</param>
@@ -410,6 +427,7 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// This method is iOS-only and allows you to set how refunds should be handled for a specific user.
+        /// On other platforms the call does nothing and completes without an error.
         /// Read more on the <see href="https://adapty.io/docs/refund-saver#set-refund-behavior-for-a-specific-user-in-the-sdk">Adapty Documentation</see>
         /// </remarks>
         /// <param name="refundPreference">The <see cref="AdaptyRefundPreference"/> value to set.</param>
@@ -484,6 +502,7 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// This method is iOS-only and presents the native App Store code redemption interface.
+        /// On other platforms the call does nothing and completes without an error.
         /// Read more at <see href="https://developer.apple.com/documentation/storekit/appstore/presentoffercoderedeemsheet(in:)">Apple Documentation</see>
         /// </remarks>
         /// <param name="completionHandler">The action that will be called with the result.</param>
@@ -592,6 +611,16 @@ namespace AdaptySDK
             Action<AdaptyError> completionHandler
         )
         {
+            if (key is null)
+            {
+                AdaptyRequest.FailWrongParam(
+                    "set_integration_identifiers",
+                    "key is null",
+                    completionHandler
+                );
+                return;
+            }
+
             var parameters = new JObject();
             var identifier = new JObject { [key] = value };
             parameters["key_values"] = identifier;
@@ -606,18 +635,28 @@ namespace AdaptySDK
         /// This method allows you to send attribution data from external providers (e.g., AppsFlyer, Adjust, Branch) to Adapty.
         /// Read more on the <see href="https://adapty.io/docs/attribution-integration">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="jsonString">A serialized JSON string containing attribution (conversion) data from the attribution provider.</param>
-        /// <param name="provider">The external attribution provider (e.g., "appsflyer", "adjust", "branch", "custom").</param>
+        /// <param name="jsonString">A serialized JSON string containing attribution (conversion) data from the attribution provider. This overload is for providers that hand the data over already serialized — AppsFlyer's conversion data callback, for one; the dictionary overload is the default path.</param>
+        /// <param name="provider">The external attribution provider: one of the <see cref="AdaptyExternalAttributionProvider"/> instances, or one constructed for a provider the backend added later.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void UpdateExternalAttribution(
             string jsonString,
-            string provider,
+            AdaptyExternalAttributionProvider provider,
             Action<AdaptyError> completionHandler
         )
         {
+            if (provider is null)
+            {
+                AdaptyRequest.FailWrongParam(
+                    "update_external_attribution_data",
+                    "provider is null",
+                    completionHandler
+                );
+                return;
+            }
+
             var parameters = new JObject();
             parameters["attribution"] = jsonString;
-            parameters["provider"] = provider;
+            parameters["provider"] = provider.RawValue;
 
             AdaptyRequest.SendVoid("update_external_attribution_data", parameters, completionHandler);
         }

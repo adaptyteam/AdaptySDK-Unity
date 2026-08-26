@@ -1,6 +1,6 @@
 {
   "$type": "AdaptyFlow",
-  "FlowVersionId": "flow-version-0001",
+  "HasViewConfiguration (property)": true,
   "InstanceIdentity": "flow-0001",
   "Name": "Winter Flow",
   "Paywalls (property)": [
@@ -157,6 +157,7 @@
     "com.adapty.sample.monthly",
     "com.adapty.sample.yearly"
   ],
+  "_FlowVersionId": "flow-version-0001",
   "_PayloadData": "{\"custom\":\"payload\"}",
   "_Paywalls": [
     {

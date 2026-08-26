@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
     /// <summary>
-    /// The optional extras of <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/>: which localization to render,
-    /// how long to wait, and the tags, timers and assets the flow substitutes into its layout.
+    /// The optional extras of <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/>: which localization
+    /// and layout to render, how long to wait, and the tags, timers and assets the flow substitutes
+    /// into its layout.
     /// </summary>
     /// <remarks>
     /// A dictionary handed to a setter is copied, so writing into your own copy afterwards does
@@ -28,6 +30,18 @@ namespace AdaptySDK
         /// </remarks>
         [DataMember(Name = "locale")]
         public string Locale;
+
+        /// <summary>
+        /// The identifier of the layout to render, instead of the one the flow resolves for the
+        /// current device. When null, the flow picks the layout itself.
+        /// </summary>
+        /// <remarks>
+        /// The id is the one the layout carries in the flow's schema, so a value naming no layout
+        /// there fails view creation rather than falling back to the resolved one. Requires the
+        /// native iOS 4.1.2 SDK or newer; on Android the pinned crossplatform 4.1.2 reads the key.
+        /// </remarks>
+        [DataMember(Name = "custom_layout_id")]
+        public string CustomLayoutId;
 
         /// <summary>
         /// How long to wait for the flow's assets before giving up. Null leaves the native
@@ -138,15 +152,23 @@ namespace AdaptySDK
         /// A description for logs and the debugger. The format is not part of the contract —
         /// read the members rather than parsing it.
         /// </summary>
-        public override string ToString() =>
-            $"{nameof(Locale)}: {Locale}, "
-            + $"{nameof(LoadTimeout)}: {LoadTimeout}, "
-            + $"{nameof(PreloadProducts)}: {PreloadProducts}, "
-            + $"{nameof(CustomTags)}: {CustomTags}, "
-            + $"{nameof(CustomTimers)}: {CustomTimers}, "
-            + $"{nameof(CustomAssets)}: {CustomAssets}, "
-            + $"{nameof(ProductPurchaseParameters)}: {ProductPurchaseParameters}, "
-            + $"{nameof(EnableSafeAreaPaddings)}: {EnableSafeAreaPaddings}";
+        public override string ToString()
+        {
+            string Render<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary) =>
+                dictionary == null
+                    ? "null"
+                    : "{" + string.Join(", ", dictionary.Select(kv => $"{kv.Key}: {kv.Value}")) + "}";
+
+            return $"{nameof(Locale)}: {Locale}, "
+                + $"{nameof(CustomLayoutId)}: {CustomLayoutId}, "
+                + $"{nameof(LoadTimeout)}: {LoadTimeout}, "
+                + $"{nameof(PreloadProducts)}: {PreloadProducts}, "
+                + $"{nameof(CustomTags)}: {Render(CustomTags)}, "
+                + $"{nameof(CustomTimers)}: {Render(CustomTimers)}, "
+                + $"{nameof(CustomAssets)}: {Render(CustomAssets)}, "
+                + $"{nameof(ProductPurchaseParameters)}: {Render(ProductPurchaseParameters)}, "
+                + $"{nameof(EnableSafeAreaPaddings)}: {EnableSafeAreaPaddings}";
+        }
 
         /// <summary>
         /// Sets <see cref="Locale"/>.
@@ -155,6 +177,16 @@ namespace AdaptySDK
         public AdaptyUICreateFlowViewParameters SetLocale(string locale)
         {
             Locale = locale;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets <see cref="CustomLayoutId"/>.
+        /// </summary>
+        /// <param name="customLayoutId">The id of the layout to render, as the flow's schema names it.</param>
+        public AdaptyUICreateFlowViewParameters SetCustomLayoutId(string customLayoutId)
+        {
+            CustomLayoutId = customLayoutId;
             return this;
         }
 
@@ -242,10 +274,26 @@ namespace AdaptySDK
         /// Sets <see cref="ProductPurchaseParameters"/>, copying the dictionary. Android only.
         /// </summary>
         /// <param name="productPurchaseParameters">The purchase extras for each product.</param>
+        /// <exception cref="ArgumentException">Two identifiers share one <c>adapty_product_id</c>.</exception>
         public AdaptyUICreateFlowViewParameters SetProductPurchaseParameters(
             IReadOnlyDictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters> productPurchaseParameters
         )
         {
+            if (productPurchaseParameters != null)
+            {
+                var seen = new HashSet<string>();
+                foreach (var entry in productPurchaseParameters)
+                {
+                    if (!seen.Add(entry.Key._AdaptyProductId))
+                    {
+                        throw new ArgumentException(
+                            $"Two product identifiers share adapty_product_id \"{entry.Key._AdaptyProductId}\".",
+                            nameof(productPurchaseParameters)
+                        );
+                    }
+                }
+            }
+
             _ProductPurchaseParameters = Copy(productPurchaseParameters);
             return this;
         }

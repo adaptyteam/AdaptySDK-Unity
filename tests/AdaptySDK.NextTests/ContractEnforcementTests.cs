@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Runtime.Serialization;
-using AdaptySDK.TestSupport;
+using System.Text.RegularExpressions;
 using AdaptySDK.Serialization;
+using AdaptySDK.TestSupport;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -441,7 +441,8 @@ namespace AdaptySDK.NextTests
                     Throws.InstanceOf<NotSupportedException>()
                 );
                 Assert.That(
-                    () => ((IList<string>)profile.AppliedExternalAttributionProviders).Add("x"),
+                    () => ((IList<AdaptyExternalAttributionProvider>)profile.AppliedExternalAttributionProviders)
+                            .Add(AdaptyExternalAttributionProvider.Custom),
                     Throws.InstanceOf<NotSupportedException>()
                 );
 

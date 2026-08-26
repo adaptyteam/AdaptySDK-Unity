@@ -91,30 +91,46 @@ namespace AdaptySDK
             AdaptyCallbacks.InvokeSafe(invocation, $"Failed to invoke completionHandler in {caller}(..)");
 
         /// <summary>
-        /// Reports a request that could not be encoded before it reached <see cref="SendVoid"/>,
-        /// with the error the transport would have produced had the encoding happened inside it.
+        /// Reports an argument the SDK can see is wrong before sending — a null the request cannot
+        /// carry, a graph that cannot be encoded — with the code the native side answers a wrong
+        /// argument with.
         /// </summary>
         /// <remarks>
-        /// For the one overload that has to serialize an argument of its own before it can build
-        /// the request. Without this the exception would leave the SDK synchronously, and that one
-        /// public method would report failure differently from the other forty.
+        /// Without this the failure would leave the SDK synchronously, or ride to the native side
+        /// as a null, and those call sites would report failure differently from every other
+        /// public method.
         /// </remarks>
-        internal static void FailEncoding(
+        internal static void FailWrongParam(
             string method,
-            Exception exception,
+            string detail,
             Action<AdaptyError> completionHandler,
             [CallerMemberName] string caller = null
         ) =>
             InvokeCompletion(
-                () => completionHandler?.Invoke(EncodingFailed(method, exception)),
+                () => completionHandler?.Invoke(WrongParam(method, detail)),
                 caller
             );
 
-        private static AdaptyError EncodingFailed(string method, Exception exception) =>
+        /// <summary>
+        /// The typed twin of <see cref="FailWrongParam(string, string, Action{AdaptyError}, string)"/>,
+        /// for a request whose reply carries a value.
+        /// </summary>
+        internal static void FailWrongParam<T>(
+            string method,
+            string detail,
+            Action<T, AdaptyError> completionHandler,
+            [CallerMemberName] string caller = null
+        ) =>
+            InvokeCompletion(
+                () => completionHandler?.Invoke(default, WrongParam(method, detail)),
+                caller
+            );
+
+        private static AdaptyError WrongParam(string method, string detail) =>
             new AdaptyError(
-                AdaptyErrorCode.EncodingFailed,
-                $"Failed encoding request: {method}",
-                $"AdaptyUnityError.EncodingFailed({exception})"
+                AdaptyErrorCode.WrongParam,
+                $"Wrong argument in request: {method}",
+                $"AdaptyUnityError.WrongParam({detail})"
             );
 
         private static void SendRaw<T>(
@@ -130,7 +146,7 @@ namespace AdaptySDK
             }
             catch (Exception ex)
             {
-                completionHandler(default(T), EncodingFailed(method, ex));
+                completionHandler(default(T), WrongParam(method, ex.ToString()));
                 return;
             }
 

@@ -8,8 +8,9 @@ namespace AdaptySDK.Serialization
 {
     /// <summary>
     /// Reads the models' <c>System.Runtime.Serialization</c> attributes, with two corrections:
-    /// <c>IsRequired</c> means present and non-null, not <see cref="Required.AllowNull"/>; and
-    /// interface-typed collections are contracted as concrete ones, see <see cref="Concrete"/>.
+    /// <c>IsRequired</c> means present and non-null on both sides of the wire, not
+    /// <see cref="Required.AllowNull"/>; and interface-typed collections are contracted as concrete
+    /// ones, see <see cref="Concrete"/>.
     /// </summary>
     /// <remarks>
     /// Both are contract rules that cannot be stated per member without repeating them across the
@@ -65,6 +66,7 @@ namespace AdaptySDK.Serialization
             if (property.Required == Required.AllowNull)
             {
                 property.Required = Required.Always;
+                property.NullValueHandling = NullValueHandling.Include;
             }
 
             return property;

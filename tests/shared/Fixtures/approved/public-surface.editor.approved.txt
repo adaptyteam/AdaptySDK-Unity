@@ -46,6 +46,8 @@ public AdaptySDK.AdaptyCustomAssetLocalVideoFile.Path : System.String { get; }
 public AdaptySDK.AdaptyCustomerIdentity.IsEmpty : System.Boolean { get; }
 public AdaptySDK.AdaptyCustomerIdentity.ctor(System.Guid iosAppAccountToken, System.String androidObfuscatedAccountId)
 public AdaptySDK.AdaptyErrorCode.value__ : System.Int32
+public AdaptySDK.AdaptyExternalAttributionProvider.ctor(System.String rawValue)
+public AdaptySDK.AdaptyFlow.HasViewConfiguration : System.Boolean { get; }
 public AdaptySDK.AdaptyFlow.Paywalls : System.Collections.Generic.IReadOnlyList<AdaptySDK.AdaptyFlowPaywall> { get; }
 public AdaptySDK.AdaptyFlow.ProductIdentifiers : System.Collections.Generic.IReadOnlyList<AdaptySDK.AdaptyProductIdentifier> { get; }
 public AdaptySDK.AdaptyFlow.RemoteConfig : AdaptySDK.AdaptyRemoteConfig { get; }
@@ -75,7 +77,7 @@ public AdaptySDK.AdaptyOnboardingsTextInput.ctor(System.String value)
 public AdaptySDK.AdaptyPaymentMode.value__ : System.Int32
 public AdaptySDK.AdaptyProductIdentifier.ctor(System.String vendorProductId, System.String adaptyProductId, System.String basePlanId)
 public AdaptySDK.AdaptyProfile.AccessLevels : System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.AccessLevel> { get; }
-public AdaptySDK.AdaptyProfile.AppliedExternalAttributionProviders : System.Collections.Generic.IReadOnlyList<System.String> { get; }
+public AdaptySDK.AdaptyProfile.AppliedExternalAttributionProviders : System.Collections.Generic.IReadOnlyList<AdaptySDK.AdaptyExternalAttributionProvider> { get; }
 public AdaptySDK.AdaptyProfile.CustomAttributes : System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> { get; }
 public AdaptySDK.AdaptyProfile.NonSubscriptions : System.Collections.Generic.IReadOnlyDictionary<System.String, System.Collections.Generic.IReadOnlyList<AdaptySDK.NonSubscription>> { get; }
 public AdaptySDK.AdaptyProfile.Subscriptions : System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.Subscription> { get; }
@@ -123,6 +125,7 @@ public AdaptySDK.AdaptySubscriptionUpdateParameters.ReplacementMode : AdaptySDK.
 public AdaptySDK.AdaptySubscriptionUpdateParameters.ctor(System.String oldSubVendorProductId, AdaptySDK.AdaptySubscriptionUpdateReplacementMode replacementMode)
 public AdaptySDK.AdaptySubscriptionUpdateReplacementMode.value__ : System.Int32
 public AdaptySDK.AdaptyUICreateFlowViewParameters.CustomAssets : System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.AdaptyCustomAsset> { get; }
+public AdaptySDK.AdaptyUICreateFlowViewParameters.CustomLayoutId : System.String
 public AdaptySDK.AdaptyUICreateFlowViewParameters.CustomTags : System.Collections.Generic.IReadOnlyDictionary<System.String, System.String> { get; }
 public AdaptySDK.AdaptyUICreateFlowViewParameters.CustomTimers : System.Collections.Generic.IReadOnlyDictionary<System.String, System.DateTime> { get; }
 public AdaptySDK.AdaptyUICreateFlowViewParameters.EnableSafeAreaPaddings : System.Nullable<System.Boolean>
@@ -131,6 +134,7 @@ public AdaptySDK.AdaptyUICreateFlowViewParameters.Locale : System.String
 public AdaptySDK.AdaptyUICreateFlowViewParameters.PreloadProducts : System.Nullable<System.Boolean>
 public AdaptySDK.AdaptyUICreateFlowViewParameters.ProductPurchaseParameters : System.Collections.Generic.IReadOnlyDictionary<AdaptySDK.AdaptyProductIdentifier, AdaptySDK.AdaptyPurchaseParameters> { get; }
 public AdaptySDK.AdaptyUICreateFlowViewParameters.SetCustomAssets(System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.AdaptyCustomAsset> customAssets) : AdaptySDK.AdaptyUICreateFlowViewParameters
+public AdaptySDK.AdaptyUICreateFlowViewParameters.SetCustomLayoutId(System.String customLayoutId) : AdaptySDK.AdaptyUICreateFlowViewParameters
 public AdaptySDK.AdaptyUICreateFlowViewParameters.SetCustomTags(System.Collections.Generic.IReadOnlyDictionary<System.String, System.String> customTags) : AdaptySDK.AdaptyUICreateFlowViewParameters
 public AdaptySDK.AdaptyUICreateFlowViewParameters.SetCustomTimers(System.Collections.Generic.IReadOnlyDictionary<System.String, System.DateTime> customTimers) : AdaptySDK.AdaptyUICreateFlowViewParameters
 public AdaptySDK.AdaptyUICreateFlowViewParameters.SetEnableSafeAreaPaddings(System.Nullable<System.Boolean> enableSafeAreaPaddings) : AdaptySDK.AdaptyUICreateFlowViewParameters
@@ -232,6 +236,9 @@ public override AdaptySDK.AdaptyConfiguration+Builder.ToString() : System.String
 public override AdaptySDK.AdaptyConfiguration.ToString() : System.String
 public override AdaptySDK.AdaptyCustomerIdentity.ToString() : System.String
 public override AdaptySDK.AdaptyError.ToString() : System.String
+public override AdaptySDK.AdaptyExternalAttributionProvider.Equals(System.Object obj) : System.Boolean
+public override AdaptySDK.AdaptyExternalAttributionProvider.GetHashCode() : System.Int32
+public override AdaptySDK.AdaptyExternalAttributionProvider.ToString() : System.String
 public override AdaptySDK.AdaptyFlow.ToString() : System.String
 public override AdaptySDK.AdaptyFlowPaywall.ToString() : System.String
 public override AdaptySDK.AdaptyInstallationDetails.ToString() : System.String
@@ -272,7 +279,7 @@ public readonly AdaptySDK.AdaptyCustomerIdentity.IosAppAccountToken : System.Gui
 public readonly AdaptySDK.AdaptyError.Code : AdaptySDK.AdaptyErrorCode
 public readonly AdaptySDK.AdaptyError.Detail : System.String
 public readonly AdaptySDK.AdaptyError.Message : System.String
-public readonly AdaptySDK.AdaptyFlow.FlowVersionId : System.String
+public readonly AdaptySDK.AdaptyExternalAttributionProvider.RawValue : System.String
 public readonly AdaptySDK.AdaptyFlow.InstanceIdentity : System.String
 public readonly AdaptySDK.AdaptyFlow.Name : System.String
 public readonly AdaptySDK.AdaptyFlow.Placement : AdaptySDK.AdaptyPlacement
@@ -430,6 +437,7 @@ public sealed class AdaptySDK.AdaptyCustomAssetLocalVideoAsset : AdaptySDK.Adapt
 public sealed class AdaptySDK.AdaptyCustomAssetLocalVideoFile : AdaptySDK.AdaptyCustomAsset
 public sealed class AdaptySDK.AdaptyCustomerIdentity
 public sealed class AdaptySDK.AdaptyError
+public sealed class AdaptySDK.AdaptyExternalAttributionProvider : System.IEquatable<AdaptySDK.AdaptyExternalAttributionProvider>
 public sealed class AdaptySDK.AdaptyFlow
 public sealed class AdaptySDK.AdaptyFlowPaywall
 public sealed class AdaptySDK.AdaptyInstallationDetails
@@ -524,8 +532,8 @@ public static AdaptySDK.Adapty.SetOnboardingsEventsListener(AdaptySDK.IAdaptyOnb
 public static AdaptySDK.Adapty.SetSystemRequestsHandler(AdaptySDK.IAdaptyUISystemRequestsHandler handler) : System.Void
 public static AdaptySDK.Adapty.UpdateAppStoreCollectingRefundDataConsent(System.Boolean consent, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.UpdateAppStoreRefundPreference(AdaptySDK.AdaptyRefundPreference refundPreference, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
-public static AdaptySDK.Adapty.UpdateExternalAttribution(System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> attribution, System.String provider, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
-public static AdaptySDK.Adapty.UpdateExternalAttribution(System.String jsonString, System.String provider, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.UpdateExternalAttribution(System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> attribution, AdaptySDK.AdaptyExternalAttributionProvider provider, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.UpdateExternalAttribution(System.String jsonString, AdaptySDK.AdaptyExternalAttributionProvider provider, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.UpdateProfile(AdaptySDK.AdaptyProfileParameters param, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyCustomAsset.Color(UnityEngine.Color color) : AdaptySDK.AdaptyCustomAsset
 public static AdaptySDK.AdaptyCustomAsset.LinearGradient(UnityEngine.Gradient gradient) : AdaptySDK.AdaptyCustomAsset
@@ -534,6 +542,8 @@ public static AdaptySDK.AdaptyCustomAsset.LocalImageData(System.Byte[] data) : A
 public static AdaptySDK.AdaptyCustomAsset.LocalImageFile(System.String path) : AdaptySDK.AdaptyCustomAsset
 public static AdaptySDK.AdaptyCustomAsset.LocalVideoAsset(System.String assetId) : AdaptySDK.AdaptyCustomAsset
 public static AdaptySDK.AdaptyCustomAsset.LocalVideoFile(System.String path) : AdaptySDK.AdaptyCustomAsset
+public static AdaptySDK.AdaptyExternalAttributionProvider.op_Equality(AdaptySDK.AdaptyExternalAttributionProvider a, AdaptySDK.AdaptyExternalAttributionProvider b) : System.Boolean
+public static AdaptySDK.AdaptyExternalAttributionProvider.op_Inequality(AdaptySDK.AdaptyExternalAttributionProvider a, AdaptySDK.AdaptyExternalAttributionProvider b) : System.Boolean
 public static AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(System.TimeSpan maxAge) : AdaptySDK.AdaptyPlacementFetchPolicy
 public static AdaptySDK.AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow flow, AdaptySDK.AdaptyUICreateFlowViewParameters optionalParameters, System.Action<AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow flow, System.Action<AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError> completionHandler) : System.Void
@@ -661,6 +671,13 @@ public static const AdaptySDK.AppTrackingTransparencyStatus.Denied : AdaptySDK.A
 public static const AdaptySDK.AppTrackingTransparencyStatus.NotDetermined : AdaptySDK.AppTrackingTransparencyStatus = 0
 public static const AdaptySDK.AppTrackingTransparencyStatus.Restricted : AdaptySDK.AppTrackingTransparencyStatus = 1
 public static readonly AdaptySDK.Adapty.SDKVersion : System.String
+public static readonly AdaptySDK.AdaptyExternalAttributionProvider.Adjust : AdaptySDK.AdaptyExternalAttributionProvider
+public static readonly AdaptySDK.AdaptyExternalAttributionProvider.AppleAds : AdaptySDK.AdaptyExternalAttributionProvider
+public static readonly AdaptySDK.AdaptyExternalAttributionProvider.Appsflyer : AdaptySDK.AdaptyExternalAttributionProvider
+public static readonly AdaptySDK.AdaptyExternalAttributionProvider.Branch : AdaptySDK.AdaptyExternalAttributionProvider
+public static readonly AdaptySDK.AdaptyExternalAttributionProvider.Custom : AdaptySDK.AdaptyExternalAttributionProvider
+public static readonly AdaptySDK.AdaptyExternalAttributionProvider.Tenjin : AdaptySDK.AdaptyExternalAttributionProvider
 public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.Default : AdaptySDK.AdaptyPlacementFetchPolicy
 public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData : AdaptySDK.AdaptyPlacementFetchPolicy
 public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataElseLoad : AdaptySDK.AdaptyPlacementFetchPolicy
+public virtual AdaptySDK.AdaptyExternalAttributionProvider.Equals(AdaptySDK.AdaptyExternalAttributionProvider other) : System.Boolean

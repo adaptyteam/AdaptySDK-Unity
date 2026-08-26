@@ -423,6 +423,17 @@ namespace AdaptySDK.NextTests
         }
 
         [Test]
+        public void NullInRequiredFieldThrowsOnWrite()
+        {
+            var sample = (Sample)
+                System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(
+                    typeof(Sample)
+                );
+
+            Assert.Throws<JsonSerializationException>(() => AdaptyJson.Serialize(sample));
+        }
+
+        [Test]
         public void NullValuesAreOmittedOnWrite()
         {
             var sample = AdaptyJson.Deserialize<Sample>("{\"required_field\":\"r\"}");
