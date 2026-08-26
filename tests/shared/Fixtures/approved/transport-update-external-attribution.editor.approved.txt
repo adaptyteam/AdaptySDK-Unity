@@ -1,0 +1,5 @@
+{
+  "attribution": "{\"status\":\"organic\",\"clicks\":3,\"cost\":1.5,\"is_retargeting\":false,\"install_time\":\"2026-07-30T10:00:00.000Z\",\"campaign\":null,\"tags\":[\"a\",\"b\"],\"nested\":{\"k\":\"v\"}}",
+  "method": "update_external_attribution_data",
+  "provider": "appsflyer"
+}

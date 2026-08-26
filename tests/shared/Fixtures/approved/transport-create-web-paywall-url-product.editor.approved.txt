@@ -1,0 +1,23 @@
+{
+  "method": "create_web_paywall_url",
+  "product": {
+    "access_level_id": "premium",
+    "adapty_product_id": "adapty-product-1",
+    "payload_data": "{\"custom\":\"product payload\"}",
+    "paywall_ab_test_name": "winter_test",
+    "paywall_name": "Winter Paywall",
+    "paywall_product_index": 0,
+    "paywall_variation_id": "variation-0001",
+    "product_type": "subscription",
+    "subscription": {
+      "offer": {
+        "offer_identifier": {
+          "id": "intro-1",
+          "type": "introductory"
+        }
+      }
+    },
+    "vendor_product_id": "com.adapty.sample.monthly",
+    "web_purchase_url": "https://pay.adapty.io/checkout/abc"
+  }
+}

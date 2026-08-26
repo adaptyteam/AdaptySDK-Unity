@@ -1,0 +1,5 @@
+{
+  "id": "view-1",
+  "ios_presentation_style": "full_screen",
+  "method": "adapty_ui_present_flow_view"
+}

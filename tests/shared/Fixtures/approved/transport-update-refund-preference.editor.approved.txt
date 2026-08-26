@@ -1,0 +1,4 @@
+{
+  "method": "update_refund_preference",
+  "refund_preference": "grant"
+}

@@ -16,23 +16,31 @@ public class InstallationDetailsSection : MonoBehaviour
 
     public void SetInstallation(AdaptyInstallationStatus status)
     {
-        SetStringValue(StatusText, GetStatusName(status));
+        SetStringValue(StatusText, GetStatusName(status.Status));
+        SetDetails(status.Details);
+    }
 
-        if (status is AdaptyInstallationStatusDetermined determined)
-        {
-            var details = determined.Details;
-            SetStringValue(InstallIdText, ShortenUuid(details.InstallId));
-            SetDateValue(InstallTimeText, details.InstallTime);
-            SetIntegerValue(AppLaunchCountText, details.AppLaunchCount);
-            SetStringValue(PayloadText, details.Payload);
-        }
-        else
+    public void SetInstallationDetails(AdaptyInstallationDetails details)
+    {
+        SetStringValue(StatusText, GetStatusName(AdaptyInstallationStatusType.Determined));
+        SetDetails(details);
+    }
+
+    private void SetDetails(AdaptyInstallationDetails details)
+    {
+        if (details == null)
         {
             SetNullValue(InstallIdText);
             SetNullValue(InstallTimeText);
             SetNullValue(AppLaunchCountText);
             SetNullValue(PayloadText);
+            return;
         }
+
+        SetStringValue(InstallIdText, ShortenUuid(details.InstallId));
+        SetDateValue(InstallTimeText, details.InstallTime);
+        SetIntegerValue(AppLaunchCountText, details.AppLaunchCount);
+        SetStringValue(PayloadText, details.Payload);
     }
 
     public void GetInstallationDetails()
@@ -65,18 +73,18 @@ public class InstallationDetailsSection : MonoBehaviour
         return uuid;
     }
 
-    private string GetStatusName(AdaptyInstallationStatus status)
+    private string GetStatusName(AdaptyInstallationStatusType status)
     {
         switch (status)
         {
-            case AdaptyInstallationStatusNotAvailable:
+            case AdaptyInstallationStatusType.NotAvailable:
                 return "Not Available";
-            case AdaptyInstallationStatusNotDetermined:
+            case AdaptyInstallationStatusType.NotDetermined:
                 return "Not Determined";
-            case AdaptyInstallationStatusDetermined:
+            case AdaptyInstallationStatusType.Determined:
                 return "Determined";
             default:
-                return status.GetType().Name;
+                return status.ToString();
         }
     }
 

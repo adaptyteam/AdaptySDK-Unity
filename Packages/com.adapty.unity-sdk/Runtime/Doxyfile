@@ -1095,7 +1095,7 @@ EXCLUDE_PATTERNS       =
 # wildcard * is used, a substring. Examples: ANamespace, AClass,
 # ANamespace::AClass, ANamespace::*Test
 
-EXCLUDE_SYMBOLS        = AdaptySDK.SimpleJSON \
+EXCLUDE_SYMBOLS        = AdaptySDK.Serialization \
                          AdaptySDK.iOS \
                          AdaptySDK.Android \
                          AdaptySDK.Noop

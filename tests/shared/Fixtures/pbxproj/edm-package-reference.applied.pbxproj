@@ -1,0 +1,92 @@
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Unity-iPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058950D05DD3E006BFB54 /* Release */,
+				56E860841D67581C00A1AB2B /* ReleaseForProfiling */,
+				56E860811D6757FF00A1AB2B /* ReleaseForRunning */,
+				1D6058940D05DD3E006BFB54 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5623C58517FDCB0900090B9E /* Build configuration list for PBXNativeTarget "Unity-iPhone Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5623C58317FDCB0900090B9E /* Release */,
+				56E860851D67581C00A1AB2B /* ReleaseForProfiling */,
+				56E860821D6757FF00A1AB2B /* ReleaseForRunning */,
+				5623C58417FDCB0900090B9E /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7F4E05AA2717216D00A2CBE4 /* Build configuration list for PBXNativeTarget "GameAssembly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7F4E05A62717216D00A2CBE4 /* Release */,
+				7F4E05A72717216D00A2CBE4 /* ReleaseForProfiling */,
+				7F4E05A82717216D00A2CBE4 /* ReleaseForRunning */,
+				7F4E05A92717216D00A2CBE4 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D25ABA6213FB47800354C27 /* Build configuration list for PBXNativeTarget "UnityFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D25ABA7213FB47800354C27 /* Release */,
+				9D25ABA8213FB47800354C27 /* ReleaseForProfiling */,
+				9D25ABA9213FB47800354C27 /* ReleaseForRunning */,
+				9D25ABAA213FB47800354C27 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Unity-iPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF5008A954540054247B /* Release */,
+				56E860831D67581C00A1AB2B /* ReleaseForProfiling */,
+				56E860801D6757FF00A1AB2B /* ReleaseForRunning */,
+				C01FCF4F08A954540054247B /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		39F241ABA0403F96E3BD5E5F /* XCRemoteSwiftPackageReference "AdaptySDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adaptyteam/AdaptySDK-iOS.git";
+			requirement = {
+				kind = exactVersion;
+				version = 4.0.2;
+			};
+			traits = (
+				KidsMode,
+			);
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8F994383B1395C3F76F2D440 /* AdaptyUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39F241ABA0403F96E3BD5E5F /* XCRemoteSwiftPackageReference "AdaptySDK-iOS" */;
+			productName = AdaptyUI;
+		};
+		D374472FA256C376C813975B /* Adapty */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39F241ABA0403F96E3BD5E5F /* XCRemoteSwiftPackageReference "AdaptySDK-iOS" */;
+			productName = Adapty;
+		};
+		DFDA4E14B677C8D03540E716 /* AdaptyPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39F241ABA0403F96E3BD5E5F /* XCRemoteSwiftPackageReference "AdaptySDK-iOS" */;
+			productName = AdaptyPlugin;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

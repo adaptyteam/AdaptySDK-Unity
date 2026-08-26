@@ -1,0 +1,12 @@
+{
+  "vendor_product_id": "com.adapty.sample.lifetime",
+  "localized_description": "Everything, forever",
+  "localized_title": "Lifetime",
+  "is_family_shareable": false,
+  "price": {
+    "amount": 49.99,
+    "currency_code": "USD",
+    "currency_symbol": "$",
+    "localized_string": "$49.99"
+  }
+}

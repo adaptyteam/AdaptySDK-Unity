@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace AdaptySDK.Android
@@ -28,7 +28,14 @@ namespace AdaptySDK.Android
             public void onHandleResult(string result)
             {
                 if (_resultHandler == null) return;
-                _resultHandler.Invoke(result);
+                try
+                {
+                    _resultHandler.Invoke(result);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Failed to invoke callback with arg " + result + ": " + e);
+                }
             }
         }
 
@@ -43,10 +50,13 @@ namespace AdaptySDK.Android
 
         internal static void InitializeOnce()
         {
-            lock(m_Lock) {  
+            lock(m_Lock) {
                 if (!m_IsInitialized) {
-                    m_IsInitialized = true;
+                    // Marked initialized only once registration has returned. Set before the call,
+                    // a throw would leave the flag standing and this method has one caller - a
+                    // [RuntimeInitializeOnLoadMethod] - so nothing would ever try again.
                     new AndroidJavaClass("com.adapty.unity.AdaptyAndroidWrapper").CallStatic("registerMessageHandler", new MessageHandler());
+                    m_IsInitialized = true;
                 }
             }
         }

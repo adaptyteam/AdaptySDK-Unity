@@ -1,0 +1,56 @@
+[
+  {
+    "id": "hero_data",
+    "type": "image",
+    "value": "AQID+g=="
+  },
+  {
+    "asset_id": "hero-asset-id",
+    "id": "hero_asset",
+    "type": "image"
+  },
+  {
+    "id": "hero_file",
+    "path": "images/hero.png",
+    "type": "image"
+  },
+  {
+    "asset_id": "clip-asset-id",
+    "id": "clip_asset",
+    "type": "video"
+  },
+  {
+    "id": "clip_file",
+    "path": "videos/clip.mp4",
+    "type": "video"
+  },
+  {
+    "id": "accent",
+    "type": "color",
+    "value": "#336699FF"
+  },
+  {
+    "id": "backdrop",
+    "points": {
+      "x0": 0,
+      "x1": 1,
+      "y0": 0,
+      "y1": 0
+    },
+    "type": "linear-gradient",
+    "values": [
+      {
+        "color": "#FF0000FF",
+        "p": 0
+      },
+      {
+        "color": "#BF004080",
+        "p": 0.25
+      },
+      {
+        "color": "#0000FF00",
+        "p": 1
+      }
+    ]
+  }
+]

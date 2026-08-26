@@ -1,0 +1,4 @@
+{
+  "adapty_product_id": "adapty-product-2",
+  "vendor_product_id": "com.adapty.sample.lifetime"
+}

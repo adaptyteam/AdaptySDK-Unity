@@ -7,9 +7,11 @@ namespace AdaptyExample
 {
     public class AdaptyListener
         : MonoBehaviour,
-            AdaptyEventListener,
-            AdaptyPaywallsEventsListener,
-            AdaptyOnboardingsEventsListener
+            IAdaptyEventListener,
+            IAdaptyFlowsEventsListener,
+            IAdaptyOnboardingsEventsListener,
+            IAdaptyUISystemRequestsHandler,
+            IAdaptyUIObserverModeResolver
     {
         public event Action OnInitializeFinished;
         public AdaptyRouter Router;
@@ -31,8 +33,10 @@ namespace AdaptyExample
         private void InitializeAdapty()
         {
             Adapty.SetEventListener(this);
-            Adapty.SetPaywallsEventsListener(this);
+            Adapty.SetFlowsEventsListener(this);
             Adapty.SetOnboardingsEventsListener(this);
+            Adapty.SetSystemRequestsHandler(this);
+            Adapty.SetObserverModeResolver(this);
 
             this.LogMethodRequest("SetLogLevel");
 
@@ -45,7 +49,7 @@ namespace AdaptyExample
             );
 
             var builder = new AdaptyConfiguration.Builder(
-                "public_live_QzY2YBrm.j0U3MNaKe2HAgeK4XV13"
+                "public_live_iNuUlSsN.83zcTTR8D5Y8FI9cGUI6"
             )
                 .SetCustomerUserId(null)
                 .SetObserverMode(false)
@@ -113,58 +117,54 @@ namespace AdaptyExample
             );
         }
 
-        public void GetPaywallForDefaultAudience(
+        public void GetFlowForDefaultAudience(
             string id,
-            string locale,
             AdaptyPlacementFetchPolicy fetchPolicy,
-            Action<AdaptyPaywall> completionHandler
+            Action<AdaptyFlow> completionHandler
         )
         {
-            this.LogMethodRequest("GetPaywallForDefaultAudience");
+            this.LogMethodRequest("GetFlowForDefaultAudience");
 
-            Adapty.GetPaywallForDefaultAudience(
+            Adapty.GetFlowForDefaultAudience(
                 id,
-                locale,
                 fetchPolicy,
-                (paywall, error) =>
+                (flow, error) =>
                 {
-                    this.LogMethodResult("GetPaywallForDefaultAudience", error);
-                    completionHandler.Invoke(paywall);
+                    this.LogMethodResult("GetFlowForDefaultAudience", error);
+                    completionHandler.Invoke(flow);
                 }
             );
         }
 
-        public void GetPaywall(
+        public void GetFlow(
             string id,
-            string locale,
             AdaptyPlacementFetchPolicy fetchPolicy,
-            Action<AdaptyPaywall> completionHandler
+            Action<AdaptyFlow> completionHandler
         )
         {
-            this.LogMethodRequest("GetPaywall");
+            this.LogMethodRequest("GetFlow");
 
-            Adapty.GetPaywall(
+            Adapty.GetFlow(
                 id,
-                locale,
                 fetchPolicy,
                 new TimeSpan(0, 0, 4),
-                (paywall, error) =>
+                (flow, error) =>
                 {
-                    this.LogMethodResult("GetPaywall", error);
-                    completionHandler.Invoke(paywall);
+                    this.LogMethodResult("GetFlow", error);
+                    completionHandler.Invoke(flow);
                 }
             );
         }
 
         public void GetPaywallProducts(
-            AdaptyPaywall paywall,
-            Action<IList<AdaptyPaywallProduct>> completionHandler
+            AdaptyFlow flow,
+            Action<IReadOnlyList<AdaptyPaywallProduct>> completionHandler
         )
         {
             this.LogMethodRequest("GetPaywallProducts");
 
             Adapty.GetPaywallProducts(
-                paywall,
+                flow,
                 (products, error) =>
                 {
                     this.LogMethodResult("GetPaywallProducts", error);
@@ -186,6 +186,9 @@ namespace AdaptyExample
                 {
                     this.LogMethodResult("MakePurchase", error);
                     completionHandler.Invoke(error);
+
+                    // No result on the error path.
+                    if (error != null) { return; }
 
                     switch (result.Type)
                     {
@@ -368,30 +371,30 @@ namespace AdaptyExample
             );
         }
 
-        public void UpdateAttribution(Action<AdaptyError> completionHandler)
+        public void UpdateExternalAttribution(Action<AdaptyError> completionHandler)
         {
-            this.LogMethodRequest("UpdateAttribution");
+            this.LogMethodRequest("UpdateExternalAttribution");
 
-            Adapty.UpdateAttribution(
+            Adapty.UpdateExternalAttribution(
                 "{\"test_key\": \"test_value\"}",
-                "custom",
+                AdaptyExternalAttributionProvider.Custom,
                 (error) =>
                 {
-                    this.LogMethodResult("UpdateAttribution", error);
+                    this.LogMethodResult("UpdateExternalAttribution", error);
                     completionHandler.Invoke(error);
                 }
             );
         }
 
-        public void LogShowPaywall(AdaptyPaywall paywall, Action<AdaptyError> completionHandler)
+        public void LogShowFlow(AdaptyFlow flow, Action<AdaptyError> completionHandler)
         {
-            this.LogMethodRequest("LogShowPaywall");
+            this.LogMethodRequest("LogShowFlow");
 
-            Adapty.LogShowPaywall(
-                paywall,
+            Adapty.LogShowFlow(
+                flow,
                 (error) =>
                 {
-                    this.LogMethodResult("LogShowPaywall", error);
+                    this.LogMethodResult("LogShowFlow", error);
                     completionHandler.Invoke(error);
                 }
             );
@@ -505,9 +508,9 @@ namespace AdaptyExample
             }
         }
 
-        private void LogIncomingCall_AdaptyUIPaywallView(
+        private void LogIncomingCall_AdaptyUIFlowView(
             string methodName,
-            AdaptyUIPaywallView view,
+            AdaptyUIFlowView view,
             string meta
         )
         {
@@ -537,13 +540,29 @@ namespace AdaptyExample
             );
         }
 
-        // – AdaptyEventListener
+        // – IAdaptyEventListener
 
         public void OnLoadLatestProfile(AdaptyProfile profile)
         {
             Debug.Log("#AdaptyListener# OnReceiveUpdatedProfile called");
 
             this.Router.SetProfile(profile);
+        }
+
+        public void OnReceivePromotedPurchase(AdaptyPromotedProduct product)
+        {
+            Debug.Log(
+                "#AdaptyListener# OnReceivePromotedPurchase called, product = "
+                    + product.VendorProductId
+            );
+
+            Adapty.MakePromotedPurchase(
+                product,
+                (result, error) =>
+                {
+                    this.LogMethodResult("MakePromotedPurchase", error);
+                }
+            );
         }
 
         public void OnInstallationDetailsSuccess(AdaptyInstallationDetails details)
@@ -553,7 +572,7 @@ namespace AdaptyExample
                     + details.ToString()
             );
 
-            this.Router.SetInstallation(new AdaptyInstallationStatusDetermined(details));
+            this.Router.SetInstallationDetails(details);
         }
 
         public void OnInstallationDetailsFail(AdaptyError error)
@@ -565,18 +584,19 @@ namespace AdaptyExample
 
         // AdaptyUI
 
-        public void CreatePaywallView(
-            AdaptyPaywall paywall,
+        public void CreateFlowView(
+            AdaptyFlow flow,
             bool preloadProducts,
-            Action<AdaptyUIPaywallView> completionHandler
+            string locale,
+            Action<AdaptyUIFlowView> completionHandler
         )
         {
-            this.LogMethodRequest("CreatePaywallView");
+            this.LogMethodRequest("CreateFlowView");
 
             var productPurchaseParams =
                 new Dictionary<AdaptyProductIdentifier, AdaptyPurchaseParameters>();
 
-            foreach (var productId in paywall.ProductIdentifiers)
+            foreach (var productId in flow.ProductIdentifiers)
             {
                 productPurchaseParams[productId] = new AdaptyPurchaseParametersBuilder()
                     .SetIsOfferPersonalized(false)
@@ -587,7 +607,8 @@ namespace AdaptyExample
             // Create custom assets dictionary
             var customAssets = AdaptyCustomAssetsConfiguration.CreateCustomAssets();
 
-            var parameters = new AdaptyUICreatePaywallViewParameters()
+            var parameters = new AdaptyUICreateFlowViewParameters()
+                .SetLocale(string.IsNullOrEmpty(locale) ? null : locale)
                 .SetPreloadProducts(preloadProducts)
                 .SetCustomTags(
                     new Dictionary<string, string>
@@ -614,12 +635,12 @@ namespace AdaptyExample
                 .SetProductPurchaseParameters(productPurchaseParams)
                 .SetLoadTimeout(new TimeSpan(0, 0, 3));
 
-            AdaptyUI.CreatePaywallView(
-                paywall,
+            AdaptyUI.CreateFlowView(
+                flow,
                 parameters,
                 (view, error) =>
                 {
-                    this.LogMethodResult("CreatePaywallView", error);
+                    this.LogMethodResult("CreateFlowView", error);
 
                     if (error != null)
                     {
@@ -648,11 +669,7 @@ namespace AdaptyExample
                 {
                     this.LogMethodResult("CreateOnboardingView", error);
 
-                    if (error != null)
-                    {
-                        this.Router.ShowAlertPanel(error.ToString());
-                    }
-                    else
+                    if (error == null)
                     {
                         completionHandler.Invoke(view);
                     }
@@ -660,18 +677,15 @@ namespace AdaptyExample
             );
         }
 
-        public void PresentPaywallView(
-            AdaptyUIPaywallView view,
-            Action<AdaptyError> completionHandler
-        )
+        public void PresentFlowView(AdaptyUIFlowView view, Action<AdaptyError> completionHandler)
         {
-            this.LogMethodRequest("PresentPaywallView");
+            this.LogMethodRequest("PresentFlowView");
 
-            AdaptyUI.PresentPaywallView(
+            AdaptyUI.PresentFlowView(
                 view,
                 (error) =>
                 {
-                    this.LogMethodResult("PresentPaywallView", error);
+                    this.LogMethodResult("PresentFlowView", error);
 
                     if (completionHandler != null)
                     {
@@ -681,40 +695,36 @@ namespace AdaptyExample
             );
         }
 
-        // - AdaptyUIEventListener
+        // - IAdaptyFlowsEventsListener
 
-        public void PaywallViewDidAppear(AdaptyUIPaywallView view)
+        public void FlowViewDidAppear(AdaptyUIFlowView view)
         {
-            LogIncomingCall_AdaptyUIPaywallView("PaywallViewDidAppear", view, null);
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidAppear", view, null);
         }
 
-        public void PaywallViewDidDisappear(AdaptyUIPaywallView view)
+        public void FlowViewDidDisappear(AdaptyUIFlowView view)
         {
-            LogIncomingCall_AdaptyUIPaywallView("PaywallViewDidDisappear", view, null);
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidDisappear", view, null);
         }
 
-        public void PaywallViewDidFinishWebPaymentNavigation(
-            AdaptyUIPaywallView view,
+        public void FlowViewDidFinishWebPaymentNavigation(
+            AdaptyUIFlowView view,
             AdaptyPaywallProduct product,
             AdaptyError error
         )
         {
-            var meta = product.VendorProductId;
+            var meta = product != null ? product.VendorProductId : "(no product)";
             if (error != null)
             {
                 meta += ", error = " + error.ToString();
             }
-            LogIncomingCall_AdaptyUIPaywallView(
-                "PaywallViewDidFinishWebPaymentNavigation",
-                view,
-                meta
-            );
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidFinishWebPaymentNavigation", view, meta);
         }
 
-        public void PaywallViewDidPerformAction(AdaptyUIPaywallView view, AdaptyUIUserAction action)
+        public void FlowViewDidPerformAction(AdaptyUIFlowView view, AdaptyUIUserAction action)
         {
-            LogIncomingCall_AdaptyUIPaywallView(
-                "PaywallViewDidPerformAction",
+            LogIncomingCall_AdaptyUIFlowView(
+                "FlowViewDidPerformAction",
                 view,
                 action.Type.ToString()
             );
@@ -754,31 +764,28 @@ namespace AdaptyExample
             }
         }
 
-        public void PaywallViewDidSelectProduct(AdaptyUIPaywallView view, string productId)
+        public void FlowViewDidSelectProduct(AdaptyUIFlowView view, string productId)
         {
-            LogIncomingCall_AdaptyUIPaywallView("PaywallViewDidSelectProduct", view, productId);
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidSelectProduct", view, productId);
         }
 
-        public void PaywallViewDidStartPurchase(
-            AdaptyUIPaywallView view,
-            AdaptyPaywallProduct product
-        )
+        public void FlowViewDidStartPurchase(AdaptyUIFlowView view, AdaptyPaywallProduct product)
         {
-            LogIncomingCall_AdaptyUIPaywallView(
-                "PaywallViewDidStartPurchase",
+            LogIncomingCall_AdaptyUIFlowView(
+                "FlowViewDidStartPurchase",
                 view,
                 product.VendorProductId
             );
         }
 
-        public void PaywallViewDidFinishPurchase(
-            AdaptyUIPaywallView view,
+        public void FlowViewDidFinishPurchase(
+            AdaptyUIFlowView view,
             AdaptyPaywallProduct product,
             AdaptyPurchaseResult purchasedResult
         )
         {
-            LogIncomingCall_AdaptyUIPaywallView(
-                "PaywallViewDidFinishPurchase",
+            LogIncomingCall_AdaptyUIFlowView(
+                "FlowViewDidFinishPurchase",
                 view,
                 product.VendorProductId
             );
@@ -802,7 +809,7 @@ namespace AdaptyExample
                         {
                             Debug.Log(
                                 string.Format(
-                                    "#AdaptyListener# PaywallViewDidFinishPurchase: Success, profile is null!"
+                                    "#AdaptyListener# FlowViewDidFinishPurchase: Success, profile is null!"
                                 )
                             );
                             break;
@@ -810,7 +817,7 @@ namespace AdaptyExample
 
                         Debug.Log(
                             string.Format(
-                                "#AdaptyListener# PaywallViewDidFinishPurchase: Success, profile = {0}",
+                                "#AdaptyListener# FlowViewDidFinishPurchase: Success, profile = {0}",
                                 profile.ToString()
                             )
                         );
@@ -821,7 +828,7 @@ namespace AdaptyExample
                         {
                             Debug.Log(
                                 string.Format(
-                                    "#AdaptyListener# PaywallViewDidFinishPurchase: Success, accessLevels is null!"
+                                    "#AdaptyListener# FlowViewDidFinishPurchase: Success, accessLevels is null!"
                                 )
                             );
                             break;
@@ -833,7 +840,7 @@ namespace AdaptyExample
                         {
                             Debug.Log(
                                 string.Format(
-                                    "#AdaptyListener# PaywallViewDidFinishPurchase: Success, premium accessLevel is null!"
+                                    "#AdaptyListener# FlowViewDidFinishPurchase: Success, premium accessLevel is null!"
                                 )
                             );
                             break;
@@ -841,7 +848,7 @@ namespace AdaptyExample
 
                         Debug.Log(
                             string.Format(
-                                "#AdaptyListener# PaywallViewDidFinishPurchase: Success, accessLevel = {0}",
+                                "#AdaptyListener# FlowViewDidFinishPurchase: Success, accessLevel = {0}",
                                 premiumAccessLevel.ToString()
                             )
                         );
@@ -850,7 +857,7 @@ namespace AdaptyExample
                     {
                         Debug.Log(
                             string.Format(
-                                "#AdaptyListener# PaywallViewDidFinishPurchase: Success, error = {0}",
+                                "#AdaptyListener# FlowViewDidFinishPurchase: Success, error = {0}",
                                 e.ToString()
                             )
                         );
@@ -862,28 +869,28 @@ namespace AdaptyExample
             }
         }
 
-        public void PaywallViewDidFailPurchase(
-            AdaptyUIPaywallView view,
+        public void FlowViewDidFailPurchase(
+            AdaptyUIFlowView view,
             AdaptyPaywallProduct product,
             AdaptyError error
         )
         {
-            LogIncomingCall_AdaptyUIPaywallView(
-                "PaywallViewDidFailPurchase",
+            LogIncomingCall_AdaptyUIFlowView(
+                "FlowViewDidFailPurchase",
                 view,
                 string.Format("id: {0}, error: {1}", product.VendorProductId, error.ToString())
             );
         }
 
-        public void PaywallViewDidStartRestore(AdaptyUIPaywallView view)
+        public void FlowViewDidStartRestore(AdaptyUIFlowView view)
         {
-            LogIncomingCall_AdaptyUIPaywallView("PaywallViewDidStartRestore", view, null);
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidStartRestore", view, null);
         }
 
-        public void PaywallViewDidFinishRestore(AdaptyUIPaywallView view, AdaptyProfile profile)
+        public void FlowViewDidFinishRestore(AdaptyUIFlowView view, AdaptyProfile profile)
         {
-            LogIncomingCall_AdaptyUIPaywallView(
-                "PaywallViewDidFinishRestore",
+            LogIncomingCall_AdaptyUIFlowView(
+                "FlowViewDidFinishRestore",
                 view,
                 profile.ProfileId
             );
@@ -896,30 +903,35 @@ namespace AdaptyExample
             AdaptyUI.ShowDialog(view, dialog, (action, error) => { });
         }
 
-        public void PaywallViewDidFailRestore(AdaptyUIPaywallView view, AdaptyError error)
+        public void FlowViewDidFailRestore(AdaptyUIFlowView view, AdaptyError error)
         {
-            LogIncomingCall_AdaptyUIPaywallView("aywallViewDidFailRestore", view, error.ToString());
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidFailRestore", view, error.ToString());
         }
 
-        public void PaywallViewDidFailRendering(AdaptyUIPaywallView view, AdaptyError error)
+        public void FlowViewDidReceiveError(AdaptyUIFlowView view, AdaptyError error)
         {
-            LogIncomingCall_AdaptyUIPaywallView(
-                "PaywallViewDidFailRendering",
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidReceiveError", view, error.ToString());
+        }
+
+        public void FlowViewDidFailLoadingProducts(AdaptyUIFlowView view, AdaptyError error)
+        {
+            LogIncomingCall_AdaptyUIFlowView(
+                "FlowViewDidFailLoadingProducts",
                 view,
                 error.ToString()
             );
         }
 
-        public void PaywallViewDidFailLoadingProducts(AdaptyUIPaywallView view, AdaptyError error)
+        public void FlowViewDidReceiveAnalyticEvent(
+            AdaptyUIFlowView view,
+            string name,
+            IReadOnlyDictionary<string, object> parameters
+        )
         {
-            LogIncomingCall_AdaptyUIPaywallView(
-                "PaywallViewDidFailLoadingProducts",
-                view,
-                error.ToString()
-            );
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidReceiveAnalyticEvent", view, name);
         }
 
-        // - AdaptyOnboardingsEventsListener
+        // - IAdaptyOnboardingsEventsListener
 
         public void OnboardingViewDidFailWithError(AdaptyUIOnboardingView view, AdaptyError error)
         {
@@ -949,7 +961,6 @@ namespace AdaptyExample
         )
         {
             LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnCloseAction", view, actionId);
-
             view.Dismiss(null);
         }
 
@@ -960,8 +971,6 @@ namespace AdaptyExample
         )
         {
             LogIncomingCall_AdaptyUIOnboardingView("OnboardingViewOnPaywallAction", view, actionId);
-
-            // TODO: present paywall with ID == actionId
         }
 
         public void OnboardingViewOnCustomAction(
@@ -980,62 +989,11 @@ namespace AdaptyExample
             AdaptyOnboardingsStateUpdatedParams @params
         )
         {
-            switch (@params)
-            {
-                case AdaptyOnboardingsSelectParams selectParams:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnStateUpdatedAction",
-                        view,
-                        "Element: " + elementId + " SelectParams: " + selectParams.ToString()
-                    );
-
-                    break;
-                case AdaptyOnboardingsMultiSelectParams multiSelectParams:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnStateUpdatedAction",
-                        view,
-                        "Element: "
-                            + elementId
-                            + " MultiSelectParams: "
-                            + multiSelectParams.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsInputParams inputParams:
-
-                    switch (inputParams.Input)
-                    {
-                        case AdaptyOnboardingsTextInput textInput:
-                            LogIncomingCall_AdaptyUIOnboardingView(
-                                "OnboardingViewOnStateUpdatedAction",
-                                view,
-                                "Element: " + elementId + " TextInput: " + textInput.Value
-                            );
-                            break;
-                        case AdaptyOnboardingsEmailInput emailInput:
-                            LogIncomingCall_AdaptyUIOnboardingView(
-                                "OnboardingViewOnStateUpdatedAction",
-                                view,
-                                "Element: " + elementId + " EmailInput: " + emailInput.Value
-                            );
-                            break;
-                        case AdaptyOnboardingsNumberInput numberInput:
-                            LogIncomingCall_AdaptyUIOnboardingView(
-                                "OnboardingViewOnStateUpdatedAction",
-                                view,
-                                "Element: " + elementId + " NumberInput: " + numberInput.Value
-                            );
-                            break;
-                    }
-                    break;
-
-                case AdaptyOnboardingsDatePickerParams dateParams:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnStateUpdatedAction",
-                        view,
-                        "Element: " + elementId + " DatePickerParams: " + dateParams.ToString()
-                    );
-                    break;
-            }
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewOnStateUpdatedAction",
+                view,
+                string.Format("elementId = {0}, params = {1}", elementId, @params)
+            );
         }
 
         public void OnboardingViewOnAnalyticsEvent(
@@ -1044,59 +1002,80 @@ namespace AdaptyExample
             AdaptyOnboardingsAnalyticsEvent analyticsEvent
         )
         {
-            switch (analyticsEvent)
-            {
-                case AdaptyOnboardingsAnalyticsEventOnboardingStarted onboardingStarted:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "OnboardingStarted: " + onboardingStarted.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsAnalyticsEventScreenPresented screenPresented:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "ScreenPresented: " + screenPresented.ToString()
-                    );
-                    break;
+            LogIncomingCall_AdaptyUIOnboardingView(
+                "OnboardingViewOnAnalyticsEvent",
+                view,
+                analyticsEvent.ToString()
+            );
+        }
 
-                case AdaptyOnboardingsAnalyticsEventScreenCompleted screenCompleted:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "ScreenCompleted: " + screenCompleted.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsAnalyticsEventOnboardingCompleted onboardingCompleted:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "OnboardingCompleted: " + onboardingCompleted.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsAnalyticsEventUserEmailCollected userEmailCollected:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "UserEmailCollected: " + userEmailCollected.ToString()
-                    );
-                    break;
-                case AdaptyOnboardingsAnalyticsEventUnknown unknownEvent:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "UnknownEvent: " + unknownEvent.Name
-                    );
-                    break;
-                default:
-                    LogIncomingCall_AdaptyUIOnboardingView(
-                        "OnboardingViewOnAnalyticsEvent",
-                        view,
-                        "UnknownEvent (default): " + analyticsEvent.GetType().Name
-                    );
-                    break;
+        // - IAdaptyUISystemRequestsHandler
+
+        public void FlowViewDidAskPermission(
+            AdaptyUIFlowView view,
+            string permission,
+            IReadOnlyDictionary<string, string> customArgs,
+            Action<bool, string> respond
+        )
+        {
+            var meta = permission;
+            if (customArgs != null)
+            {
+                foreach (KeyValuePair<string, string> arg in customArgs)
+                {
+                    meta += string.Format(", {0} = {1}", arg.Key, arg.Value);
+                }
             }
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidAskPermission", view, meta);
+
+            // A real app requests the permission from the OS here and reports the actual outcome.
+            respond(true, "Answered by the Unity sample app without asking the OS.");
+        }
+
+        public void FlowViewDidRequestAppReview(AdaptyUIFlowView view)
+        {
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidRequestAppReview", view, null);
+
+            this.LogMethodRequest("RequestAppReview");
+
+            AdaptyUI.RequestAppReview(
+                (error) =>
+                {
+                    this.LogMethodResult("RequestAppReview", error);
+                }
+            );
+        }
+
+        // - IAdaptyUIObserverModeResolver
+
+        public void FlowViewDidInitiatePurchase(
+            AdaptyUIFlowView view,
+            AdaptyPaywallProduct product,
+            Action onStartPurchase,
+            Action onFinishPurchase
+        )
+        {
+            LogIncomingCall_AdaptyUIFlowView(
+                "FlowViewDidInitiatePurchase",
+                view,
+                product.VendorProductId
+            );
+
+            // A real app runs its own billing flow between these two calls.
+            onStartPurchase();
+            onFinishPurchase();
+        }
+
+        public void FlowViewDidInitiateRestore(
+            AdaptyUIFlowView view,
+            Action onStartRestore,
+            Action onFinishRestore
+        )
+        {
+            LogIncomingCall_AdaptyUIFlowView("FlowViewDidInitiateRestore", view, null);
+
+            onStartRestore();
+            onFinishRestore();
         }
     }
 }

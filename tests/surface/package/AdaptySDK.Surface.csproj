@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The package as an assembly of its own. Its consumers declare the same type names in the same
+    namespace, so they load it off disk for metadata only and never reference it - hence
+    ReferenceOutputAssembly="false" on their side.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>AdaptySDK.Surface</AssemblyName>
+    <RootNamespace>AdaptySDK</RootNamespace>
+    <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+
+    <!-- The completeness gate for public XML docs: CS1591 is "missing comment on a publicly
+         visible member", and the compiler enumerates them far more reliably than reading files.
+         The Unity stubs linked in for compilation are not the package's surface, so they are
+         excluded below rather than documented. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591 (missing) stays a warning: the Unity stubs and the deprecated tree share this
+         assembly and are not the SDK's surface, and DocumentationTests applies those exclusions.
+         Invalid documentation has no such exception - an unresolved cref or a param tag naming
+         nothing is wrong wherever it appears, and the compiler is the authority on both. -->
+    <WarningsAsErrors>$(WarningsAsErrors);CS0419;CS1570;CS1571;CS1572;CS1573;CS1574;CS1580;CS1581;CS1584;CS1587;CS1589;CS1590;CS1592;CS1598;CS1710;CS1711;CS1712;CS1723;CS1734;CS1735</WarningsAsErrors>
+    <SdkRuntime>$(MSBuildThisFileDirectory)../../../Packages/com.adapty.unity-sdk/Runtime</SdkRuntime>
+    <Shared>$(MSBuildThisFileDirectory)../../shared</Shared>
+  </PropertyGroup>
+
+  <!-- No platform asked for means the Editor, which is the leg the workflow already names that
+       way. It has to say so: UNITY_EDITOR is what selects the no-op bridge over a native one, and
+       defining nothing at all is a configuration Unity never produces. -->
+  <PropertyGroup Condition="'$(AdaptyPlatform)' == ''">
+    <AdaptyPlatform>UNITY_EDITOR</AdaptyPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);$(AdaptyPlatform)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(SdkRuntime)/Models/*.cs" LinkBase="Sdk/Models" />
+    <Compile Include="$(SdkRuntime)/Serialization/*.cs" LinkBase="Sdk/Serialization" />
+    <Compile Include="$(SdkRuntime)/Serialization/Converters/*.cs" LinkBase="Sdk/Serialization/Converters" />
+    <Compile Include="$(SdkRuntime)/*.cs" LinkBase="Sdk" />
+    <Compile Include="$(SdkRuntime)/Obsolete/*.cs" LinkBase="Sdk/Obsolete" />
+    <Compile Include="$(SdkRuntime)/Obsolete/Models/*.cs" LinkBase="Sdk/Obsolete/Models" />
+    <Compile Include="$(SdkRuntime)/Obsolete/Serialization/Converters/*.cs" LinkBase="Sdk/Obsolete/Serialization/Converters" />
+    <Compile Include="$(SdkRuntime)/Plugins/AdaptyNoop.cs" LinkBase="Sdk/Plugins" />
+    <Compile Include="$(SdkRuntime)/Plugins/iOS/*.cs" LinkBase="Sdk/Plugins/iOS" />
+    <Compile Include="$(SdkRuntime)/Plugins/Android/*.cs" LinkBase="Sdk/Plugins/Android" />
+    <Compile Include="$(Shared)/UnityStubs.cs" LinkBase="Shared" />
+  </ItemGroup>
+
+</Project>

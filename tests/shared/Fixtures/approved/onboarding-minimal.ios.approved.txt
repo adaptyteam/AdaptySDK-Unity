@@ -1,0 +1,23 @@
+{
+  "$type": "AdaptyOnboarding",
+  "Name": "Short Onboarding",
+  "OnboardingId": "onboarding-0002",
+  "Placement": {
+    "$type": "AdaptyPlacement",
+    "ABTestName": "onboarding_test",
+    "AudienceName": "All Users",
+    "Id": "welcome",
+    "IsTrackingPurchases": false,
+    "PlacementAudienceVersionId": "pav-0003",
+    "Revision": 1
+  },
+  "RemoteConfig": null,
+  "VariationId": "variation-0003",
+  "_Builder": {
+    "$type": "OnboardingBuilder",
+    "ConfigUrl": "https://cdn.adapty.io/onboardings/onboarding-0002.json"
+  },
+  "_PayloadData": null,
+  "_RequestLocale": "es",
+  "_ResponseCreatedAt": 1754006401
+}

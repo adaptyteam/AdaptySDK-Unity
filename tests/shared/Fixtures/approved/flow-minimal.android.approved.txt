@@ -1,0 +1,27 @@
+{
+  "$type": "AdaptyFlow",
+  "HasViewConfiguration (property)": false,
+  "InstanceIdentity": "flow-0002",
+  "Name": "Minimal Flow",
+  "Paywalls (property)": [],
+  "Placement": {
+    "$type": "AdaptyPlacement",
+    "ABTestName": "default",
+    "AudienceName": "All Users",
+    "Id": "onboarding",
+    "IsTrackingPurchases": false,
+    "PlacementAudienceVersionId": "pav-0002",
+    "Revision": 1
+  },
+  "ProductIdentifiers (property)": [],
+  "RemoteConfig (property)": null,
+  "RemoteConfigs (property)": [],
+  "VariationId": "variation-0002",
+  "VendorProductIds (property)": [],
+  "_FlowVersionId": null,
+  "_PayloadData": null,
+  "_Paywalls": [],
+  "_RemoteConfigs": [],
+  "_ResponseCreatedAt": 1753876800000,
+  "_UiSchema": null
+}

@@ -1,19 +1,16 @@
-//
-//  AdaptyCustomAsset.cs
-//  AdaptySDK
-//
-//  Created by Assistant on 14.01.2025.
-//
-
 using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
     /// <summary>
     /// Base class for custom assets that can be used in Adapty UI.
     /// </summary>
-    public abstract partial class AdaptyCustomAsset
+    [Preserve]
+    public abstract class AdaptyCustomAsset
     {
         /// <summary>
         /// Creates a custom asset from local image data.
@@ -68,6 +65,9 @@ namespace AdaptySDK
         /// <summary>
         /// Creates a custom asset from a Unity Color.
         /// </summary>
+        /// <remarks>
+        /// Not rendered on iOS: the pinned native SDK substitutes a transparent color for whatever it receives.
+        /// </remarks>
         /// <param name="color">The Unity Color.</param>
         /// <returns>A custom asset representing the color.</returns>
         public static AdaptyCustomAsset Color(Color color)
@@ -78,6 +78,9 @@ namespace AdaptySDK
         /// <summary>
         /// Creates a custom asset from a Unity Gradient.
         /// </summary>
+        /// <remarks>
+        /// Not rendered on iOS: the pinned native SDK substitutes an empty gradient for whatever it receives.
+        /// </remarks>
         /// <param name="gradient">The Unity Gradient.</param>
         /// <returns>A custom asset representing the linear gradient.</returns>
         public static AdaptyCustomAsset LinearGradient(Gradient gradient)
@@ -89,27 +92,55 @@ namespace AdaptySDK
     /// <summary>
     /// Custom asset representing local image data.
     /// </summary>
-    public sealed partial class AdaptyCustomAssetLocalImageData : AdaptyCustomAsset
+    [DataContract]
+    [Preserve]
+    public sealed class AdaptyCustomAssetLocalImageData : AdaptyCustomAsset
     {
+        [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
+        private static string Type => "image";
+
+        [DataMember(Name = "value", IsRequired = true)]
+        [Preserve]
+        private byte[] _Data { get; }
+
         /// <summary>
         /// The image data as byte array.
         /// </summary>
-        public byte[] Data { get; }
+        /// <remarks>
+        /// A copy, as is the array the asset was built from: the request must not change because
+        /// the caller kept writing into the array it handed over, or into this one. For a large
+        /// image that is a real copy each way - hold the result if you need it twice.
+        /// </remarks>
+        public byte[] Data => (byte[])_Data.Clone();
 
         internal AdaptyCustomAssetLocalImageData(byte[] data)
         {
-            Data = data ?? throw new ArgumentNullException(nameof(data));
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            _Data = (byte[])data.Clone();
         }
     }
 
     /// <summary>
     /// Custom asset representing a local image asset.
     /// </summary>
-    public sealed partial class AdaptyCustomAssetLocalImageAsset : AdaptyCustomAsset
+    [DataContract]
+    [Preserve]
+    public sealed class AdaptyCustomAssetLocalImageAsset : AdaptyCustomAsset
     {
+        [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
+        private static string Type => "image";
+
         /// <summary>
         /// The asset ID of the image.
         /// </summary>
+        [DataMember(Name = "asset_id", IsRequired = true)]
+        [Preserve]
         public string AssetId { get; }
 
         internal AdaptyCustomAssetLocalImageAsset(string assetId)
@@ -121,12 +152,22 @@ namespace AdaptySDK
     /// <summary>
     /// Custom asset representing a local image file.
     /// </summary>
-    public sealed partial class AdaptyCustomAssetLocalImageFile : AdaptyCustomAsset
+    [DataContract]
+    [Preserve]
+    public sealed class AdaptyCustomAssetLocalImageFile : AdaptyCustomAsset
     {
+        [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
+        private static string Type => "image";
+
         /// <summary>
         /// The file path to the image.
         /// </summary>
         public string Path { get; }
+
+        [DataMember(Name = "path", IsRequired = true)]
+        [Preserve]
+        private string PathForRequest => AdaptyCustomAssetPath.Resolve(Path);
 
         internal AdaptyCustomAssetLocalImageFile(string path)
         {
@@ -137,11 +178,19 @@ namespace AdaptySDK
     /// <summary>
     /// Custom asset representing a local video asset.
     /// </summary>
-    public sealed partial class AdaptyCustomAssetLocalVideoAsset : AdaptyCustomAsset
+    [DataContract]
+    [Preserve]
+    public sealed class AdaptyCustomAssetLocalVideoAsset : AdaptyCustomAsset
     {
+        [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
+        private static string Type => "video";
+
         /// <summary>
         /// The asset ID of the video.
         /// </summary>
+        [DataMember(Name = "asset_id", IsRequired = true)]
+        [Preserve]
         public string AssetId { get; }
 
         internal AdaptyCustomAssetLocalVideoAsset(string assetId)
@@ -153,12 +202,22 @@ namespace AdaptySDK
     /// <summary>
     /// Custom asset representing a local video file.
     /// </summary>
-    public sealed partial class AdaptyCustomAssetLocalVideoFile : AdaptyCustomAsset
+    [DataContract]
+    [Preserve]
+    public sealed class AdaptyCustomAssetLocalVideoFile : AdaptyCustomAsset
     {
+        [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
+        private static string Type => "video";
+
         /// <summary>
         /// The file path to the video.
         /// </summary>
         public string Path { get; }
+
+        [DataMember(Name = "path", IsRequired = true)]
+        [Preserve]
+        private string PathForRequest => AdaptyCustomAssetPath.Resolve(Path);
 
         internal AdaptyCustomAssetLocalVideoFile(string path)
         {
@@ -169,12 +228,22 @@ namespace AdaptySDK
     /// <summary>
     /// Custom asset representing a color.
     /// </summary>
-    public sealed partial class AdaptyCustomAssetColor : AdaptyCustomAsset
+    [DataContract]
+    [Preserve]
+    public sealed class AdaptyCustomAssetColor : AdaptyCustomAsset
     {
+        [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
+        private static string Type => "color";
+
         /// <summary>
         /// The Unity Color.
         /// </summary>
         public Color ColorValue { get; }
+
+        [DataMember(Name = "value", IsRequired = true)]
+        [Preserve]
+        private string ValueForRequest => AdaptyCustomAssetPath.ColorToHex(ColorValue);
 
         internal AdaptyCustomAssetColor(Color color)
         {
@@ -185,16 +254,144 @@ namespace AdaptySDK
     /// <summary>
     /// Custom asset representing a linear gradient.
     /// </summary>
-    public sealed partial class AdaptyCustomAssetLinearGradient : AdaptyCustomAsset
+    [DataContract]
+    [Preserve]
+    public sealed class AdaptyCustomAssetLinearGradient : AdaptyCustomAsset
     {
+        [DataMember(Name = "type", IsRequired = true)]
+        [Preserve]
+        private static string Type => "linear-gradient";
+
         /// <summary>
         /// The Unity Gradient.
         /// </summary>
+        /// <remarks>
+        /// The request was read off it when the asset was built, so a gradient the caller keeps
+        /// writing into - this one included - no longer changes what goes out.
+        /// </remarks>
         public Gradient Gradient { get; }
+
+        [DataMember(Name = "values", IsRequired = true)]
+        [Preserve]
+        private List<Stop> ValuesForRequest { get; }
+
+        /// <summary>
+        /// A Unity gradient always runs left to right over its full width.
+        /// </summary>
+        [DataMember(Name = "points", IsRequired = true)]
+        [Preserve]
+        private Points PointsForRequest => new Points();
 
         internal AdaptyCustomAssetLinearGradient(Gradient gradient)
         {
             Gradient = gradient ?? throw new ArgumentNullException(nameof(gradient));
+            ValuesForRequest = Stops(gradient);
+        }
+
+        /// <summary>
+        /// Color keys and alpha keys are independent in a Unity Gradient: they may differ in count and sit
+        /// at different times. Emit a stop at every key time of either channel and let Gradient.Evaluate
+        /// resolve the RGBA there, so the serialized gradient matches what Unity renders.
+        /// </summary>
+        private static List<Stop> Stops(Gradient gradient)
+        {
+            var times = new List<float>();
+
+            foreach (var key in gradient.colorKeys)
+            {
+                if (!times.Contains(key.time))
+                {
+                    times.Add(key.time);
+                }
+            }
+
+            foreach (var key in gradient.alphaKeys)
+            {
+                if (!times.Contains(key.time))
+                {
+                    times.Add(key.time);
+                }
+            }
+
+            times.Sort();
+
+            var stops = new List<Stop>();
+            foreach (var time in times)
+            {
+                stops.Add(new Stop(AdaptyCustomAssetPath.ColorToHex(gradient.Evaluate(time)), time));
+            }
+
+            return stops;
+        }
+
+        [DataContract]
+        private sealed class Stop
+        {
+            internal Stop(string color, double position)
+            {
+                Color = color;
+                Position = position;
+            }
+
+            [DataMember(Name = "color", IsRequired = true)]
+            [Preserve]
+            private string Color { get; }
+
+            [DataMember(Name = "p", IsRequired = true)]
+            [Preserve]
+            private double Position { get; }
+        }
+
+        [DataContract]
+        private sealed class Points
+        {
+            [DataMember(Name = "x0", IsRequired = true)]
+            [Preserve]
+            private double X0 => 0.0;
+
+            [DataMember(Name = "y0", IsRequired = true)]
+            [Preserve]
+            private double Y0 => 0.0;
+
+            [DataMember(Name = "x1", IsRequired = true)]
+            [Preserve]
+            private double X1 => 1.0;
+
+            [DataMember(Name = "y1", IsRequired = true)]
+            [Preserve]
+            private double Y1 => 0.0;
+        }
+    }
+
+    /// <summary>
+    /// Shared helpers for the write-only custom asset payloads.
+    /// </summary>
+    [Preserve]
+    internal static class AdaptyCustomAssetPath
+    {
+        /// <summary>
+        /// A path given by the app is relative to StreamingAssets; the native side needs the real
+        /// location, which differs per platform.
+        /// </summary>
+        internal static string Resolve(string path)
+        {
+#if UNITY_IOS && !UNITY_EDITOR
+            return UnityEngine.Application.dataPath + "/Raw/" + path;
+#elif UNITY_ANDROID && !UNITY_EDITOR
+            return "jar:file://" + UnityEngine.Application.dataPath + "!/assets/" + path;
+#else
+            return path;
+#endif
+        }
+
+        internal static string ColorToHex(Color color)
+        {
+            var r = Mathf.RoundToInt(color.r * 255);
+            var g = Mathf.RoundToInt(color.g * 255);
+            var b = Mathf.RoundToInt(color.b * 255);
+            var a = Mathf.RoundToInt(color.a * 255);
+
+            return $"#{r:X2}{g:X2}{b:X2}{a:X2}";
         }
     }
 }

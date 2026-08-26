@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The SDK's JSON layer against its approved snapshots. Links the package sources into a plain
+    .NET project, so it runs without the Unity Editor. Once per platform in CI - see
+    .github/workflows/json-layer-tests.yml.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>LatestMajor</RollForward>
+    <LangVersion>9</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>AdaptySDK.NextTests</RootNamespace>
+    <NoWarn>CS0169;CS0649;CS0414;CS0067</NoWarn>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <SdkRuntime>$(MSBuildThisFileDirectory)../../Packages/com.adapty.unity-sdk/Runtime</SdkRuntime>
+    <SdkEditor>$(MSBuildThisFileDirectory)../../Packages/com.adapty.unity-sdk/Editor</SdkEditor>
+    <Shared>$(MSBuildThisFileDirectory)../shared</Shared>
+  </PropertyGroup>
+
+  <!-- Same default as the surface project: no platform asked for is the Editor, and it has to be
+       said rather than left as an empty define set. -->
+  <PropertyGroup Condition="'$(AdaptyPlatform)' == ''">
+    <AdaptyPlatform>UNITY_EDITOR</AdaptyPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);$(AdaptyPlatform)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
+  </ItemGroup>
+
+  <!--
+    Built, not referenced: the surface assembly declares the same type names in the same namespace
+    as the sources compiled here, so it can only be read from the outside - off disk, metadata only.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="../surface/package/AdaptySDK.Surface.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(SdkRuntime)/Models/*.cs" LinkBase="Sdk/Models" />
+    <Compile Include="$(SdkRuntime)/Serialization/*.cs" LinkBase="Sdk/Serialization" />
+    <Compile Include="$(SdkRuntime)/Serialization/Converters/*.cs" LinkBase="Sdk/Serialization/Converters" />
+    <Compile Include="$(SdkRuntime)/*.cs" LinkBase="Sdk" />
+    <Compile Include="$(SdkRuntime)/Obsolete/*.cs" LinkBase="Sdk/Obsolete" />
+    <Compile Include="$(SdkRuntime)/Obsolete/Models/*.cs" LinkBase="Sdk/Obsolete/Models" />
+    <Compile Include="$(SdkRuntime)/Obsolete/Serialization/Converters/*.cs" LinkBase="Sdk/Obsolete/Serialization/Converters" />
+    <Compile Include="$(SdkRuntime)/Plugins/AdaptyNoop.cs" LinkBase="Sdk/Plugins" />
+    <Compile Include="$(SdkRuntime)/Plugins/iOS/*.cs" LinkBase="Sdk/Plugins/iOS" />
+    <Compile Include="$(SdkRuntime)/Plugins/Android/*.cs" LinkBase="Sdk/Plugins/Android" />
+    <Compile Include="$(SdkEditor)/AdaptyManifest.cs" LinkBase="Sdk/Editor" />
+    <Compile Include="$(SdkEditor)/AdaptyIOSKidsModeTrait.cs" LinkBase="Sdk/Editor" />
+    <Compile Include="$(SdkEditor)/AdaptyDependencyPlan.cs" LinkBase="Sdk/Editor" />
+    <Compile Include="$(Shared)/ModelSnapshot.cs" LinkBase="Shared" />
+    <Compile Include="$(Shared)/Snapshots.cs" LinkBase="Shared" />
+    <Compile Include="$(Shared)/UnityStubs.cs" LinkBase="Shared" />
+    <Compile Include="$(Shared)/Samples.cs" LinkBase="Shared" />
+  </ItemGroup>
+
+</Project>

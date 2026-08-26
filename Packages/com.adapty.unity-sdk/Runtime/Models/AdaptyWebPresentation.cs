@@ -1,23 +1,24 @@
-//
-//  AdaptyWebPresentation.cs
-//  AdaptySDK
-//
+using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
     /// <summary>
-    /// Controls how web content (paywalls, external URLs in onboarding) is presented.
+    /// Where a web paywall opens.
     /// </summary>
+    [Preserve]
     public enum AdaptyWebPresentation
     {
         /// <summary>
-        /// Open in the default external browser (outside the app).
+        /// The device's browser app, leaving your app.
         /// </summary>
-        ExternalBrowser,
+        [EnumMember(Value = "browser_out_app")]
+        ExternalBrowser = 0,
 
         /// <summary>
-        /// Open in an in-app browser/web view.
+        /// A browser presented over your app, which stays in the foreground.
         /// </summary>
-        InAppBrowser,
+        [EnumMember(Value = "browser_in_app")]
+        InAppBrowser = 1,
     }
 }

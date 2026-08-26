@@ -1,0 +1,81 @@
+name: JSON layer tests
+
+# The SDK JSON layer against its approved snapshots. The suite links the SDK sources into a plain
+# .NET project, so it needs neither the Unity Editor nor a licence, and runs once per define set:
+# the layer branches on UNITY_IOS / UNITY_ANDROID and each has its own snapshots. The third leg is
+# the Editor, which the projects define as UNITY_EDITOR when no platform is asked for - it is a
+# configuration of its own, not the absence of one. The fourth is iOS with ADAPTY_KIDS_MODE, the
+# one define that changes what goes on the wire rather than what compiles.
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "Packages/com.adapty.unity-sdk/Runtime/**"
+      # The suite links two Editor sources as well - AdaptyManifest and AdaptyIOSKidsModeTrait, the
+      # two that edit a build file by text - so a change to one of them has to run it.
+      - "Packages/com.adapty.unity-sdk/Editor/**"
+      - "tests/**"
+      - ".github/workflows/json-layer-tests.yml"
+  pull_request:
+    paths:
+      - "Packages/com.adapty.unity-sdk/Runtime/**"
+      # The suite links two Editor sources as well - AdaptyManifest and AdaptyIOSKidsModeTrait, the
+      # two that edit a build file by text - so a change to one of them has to run it.
+      - "Packages/com.adapty.unity-sdk/Editor/**"
+      - "tests/**"
+      - ".github/workflows/json-layer-tests.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # The runners are UTC, where converting a date to UTC and relabelling it as UTC produce the
+    # same string - so DatesTheAppSuppliesAreWrittenAsUtc could not tell the two apart and would
+    # ignore itself. Any zone with a non-zero offset makes it discriminate again.
+    env:
+      TZ: Europe/Berlin
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: editor
+            defines: ""
+          - name: UNITY_IOS
+            defines: "UNITY_IOS"
+          - name: UNITY_ANDROID
+            defines: "UNITY_ANDROID"
+          # Kids Mode is the one shipped define that changes the wire format rather than which
+          # sources compile: on iOS it forces apple_idfa_collection_disabled, because the trait has
+          # compiled IDFA out of the binary. Without a leg of its own the three configuration
+          # snapshots it moves are approved for no one - the run simply failed all three.
+          # %3B escapes the ';' separating the two defines inside the MSBuild property value.
+          - name: UNITY_IOS-kids
+            defines: "UNITY_IOS%3BADAPTY_KIDS_MODE"
+    name: ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj
+
+      - name: Test
+        run: |
+          if [ -z "${{ matrix.defines }}" ]; then
+            dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj --no-restore
+          else
+            dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj --no-restore \
+              -p:AdaptyPlatform="${{ matrix.defines }}"
+          fi
+
+      - name: Upload received snapshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: received-${{ matrix.name }}
+          path: tests/shared/Fixtures/approved/*.received.txt
+          if-no-files-found: ignore

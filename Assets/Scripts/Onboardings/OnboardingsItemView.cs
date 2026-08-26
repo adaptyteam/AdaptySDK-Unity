@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using AdaptySDK;
 using TMPro;
 using UnityEngine;
@@ -20,7 +18,6 @@ namespace AdaptyExample
         public string PlacementLocale;
 
         public RectTransform LoadingTransform;
-
         public TextMeshProUGUI PlacementIdText;
         public TextMeshProUGUI RequestLocaleText;
         public TextMeshProUGUI StatusText;
@@ -30,8 +27,9 @@ namespace AdaptyExample
         public TextMeshProUGUI VariationIdText;
         public TextMeshProUGUI RemoteConfigText;
         public TextMeshProUGUI ErrorText;
-
         public Toggle Toggle;
+
+        private AdaptyOnboarding m_onboarding;
 
         void Start()
         {
@@ -46,31 +44,21 @@ namespace AdaptyExample
             );
         }
 
-        void SetLoading(bool loading)
-        {
-            this.LoadingTransform.gameObject.SetActive(loading);
-        }
-
-        private AdaptyOnboarding m_onboarding;
-
         public void LoadOnboarding(PlacementLoadStrategy loadStrategy, bool isDefaultAudience)
         {
             if (string.IsNullOrEmpty(this.PlacementId))
             {
-                this.UpdateOnboardingError("OnboardingId is empty");
+                this.UpdateOnboardingError("PlacementId is empty");
                 this.SetLoading(false);
                 return;
             }
 
-            var placementLocale = string.IsNullOrEmpty(this.PlacementLocale)
-                ? null
-                : this.PlacementLocale;
-
             this.SetLoading(true);
 
+            var locale = string.IsNullOrEmpty(this.PlacementLocale) ? null : this.PlacementLocale;
             var fetchPolicy = loadStrategy.ToFetchPolicy();
 
-            Action<AdaptyOnboarding, AdaptyError> onLoadOnboarding = (onboarding, error) =>
+            Action<AdaptyOnboarding, AdaptyError> completionHandler = (onboarding, error) =>
             {
                 if (error != null)
                 {
@@ -89,19 +77,19 @@ namespace AdaptyExample
             {
                 Adapty.GetOnboardingForDefaultAudience(
                     this.PlacementId,
-                    placementLocale,
+                    locale,
                     fetchPolicy,
-                    onLoadOnboarding
+                    completionHandler
                 );
             }
             else
             {
                 Adapty.GetOnboarding(
                     this.PlacementId,
-                    placementLocale,
+                    locale,
                     fetchPolicy,
                     null,
-                    onLoadOnboarding
+                    completionHandler
                 );
             }
         }
@@ -130,17 +118,20 @@ namespace AdaptyExample
             );
         }
 
+        private void SetLoading(bool loading)
+        {
+            this.LoadingTransform.gameObject.SetActive(loading);
+        }
+
         private void UpdateOnboardingData(AdaptyOnboarding onboarding)
         {
             this.StatusText.SetText("OK");
             this.StatusText.color = Color.green;
-
             this.DetailsContainerTransform.gameObject.SetActive(true);
             this.NameText.SetText(onboarding.Name);
             this.AudienceNameText.SetText(onboarding.Placement.AudienceName);
             this.VariationIdText.SetText(onboarding.VariationId);
             this.RemoteConfigText.SetText(onboarding.RemoteConfig?.Locale ?? "null");
-
             this.ErrorText.gameObject.SetActive(false);
         }
 
@@ -148,10 +139,8 @@ namespace AdaptyExample
         {
             this.StatusText.SetText("FAIL");
             this.StatusText.color = Color.red;
-
             this.DetailsContainerTransform.gameObject.SetActive(false);
             this.ErrorText.gameObject.SetActive(true);
-
             this.ErrorText.SetText("Error: " + error);
         }
     }

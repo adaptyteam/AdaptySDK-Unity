@@ -1,0 +1,113 @@
+using UnityEngine.Scripting;
+using System.Collections.Generic;
+
+namespace AdaptySDK
+{
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public abstract class AdaptyOnboardingsStateUpdatedParams { }
+
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public sealed class AdaptyOnboardingsSelectParams : AdaptyOnboardingsStateUpdatedParams
+    {
+        public readonly string Id;
+        public readonly string Value;
+        public readonly string Label;
+
+        public AdaptyOnboardingsSelectParams(string id, string value, string label)
+        {
+            Id = id;
+            Value = value;
+            Label = label;
+        }
+
+        public override string ToString() =>
+            $"{nameof(Id)}: {Id}, {nameof(Value)}: {Value}, {nameof(Label)}: {Label}";
+    }
+
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public sealed class AdaptyOnboardingsMultiSelectParams : AdaptyOnboardingsStateUpdatedParams
+    {
+        public readonly IList<AdaptyOnboardingsSelectParams> Params;
+
+        public AdaptyOnboardingsMultiSelectParams(IList<AdaptyOnboardingsSelectParams> @params)
+        {
+            Params = @params;
+        }
+
+        public override string ToString() => $"{nameof(Params)}: {Params}";
+    }
+
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public abstract class AdaptyOnboardingsInput { }
+
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public sealed class AdaptyOnboardingsTextInput : AdaptyOnboardingsInput
+    {
+        public readonly string Value;
+
+        public AdaptyOnboardingsTextInput(string value)
+        {
+            Value = value;
+        }
+    }
+
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public sealed class AdaptyOnboardingsEmailInput : AdaptyOnboardingsInput
+    {
+        public readonly string Value;
+
+        public AdaptyOnboardingsEmailInput(string value)
+        {
+            Value = value;
+        }
+    }
+
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public sealed class AdaptyOnboardingsNumberInput : AdaptyOnboardingsInput
+    {
+        public readonly double Value;
+
+        public AdaptyOnboardingsNumberInput(double value)
+        {
+            Value = value;
+        }
+    }
+
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public sealed class AdaptyOnboardingsInputParams : AdaptyOnboardingsStateUpdatedParams
+    {
+        public readonly AdaptyOnboardingsInput Input;
+
+        public AdaptyOnboardingsInputParams(AdaptyOnboardingsInput input)
+        {
+            Input = input;
+        }
+    }
+
+    [Preserve]
+    [System.Obsolete("The legacy onboarding API is deprecated in favor of Flows.")]
+    public sealed class AdaptyOnboardingsDatePickerParams : AdaptyOnboardingsStateUpdatedParams
+    {
+        public readonly int? Day;
+        public readonly int? Month;
+        public readonly int? Year;
+
+        public AdaptyOnboardingsDatePickerParams(int? day, int? month, int? year)
+        {
+            Day = day;
+            Month = month;
+            Year = year;
+        }
+
+        public override string ToString() =>
+            $"{nameof(Day)}: {Day}, {nameof(Month)}: {Month}, {nameof(Year)}: {Year}";
+    }
+}

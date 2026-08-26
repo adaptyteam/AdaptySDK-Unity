@@ -1,0 +1,16 @@
+{
+  "method": "update_profile",
+  "params": {
+    "analytics_disabled": false,
+    "birthday": "1815-12-10",
+    "custom_attributes": {
+      "plan": "gold",
+      "score": 12.5
+    },
+    "email": "ada@example.com",
+    "first_name": "Ada",
+    "gender": "f",
+    "last_name": "Lovelace",
+    "phone_number": "+15550100"
+  }
+}

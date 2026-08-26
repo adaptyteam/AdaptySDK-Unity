@@ -1,0 +1,13 @@
+{
+  "activate_ui": false,
+  "api_key": "public_live_key",
+  "apple_idfa_collection_disabled": false,
+  "backend_proxy_port": 0,
+  "cross_platform_sdk_name": "unity",
+  "cross_platform_sdk_version": "<sdk-version>",
+  "customer_user_id": "user-1",
+  "google_adid_collection_disabled": false,
+  "google_enable_pending_prepaid_plans": false,
+  "ip_address_collection_disabled": false,
+  "log_level": "error"
+}

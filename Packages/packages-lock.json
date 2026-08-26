@@ -4,70 +4,16 @@
       "version": "file:com.adapty.unity-sdk",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
     },
     "com.google.external-dependency-manager": {
-      "version": "1.2.187",
+      "version": "1.2.188",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
-    },
-    "com.unity.2d.sprite": {
-      "version": "1.0.0",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {}
-    },
-    "com.unity.ai.assistant": {
-      "version": "2.5.0-pre.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.2d.sprite": "1.0.0",
-        "com.unity.mathematics": "1.3.2",
-        "com.unity.cloud.gltfast": "6.14.1",
-        "com.unity.serialization": "3.1.1",
-        "com.unity.modules.uielements": "1.0.0",
-        "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.modules.unitywebrequest": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.burst": {
-      "version": "1.8.29",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.mathematics": "1.2.1",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.cloud.gltfast": {
-      "version": "6.14.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.burst": "1.8.24",
-        "com.unity.collections": "1.2.4",
-        "com.unity.mathematics": "1.2.6",
-        "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.unitywebrequest": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.collections": {
-      "version": "6.4.0",
-      "depth": 2,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.burst": "1.8.23",
-        "com.unity.mathematics": "1.3.2",
-        "com.unity.nuget.mono-cecil": "1.11.5",
-        "com.unity.test-framework": "1.4.6",
-        "com.unity.test-framework.performance": "3.0.3"
-      }
     },
     "com.unity.ext.nunit": {
       "version": "2.0.5",
@@ -76,7 +22,7 @@
       "dependencies": {}
     },
     "com.unity.ide.rider": {
-      "version": "3.0.39",
+      "version": "3.0.40",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -102,13 +48,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.mathematics": {
-      "version": "1.3.3",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.mobile.android-logcat": {
       "version": "1.4.7",
       "depth": 0,
@@ -118,7 +57,7 @@
     },
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.6",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -130,13 +69,17 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.serialization": {
-      "version": "3.1.5",
-      "depth": 1,
+    "com.unity.pipeline": {
+      "version": "0.4.0-exp.1",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.8.13",
-        "com.unity.collections": "2.4.2"
+        "com.unity.test-framework": "1.1.33",
+        "com.unity.nuget.mono-cecil": "1.11.6",
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.screencapture": "1.0.0",
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
       "url": "https://packages.unity.com"
     },
@@ -149,16 +92,6 @@
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       }
-    },
-    "com.unity.test-framework.performance": {
-      "version": "3.4.0",
-      "depth": 3,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.test-framework": "1.1.33",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
     },
     "com.unity.ugui": {
       "version": "2.0.0",

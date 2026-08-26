@@ -1,0 +1,5 @@
+{
+  "$type": "AdaptyInstallationStatus",
+  "Details (property)": null,
+  "Status": "NotDetermined (1)"
+}

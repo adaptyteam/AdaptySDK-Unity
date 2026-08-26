@@ -1,0 +1,6 @@
+{
+  "$type": "AdaptyError",
+  "Code": "Unknown (0)",
+  "Detail": null,
+  "Message": "Unknown error"
+}

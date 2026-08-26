@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace AdaptySDK.iOS
 {
-    internal static class ExceptionGetFullMessage
+    internal static class AdaptyExceptionExtensions
     {
         internal static string GetFullMessage(this Exception ex)
         {
@@ -74,8 +74,8 @@ namespace AdaptySDK.iOS
             {
                 if (!m_IsInitialized)
                 {
-                    m_IsInitialized = true;
                     RegisterCallbackDelegate(OnMessage, OnCallback);
+                    m_IsInitialized = true;
                 }
             }
         }

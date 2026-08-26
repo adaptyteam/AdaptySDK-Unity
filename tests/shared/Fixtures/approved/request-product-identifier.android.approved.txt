@@ -1,0 +1,5 @@
+{
+  "adapty_product_id": "adapty-product-1",
+  "base_plan_id": "monthly-base-plan",
+  "vendor_product_id": "com.adapty.sample.monthly"
+}

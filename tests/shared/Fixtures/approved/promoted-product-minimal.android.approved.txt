@@ -1,0 +1,17 @@
+{
+  "$type": "AdaptyPromotedProduct",
+  "IsFamilyShareable": false,
+  "LocalizedDescription": "Everything, forever",
+  "LocalizedTitle": "Lifetime",
+  "Price": {
+    "$type": "AdaptyPrice",
+    "Amount": 49.99,
+    "CurrencyCode": "USD",
+    "CurrencySymbol": "$",
+    "LocalizedString": "$49.99"
+  },
+  "RegionCode": null,
+  "Subscription": null,
+  "VendorProductId": "com.adapty.sample.lifetime",
+  "_PayloadData": null
+}

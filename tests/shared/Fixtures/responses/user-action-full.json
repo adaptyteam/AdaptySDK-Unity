@@ -1,0 +1,7 @@
+{
+  "action": {
+    "type": "open_url",
+    "value": "https://adapty.io/terms",
+    "open_in": "browser_out_app"
+  }
+}

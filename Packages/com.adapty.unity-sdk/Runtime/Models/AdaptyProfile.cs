@@ -1,13 +1,9 @@
-﻿//
-//  AdaptyProfile.cs
-//  AdaptySDK
-//
-//  Created by Aleksei Valiano on 20.12.2022.
-//
-
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Serialization;
+using UnityEngine.Scripting;
 
 namespace AdaptySDK
 {
@@ -18,11 +14,15 @@ namespace AdaptySDK
     /// The profile contains all information about the user including access levels, subscriptions, non-subscription purchases, and custom attributes.
     /// Read more at <see href="https://adapty.io/docs/unity-check-subscription-status">Adapty Documentation</see>
     /// </remarks>
-    public partial class AdaptyProfile
+    [DataContract]
+    public sealed partial class AdaptyProfile
     {
+        private AdaptyProfile() => Freeze();
+
         /// <summary>
         /// An identifier of the user in Adapty.
         /// </summary>
+        [DataMember(Name = "profile_id", IsRequired = true)]
         public readonly string ProfileId;
 
         /// <summary>
@@ -31,22 +31,39 @@ namespace AdaptySDK
         /// <remarks>
         /// This is the customer user ID that you set using <see cref="Adapty.Identify(string, Action{AdaptyError})"/>.
         /// </remarks>
+        [DataMember(Name = "customer_user_id")]
         public readonly string CustomerUserId;
 
         /// <summary>
         /// An identifier of the segment to which the user belongs.
         /// </summary>
+        [DataMember(Name = "segment_hash", IsRequired = true)]
         internal readonly string SegmentId;
 
         /// <summary>
-        /// Identifiers of attribution sources applied to the profile.
+        /// Identifiers of external attribution providers applied to the profile.
         /// </summary>
-        public readonly IList<string> AppliedAttributionSources;
+        [DataMember(Name = "applied_attribution_sources")]
+        private readonly List<string> _AppliedExternalAttributionProviders = new List<string>();
+
+        /// <summary>
+        /// The external attribution providers applied to this profile.
+        /// </summary>
+        [Preserve]
+        public IReadOnlyList<AdaptyExternalAttributionProvider> AppliedExternalAttributionProviders { get; private set; }
 
         /// <summary>
         /// Previously set user custom attributes with <see cref="Adapty.UpdateProfile(AdaptyProfileParameters, Action{AdaptyError})"/> method.
         /// </summary>
-        public readonly IDictionary<string, object> CustomAttributes;
+        [DataMember(Name = "custom_attributes")]
+        [Newtonsoft.Json.JsonConverter(typeof(Serialization.AdaptyConverterLooseJson))]
+        private readonly Dictionary<string, object> _CustomAttributes = new Dictionary<string, object>();
+
+        /// <summary>
+        /// The custom attributes set on this profile. Numbers arrive as <see cref="double"/>.
+        /// </summary>
+        [Preserve]
+        public IReadOnlyDictionary<string, object> CustomAttributes { get; private set; }
 
         /// <summary>
         /// A dictionary of access levels configured in the Adapty Dashboard.
@@ -56,7 +73,15 @@ namespace AdaptySDK
         /// The values are <see cref="AccessLevel"/> objects.
         /// Can be null if the customer has no access levels.
         /// </remarks>
-        public readonly IDictionary<string, AccessLevel> AccessLevels;
+        [DataMember(Name = "paid_access_levels")]
+        private readonly Dictionary<string, AccessLevel> _AccessLevels = new Dictionary<string, AccessLevel>();
+
+        /// <summary>
+        /// The profile's access levels, keyed by the identifier configured in the Dashboard. Empty when
+        /// the user has none.
+        /// </summary>
+        [Preserve]
+        public IReadOnlyDictionary<string, AccessLevel> AccessLevels { get; private set; }
 
         /// <summary>
         /// A dictionary of active subscriptions.
@@ -66,7 +91,14 @@ namespace AdaptySDK
         /// The values are <see cref="Subscription"/> objects.
         /// Can be null if the customer has no subscriptions.
         /// </remarks>
-        public readonly IDictionary<string, Subscription> Subscriptions;
+        [DataMember(Name = "subscriptions")]
+        private readonly Dictionary<string, Subscription> _Subscriptions = new Dictionary<string, Subscription>();
+
+        /// <summary>
+        /// The profile's subscriptions, keyed by store product id. Empty when the user has none.
+        /// </summary>
+        [Preserve]
+        public IReadOnlyDictionary<string, Subscription> Subscriptions { get; private set; }
 
         /// <summary>
         /// A dictionary of non-subscription purchases.
@@ -76,12 +108,60 @@ namespace AdaptySDK
         /// The values are lists of <see cref="NonSubscription"/> objects (one product can have multiple purchases).
         /// Can be null if the customer has no non-subscription purchases.
         /// </remarks>
-        public readonly IDictionary<string, IList<NonSubscription>> NonSubscriptions;
+        [DataMember(Name = "non_subscriptions")]
+        private readonly Dictionary<string, List<NonSubscription>> _NonSubscriptions = new Dictionary<string, List<NonSubscription>>();
 
+        /// <summary>
+        /// The profile's non-subscription purchases, keyed by store product id — a list each, since one
+        /// product can be bought more than once. Empty when the user has none.
+        /// </summary>
+        [Preserve]
+        public IReadOnlyDictionary<string, IReadOnlyList<NonSubscription>> NonSubscriptions { get; private set; }
+
+        [DataMember(Name = "timestamp", IsRequired = true)]
         internal readonly Int64 Version;
 
+        [DataMember(Name = "is_test_user", IsRequired = true)]
         internal readonly bool IsTestUser;
 
+        // Replace hands the deserializer a new collection instead of filling the one the field
+        // initializer made, so the views are built here rather than alongside it.
+        [Preserve]
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context) => Freeze();
+
+        private void Freeze()
+        {
+            // A null entry would fail the constructor and a blank one would come out as a
+            // provider with an empty identifier, so both are skipped.
+            var providers = new List<AdaptyExternalAttributionProvider>();
+            foreach (var value in _AppliedExternalAttributionProviders)
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    continue;
+                }
+                providers.Add(new AdaptyExternalAttributionProvider(value));
+            }
+            AppliedExternalAttributionProviders = new ReadOnlyCollection<AdaptyExternalAttributionProvider>(providers);
+            CustomAttributes = new ReadOnlyDictionary<string, object>(_CustomAttributes);
+            AccessLevels = new ReadOnlyDictionary<string, AccessLevel>(_AccessLevels);
+            Subscriptions = new ReadOnlyDictionary<string, Subscription>(_Subscriptions);
+
+            var nonSubscriptions = new Dictionary<string, IReadOnlyList<NonSubscription>>();
+            foreach (var entry in _NonSubscriptions)
+            {
+                nonSubscriptions[entry.Key] = new ReadOnlyCollection<NonSubscription>(entry.Value);
+            }
+            NonSubscriptions = new ReadOnlyDictionary<string, IReadOnlyList<NonSubscription>>(
+                nonSubscriptions
+            );
+        }
+
+        /// <summary>
+        /// A description for logs and the debugger. The format is not part of the contract —
+        /// read the members rather than parsing it.
+        /// </summary>
         public override string ToString()
         {
             var customAttributesStr =
@@ -120,7 +200,7 @@ namespace AdaptySDK
             return $"{nameof(ProfileId)}: {ProfileId}, "
                 + $"{nameof(SegmentId)}: {SegmentId}, "
                 + $"{nameof(CustomerUserId)}: {CustomerUserId}, "
-                + $"{nameof(AppliedAttributionSources)}: [{string.Join(", ", AppliedAttributionSources)}], "
+                + $"{nameof(AppliedExternalAttributionProviders)}: [{string.Join(", ", AppliedExternalAttributionProviders)}], "
                 + $"{nameof(CustomAttributes)}: {customAttributesStr}, "
                 + $"{nameof(AccessLevels)}: {accessLevelsStr}, "
                 + $"{nameof(Subscriptions)}: {subscriptionsStr}, "

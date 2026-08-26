@@ -1,0 +1,7 @@
+{
+  "event": {
+    "name": "screen_completed",
+    "element_id": "gender_select",
+    "reply": "female"
+  }
+}
