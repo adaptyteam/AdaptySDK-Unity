@@ -1,0 +1,126 @@
+name: Publish docs
+
+# The Doxygen HTML reference published at unity.adapty.io.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Where to deploy the reference'
+        type: choice
+        default: draft
+        options:
+          - draft
+          - production
+  push:
+    # Stable releases only
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+# A production publish replaces the whole site; two racing would leave the later one.
+concurrency:
+  group: publish-docs
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish-docs:
+    name: Publish docs
+    runs-on: ubuntu-24.04
+    # Otherwise a hung step holds the concurrency group for GitHub's 360-minute default.
+    timeout-minutes: 20
+
+    env:
+      # Not from apt: Ubuntu 24.04 carries only 1.9.8, older than the Doxyfile's own format.
+      DOXYGEN_VERSION: '1.18.0'
+      NETLIFY_CLI_VERSION: '27.4.0'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Decided once, read by both the build and the deploy so they cannot drift. The event
+      # matters: workflow_dispatch takes a tag as its ref, so GITHUB_REF_TYPE alone cannot tell.
+      - name: Decide the deploy target
+        env:
+          # Through env, not interpolated, so the value stays data.
+          DEPLOY_TARGET: ${{ inputs.target }}
+        run: |
+          if { [ "$GITHUB_EVENT_NAME" = push ] && [ "$GITHUB_REF_TYPE" = tag ]; } \
+             || [ "$DEPLOY_TARGET" = production ]; then
+            publish_prod=true
+          else
+            publish_prod=false
+          fi
+          echo "Publishing to production: $publish_prod"
+          echo "PUBLISH_PROD=$publish_prod" >> "$GITHUB_ENV"
+
+      - name: Install Doxygen
+        run: |
+          url="https://github.com/doxygen/doxygen/releases/download/Release_${DOXYGEN_VERSION//./_}/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz"
+          curl -fsSL "$url" | tar xz
+          sudo install -m755 "doxygen-${DOXYGEN_VERSION}/bin/doxygen" /usr/local/bin/
+          doxygen --version
+
+      - name: Generate documentation
+        working-directory: Packages/com.adapty.unity-sdk/Runtime
+        run: |
+          version=$(jq -r .version ../package.json)
+          if [ -z "$version" ] || [ "$version" = null ]; then
+            echo "::error::no \"version\" in Packages/com.adapty.unity-sdk/package.json"
+            exit 1
+          fi
+          # A tag must agree with the version in the header, and release_unitypackage.sh lets TAG
+          # diverge from the package. Publishing runs only - a draft is where you look anyway.
+          if [ "$PUBLISH_PROD" = true ] && [ "$GITHUB_REF_TYPE" = tag ] \
+             && [ "$GITHUB_REF_NAME" != "$version" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match package version $version"
+            exit 1
+          fi
+          echo "Building the reference for SDK $version"
+          # Appended, not committed, so the header's version cannot go stale in the Doxyfile.
+          { cat Doxyfile; echo "PROJECT_NUMBER = $version"; } | doxygen -
+          echo "SDK_VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Check the generated reference
+        working-directory: Packages/com.adapty.unity-sdk/Runtime
+        run: |
+          test -s docs/html/index.html \
+            || { echo "::error::no Doxygen output at docs/html/index.html"; exit 1; }
+          grep -q 'Why Adapty' docs/html/index.html \
+            || { echo "::error::the main page is not the README"; exit 1; }
+          # AdaptySDK's only sub-namespaces are the four EXCLUDE_SYMBOLS drops, so any page here
+          # means the patterns stopped matching. Catches Android too, whose classes the
+          # preprocessor strips while the namespace itself would still leak.
+          leaked=(docs/html/namespace_adapty_s_d_k_1_1*)
+          if [ -e "${leaked[0]}" ]; then
+            echo "::error::EXCLUDE_SYMBOLS leaked: ${leaked[*]##*/}"
+            exit 1
+          fi
+          grep -q "projectnumber\">&#160;${SDK_VERSION}<" docs/html/index.html \
+            || { echo "::error::the header does not carry version ${SDK_VERSION}"; exit 1; }
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Netlify CLI
+        run: npm install -g "netlify-cli@${NETLIFY_CLI_VERSION}"
+
+      - name: Publish docs to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          args=(--no-build
+                --site "$NETLIFY_SITE_ID"
+                --dir Packages/com.adapty.unity-sdk/Runtime/docs/html
+                --message "$GITHUB_REF_NAME ($SDK_VERSION, ${GITHUB_SHA:0:7})")
+          # PUBLISH_PROD was decided in "Decide the deploy target"; a draft is the default.
+          if [ "$PUBLISH_PROD" = true ]; then
+            args=(--prod "${args[@]}")
+          fi
+          netlify deploy "${args[@]}"
