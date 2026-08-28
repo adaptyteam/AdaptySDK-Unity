@@ -33,9 +33,9 @@ namespace AdaptySDK
         /// The localization the view was actually built with.
         /// </summary>
         /// <remarks>
-        /// This is the locale passed to <see cref="AdaptyUICreateFlowViewParameters.SetLocale(string)"/> when that
-        /// localization exists, and the flow's default localization otherwise. It is null when the native SDK is
-        /// older than iOS 4.0.2 / Android 4.0.1 and does not report it.
+        /// May differ from the localization requested through
+        /// <see cref="AdaptyUICreateFlowViewParameters.SetLocale(string)"/> when that one does not exist in the
+        /// flow, and may be null when the native side reports none.
         /// </remarks>
         [DataMember(Name = "locale")]
         public string Locale;
@@ -53,7 +53,7 @@ namespace AdaptySDK
         /// <summary>
         /// Call this function if you wish to present the view.
         /// </summary>
-        /// <param name="iosPresentationStyle"></param> an [AdaptyUIIOSPresentationStyle] object, for which is representing the iOS presentation style.
+        /// <param name="iosPresentationStyle">An <see cref="AdaptyUIIOSPresentationStyle"/> object representing the iOS presentation style (iOS only).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public void Present(
             AdaptyUIIOSPresentationStyle iosPresentationStyle,
