@@ -98,12 +98,12 @@ so start new integrations on flows.
 does not sit at the repository root — and the version suffix, which pins the tag:
 
 ```
-https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.1.0
+https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.1.1
 ```
 
-Drop `#4.1.0` and Package Manager resolves the default branch, which carries the previous
-major until a release merges this one into it — so an unpinned URL installs 3.17 and says nothing
-about it.
+Drop `#4.1.1` and Package Manager resolves the default branch instead, which moves with every
+release — you get whatever was merged into `main` last, and it changes under you without notice.
+Pin the tag.
 
 The SDK depends on `com.unity.nuget.newtonsoft-json`, which Package Manager installs for you and
 which every platform needs — the SDK assembly is gated on it. It also depends on External Dependency
