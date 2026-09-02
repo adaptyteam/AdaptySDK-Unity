@@ -21,6 +21,8 @@ dotnet test tests/AdaptySDK.NextTests/AdaptySDK.NextTests.csproj
 ```
 The layer branches on `UNITY_IOS` / `UNITY_ANDROID` and each platform has its own approved snapshots, so a change to it has to pass all four legs: add `-p:AdaptyPlatform=UNITY_IOS` or `-p:AdaptyPlatform=UNITY_ANDROID` for two of the others. Asking for no platform means `UNITY_EDITOR`, which the projects default to — the Editor is a configuration of its own and has to say so, since it is what selects the no-op bridge; an empty define set is a state Unity never produces. The fourth is `-p:AdaptyPlatform="UNITY_IOS%3BADAPTY_KIDS_MODE"` — `%3B` escapes the `;` inside the MSBuild property value. Kids Mode is the only shipped define that changes the wire format rather than which sources compile, and its whole visible effect here is the forced `apple_idfa_collection_disabled`: three configuration requests have a second approved form under `-kids`, and `RequestParityTests.Configured` is what picks it. Nothing else in the layer moves with the define — if a fourth snapshot ever needs a `-kids` form, that is a change in blast radius worth understanding before approving it. `ADAPTY_UPDATE_SNAPSHOTS=1` rewrites the approved files instead of failing. CI runs the same matrix in `.github/workflows/json-layer-tests.yml`.
 
+**Drive the real SDK on the iOS simulator:** `Assets/SdkHarness/` is a player the agent runs from the command line against the native SDK — build, launch, StoreKit and the command set are in [Assets/SdkHarness/AGENTS.md](Assets/SdkHarness/AGENTS.md); a purchase's system windows are handled by the `ios-storekit-purchase` skill.
+
 **Build .unitypackage for distribution:**
 ```bash
 cd deploy && ./build_unitypackage.sh       # export into deploy/output/
