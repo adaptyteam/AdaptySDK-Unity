@@ -3,7 +3,7 @@
   "version": "4.1.1",
   "displayName": "Adapty Unity SDK",
   "description": "Unity SDK for Adapty in-app purchases, subscriptions, paywalls, and onboarding flows.",
-  "unity": "2022.3",
+  "unity": "6000.0",
   "_upm": {
     "changelog": "### Fixed\n\n- [Android] `AdaptyProfile.AppliedExternalAttributionProviders` was always empty. Pins crossplatform 4.1.3."
   },

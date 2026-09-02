@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Breaking Changes
+
+- **The minimum supported Unity version is raised from 2022.3 to 6.0 (6000.0)**, declared as
+  `unity` in `package.json`. The package will rely on UI Toolkit runtime bindings (2023.2+) for
+  its Editor-side mock UI; projects on 2022.3 stay on 4.1.x.
+
 ## [4.1.1] - 2026-08-28
 
 ### Fixed
