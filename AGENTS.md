@@ -11,9 +11,9 @@ Adapty Unity SDK — a C# wrapper around native [Adapty iOS SDK](https://github.
 
 This is a **Unity project** (Unity 6000.x) — the player is built and tested through the Unity Editor. The JSON layer is the exception: `tests/` links the SDK sources into a plain .NET project, so it needs neither the Editor nor a licence.
 
-The package declares **Unity 2022.3 and newer** as `unity` in `package.json`, and that floor is what Editor-facing code may assume: `AdaptyDependencies` uses `Client.AddAndRemove` and `PackageInfo.FindForAssembly`, neither of which exists all the way back (`AddAndRemove` arrived after 2020.3).
+The package declares **Unity 6.0 (6000.0) and newer** as `unity` in `package.json` — raised from 2022.3 on 2026-09-01 so the package may use UI Toolkit runtime bindings (2023.2+) for the Editor mock UI — and that floor is what all package code may assume. Demo-only code under `Assets/` may go further (the project itself runs 6.6).
 
-The install path is verified on the floor — `.unitypackage` import into a clean project, then `Adapty SDK > Install Dependencies`, then a compile, all on 2022.3.62f3. Everything else runs on Unity 6. Keep the changelog and `MIGRATION-v3.17-to-v4.1.md` wording matching that split; do not widen it to claim device or build coverage on 2022.3. One trap when re-verifying: recent 2022.3 builds are Extended LTS and refuse to launch without an Industry or Enterprise licence, so pick a build below that cutoff (62f3 works).
+The floor raise is unreleased: 4.1.x shipped on 2022.3, and its install path — `.unitypackage` import into a clean project, then `Adapty SDK > Install Dependencies`, then a compile — was verified on 2022.3.62f3. Before the release that carries the raise, verify that path on a 6000.0.x build and say so in the changelog entry (there is one under Unreleased); do not widen it to claim device or build coverage on 6000.0. `MIGRATION-v3.17-to-v4.1.md` describes 4.1 as it shipped and is not edited for later floors.
 
 **Run the JSON layer tests:**
 ```bash
