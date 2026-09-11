@@ -1,0 +1,7 @@
+<linker>
+  <!-- The harness reaches the SDK by reflection, so the linker sees nothing to keep. -->
+  <assembly fullname="com.adapty.unity-sdk" preserve="all" />
+  <assembly fullname="Assembly-CSharp">
+    <namespace fullname="AdaptyExample.SdkHarness" preserve="all" />
+  </assembly>
+</linker>
