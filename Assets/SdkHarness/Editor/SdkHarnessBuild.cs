@@ -66,6 +66,39 @@ namespace AdaptyExample.SdkHarness.Editor
         }
 
         /// <summary>
+        /// The same scene for an Android device: a Development build, so the player is debuggable
+        /// and <c>run-as</c> can read the runtime descriptor <c>AndroidHarnessServer</c> writes.
+        /// </summary>
+        [CliCommand("harness_build_android", "Build the SDK harness scene for an Android device into android-harness-build.apk (Development, ARM64). Submit with --detach, then unity job wait.",
+            MainThreadRequired = true, Tags = new[] { "adapty" })]
+        public static object BuildAndroid()
+        {
+            // The Pipeline build processor reads this flag, not the build options: with Enable In
+            // Builds on and the flag off it cancels an interactive build as a release one.
+            EditorUserBuildSettings.development = true;
+            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
+            PlayerSettings.SetApplicationIdentifier(UnityEditor.Build.NamedBuildTarget.Android, "com.adaptytest");
+
+            var report = BuildPipeline.BuildPlayer(
+                new BuildPlayerOptions
+                {
+                    scenes = new[] { Scene },
+                    locationPathName = "android-harness-build.apk",
+                    target = BuildTarget.Android,
+                    options = BuildOptions.Development,
+                }
+            );
+
+            return new
+            {
+                result = report.summary.result.ToString(),
+                errors = report.summary.totalErrors,
+                output = report.summary.outputPath,
+                seconds = (int)report.summary.totalTime.TotalSeconds,
+            };
+        }
+
+        /// <summary>
         /// Gives the harness build Xcode's local StoreKit: the configuration is filed in the project
         /// and selected in the scheme, so a run from Xcode syncs it into the simulator and
         /// purchases never reach the App Store sandbox.
