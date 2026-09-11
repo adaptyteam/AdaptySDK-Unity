@@ -174,6 +174,9 @@ namespace UnityEngine
     {
         protected AndroidJavaProxy(string javaInterface) { }
     }
+
+    // What the bridge hands a Handler.post: Unity marshals it as a java.lang.Runnable.
+    public delegate void AndroidJavaRunnable();
 }
 
 namespace AOT
