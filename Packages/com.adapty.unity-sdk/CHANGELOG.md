@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `unity` in `package.json`. The package will rely on UI Toolkit runtime bindings (2023.2+) for
   its Editor-side mock UI; projects on 2022.3 stay on 4.1.x.
 
+### Changed
+
+- [Android] The package no longer ships a Java wrapper (`io.adapty.internal:unity-wrapper`): the
+  bridge calls `CrossplatformHelper` from `io.adapty.internal:crossplatform` directly through JNI.
+  Callbacks and events still arrive on the Unity thread, through its Looper as before, so a flow's
+  `close` action reaches the listener while the flow is on screen. Nothing changes for an app; a
+  project that reached the wrapper's `com.adapty.unity.*` classes itself will no longer find them.
+
 ## [4.1.1] - 2026-08-28
 
 ### Fixed

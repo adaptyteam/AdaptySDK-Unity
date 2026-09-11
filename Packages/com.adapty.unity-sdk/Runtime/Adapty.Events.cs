@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 #if UNITY_IOS && !UNITY_EDITOR
 using _AdaptyCallbackAction = AdaptySDK.iOS.AdaptyIOSCallbackAction;
 #elif UNITY_ANDROID && !UNITY_EDITOR
-using _AdaptyCallbackAction = AdaptySDK.Android.AdaptyAndroidCallbackAction;
+using _AdaptyCallbackAction = AdaptySDK.Android.AdaptyAndroid;
 #else
 using _AdaptyCallbackAction = AdaptySDK.Noop.AdaptyNoopCallbackAction;
 #endif
@@ -46,10 +46,11 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// Nothing native reaches C# until this has run: on iOS the bridge drops a completion while
-        /// its delegate is null, and on Android the wrapper has no handler to post it to. It used to
-        /// happen inside the listener setters, which made every completion handler depend on a
+        /// its delegate is null, and on Android the helper is not initialised. It used to happen
+        /// inside the listener setters, which made every completion handler depend on a
         /// subscription that is optional and unrelated. The stage covers the whole MonoBehaviour
-        /// lifecycle, and it is what binds Android's handler to the scripting thread.
+        /// lifecycle, and the context captured here is what carries Android's callbacks back to
+        /// the scripting thread.
         /// </remarks>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         internal static void InitializeTransport()
