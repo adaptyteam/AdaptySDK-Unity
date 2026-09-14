@@ -1,6 +1,6 @@
 {
   "name": "com.adapty.unity-sdk",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "displayName": "Adapty Unity SDK",
   "description": "Unity SDK for Adapty in-app purchases, subscriptions, paywalls, and onboarding flows.",
   "unity": "2022.3",
