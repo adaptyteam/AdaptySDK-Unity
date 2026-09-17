@@ -5,7 +5,7 @@
   "description": "Unity SDK for Adapty in-app purchases, subscriptions, paywalls, and onboarding flows.",
   "unity": "2022.3",
   "_upm": {
-    "changelog": "### Fixed\n\n- [Android] `AdaptyProfile.AppliedExternalAttributionProviders` was always empty. Pins crossplatform 4.1.3."
+    "changelog": "### Fixed\n\n- [iOS] Flow analytics events reported numeric parameters valued 0 or 1 as booleans.\n- [Android] Various bugfixes and stability improvements."
   },
   "dependencies": {
     "com.unity.nuget.newtonsoft-json": "3.2.2"
