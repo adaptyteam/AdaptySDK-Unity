@@ -9,10 +9,7 @@ namespace AdaptySDK
     /// Almost every value is the native SDK's own, so a code always arrives whether or not this
     /// enum names it. Most of those are produced by one platform only, and each member says which;
     /// where both produce a number, both meanings are given, because they are not always the same
-    /// one. Each was traced to its throw site in AdaptySDK-iOS 4.0.2 and AdaptySDK-Android 4.0.1;
-    /// the pinned iOS 4.1.2 and Android 4.1.0 natives declare the same set of codes, with the one
-    /// behavioural change noted on <see cref="NoPurchasesToRestore"/>. Two are different:
-    /// <see cref="WrongParam"/> and
+    /// one. Two are different: <see cref="WrongParam"/> and
     /// <see cref="DecodingFailed"/> are also raised by this SDK itself, on either platform, when a
     /// wrong argument is caught before sending or a reply cannot be read — the native side is
     /// never reached in the first case and has already answered in the second.
