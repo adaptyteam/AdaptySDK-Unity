@@ -98,10 +98,10 @@ so start new integrations on flows.
 does not sit at the repository root — and the version suffix, which pins the tag:
 
 ```
-https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.1.1
+https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.1.2
 ```
 
-Drop `#4.1.1` and Package Manager resolves the default branch instead, which moves with every
+Drop `#4.1.2` and Package Manager resolves the default branch instead, which moves with every
 release — you get whatever was merged into `main` last, and it changes under you without notice.
 Pin the tag.
 
