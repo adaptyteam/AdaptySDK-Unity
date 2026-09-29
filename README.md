@@ -168,7 +168,7 @@ assemblies only, and it is invisible to every Editor API, so the mismatch cannot
 
 ## Contributing
 
-- Feel free to open an issue, we check all of them or drop us an email at [support@adapty.io](mailto:support@adapty.io) and tell us everything you want.
+- Feel free to open an issue, we check all of them or drop us an email at <support@adapty.io> and tell us everything you want.
 - Want to suggest a feature? Just contact us or open an issue in the repo.
 
 ## Like Adapty SDK?
