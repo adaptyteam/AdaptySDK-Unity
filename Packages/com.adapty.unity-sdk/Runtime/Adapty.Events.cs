@@ -49,8 +49,8 @@ namespace AdaptySDK
         /// its delegate is null, and on Android the helper is not initialised. It used to happen
         /// inside the listener setters, which made every completion handler depend on a
         /// subscription that is optional and unrelated. The stage covers the whole MonoBehaviour
-        /// lifecycle, and the context captured here is what carries Android's callbacks back to
-        /// the scripting thread.
+        /// lifecycle and runs on the scripting thread, whose looper Android's bridge registers on.
+        /// The context captured here serves only <see cref="RunOnMainThread"/>.
         /// </remarks>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         internal static void InitializeTransport()
