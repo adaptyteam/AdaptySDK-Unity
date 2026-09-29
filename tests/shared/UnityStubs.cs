@@ -174,16 +174,14 @@ namespace UnityEngine
     {
         protected AndroidJavaProxy(string javaInterface) { }
     }
-
-    // What the bridge hands a Handler.post: Unity marshals it as a java.lang.Runnable.
-    public delegate void AndroidJavaRunnable();
 }
 
 namespace AOT
 {
-    // Marks the reverse-P/Invoke entry points on iOS. Attribute only - it changes nothing here,
-    // but the transport's callback boundary is exactly where a thrown exception would be fatal
-    // on IL2CPP, so the file has to compile in the test suite.
+    // Marks the reverse-P/Invoke entry points - the iOS transport's, Android's looper callback.
+    // Attribute only - it changes nothing here, but the transport's callback boundary is exactly
+    // where a thrown exception would be fatal on IL2CPP, so the files have to compile in the
+    // test suite.
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class MonoPInvokeCallbackAttribute : Attribute
     {
