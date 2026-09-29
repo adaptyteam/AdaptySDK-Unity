@@ -11,14 +11,9 @@ namespace AdaptySDK.Android
     /// <remarks>
     /// The helper's four callbacks are plain Java interfaces with a single <c>invoke</c>, which is
     /// the shape <see cref="AndroidJavaProxy"/> implements by method name. They arrive on the
-    /// thread the native SDK calls from, never Unity's, and are posted to a <c>Handler</c> bound to
-    /// the Unity thread's <c>Looper</c> - not through <see cref="Adapty.RunOnMainThread"/>. The
-    /// difference is what happens while a flow is on screen: it is an Activity of its own, Unity's
-    /// player loop is paused underneath it, and a <c>SynchronizationContext</c> post waits for the
-    /// next frame - which comes only once the flow is gone. The Looper keeps running through the
-    /// pause, so the <c>close</c> action reaches the app's listener while there is still a view to
-    /// dismiss. Measured on a device against the Java wrapper this replaces, which posted the same
-    /// way.
+    /// thread the native SDK calls from, never Unity's, and are posted to Unity's through
+    /// <see cref="AdaptyAndroidLooper"/> - not through <see cref="Adapty.RunOnMainThread"/>, which
+    /// waits for a frame that does not come while a flow is on screen.
     /// </remarks>
     internal static class AdaptyAndroid
     {
@@ -26,7 +21,6 @@ namespace AdaptySDK.Android
         private const string UnityPlayerClass = "com.unity3d.player.UnityPlayer";
 
         private static AndroidJavaObject s_Helper;
-        private static AndroidJavaObject s_UnityThreadHandler;
 
         /// <summary>
         /// Initialises the helper before the first scene, so an event has somewhere to land.
@@ -49,18 +43,15 @@ namespace AdaptySDK.Android
                     return s_Helper;
                 }
 
-                using var looperClass = new AndroidJavaClass("android.os.Looper");
-                using var looper = looperClass.CallStatic<AndroidJavaObject>("myLooper");
-                if (looper == null)
+                if (!AdaptyAndroidLooper.Install())
                 {
                     throw new InvalidOperationException(
-                        "Adapty: the bridge was initialised from a thread with no Looper, so SDK "
-                            + "callbacks cannot be delivered back to it. It is expected to run on "
-                            + "Unity's scripting thread, which Adapty.InitializeTransport does before "
-                            + "the first scene loads."
+                        "Adapty: the bridge could not register on the calling thread's native "
+                            + "looper, so SDK callbacks cannot be delivered back to it. It is expected "
+                            + "to run on Unity's scripting thread, which Adapty.InitializeTransport "
+                            + "does before the first scene loads."
                     );
                 }
-                s_UnityThreadHandler = new AndroidJavaObject("android.os.Handler", looper);
 
                 using var player = new AndroidJavaClass(UnityPlayerClass);
                 using var activity = player.GetStatic<AndroidJavaObject>("currentActivity");
@@ -85,12 +76,6 @@ namespace AdaptySDK.Android
             }
         }
 
-        /// <summary>
-        /// Runs the action on the Unity thread through its Looper, paused player loop or not.
-        /// </summary>
-        private static void PostToUnityThread(Action action) =>
-            s_UnityThreadHandler.Call<bool>("post", (AndroidJavaRunnable)(() => action()));
-
         private static AndroidJavaObject CurrentActivity()
         {
             using var player = new AndroidJavaClass(UnityPlayerClass);
@@ -103,7 +88,7 @@ namespace AdaptySDK.Android
                 : base("com.adapty.internal.crossplatform.EventCallback") { }
 
             public void invoke(string id, string json) =>
-                PostToUnityThread(() => Adapty.OnMessage(id, json));
+                AdaptyAndroidLooper.Post(() => Adapty.OnMessage(id, json));
         }
 
         private sealed class ResultCallback : AndroidJavaProxy
@@ -117,7 +102,7 @@ namespace AdaptySDK.Android
             }
 
             public void invoke(string json) =>
-                PostToUnityThread(() =>
+                AdaptyAndroidLooper.Post(() =>
                 {
                     try
                     {
