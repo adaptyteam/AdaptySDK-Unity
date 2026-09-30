@@ -94,7 +94,7 @@ jobs:
           # AdaptySDK's only sub-namespaces are the four EXCLUDE_SYMBOLS drops, so any page here
           # means the patterns stopped matching. Catches Android too, whose classes the
           # preprocessor strips while the namespace itself would still leak.
-          leaked=(docs/html/namespace_adapty_s_d_k_1_1*)
+          leaked=(docs/html/namespace*_1_1*)
           if [ -e "${leaked[0]}" ]; then
             echo "::error::EXCLUDE_SYMBOLS leaked: ${leaked[*]##*/}"
             exit 1
