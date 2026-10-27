@@ -58,6 +58,9 @@ namespace AdaptyExample.SdkHarness.Editor
             MainThreadRequired = true, Tags = new[] { "adapty" })]
         public static object Build()
         {
+            // The Pipeline build processor reads this flag, not the build options: with Enable In
+            // Builds on and the flag off it stops an interactive build on a release-build dialog.
+            EditorUserBuildSettings.development = true;
             PlayerSettings.iOS.sdkVersion = iOSSdkVersion.SimulatorSDK;
             s_RigBuild = true;
 
@@ -109,8 +112,6 @@ namespace AdaptyExample.SdkHarness.Editor
             MainThreadRequired = true, Tags = new[] { "adapty" })]
         public static object BuildAndroid()
         {
-            // The Pipeline build processor reads this flag, not the build options: with Enable In
-            // Builds on and the flag off it cancels an interactive build as a release one.
             EditorUserBuildSettings.development = true;
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.SetApplicationIdentifier(UnityEditor.Build.NamedBuildTarget.Android, "com.adaptytest");
