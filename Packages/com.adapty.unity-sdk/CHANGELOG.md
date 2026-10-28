@@ -4,13 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [4.3.0] - 2026-10-28
 
 ### Breaking Changes
 
 - **The minimum supported Unity version is raised from 2022.3 to 6.0 (6000.0)**, declared as
   `unity` in `package.json`. The package will rely on UI Toolkit runtime bindings (2023.2+) for
-  its Editor-side mock UI; projects on 2022.3 stay on 4.1.x.
+  its Editor-side mock UI; projects on 2022.3 stay on 4.1.x. The `.unitypackage` install path —
+  import into a clean project, `Adapty SDK > Install Dependencies`, compile — was verified on
+  6000.0.74f1.
 
 ### Added
 
@@ -38,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Adapty.ShowStoreMessages`, on iOS optionally filtered by `AdaptyStoreMessageType`.
   `Adapty.GetPendingStoreMessageTypes` lists what is held on iOS and reports a null list on
   Android. On iOS all of it needs iOS 16+.
-- `AdaptyErrorCode.BillingPlanUnavailable` (1060), `OperationInProgress` (3201) and
+- [iOS] `AdaptyErrorCode.BillingPlanUnavailable` (1060), `OperationInProgress` (3201) and
   `ResolverFailure` (3202).
 
 ### Changed
