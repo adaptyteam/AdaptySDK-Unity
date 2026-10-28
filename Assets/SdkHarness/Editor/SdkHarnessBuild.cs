@@ -115,16 +115,26 @@ namespace AdaptyExample.SdkHarness.Editor
             EditorUserBuildSettings.development = true;
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.SetApplicationIdentifier(UnityEditor.Build.NamedBuildTarget.Android, "com.adaptytest");
+            s_RigBuild = true;
 
-            var report = BuildPipeline.BuildPlayer(
-                new BuildPlayerOptions
-                {
-                    scenes = new[] { Scene },
-                    locationPathName = "android-harness-build.apk",
-                    target = BuildTarget.Android,
-                    options = BuildOptions.Development,
-                }
-            );
+            UnityEditor.Build.Reporting.BuildReport report;
+
+            try
+            {
+                report = BuildPipeline.BuildPlayer(
+                    new BuildPlayerOptions
+                    {
+                        scenes = new[] { Scene },
+                        locationPathName = "android-harness-build.apk",
+                        target = BuildTarget.Android,
+                        options = BuildOptions.Development,
+                    }
+                );
+            }
+            finally
+            {
+                s_RigBuild = false;
+            }
 
             return new
             {
