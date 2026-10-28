@@ -225,6 +225,14 @@ namespace AdaptySDK
         PaymentPendingError = 1050,
 
         /// <summary>
+        /// iOS only. The product cannot be bought on the billing plan it was offered on, because
+        /// StoreKit no longer offers that plan for it. Below iOS 26.4, or in an app built with
+        /// Xcode older than 26.5, products are offered on their up-front terms instead, so this
+        /// does not come up there.
+        /// </summary>
+        BillingPlanUnavailable = 1060,
+
+        /// <summary>
         /// The two platforms mean different things by this number. On iOS the SDK was called
         /// before <see cref="Adapty.Activate(AdaptySDK.AdaptyConfiguration, System.Action{AdaptySDK.AdaptyError})"/>; on Android the Adapty backend answered 401 or 403,
         /// which points at the API key.
@@ -305,6 +313,18 @@ namespace AdaptySDK
         /// iOS only. The fetch did not finish within the timeout the call was given.
         /// </summary>
         FetchTimeoutError = 3101,
+
+        /// <summary>
+        /// iOS only. <see cref="Adapty.ShowStoreMessages(System.Collections.Generic.IReadOnlyList{AdaptyStoreMessageType}, System.Action{AdaptyError})"/>
+        /// was called while the messages of an earlier call were still being shown.
+        /// </summary>
+        OperationInProgress = 3201,
+
+        /// <summary>
+        /// iOS only. <see cref="Adapty.ShowStoreMessages(System.Collections.Generic.IReadOnlyList{AdaptyStoreMessageType}, System.Action{AdaptyError})"/>
+        /// found no active window scene to show the messages in.
+        /// </summary>
+        ResolverFailure = 3202,
 
         /// <summary>
         /// Android only. Reported through <c>FlowViewDidReceiveError</c> when an asset in the flow

@@ -40,6 +40,7 @@ MAPPING = {
     "AdaptyProfile.AccessLevel": "AdaptyProfile+AccessLevel",
     "AdaptyProfile.NonSubscription": "AdaptyProfile+NonSubscription",
     "AdaptyProfile.Subscription": "AdaptyProfile+Subscription",
+    "AdaptyProfile.SubscriptionCommitmentInfo": "AdaptyProfile+SubscriptionCommitmentInfo",
     "AdaptyFlowPaywall.ProductReference": "AdaptyFlowPaywall+ProductReference",
     # $assets variants: one contract object, several C# types. Their members are unioned.
     "Color": "AdaptyCustomAssetColor",
@@ -71,6 +72,8 @@ ENUM_MAPPING = {
     "AdaptySubscriptionOffer.Identifier.Type": "AdaptySubscriptionOfferType",
     "AdaptyWebPresentation": "AdaptyWebPresentation",
     "AdaptyUI.DialogActionType": "AdaptyUIDialogActionType",
+    # The contract's "default" is a synonym for "auto" in iOS and has no member on purpose.
+    "StoreMessagesHandling": "AdaptyStoreMessagesHandling",
 }
 
 

@@ -1,0 +1,10 @@
+{
+  "access_level_id": "premium",
+  "adapty_product_id": "adapty-product-3",
+  "paywall_ab_test_name": "winter_test",
+  "paywall_name": "Winter Paywall",
+  "paywall_product_index": 2,
+  "paywall_variation_id": "variation-0001",
+  "product_type": "subscription",
+  "vendor_product_id": "com.adapty.sample.yearly.monthly"
+}

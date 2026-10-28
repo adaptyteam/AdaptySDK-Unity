@@ -1,0 +1,7 @@
+{
+  "load_timeout": 2.5,
+  "method": "preload_flows",
+  "placement_ids": [
+    "onboarding"
+  ]
+}

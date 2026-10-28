@@ -16,6 +16,7 @@ namespace AdaptySDK.TestSupport
                 .SetObserverMode(true)
                 .SetIPAddressCollectionDisabled(true)
                 .SetServerCluster(AdaptyServerCluster.EU)
+                .SetStoreMessagesHandling(AdaptyStoreMessagesHandling.Manual)
                 .SetBackendProxy("proxy.example.com", 8080)
                 .SetAdaptyUIMediaCache(100, 200, 300)
                 .Build();

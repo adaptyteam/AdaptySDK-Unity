@@ -44,6 +44,13 @@ namespace AdaptySDK
         public readonly string VariationId;
 
         /// <summary>
+        /// The variation name configured in the Adapty Dashboard. Null when the native side does
+        /// not report one.
+        /// </summary>
+        [DataMember(Name = "variation_name")]
+        public readonly string VariationName;
+
+        /// <summary>
         /// Array of custom JSON formatted data configured in the Adapty Dashboard, one entry per locale.
         /// </summary>
         [DataMember(Name = "remote_configs")]
@@ -176,6 +183,7 @@ namespace AdaptySDK
             + $"{nameof(InstanceIdentity)}: {InstanceIdentity}, "
             + $"{nameof(Name)}: {Name}, "
             + $"{nameof(VariationId)}: {VariationId}, "
+            + $"{nameof(VariationName)}: {VariationName}, "
             + $"{nameof(_FlowVersionId)}: {_FlowVersionId}, "
             + $"{nameof(RemoteConfigs)}: [{string.Join(", ", RemoteConfigs)}], "
             + $"{nameof(Paywalls)}: {(Paywalls is null ? "null" : "[" + string.Join(", ", Paywalls) + "]")}, "

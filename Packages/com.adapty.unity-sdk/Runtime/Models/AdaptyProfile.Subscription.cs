@@ -171,6 +171,28 @@ namespace AdaptySDK
             [DataMember(Name = "cancellation_reason")]
             public readonly string CancellationReason;
 
+            [DataMember(Name = "billing_plan_id")]
+            private readonly string _BillingPlan;
+
+            /// <summary>
+            /// The billing plan the subscription was bought on. Always set —
+            /// <see cref="AdaptySubscriptionBillingPlan.UpFront"/> when the store reports none,
+            /// including for a subscription bought elsewhere.
+            /// </summary>
+            public AdaptySubscriptionBillingPlan BillingPlan =>
+                _BillingPlan is null ? null : new AdaptySubscriptionBillingPlan(_BillingPlan);
+
+            /// <summary>
+            /// Where the subscription stands within its commitment. Null unless it was bought on a
+            /// commitment plan such as <see cref="AdaptySubscriptionBillingPlan.Monthly"/>.
+            /// </summary>
+            /// <remarks>
+            /// <see cref="ExpiresAt"/> is the end of the period paid for; the end of the
+            /// commitment is <see cref="SubscriptionCommitmentInfo.ExpiresAt"/>.
+            /// </remarks>
+            [DataMember(Name = "commitment")]
+            public readonly SubscriptionCommitmentInfo CommitmentInfo;
+
             /// <summary>
             /// A description for logs and the debugger. The format is not part of the contract —
             /// read the members rather than parsing it.
@@ -186,6 +208,7 @@ namespace AdaptySDK
                        $"{nameof(ActiveIntroductoryOfferType)}: {ActiveIntroductoryOfferType}, " +
                        $"{nameof(ActivePromotionalOfferType)}: {ActivePromotionalOfferType}, " +
                        $"{nameof(ActivePromotionalOfferId)}: {ActivePromotionalOfferId}, " +
+                       $"{nameof(OfferId)}: {OfferId}, " +
                        $"{nameof(WillRenew)}: {WillRenew}, " +
                        $"{nameof(IsInGracePeriod)}: {IsInGracePeriod}, " +
                        $"{nameof(UnsubscribedAt)}: {UnsubscribedAt}, " +
@@ -194,6 +217,8 @@ namespace AdaptySDK
                        $"{nameof(VendorTransactionId)}: {VendorTransactionId}, " +
                        $"{nameof(VendorOriginalTransactionId)}: {VendorOriginalTransactionId}, " +
                        $"{nameof(CancellationReason)}: {CancellationReason}, " +
+                       $"{nameof(BillingPlan)}: {BillingPlan}, " +
+                       $"{nameof(CommitmentInfo)}: {CommitmentInfo}, " +
                        $"{nameof(IsRefund)}: {IsRefund}";
         }
     }

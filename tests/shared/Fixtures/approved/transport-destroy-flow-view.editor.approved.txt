@@ -1,0 +1,4 @@
+{
+  "id": "view-1",
+  "method": "adapty_ui_destroy_flow_view"
+}

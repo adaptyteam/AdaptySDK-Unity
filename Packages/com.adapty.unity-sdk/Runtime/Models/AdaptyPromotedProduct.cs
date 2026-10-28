@@ -71,6 +71,13 @@ namespace AdaptySDK
 
         internal string PayloadData => _PayloadData;
 
+        // The contract requires it on iOS; read leniently, since an event that fails to decode is
+        // dropped, while a purchase without it gets a native error the caller can see.
+        [DataMember(Name = "purchase_intent_id")]
+        private readonly string _PurchaseIntentId;
+
+        internal string PurchaseIntentId => _PurchaseIntentId;
+
         /// <summary>
         /// A description for logs and the debugger. The format is not part of the contract —
         /// read the members rather than parsing it.
@@ -83,6 +90,7 @@ namespace AdaptySDK
             + $"{nameof(RegionCode)}: {RegionCode}, "
             + $"{nameof(Price)}: {Price}, "
             + $"{nameof(Subscription)}: {Subscription}, "
-            + $"{nameof(_PayloadData)}: {_PayloadData}";
+            + $"{nameof(_PayloadData)}: {_PayloadData}, "
+            + $"{nameof(_PurchaseIntentId)}: {_PurchaseIntentId}";
     }
 }

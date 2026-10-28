@@ -8,7 +8,17 @@
       "ActivePromotionalOfferId": "promo-winter",
       "ActivePromotionalOfferType": "promotional",
       "BillingIssueDetectedAt": { "utc": "2026-07-19T10:00:00.0000000Z", "kind": "Local" },
+      "BillingPlan (property)": {
+        "$type": "AdaptySubscriptionBillingPlan",
+        "RawValue": "monthly"
+      },
       "CancellationReason": "voluntarily_cancelled",
+      "CommitmentInfo": {
+        "$type": "SubscriptionCommitmentInfo",
+        "BillingPeriodNumber": 7,
+        "ExpiresAt": { "utc": "2027-01-15T09:30:00.0000000Z", "kind": "Local" },
+        "TotalBillingPeriods": 12
+      },
       "ExpiresAt": { "utc": "2026-08-15T09:30:00.0000000Z", "kind": "Local" },
       "Id": "premium",
       "IsActive": true,
@@ -21,7 +31,8 @@
       "Store": "app_store",
       "UnsubscribedAt": { "utc": "2026-07-20T10:00:00.0000000Z", "kind": "Local" },
       "VendorProductId": "com.adapty.sample.monthly",
-      "WillRenew": true
+      "WillRenew": true,
+      "_BillingPlan": "monthly"
     }
   },
   "AppliedExternalAttributionProviders (property)": [
@@ -65,7 +76,17 @@
       "ActivePromotionalOfferId": "promo-winter",
       "ActivePromotionalOfferType": "promotional",
       "BillingIssueDetectedAt": { "utc": "2026-07-19T10:00:00.0000000Z", "kind": "Local" },
+      "BillingPlan (property)": {
+        "$type": "AdaptySubscriptionBillingPlan",
+        "RawValue": "monthly"
+      },
       "CancellationReason": "voluntarily_cancelled",
+      "CommitmentInfo": {
+        "$type": "SubscriptionCommitmentInfo",
+        "BillingPeriodNumber": 7,
+        "ExpiresAt": { "utc": "2027-01-15T09:30:00.1234568Z", "kind": "Local" },
+        "TotalBillingPeriods": 12
+      },
       "ExpiresAt": { "utc": "2026-08-15T09:30:00.0000000Z", "kind": "Local" },
       "IsActive": true,
       "IsInGracePeriod": false,
@@ -80,7 +101,35 @@
       "VendorOriginalTransactionId": "2000000000000001",
       "VendorProductId": "com.adapty.sample.monthly",
       "VendorTransactionId": "2000000123456789",
-      "WillRenew": true
+      "WillRenew": true,
+      "_BillingPlan": "monthly"
+    },
+    "com.adapty.sample.yearly:base-plan-yearly": {
+      "$type": "Subscription",
+      "ActivatedAt": { "utc": "2025-03-01T08:00:00.0000000Z", "kind": "Local" },
+      "ActiveIntroductoryOfferType": null,
+      "ActivePromotionalOfferId": null,
+      "ActivePromotionalOfferType": null,
+      "BillingIssueDetectedAt": null,
+      "BillingPlan (property)": null,
+      "CancellationReason": null,
+      "CommitmentInfo": null,
+      "ExpiresAt": { "utc": "2026-03-01T08:00:00.0000000Z", "kind": "Local" },
+      "IsActive": false,
+      "IsInGracePeriod": false,
+      "IsLifetime": false,
+      "IsRefund": false,
+      "IsSandbox": false,
+      "OfferId": "offer-yearly-intro",
+      "RenewedAt": null,
+      "StartsAt": null,
+      "Store": "play_store",
+      "UnsubscribedAt": null,
+      "VendorOriginalTransactionId": "GPA.3300-0000-0000-00001",
+      "VendorProductId": "com.adapty.sample.yearly:base-plan-yearly",
+      "VendorTransactionId": "GPA.3300-0000-0000-00001",
+      "WillRenew": false,
+      "_BillingPlan": null
     }
   },
   "Version": 1753876800000,
@@ -92,7 +141,17 @@
       "ActivePromotionalOfferId": "promo-winter",
       "ActivePromotionalOfferType": "promotional",
       "BillingIssueDetectedAt": { "utc": "2026-07-19T10:00:00.0000000Z", "kind": "Local" },
+      "BillingPlan (property)": {
+        "$type": "AdaptySubscriptionBillingPlan",
+        "RawValue": "monthly"
+      },
       "CancellationReason": "voluntarily_cancelled",
+      "CommitmentInfo": {
+        "$type": "SubscriptionCommitmentInfo",
+        "BillingPeriodNumber": 7,
+        "ExpiresAt": { "utc": "2027-01-15T09:30:00.0000000Z", "kind": "Local" },
+        "TotalBillingPeriods": 12
+      },
       "ExpiresAt": { "utc": "2026-08-15T09:30:00.0000000Z", "kind": "Local" },
       "Id": "premium",
       "IsActive": true,
@@ -105,7 +164,8 @@
       "Store": "app_store",
       "UnsubscribedAt": { "utc": "2026-07-20T10:00:00.0000000Z", "kind": "Local" },
       "VendorProductId": "com.adapty.sample.monthly",
-      "WillRenew": true
+      "WillRenew": true,
+      "_BillingPlan": "monthly"
     }
   },
   "_AppliedExternalAttributionProviders": [
@@ -139,7 +199,17 @@
       "ActivePromotionalOfferId": "promo-winter",
       "ActivePromotionalOfferType": "promotional",
       "BillingIssueDetectedAt": { "utc": "2026-07-19T10:00:00.0000000Z", "kind": "Local" },
+      "BillingPlan (property)": {
+        "$type": "AdaptySubscriptionBillingPlan",
+        "RawValue": "monthly"
+      },
       "CancellationReason": "voluntarily_cancelled",
+      "CommitmentInfo": {
+        "$type": "SubscriptionCommitmentInfo",
+        "BillingPeriodNumber": 7,
+        "ExpiresAt": { "utc": "2027-01-15T09:30:00.1234568Z", "kind": "Local" },
+        "TotalBillingPeriods": 12
+      },
       "ExpiresAt": { "utc": "2026-08-15T09:30:00.0000000Z", "kind": "Local" },
       "IsActive": true,
       "IsInGracePeriod": false,
@@ -154,7 +224,35 @@
       "VendorOriginalTransactionId": "2000000000000001",
       "VendorProductId": "com.adapty.sample.monthly",
       "VendorTransactionId": "2000000123456789",
-      "WillRenew": true
+      "WillRenew": true,
+      "_BillingPlan": "monthly"
+    },
+    "com.adapty.sample.yearly:base-plan-yearly": {
+      "$type": "Subscription",
+      "ActivatedAt": { "utc": "2025-03-01T08:00:00.0000000Z", "kind": "Local" },
+      "ActiveIntroductoryOfferType": null,
+      "ActivePromotionalOfferId": null,
+      "ActivePromotionalOfferType": null,
+      "BillingIssueDetectedAt": null,
+      "BillingPlan (property)": null,
+      "CancellationReason": null,
+      "CommitmentInfo": null,
+      "ExpiresAt": { "utc": "2026-03-01T08:00:00.0000000Z", "kind": "Local" },
+      "IsActive": false,
+      "IsInGracePeriod": false,
+      "IsLifetime": false,
+      "IsRefund": false,
+      "IsSandbox": false,
+      "OfferId": "offer-yearly-intro",
+      "RenewedAt": null,
+      "StartsAt": null,
+      "Store": "play_store",
+      "UnsubscribedAt": null,
+      "VendorOriginalTransactionId": "GPA.3300-0000-0000-00001",
+      "VendorProductId": "com.adapty.sample.yearly:base-plan-yearly",
+      "VendorTransactionId": "GPA.3300-0000-0000-00001",
+      "WillRenew": false,
+      "_BillingPlan": null
     }
   }
 }

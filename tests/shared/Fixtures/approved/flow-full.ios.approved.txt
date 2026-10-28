@@ -44,10 +44,9 @@
           "AndroidBasePlanId": null,
           "AndroidOfferId": null,
           "FlowProductId": "flow-product-1",
+          "PricingTerms": "[{\"billing_plan_id\":\"monthly\",\"promotional_offer_id\":\"promo-1\"},{\"billing_plan_id\":\"up_front\",\"promotional_offer_id\":\"promo-1\",\"win_back_offer_id\":\"winback-1\",\"future_key\":\"kept as received\"}]",
           "ProductType": "subscription",
-          "PromotionalOfferId": "promo-1",
-          "VendorProductId": "com.adapty.sample.monthly",
-          "WinBackOfferId": "winback-1"
+          "VendorProductId": "com.adapty.sample.monthly"
         },
         {
           "$type": "ProductReference",
@@ -56,10 +55,9 @@
           "AndroidBasePlanId": null,
           "AndroidOfferId": null,
           "FlowProductId": null,
+          "PricingTerms": null,
           "ProductType": "subscription",
-          "PromotionalOfferId": null,
-          "VendorProductId": "com.adapty.sample.yearly",
-          "WinBackOfferId": null
+          "VendorProductId": "com.adapty.sample.yearly"
         }
       ],
       "_WebPurchaseUrl": "https://pay.adapty.io/checkout/abc"
@@ -153,6 +151,7 @@
     }
   ],
   "VariationId": "variation-0001",
+  "VariationName": "Variation A",
   "VendorProductIds (property)": [
     "com.adapty.sample.monthly",
     "com.adapty.sample.yearly"
@@ -200,10 +199,9 @@
           "AndroidBasePlanId": null,
           "AndroidOfferId": null,
           "FlowProductId": "flow-product-1",
+          "PricingTerms": "[{\"billing_plan_id\":\"monthly\",\"promotional_offer_id\":\"promo-1\"},{\"billing_plan_id\":\"up_front\",\"promotional_offer_id\":\"promo-1\",\"win_back_offer_id\":\"winback-1\",\"future_key\":\"kept as received\"}]",
           "ProductType": "subscription",
-          "PromotionalOfferId": "promo-1",
-          "VendorProductId": "com.adapty.sample.monthly",
-          "WinBackOfferId": "winback-1"
+          "VendorProductId": "com.adapty.sample.monthly"
         },
         {
           "$type": "ProductReference",
@@ -212,10 +210,9 @@
           "AndroidBasePlanId": null,
           "AndroidOfferId": null,
           "FlowProductId": null,
+          "PricingTerms": null,
           "ProductType": "subscription",
-          "PromotionalOfferId": null,
-          "VendorProductId": "com.adapty.sample.yearly",
-          "WinBackOfferId": null
+          "VendorProductId": "com.adapty.sample.yearly"
         }
       ],
       "_WebPurchaseUrl": "https://pay.adapty.io/checkout/abc"
