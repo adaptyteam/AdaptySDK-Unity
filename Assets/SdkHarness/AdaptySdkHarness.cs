@@ -590,19 +590,27 @@ namespace AdaptyExample.SdkHarness
             private Exception m_Thrown;
             private string m_Method;
             private DateTime m_Started;
-            private volatile bool m_TimedOut;
+            private bool m_TimedOut;
 
             public void OnVoid(AdaptyError error) => Complete(null, error);
 
             public void Complete(object value, AdaptyError error)
             {
-                m_Value = value;
-                m_Error = error;
-                m_Done.Set();
+                bool late;
+
+                // Under the lock with Run's verdict, so a reply that lands as the wait times out is
+                // reported by exactly one side.
+                lock (m_Done)
+                {
+                    m_Value = value;
+                    m_Error = error;
+                    m_Done.Set();
+                    late = m_TimedOut;
+                }
 
                 // A reply after the budget is still a reply: it goes on the ledger and, if it carried
                 // an object, becomes the handle — the command that waited for it has already returned.
-                if (m_TimedOut)
+                if (late)
                 {
                     Ledger(error == null ? "←" : "×", $"{m_Method}  late {(DateTime.UtcNow - m_Started).TotalSeconds:F2}s  " + (error?.ToString() ?? "ok"));
 
@@ -655,9 +663,15 @@ namespace AdaptyExample.SdkHarness
                 );
 
                 var started = DateTime.UtcNow;
-                var finished = m_Done.Wait(Math.Max(1000, timeoutMs));
+                m_Done.Wait(Math.Max(1000, timeoutMs));
                 var elapsed = (DateTime.UtcNow - started).TotalSeconds;
-                m_TimedOut = !finished;
+                bool finished;
+
+                lock (m_Done)
+                {
+                    finished = m_Done.IsSet;
+                    m_TimedOut = !finished;
+                }
 
                 var outcome = new CallResult
                 {
