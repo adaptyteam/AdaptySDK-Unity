@@ -23,7 +23,7 @@
 
 Adapty Unity SDK is a native wrapper around [Adapty iOS SDK](https://github.com/adaptyteam/AdaptySDK-iOS) and [Adapty Android SDK](https://github.com/adaptyteam/AdaptySDK-Android). Both SDKs are written in pure Swift/Kotlin, all wrapped into a C# lib.
 
-Requires Unity 2022.3 or newer and Android API 21 or newer. iOS builds require **Xcode 26 or newer**
+Requires Unity 6.0 (6000.0) or newer and Android API 21 or newer. iOS builds require **Xcode 26 or newer**
 and a deployment target of 15.0 or newer: AdaptySDK-iOS 4.x is a `swift-tools-version: 6.2` package,
 and an older toolchain refuses to resolve it. Open the exported project as
 **`Unity-iPhone.xcworkspace`** — building `Unity-iPhone.xcodeproj` directly fails at link time with
