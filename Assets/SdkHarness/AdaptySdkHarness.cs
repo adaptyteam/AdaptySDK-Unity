@@ -565,17 +565,6 @@ namespace AdaptyExample.SdkHarness
             return new CallResult { method = method, ok = false, error = error };
         }
 
-        /// <summary>
-        /// The two callback shapes with a value-type payload, instantiated so IL2CPP compiles them.
-        /// Reference-type payloads share one instantiation and need nothing. Never called.
-        /// </summary>
-        [Preserve]
-        private static void AotHints()
-        {
-            new Capture<bool>(null).On(false, null);
-            new Capture<AdaptyLogLevel>(null).On(default, null);
-        }
-
         [Preserve]
         public sealed class CallResult
         {
