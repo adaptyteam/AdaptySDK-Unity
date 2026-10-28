@@ -594,7 +594,7 @@ namespace AdaptyExample.SdkHarness
 
             public void OnVoid(AdaptyError error) => Complete(null, error);
 
-            public void Complete(object value, AdaptyError error)
+            public void Complete(object value, AdaptyError error, Exception thrown = null)
             {
                 bool late;
 
@@ -604,6 +604,7 @@ namespace AdaptyExample.SdkHarness
                 {
                     m_Value = value;
                     m_Error = error;
+                    m_Thrown = thrown;
                     m_Done.Set();
                     late = m_TimedOut;
                 }
@@ -612,9 +613,10 @@ namespace AdaptyExample.SdkHarness
                 // an object, becomes the handle — the command that waited for it has already returned.
                 if (late)
                 {
-                    Ledger(error == null ? "←" : "×", $"{m_Method}  late {(DateTime.UtcNow - m_Started).TotalSeconds:F2}s  " + (error?.ToString() ?? "ok"));
+                    var failed = error != null || thrown != null;
+                    Ledger(failed ? "×" : "←", $"{m_Method}  late {(DateTime.UtcNow - m_Started).TotalSeconds:F2}s  " + (error?.ToString() ?? thrown?.ToString().Split('\n')[0] ?? "ok"));
 
-                    if (error == null && value != null)
+                    if (!failed && value != null)
                     {
                         lock (s_Gate)
                         {
@@ -655,8 +657,7 @@ namespace AdaptyExample.SdkHarness
                         }
                         catch (Exception e)
                         {
-                            m_Thrown = e is TargetInvocationException t && t.InnerException != null ? t.InnerException : e;
-                            m_Done.Set();
+                            Complete(null, null, e is TargetInvocationException t && t.InnerException != null ? t.InnerException : e);
                         }
                     },
                     null
@@ -666,28 +667,35 @@ namespace AdaptyExample.SdkHarness
                 m_Done.Wait(Math.Max(1000, timeoutMs));
                 var elapsed = (DateTime.UtcNow - started).TotalSeconds;
                 bool finished;
+                object value;
+                AdaptyError error;
+                Exception thrown;
 
+                // Read with the verdict: a late reply landing right after it belongs to Complete.
                 lock (m_Done)
                 {
                     finished = m_Done.IsSet;
                     m_TimedOut = !finished;
+                    value = m_Value;
+                    error = m_Error;
+                    thrown = m_Thrown;
                 }
 
                 var outcome = new CallResult
                 {
                     method = method,
-                    ok = finished && m_Thrown == null && m_Error == null,
+                    ok = finished && thrown == null && error == null,
                     timedOut = !finished,
-                    error = m_Error?.ToString(),
-                    exception = m_Thrown?.ToString(),
-                    result = ToJson(m_Value),
+                    error = error?.ToString(),
+                    exception = thrown?.ToString(),
+                    result = ToJson(value),
                 };
 
-                if (outcome.ok && m_Value != null)
+                if (outcome.ok && value != null)
                 {
                     lock (s_Gate)
                     {
-                        s_Results[method] = m_Value;
+                        s_Results[method] = value;
                     }
                 }
 
