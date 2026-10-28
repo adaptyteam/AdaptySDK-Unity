@@ -26,9 +26,10 @@ namespace AdaptyExample.SdkHarness
     /// and the main loop has to stay free to run it — waiting on the main thread would deadlock every
     /// call. The wait budget stays below the scene's 120 s request timeout.
     ///
-    /// A player discovers commands by reflection and reaches the harness from nothing else, so
-    /// <c>link.xml</c> beside this file keeps the namespace and the whole SDK assembly, and each
-    /// handler carries <see cref="PreserveAttribute"/> as well.
+    /// A player discovers commands by reflection and reaches the harness from nothing else, so the
+    /// harness build's own link.xml (<c>SdkHarnessBuild</c>) keeps the namespace and what the
+    /// harness reaches in the SDK by reflection, and each handler carries
+    /// <see cref="PreserveAttribute"/> as well.
     /// </remarks>
     public sealed class AdaptySdkHarness
         : MonoBehaviour,

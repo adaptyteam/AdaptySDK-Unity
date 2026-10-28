@@ -1,7 +1,10 @@
 using System.IO;
 using Unity.Pipeline.Commands;
 using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 using UnityEditor.Callbacks;
+using UnityEditor.UnityLinker;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
 #endif
@@ -26,9 +29,30 @@ namespace AdaptyExample.SdkHarness.Editor
         public const string Output = "ios-harness-build";
         public const string StoreKitConfiguration = "Assets/SdkHarness/AdaptyDemo.storekit";
 
-        // Set for the duration of a harness build, so the post-processor below can tell a harness build
+        // Set for the duration of a harness build, so the post-processors below can tell a harness build
         // from the demo's and leave the demo's bundle alone.
         private static bool s_RigBuild;
+
+        // What the harness reaches only by reflection. Response models and converters are left to the
+        // linker: their decoding after stripping is what the harness checks. A link.xml under Assets/
+        // would go into every build and keep the demo and StrippingBuild from being stripped too.
+        private const string LinkXml = @"<linker>
+  <assembly fullname=""com.adapty.unity-sdk"">
+    <type fullname=""AdaptySDK.Adapty"" preserve=""methods"" />
+    <type fullname=""AdaptySDK.AdaptyUI"" preserve=""methods"" />
+    <type fullname=""AdaptySDK.Serialization.AdaptyJson"" preserve=""methods"" />
+    <type fullname=""AdaptySDK.AdaptyConfiguration/Builder"" preserve=""all"" />
+    <type fullname=""AdaptySDK.AdaptyProfileParameters/Builder"" preserve=""all"" />
+    <type fullname=""AdaptySDK.AdaptyPlacementFetchPolicy"" preserve=""all"" />
+    <type fullname=""AdaptySDK.AdaptyExternalAttributionProvider"" preserve=""all"" />
+    <type fullname=""AdaptySDK.AdaptyUICreateFlowViewParameters"" preserve=""all"" />
+    <type fullname=""AdaptySDK.AdaptyUIDialogConfiguration"" preserve=""all"" />
+    <type fullname=""AdaptySDK.AdaptyPurchaseParameters"" preserve=""all"" />
+  </assembly>
+  <assembly fullname=""Assembly-CSharp"">
+    <namespace fullname=""AdaptyExample.SdkHarness"" preserve=""all"" />
+  </assembly>
+</linker>";
 
         [CliCommand("harness_build", "Build the SDK harness scene for the iOS simulator into ios-harness-build (Development). Submit with --detach, then unity job wait.",
             MainThreadRequired = true, Tags = new[] { "adapty" })]
@@ -63,6 +87,18 @@ namespace AdaptyExample.SdkHarness.Editor
                 output = report.summary.outputPath,
                 seconds = (int)report.summary.totalTime.TotalSeconds,
             };
+        }
+
+        private sealed class HarnessLinkXml : IUnityLinkerProcessor
+        {
+            public int callbackOrder => 0;
+
+            public string GenerateAdditionalLinkXmlFile(BuildReport report, UnityLinkerBuildPipelineData data)
+            {
+                var path = Path.GetFullPath("Temp/SdkHarness.link.xml");
+                File.WriteAllText(path, s_RigBuild ? LinkXml : "<linker />");
+                return path;
+            }
         }
 
         /// <summary>
