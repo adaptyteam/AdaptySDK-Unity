@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using AdaptySDK.Serialization;
 using Newtonsoft.Json.Linq;
 
@@ -130,6 +131,81 @@ namespace AdaptySDK
             }
 
             AdaptyRequest.Send("get_flow_for_default_audience", parameters, completionHandler);
+        }
+
+        /// <summary>
+        /// Loads the flows of the given placements into the cache ahead of time, so a later
+        /// <see cref="GetFlow(string, AdaptyPlacementFetchPolicy, TimeSpan?, Action{AdaptyFlow, AdaptyError})"/>
+        /// returns without waiting for the network.
+        /// </summary>
+        /// <remarks>
+        /// Only the placement data is loaded — not the view configuration or its media. A preloaded
+        /// flow is read first only by a fetch with <see cref="AdaptyPlacementFetchPolicy.ReturnCacheDataElseLoad"/>
+        /// or <see cref="AdaptyPlacementFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(TimeSpan)"/>,
+        /// and not at all for test users; any fetch falls back to it when the network fails.
+        /// The cache belongs to the current profile, so flows preloaded before <c>Identify</c> or
+        /// <c>Logout</c> are not found after it. If some placements
+        /// fail, the call reports <see cref="AdaptyErrorCode.NetworkFailed"/> naming them, and the
+        /// ones that loaded stay cached.
+        /// </remarks>
+        /// <param name="placementIds">The identifiers of the placements to preload.</param>
+        /// <param name="loadTimeout">How long to wait for the placements. The native default, 5 seconds, applies when null.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void PreloadFlows(
+            IReadOnlyList<string> placementIds,
+            TimeSpan? loadTimeout,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            if (placementIds is null || placementIds.Contains(null))
+            {
+                AdaptyRequest.FailWrongParam(
+                    "preload_flows",
+                    "placementIds is null or contains null",
+                    completionHandler
+                );
+                return;
+            }
+
+            var parameters = new JObject();
+            parameters["placement_ids"] = new JArray(placementIds);
+
+            if (loadTimeout.HasValue)
+            {
+                parameters["load_timeout"] = loadTimeout.Value.TotalSeconds;
+            }
+
+            AdaptyRequest.SendVoid("preload_flows", parameters, completionHandler);
+        }
+
+        /// <summary>
+        /// Loads the Default Audience flows of the given placements into the cache ahead of time,
+        /// for a later <see cref="GetFlowForDefaultAudience(string, AdaptyPlacementFetchPolicy, Action{AdaptyFlow, AdaptyError})"/>.
+        /// </summary>
+        /// <remarks>
+        /// The same cache rules as <see cref="PreloadFlows(IReadOnlyList{string}, TimeSpan?, Action{AdaptyError})"/>.
+        /// </remarks>
+        /// <param name="placementIds">The identifiers of the placements to preload.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void PreloadFlowsForDefaultAudience(
+            IReadOnlyList<string> placementIds,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            if (placementIds is null || placementIds.Contains(null))
+            {
+                AdaptyRequest.FailWrongParam(
+                    "preload_flows_for_default_audience",
+                    "placementIds is null or contains null",
+                    completionHandler
+                );
+                return;
+            }
+
+            var parameters = new JObject();
+            parameters["placement_ids"] = new JArray(placementIds);
+
+            AdaptyRequest.SendVoid("preload_flows_for_default_audience", parameters, completionHandler);
         }
 
         /// <summary>
@@ -455,6 +531,9 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// This method initiates the purchase flow for a product. The result contains information about the purchase status.
+        /// The product is bought on its own billing plan, <see cref="AdaptySubscription.PricingTerms"/> — there is
+        /// nothing to choose here. A plan other than up front needs iOS 26.4+ and an app built with Xcode 26.5+;
+        /// on Android and below iOS 26.4 subscriptions are bought up front.
         /// Read more on the <see href="https://adapty.io/docs/unity-making-purchases">Adapty Documentation</see>
         /// </remarks>
         /// <param name="product">An <see cref="AdaptyPaywallProduct"/> object retrieved from the paywall.</param>
@@ -482,6 +561,9 @@ namespace AdaptySDK
         /// <remarks>
         /// Promoted in-app purchases are an App Store feature; on other platforms the completion
         /// handler reports an error.
+        /// Pass the product the listener received as it is: on iOS its product, billing plan and
+        /// offer are looked up in the store again and bought. A win-back offer the store does not list
+        /// among the product's offers fails the call before the purchase starts.
         /// Read more on the <see href="https://adapty.io/docs/promoted-purchases">Adapty Documentation</see>
         /// </remarks>
         /// <param name="product">An <see cref="AdaptyPromotedProduct"/> object received through <see cref="IAdaptyEventListener.OnReceivePromotedPurchase(AdaptyPromotedProduct)"/>.</param>
@@ -516,6 +598,83 @@ namespace AdaptySDK
                 $"Failed to invoke completionHandler in {nameof(PresentCodeRedemptionSheet)}(..)"
             );
 #endif
+        }
+
+        /// <summary>
+        /// The kinds of App Store messages held for <see cref="ShowStoreMessages(IReadOnlyList{AdaptyStoreMessageType}, Action{AdaptyError})"/>.
+        /// </summary>
+        /// <remarks>
+        /// iOS 16+ only, and only with <see cref="AdaptyStoreMessagesHandling.Manual"/> in the
+        /// configuration — otherwise, and until activation has finished, the list is empty. On
+        /// iOS 15 the call fails. On other platforms it completes with a null list and no error:
+        /// Google Play does not tell what it holds.
+        /// </remarks>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void GetPendingStoreMessageTypes(
+            Action<IReadOnlyList<AdaptyStoreMessageType>, AdaptyError> completionHandler
+        )
+        {
+#if UNITY_IOS || UNITY_EDITOR
+            AdaptyRequest.Send<List<string>>(
+                "get_pending_store_message_types",
+                null,
+                (value, error) =>
+                    completionHandler?.Invoke(
+                        value?.ConvertAll(type => new AdaptyStoreMessageType(type)).AsReadOnly(),
+                        error
+                    )
+            );
+#else
+            AdaptyCallbacks.InvokeSafe(
+                () => completionHandler?.Invoke(null, null),
+                $"Failed to invoke completionHandler in {nameof(GetPendingStoreMessageTypes)}(..)"
+            );
+#endif
+        }
+
+        /// <summary>
+        /// Shows the store messages held back by <see cref="AdaptyStoreMessagesHandling.Manual"/>.
+        /// </summary>
+        /// <remarks>
+        /// On iOS 16+ the App Store messages of the given kinds are shown one after another; one
+        /// that fails to show stays pending for the next call. On iOS 15 the call fails, and until
+        /// activation has finished there is nothing to show. It fails with
+        /// <see cref="AdaptyErrorCode.OperationInProgress"/> while an earlier call is still
+        /// showing messages, and with <see cref="AdaptyErrorCode.ResolverFailure"/> when there is
+        /// no active window scene to show them in. On Android the Google Play in-app messages are
+        /// shown and the filter is not sent.
+        /// </remarks>
+        /// <param name="iosFilter">The kinds to show on iOS. Null shows every kind, including ones this SDK does not name; an empty list shows none.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void ShowStoreMessages(
+            IReadOnlyList<AdaptyStoreMessageType> iosFilter,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            if (iosFilter != null && iosFilter.Contains(null))
+            {
+                AdaptyRequest.FailWrongParam(
+                    "show_store_messages",
+                    "iosFilter contains null",
+                    completionHandler
+                );
+                return;
+            }
+
+            var parameters = new JObject();
+#if UNITY_IOS || UNITY_EDITOR
+            if (iosFilter != null)
+            {
+                var filter = new JArray();
+                foreach (var type in iosFilter)
+                {
+                    filter.Add(type.RawValue);
+                }
+                parameters["filter"] = filter;
+            }
+#endif
+
+            AdaptyRequest.SendVoid("show_store_messages", parameters, completionHandler);
         }
 
         /// <summary>
@@ -721,24 +880,51 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Dismisses the flow view.
+        /// Dismisses the flow view, and releases it unless asked to keep it.
         /// </summary>
         /// <remarks>
-        /// Call this method when you want to dismiss the flow view from the screen.
-        /// A dismissed view is released and cannot be presented again — create a new view via <see cref="CreateFlowView(AdaptyFlow, AdaptyUICreateFlowViewParameters, Action{AdaptyUIFlowView, AdaptyError})"/> if you need to re-present it.
+        /// A released view cannot be presented again — create a new one via <see cref="CreateFlowView(AdaptyFlow, AdaptyUICreateFlowViewParameters, Action{AdaptyUIFlowView, AdaptyError})"/>.
+        /// A kept view (<paramref name="destroy"/> false) can be presented again with
+        /// <see cref="PresentFlowView(AdaptyUIFlowView, Action{AdaptyError})"/> and resumes where
+        /// it was; its events keep arriving with the same <see cref="AdaptyUIFlowView.Id"/>. It
+        /// stays in memory until <see cref="DestroyFlowView(AdaptyUIFlowView, Action{AdaptyError})"/>
+        /// is called, so call it once the view is no longer needed.
         /// </remarks>
         /// <param name="view">An <see cref="AdaptyUIFlowView"/> object representing the view to dismiss.</param>
+        /// <param name="destroy">Whether to release the view once it is dismissed.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void DismissFlowView(
+            AdaptyUIFlowView view,
+            bool destroy,
+            Action<AdaptyError> completionHandler
+        )
+        {
+            var parameters = new JObject();
+            parameters["id"] = view.Id;
+            parameters["destroy"] = destroy;
+
+            AdaptyRequest.SendVoid("adapty_ui_dismiss_flow_view", parameters, completionHandler);
+        }
+
+        /// <summary>
+        /// Releases a flow view kept by <see cref="DismissFlowView(AdaptyUIFlowView, bool, Action{AdaptyError})"/>
+        /// with <c>destroy</c> false.
+        /// </summary>
+        /// <remarks>
+        /// A view still on screen is dismissed first. Any call on a released view fails with
+        /// <see cref="AdaptyErrorCode.WrongParam"/>: the view is not found.
+        /// </remarks>
+        /// <param name="view">An <see cref="AdaptyUIFlowView"/> object representing the view to release.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void DestroyFlowView(
             AdaptyUIFlowView view,
             Action<AdaptyError> completionHandler
         )
         {
             var parameters = new JObject();
             parameters["id"] = view.Id;
-            parameters["destroy"] = true;
 
-            AdaptyRequest.SendVoid("adapty_ui_dismiss_flow_view", parameters, completionHandler);
+            AdaptyRequest.SendVoid("adapty_ui_destroy_flow_view", parameters, completionHandler);
         }
 
         /// <summary>

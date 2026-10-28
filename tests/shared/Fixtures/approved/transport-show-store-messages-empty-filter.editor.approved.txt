@@ -1,0 +1,4 @@
+{
+  "filter": [],
+  "method": "show_store_messages"
+}

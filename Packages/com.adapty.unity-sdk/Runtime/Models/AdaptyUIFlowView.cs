@@ -4,8 +4,9 @@ using UnityEngine.Scripting;
 namespace AdaptySDK
 {
     /// <summary>
-    /// A flow view built by <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/>. Single use: once dismissed it
-    /// is destroyed, and showing the flow again means building another one.
+    /// A flow view built by <see cref="AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow, AdaptySDK.AdaptyUICreateFlowViewParameters, System.Action{AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError})"/>. Dismissing it releases it
+    /// unless it is dismissed with <c>destroy</c> false, which keeps it for another
+    /// <see cref="Present(System.Action{AdaptyError})"/> until <see cref="Destroy"/>.
     /// </summary>
     [DataContract]
     [Preserve]
@@ -72,13 +73,34 @@ namespace AdaptySDK
             );
 
         /// <summary>
-        /// Call this function if you wish to dismiss the view.
+        /// Dismisses the view and releases it.
         /// </summary>
         /// <remarks>
-        /// A dismissed view is released and cannot be presented again. Create a new view via <see cref="AdaptyUI.CreateFlowView(AdaptyFlow, AdaptyUICreateFlowViewParameters, System.Action{AdaptyUIFlowView, AdaptyError})"/> if you need to re-present it.
+        /// A released view cannot be presented again. Create a new view via <see cref="AdaptyUI.CreateFlowView(AdaptyFlow, AdaptyUICreateFlowViewParameters, System.Action{AdaptyUIFlowView, AdaptyError})"/> if you need to re-present it,
+        /// or keep this one with <see cref="Dismiss(bool, System.Action{AdaptyError})"/>.
         /// </remarks>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public void Dismiss(System.Action<AdaptyError> completionHandler) =>
-            AdaptyUI.DismissFlowView(this, completionHandler);
+            AdaptyUI.DismissFlowView(this, true, completionHandler);
+
+        /// <summary>
+        /// Dismisses the view, and releases it unless asked to keep it.
+        /// </summary>
+        /// <remarks>
+        /// A kept view can be presented again and resumes where it was. It stays in memory until
+        /// <see cref="Destroy"/>.
+        /// </remarks>
+        /// <param name="destroy">Whether to release the view once it is dismissed.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public void Dismiss(bool destroy, System.Action<AdaptyError> completionHandler) =>
+            AdaptyUI.DismissFlowView(this, destroy, completionHandler);
+
+        /// <summary>
+        /// Releases a view kept by <see cref="Dismiss(bool, System.Action{AdaptyError})"/>, dismissing
+        /// it first if it is on screen.
+        /// </summary>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public void Destroy(System.Action<AdaptyError> completionHandler) =>
+            AdaptyUI.DestroyFlowView(this, completionHandler);
     }
 }

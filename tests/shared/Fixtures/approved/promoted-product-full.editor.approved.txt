@@ -48,8 +48,10 @@
       "NumberOfUnits": 1,
       "Unit": "Month (2)"
     },
+    "PricingTerms": null,
     "RenewalType": "Autorenewable (1)"
   },
   "VendorProductId": "com.adapty.sample.monthly",
-  "_PayloadData": "{\"custom\":\"promoted payload\"}"
+  "_PayloadData": "{\"custom\":\"promoted payload\"}",
+  "_PurchaseIntentId": "intent-1"
 }

@@ -50,6 +50,7 @@ namespace AdaptyExample.SdkHarness.Editor
     <type fullname=""AdaptySDK.AdaptyUICreateFlowViewParameters"" preserve=""all"" />
     <type fullname=""AdaptySDK.AdaptyUIDialogConfiguration"" preserve=""all"" />
     <type fullname=""AdaptySDK.AdaptyPurchaseParameters"" preserve=""all"" />
+    <type fullname=""AdaptySDK.AdaptyStoreMessageType"" preserve=""all"" />
   </assembly>
   <assembly fullname=""Assembly-CSharp"">
     <namespace fullname=""AdaptyExample.SdkHarness"" preserve=""all"" />

@@ -170,12 +170,17 @@ namespace AdaptySDK.NextTests
 
             Adapty.GetFlow(null, null, null, (_, error) => reported.Add(error));
             Adapty.GetFlowForDefaultAudience(null, null, (_, error) => reported.Add(error));
+            Adapty.PreloadFlows(null, error => reported.Add(error));
+            Adapty.PreloadFlowsForDefaultAudience(null, error => reported.Add(error));
+            Adapty.PreloadFlows(new[] { "onboarding", null }, error => reported.Add(error));
+            Adapty.PreloadFlowsForDefaultAudience(new string[] { null }, error => reported.Add(error));
+            Adapty.ShowStoreMessages(new AdaptyStoreMessageType[] { null }, error => reported.Add(error));
             Adapty.SetIntegrationIdentifier(null, "af-1", error => reported.Add(error));
             Adapty.UpdateExternalAttribution("{}", null, error => reported.Add(error));
 
             Assert.Multiple(() =>
             {
-                Assert.That(reported, Has.Count.EqualTo(4), "a completion handler was never called");
+                Assert.That(reported, Has.Count.EqualTo(9), "a completion handler was never called");
                 Assert.That(
                     reported,
                     Has.All.Matches<AdaptyError>(error => error?.Code == AdaptyErrorCode.WrongParam)
@@ -255,6 +260,44 @@ namespace AdaptySDK.NextTests
                 "create-web-paywall-url-paywall",
                 "create_web_paywall_url",
                 () => Adapty.CreateWebPaywallUrl(paywall, (_, __) => { })
+            );
+            yield return Case(
+                "get-pending-store-message-types",
+                "get_pending_store_message_types",
+                () => Adapty.GetPendingStoreMessageTypes((_, __) => { })
+            );
+            yield return Case(
+                "show-store-messages",
+                "show_store_messages",
+                () => Adapty.ShowStoreMessages(_ => { })
+            );
+            yield return Case(
+                "show-store-messages-filtered",
+                "show_store_messages",
+                () => Adapty.ShowStoreMessages(
+                    new[] { AdaptyStoreMessageType.BillingIssue, new AdaptyStoreMessageType("storekit_-42") },
+                    _ => { }
+                )
+            );
+            yield return Case(
+                "show-store-messages-empty-filter",
+                "show_store_messages",
+                () => Adapty.ShowStoreMessages(new AdaptyStoreMessageType[0], _ => { })
+            );
+            yield return Case(
+                "preload-flows",
+                "preload_flows",
+                () => Adapty.PreloadFlows(new[] { "onboarding", "paywall" }, _ => { })
+            );
+            yield return Case(
+                "preload-flows-with-timeout",
+                "preload_flows",
+                () => Adapty.PreloadFlows(new[] { "onboarding" }, TimeSpan.FromSeconds(2.5), _ => { })
+            );
+            yield return Case(
+                "preload-flows-for-default-audience",
+                "preload_flows_for_default_audience",
+                () => Adapty.PreloadFlowsForDefaultAudience(new[] { "onboarding" }, _ => { })
             );
             yield return Case(
                 "get-paywall-products",
@@ -342,6 +385,21 @@ namespace AdaptySDK.NextTests
                 () => AdaptyUI.DismissFlowView(flowView, _ => { })
             );
             yield return Case(
+                "dismiss-flow-view-from-view",
+                "adapty_ui_dismiss_flow_view",
+                () => flowView.Dismiss(_ => { })
+            );
+            yield return Case(
+                "dismiss-flow-view-keep-alive",
+                "adapty_ui_dismiss_flow_view",
+                () => flowView.Dismiss(false, _ => { })
+            );
+            yield return Case(
+                "destroy-flow-view",
+                "adapty_ui_destroy_flow_view",
+                () => flowView.Destroy(_ => { })
+            );
+            yield return Case(
                 "show-dialog",
                 "adapty_ui_show_dialog",
                 () => AdaptyUI.ShowDialog(flowView, Samples.DialogConfiguration(), (_, __) => { })
@@ -375,6 +433,23 @@ namespace AdaptySDK.NextTests
                 Assert.That(fromReferenceType?.Code, Is.EqualTo(AdaptyErrorCode.DecodingFailed));
                 Assert.That(profile, Is.Null);
             });
+        }
+
+        /// <summary>
+        /// A kind the SDK names comes back equal to its shared instance, and one it does not is
+        /// kept as it arrived rather than dropped.
+        /// </summary>
+        [Test]
+        public void PendingStoreMessageTypesKeepUnknownKinds()
+        {
+            _reply = "{\"success\":[\"billing_issue\",\"storekit_-42\"]}";
+
+            IReadOnlyList<AdaptyStoreMessageType> types = null;
+            Adapty.GetPendingStoreMessageTypes((value, _) => types = value);
+
+            Assert.That(types, Has.Count.EqualTo(2));
+            Assert.That(types[0] == AdaptyStoreMessageType.BillingIssue, Is.True);
+            Assert.That(types[1].RawValue, Is.EqualTo("storekit_-42"));
         }
 
         /// <summary>

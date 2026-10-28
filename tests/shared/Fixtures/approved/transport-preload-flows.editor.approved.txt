@@ -1,0 +1,7 @@
+{
+  "method": "preload_flows",
+  "placement_ids": [
+    "onboarding",
+    "paywall"
+  ]
+}

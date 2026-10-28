@@ -48,8 +48,44 @@
       "NumberOfUnits": 1,
       "Unit": "Month (2)"
     },
+    "PricingTerms": {
+      "$type": "AdaptySubscriptionPricingTerms",
+      "BillingPeriod": {
+        "$type": "AdaptySubscriptionPeriod",
+        "NumberOfUnits": 1,
+        "Unit": "Month (2)"
+      },
+      "BillingPlan (property)": {
+        "$type": "AdaptySubscriptionBillingPlan",
+        "RawValue": "up_front"
+      },
+      "BillingPrice": {
+        "$type": "AdaptyPrice",
+        "Amount": 9.99,
+        "CurrencyCode": "USD",
+        "CurrencySymbol": null,
+        "LocalizedString": "$9.99"
+      },
+      "CommitmentInfo": {
+        "$type": "AdaptySubscriptionCommitmentInfo",
+        "Period": {
+          "$type": "AdaptySubscriptionPeriod",
+          "NumberOfUnits": 1,
+          "Unit": "Month (2)"
+        },
+        "Price": {
+          "$type": "AdaptyPrice",
+          "Amount": 9.99,
+          "CurrencyCode": "USD",
+          "CurrencySymbol": null,
+          "LocalizedString": "$9.99"
+        }
+      },
+      "_BillingPlan": "up_front"
+    },
     "RenewalType": "Autorenewable (1)"
   },
   "VendorProductId": "com.adapty.sample.monthly",
-  "_PayloadData": "{\"custom\":\"promoted payload\"}"
+  "_PayloadData": "{\"custom\":\"promoted payload\"}",
+  "_PurchaseIntentId": "intent-1"
 }

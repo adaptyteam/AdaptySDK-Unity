@@ -1,4 +1,5 @@
 {
+  "purchase_intent_id": "intent-1",
   "vendor_product_id": "com.adapty.sample.monthly",
   "localized_description": "Full access, billed monthly",
   "localized_title": "Monthly",
@@ -17,6 +18,29 @@
       "number_of_units": 1
     },
     "localized_period": "1 month",
+    "pricing_terms": {
+      "billing_plan_id": "up_front",
+      "billing_price": {
+        "amount": 9.99,
+        "currency_code": "USD",
+        "localized_string": "$9.99"
+      },
+      "billing_period": {
+        "unit": "month",
+        "number_of_units": 1
+      },
+      "commitment_info": {
+        "price": {
+          "amount": 9.99,
+          "currency_code": "USD",
+          "localized_string": "$9.99"
+        },
+        "period": {
+          "unit": "month",
+          "number_of_units": 1
+        }
+      }
+    },
     "renewal_type": "autorenewable",
     "base_plan_id": "base-plan-1",
     "offer": {

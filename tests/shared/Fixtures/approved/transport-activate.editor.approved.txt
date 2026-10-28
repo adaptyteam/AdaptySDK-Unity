@@ -21,7 +21,8 @@
       "memory_storage_total_cost_limit": 100
     },
     "observer_mode": true,
-    "server_cluster": "eu"
+    "server_cluster": "eu",
+    "store_messages_handling": "manual"
   },
   "method": "activate"
 }
