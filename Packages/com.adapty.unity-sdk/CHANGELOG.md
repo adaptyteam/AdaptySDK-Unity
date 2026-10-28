@@ -12,6 +12,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `unity` in `package.json`. The package will rely on UI Toolkit runtime bindings (2023.2+) for
   its Editor-side mock UI; projects on 2022.3 stay on 4.1.x.
 
+### Changed
+
+- [Android] The package no longer ships a Java wrapper (`io.adapty.internal:unity-wrapper`): the
+  bridge calls `CrossplatformHelper` from `io.adapty.internal:crossplatform` directly through JNI.
+  Callbacks and events still arrive on the Unity thread while a flow is on screen, so its `close`
+  action reaches the listener in time. Nothing changes for an app on the Activity entry point
+  (GameActivity: see Fixed); a project that reached the wrapper's `com.adapty.unity.*` classes
+  itself will no longer find them.
+
+### Fixed
+
+- [Android] With GameActivity as the application entry point — the default for a new Unity 6
+  project — no completion handler or event reached C# in 4.1.0–4.1.2: the bridge expected a Java
+  Looper on Unity's thread, which GameActivity does not have. Callbacks now go through the
+  thread's native looper, which both entry points poll, so a flow's `close` and Back also reach
+  the listener while the flow is on screen.
+
 ## [4.1.2] - 2026-09-14
 
 ### Fixed

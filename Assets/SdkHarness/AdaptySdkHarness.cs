@@ -24,7 +24,7 @@ namespace AdaptyExample.SdkHarness
     /// Commands run on the request thread, not the main one. A call is posted to the main thread and
     /// awaited here, because the SDK delivers its callback through <c>SynchronizationContext.Post</c>
     /// and the main loop has to stay free to run it — waiting on the main thread would deadlock every
-    /// call. The wait budget stays below the scene's 120 s request timeout.
+    /// call. The wait budget stays below the runtime server's 120 s request timeout.
     ///
     /// A player discovers commands by reflection and reaches the harness from nothing else, so the
     /// harness build's own link.xml (<c>SdkHarnessBuild</c>) keeps the namespace and what the

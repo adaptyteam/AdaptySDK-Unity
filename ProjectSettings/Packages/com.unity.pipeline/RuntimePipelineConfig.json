@@ -1,0 +1,8 @@
+{
+    "enableInBuilds": true,
+    "port": 7900,
+    "requestTimeoutMs": 120000,
+    "enableAuditLogging": true,
+    "autoStart": true,
+    "maxWorkItemsPerFrame": 10
+}
