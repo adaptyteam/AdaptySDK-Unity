@@ -686,9 +686,9 @@ namespace AdaptySDK
         /// After doing this, you'll be able to see metrics in the Adapty Dashboard.
         /// Read more at <see href="https://adapty.io/docs/observer-vs-full-mode">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the transaction identifier from <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see>. For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
+        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the identifier of the StoreKit transaction: <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> (StoreKit 1) or <see href="https://developer.apple.com/documentation/storekit/transaction">Transaction</see> (StoreKit 2). For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
         /// <param name="variationId">An optional string identifier of the variation. You can get it using the <see cref="AdaptyFlow.VariationId"/> property of <see cref="AdaptyFlow"/>.</param>
-        /// <param name="appleJWSTransaction">iOS only. The JWS (`VerificationResult.jwsRepresentation`) of the same StoreKit 2 transaction as <paramref name="transactionId"/>, when your purchase library provides it. Sent as is; not sent on Android.</param>
+        /// <param name="appleJWSTransaction">iOS only. The JWS (`VerificationResult.jwsRepresentation`) of the StoreKit 2 transaction <paramref name="transactionId"/> identifies, when your purchase library provides it; to pass it without a variation, pass null as <paramref name="variationId"/>. Sent as is, except that an empty string is not sent; not sent on Android.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
             string transactionId,
@@ -704,7 +704,7 @@ namespace AdaptySDK
                 parameters["variation_id"] = variationId;
             }
 #if UNITY_IOS || UNITY_EDITOR
-            if (appleJWSTransaction != null)
+            if (!string.IsNullOrEmpty(appleJWSTransaction))
             {
                 parameters["apple_jws_transaction"] = appleJWSTransaction;
             }

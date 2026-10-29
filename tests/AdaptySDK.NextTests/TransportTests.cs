@@ -356,6 +356,11 @@ namespace AdaptySDK.NextTests
                 () => Adapty.ReportTransaction("txn-1", null, "header.payload.signature", _ => { })
             );
             yield return Case(
+                "report-transaction-jws-empty",
+                "report_transaction",
+                () => Adapty.ReportTransaction("txn-1", null, "", _ => { })
+            );
+            yield return Case(
                 "restore-purchases",
                 "restore_purchases",
                 () => Adapty.RestorePurchases((_, __) => { })

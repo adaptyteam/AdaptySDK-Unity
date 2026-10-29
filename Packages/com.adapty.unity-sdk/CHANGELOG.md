@@ -42,9 +42,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Android. On iOS all of it needs iOS 16+.
 - [iOS] `AdaptyErrorCode.BillingPlanUnavailable` (1060), `OperationInProgress` (3201) and
   `ResolverFailure` (3202).
-- [iOS] `Adapty.ReportTransaction` takes an optional `appleJWSTransaction`: in Observer mode,
-  pass the JWS of the reported StoreKit 2 transaction when your purchase library provides it. It
-  is sent as is and not sent on Android.
+- [iOS] `Adapty.ReportTransaction(transactionId, variationId, appleJWSTransaction, ...)`: in
+  Observer mode, pass the JWS of the reported StoreKit 2 transaction when your purchase library
+  provides it, with a null `variationId` when there is none. It is sent as is, an empty string
+  is not sent, and nothing is sent on Android.
 
 ### Changed
 
