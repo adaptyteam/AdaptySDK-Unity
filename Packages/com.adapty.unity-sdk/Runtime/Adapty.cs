@@ -688,10 +688,12 @@ namespace AdaptySDK
         /// </remarks>
         /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the transaction identifier from <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see>. For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
         /// <param name="variationId">An optional string identifier of the variation. You can get it using the <see cref="AdaptyFlow.VariationId"/> property of <see cref="AdaptyFlow"/>.</param>
+        /// <param name="appleJWSTransaction">iOS only. The JWS (`VerificationResult.jwsRepresentation`) of the same StoreKit 2 transaction as <paramref name="transactionId"/>, when your purchase library provides it. Sent as is; not sent on Android.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
             string transactionId,
             string variationId,
+            string appleJWSTransaction,
             Action<AdaptyError> completionHandler
         )
         {
@@ -701,6 +703,12 @@ namespace AdaptySDK
             {
                 parameters["variation_id"] = variationId;
             }
+#if UNITY_IOS || UNITY_EDITOR
+            if (appleJWSTransaction != null)
+            {
+                parameters["apple_jws_transaction"] = appleJWSTransaction;
+            }
+#endif
 
             AdaptyRequest.SendVoid("report_transaction", parameters, completionHandler);
         }
