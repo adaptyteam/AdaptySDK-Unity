@@ -17,6 +17,7 @@
   "RemoteConfig (property)": null,
   "RemoteConfigs (property)": [],
   "VariationId": "variation-0002",
+  "VariationName": null,
   "VendorProductIds (property)": [],
   "_FlowVersionId": null,
   "_PayloadData": null,

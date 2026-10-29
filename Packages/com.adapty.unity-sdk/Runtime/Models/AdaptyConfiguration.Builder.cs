@@ -29,6 +29,7 @@ namespace AdaptySDK
             IpAddressCollectionDisabled = builder.IpAddressCollectionDisabled;
             AdaptyAttributionEnabled = builder.AdaptyAttributionEnabled;
             AppleClearDataOnBackup = builder.AppleClearDataOnBackup;
+            StoreMessagesHandling = builder.StoreMessagesHandling;
             ServerCluster = builder.ServerCluster;
             BackendProxyHost = builder.BackendProxyHost;
             BackendProxyPort = builder.BackendProxyPort;
@@ -51,7 +52,8 @@ namespace AdaptySDK
         /// Only the API key is required, but "not set" does not mean "not sent". The nullable
         /// members — <see cref="ObserverMode"/>, <see cref="GoogleLocalAccessLevelAllowed"/>,
         /// <see cref="AdaptyAttributionEnabled"/>,
-        /// <see cref="AppleClearDataOnBackup"/>, <see cref="ServerCluster"/>,
+        /// <see cref="AppleClearDataOnBackup"/>, <see cref="StoreMessagesHandling"/>,
+        /// <see cref="ServerCluster"/>,
         /// <see cref="CustomerUserId"/>, <see cref="CustomerIdentity"/>,
         /// <see cref="BackendProxyHost"/> and <see cref="AdaptyUIMediaCache"/> — are left out of
         /// the request when null, and the native SDK applies its own default. The rest are not
@@ -137,6 +139,13 @@ namespace AdaptySDK
             public bool? AppleClearDataOnBackup;
 
             /// <summary>
+            /// Whether the store's own messages are shown as they arrive or held for
+            /// <see cref="Adapty.ShowStoreMessages(System.Action{AdaptyError})"/>. On iOS it needs
+            /// iOS 16+. Null leaves the native default, <see cref="AdaptyStoreMessagesHandling.Auto"/>.
+            /// </summary>
+            public AdaptyStoreMessagesHandling? StoreMessagesHandling;
+
+            /// <summary>
             /// Which Adapty server region to talk to. Null uses the default cluster.
             /// </summary>
             public AdaptyServerCluster? ServerCluster;
@@ -196,6 +205,7 @@ namespace AdaptySDK
                 + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
                 + $"{nameof(AdaptyAttributionEnabled)}: {AdaptyAttributionEnabled}, "
                 + $"{nameof(AppleClearDataOnBackup)}: {AppleClearDataOnBackup}, "
+                + $"{nameof(StoreMessagesHandling)}: {StoreMessagesHandling}, "
                 + $"{nameof(ServerCluster)}: {ServerCluster}, "
                 + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "
                 + $"{nameof(BackendProxyPort)}: {BackendProxyPort}, "
@@ -328,6 +338,16 @@ namespace AdaptySDK
             public Builder SetAppleClearDataOnBackup(bool appleClearDataOnBackup)
             {
                 AppleClearDataOnBackup = appleClearDataOnBackup;
+                return this;
+            }
+
+            /// <summary>
+            /// Sets <see cref="StoreMessagesHandling"/>.
+            /// </summary>
+            /// <param name="storeMessagesHandling">Who decides when App Store messages are shown.</param>
+            public Builder SetStoreMessagesHandling(AdaptyStoreMessagesHandling storeMessagesHandling)
+            {
+                StoreMessagesHandling = storeMessagesHandling;
                 return this;
             }
 

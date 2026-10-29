@@ -2,6 +2,7 @@
   "method": "make_promoted_purchase",
   "product": {
     "payload_data": "{\"custom\":\"promoted payload\"}",
+    "purchase_intent_id": "intent-1",
     "subscription": {
       "offer": {
         "offer_identifier": {

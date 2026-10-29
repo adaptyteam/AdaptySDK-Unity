@@ -102,6 +102,11 @@ namespace AdaptySDK
         /// <summary>
         /// The object that represents the main price for the product.
         /// </summary>
+        /// <remarks>
+        /// For a subscription on iOS this is the total over the whole commitment: twelve payments
+        /// for a plan paid monthly. A single payment is
+        /// <see cref="AdaptySubscriptionPricingTerms.BillingPrice"/>.
+        /// </remarks>
         [DataMember(Name = "price", IsRequired = true)]
         public readonly AdaptyPrice Price;
 

@@ -20,11 +20,14 @@ namespace AdaptySDK
         public readonly double Amount;
 
         /// <summary>
-        /// The currency code of the locale used to format the price of the product.
-        /// ///
-        /// [Nullable]
+        /// The currency code of the locale used to format the price of the product. Always set on
+        /// iOS; may be null on Android.
         /// </summary>
+#if UNITY_IOS
+        [DataMember(Name = "currency_code", IsRequired = true)]
+#else
         [DataMember(Name = "currency_code")]
+#endif
         public readonly string CurrencyCode;
 
         /// <summary>
@@ -36,11 +39,14 @@ namespace AdaptySDK
         public readonly string CurrencySymbol;
 
         /// <summary>
-        /// A formatted price of a discount for a user's locale.
-        ///
-        /// [Nullable]
+        /// A formatted price of a discount for a user's locale. Always set on iOS; may be null on
+        /// Android.
         /// </summary>
+#if UNITY_IOS
+        [DataMember(Name = "localized_string", IsRequired = true)]
+#else
         [DataMember(Name = "localized_string")]
+#endif
         public readonly string LocalizedString;
 
         /// <summary>

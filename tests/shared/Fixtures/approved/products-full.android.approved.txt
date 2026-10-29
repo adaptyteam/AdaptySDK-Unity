@@ -60,6 +60,7 @@
         "NumberOfUnits": 1,
         "Unit": "Month (2)"
       },
+      "PricingTerms": null,
       "RenewalType": "Prepaid (0)"
     },
     "VendorProductId": "com.adapty.sample.monthly",
@@ -89,6 +90,45 @@
     "RegionCode": null,
     "Subscription": null,
     "VendorProductId": "com.adapty.sample.lifetime",
+    "_PayloadData": null,
+    "_WebPurchaseUrl": null
+  },
+  {
+    "$type": "AdaptyPaywallProduct",
+    "AccessLevelId": "premium",
+    "AdaptyProductId": "adapty-product-3",
+    "FlowProductId": null,
+    "IsFamilyShareable": false,
+    "LocalizedDescription": "A year of access, paid monthly",
+    "LocalizedTitle": "Yearly, monthly payments",
+    "PaywallABTestName": "winter_test",
+    "PaywallName": "Winter Paywall",
+    "PaywallProductIndex": 2,
+    "PaywallVariationId": "variation-0001",
+    "Price": {
+      "$type": "AdaptyPrice",
+      "Amount": 83.88,
+      "CurrencyCode": "EUR",
+      "CurrencySymbol": "€",
+      "LocalizedString": "€83.88"
+    },
+    "ProductType": "subscription",
+    "RegionCode": null,
+    "Subscription": {
+      "$type": "AdaptySubscription",
+      "BasePlanId": "base-plan-yearly",
+      "GroupIdentifier": null,
+      "LocalizedPeriod": "1 year",
+      "Offer": null,
+      "Period": {
+        "$type": "AdaptySubscriptionPeriod",
+        "NumberOfUnits": 1,
+        "Unit": "Year (3)"
+      },
+      "PricingTerms": null,
+      "RenewalType": "Autorenewable (1)"
+    },
+    "VendorProductId": "com.adapty.sample.yearly.monthly",
     "_PayloadData": null,
     "_WebPurchaseUrl": null
   }

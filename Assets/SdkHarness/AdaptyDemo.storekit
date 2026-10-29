@@ -88,10 +88,54 @@
           "type": "RecurringSubscription"
         }
       ]
+    },
+    {
+      "id": "ACEE3D3D-A76C-4214-9E40-E051B5C0444D",
+      "localizations": [],
+      "name": "commitment",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "billingPlans": [
+            {
+              "billingPlanType": "BILLED_UPFRONT",
+              "commitmentDisplayPrice": "69.99",
+              "displayPrice": "69.99",
+              "internalID": "04F33E24-EE9B-41F4-832B-28054CD35514",
+              "isEnabled": true
+            },
+            {
+              "billingPlanType": "MONTHLY",
+              "commitmentDisplayPrice": "83.88",
+              "displayPrice": "6.99",
+              "internalID": "4365019D-4690-4D74-B80D-87B811B615B5",
+              "isEnabled": true
+            }
+          ],
+          "codeOffers": [],
+          "displayPrice": "69.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "F9CCDC09-9DAC-4E08-A819-7BC5E96FBE2A",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "1 Year Premium, billed monthly over a 12-month commitment",
+              "displayName": "1 Year Commitment",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "yearly.commitment.6999",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "1 Year Commitment",
+          "subscriptionGroupID": "ACEE3D3D-A76C-4214-9E40-E051B5C0444D",
+          "type": "RecurringSubscription"
+        }
+      ]
     }
   ],
   "version": {
-    "major": 4,
+    "major": 5,
     "minor": 0
   }
 }

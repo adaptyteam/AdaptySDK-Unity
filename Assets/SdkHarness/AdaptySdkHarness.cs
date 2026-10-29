@@ -419,6 +419,18 @@ namespace AdaptyExample.SdkHarness
 
             var inner = Nullable.GetUnderlyingType(type) ?? type;
 
+            // A list goes element by element, so a store message filter can name its kinds.
+            if (token is JArray array && inner.IsGenericType && inner.GetGenericTypeDefinition() == typeof(IReadOnlyList<>))
+            {
+                var element = inner.GetGenericArguments()[0];
+                var items = Array.CreateInstance(element, array.Count);
+                for (var i = 0; i < array.Count; i++)
+                {
+                    items.SetValue(Read(array[i], element, serializer), i);
+                }
+                return items;
+            }
+
             if (inner == typeof(TimeSpan) && (token.Type == JTokenType.Integer || token.Type == JTokenType.Float))
             {
                 return TimeSpan.FromSeconds(token.Value<double>());

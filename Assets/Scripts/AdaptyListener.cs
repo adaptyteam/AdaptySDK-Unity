@@ -721,6 +721,31 @@ namespace AdaptyExample
             LogIncomingCall_AdaptyUIFlowView("FlowViewDidFinishWebPaymentNavigation", view, meta);
         }
 
+        private readonly Dictionary<string, AdaptyUIFlowView> keptFlowViews =
+            new Dictionary<string, AdaptyUIFlowView>();
+
+        // Realtime: a paywall often pauses the game with timeScale = 0.
+        private System.Collections.IEnumerator PresentAgain(AdaptyUIFlowView view)
+        {
+            yield return new WaitForSecondsRealtime(3);
+
+            // A second Close within the wait has already released it.
+            if (this.keptFlowViews.ContainsKey(view.Id))
+            {
+                this.PresentFlowView(view, null);
+            }
+        }
+
+        // A kept view lives until it is destroyed, so one this listener can no longer show is released.
+        void OnDestroy()
+        {
+            foreach (var view in this.keptFlowViews.Values)
+            {
+                view.Destroy(null);
+            }
+            this.keptFlowViews.Clear();
+        }
+
         public void FlowViewDidPerformAction(AdaptyUIFlowView view, AdaptyUIUserAction action)
         {
             LogIncomingCall_AdaptyUIFlowView(
@@ -732,7 +757,18 @@ namespace AdaptyExample
             switch (action.Type)
             {
                 case AdaptyUIUserActionType.Close:
-                    view.Dismiss(null);
+                    // Demo of a kept view: the first Close keeps it and shows it again in 3 s, the
+                    // second one releases it.
+                    if (this.keptFlowViews.TryAdd(view.Id, view))
+                    {
+                        view.Dismiss(false, null);
+                        this.StartCoroutine(this.PresentAgain(view));
+                    }
+                    else
+                    {
+                        this.keptFlowViews.Remove(view.Id);
+                        view.Dismiss(true, null);
+                    }
                     break;
                 case AdaptyUIUserActionType.OpenUrl:
                     var urlString = action.Value;
@@ -801,6 +837,7 @@ namespace AdaptyExample
                 case AdaptyPurchaseResultType.Success:
                     try
                     {
+                        this.keptFlowViews.Remove(view.Id);
                         view.Dismiss(null);
 
                         var profile = purchasedResult.Profile;

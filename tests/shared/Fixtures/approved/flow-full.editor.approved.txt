@@ -44,10 +44,9 @@
           "AndroidBasePlanId": null,
           "AndroidOfferId": null,
           "FlowProductId": "flow-product-1",
+          "PricingTerms": null,
           "ProductType": "subscription",
-          "PromotionalOfferId": null,
-          "VendorProductId": "com.adapty.sample.monthly",
-          "WinBackOfferId": null
+          "VendorProductId": "com.adapty.sample.monthly"
         },
         {
           "$type": "ProductReference",
@@ -56,10 +55,9 @@
           "AndroidBasePlanId": null,
           "AndroidOfferId": null,
           "FlowProductId": null,
+          "PricingTerms": null,
           "ProductType": "subscription",
-          "PromotionalOfferId": null,
-          "VendorProductId": "com.adapty.sample.yearly",
-          "WinBackOfferId": null
+          "VendorProductId": "com.adapty.sample.yearly"
         }
       ],
       "_WebPurchaseUrl": "https://pay.adapty.io/checkout/abc"
@@ -153,6 +151,7 @@
     }
   ],
   "VariationId": "variation-0001",
+  "VariationName": "Variation A",
   "VendorProductIds (property)": [
     "com.adapty.sample.monthly",
     "com.adapty.sample.yearly"
@@ -200,10 +199,9 @@
           "AndroidBasePlanId": null,
           "AndroidOfferId": null,
           "FlowProductId": "flow-product-1",
+          "PricingTerms": null,
           "ProductType": "subscription",
-          "PromotionalOfferId": null,
-          "VendorProductId": "com.adapty.sample.monthly",
-          "WinBackOfferId": null
+          "VendorProductId": "com.adapty.sample.monthly"
         },
         {
           "$type": "ProductReference",
@@ -212,10 +210,9 @@
           "AndroidBasePlanId": null,
           "AndroidOfferId": null,
           "FlowProductId": null,
+          "PricingTerms": null,
           "ProductType": "subscription",
-          "PromotionalOfferId": null,
-          "VendorProductId": "com.adapty.sample.yearly",
-          "WinBackOfferId": null
+          "VendorProductId": "com.adapty.sample.yearly"
         }
       ],
       "_WebPurchaseUrl": "https://pay.adapty.io/checkout/abc"

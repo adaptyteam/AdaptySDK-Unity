@@ -35,6 +35,8 @@ public AdaptySDK.AdaptyConfiguration+Builder.SetGoogleLocalAccessLevelAllowed(Sy
 public AdaptySDK.AdaptyConfiguration+Builder.SetIPAddressCollectionDisabled(System.Boolean ipAddressCollectionDisabled) : AdaptySDK.Builder
 public AdaptySDK.AdaptyConfiguration+Builder.SetObserverMode(System.Boolean observerMode) : AdaptySDK.Builder
 public AdaptySDK.AdaptyConfiguration+Builder.SetServerCluster(AdaptySDK.AdaptyServerCluster serverCluster) : AdaptySDK.Builder
+public AdaptySDK.AdaptyConfiguration+Builder.SetStoreMessagesHandling(AdaptySDK.AdaptyStoreMessagesHandling storeMessagesHandling) : AdaptySDK.Builder
+public AdaptySDK.AdaptyConfiguration+Builder.StoreMessagesHandling : System.Nullable<AdaptySDK.AdaptyStoreMessagesHandling>
 public AdaptySDK.AdaptyConfiguration+Builder.ctor(System.String apiKey)
 public AdaptySDK.AdaptyCustomAssetColor.ColorValue : UnityEngine.Color { get; }
 public AdaptySDK.AdaptyCustomAssetLinearGradient.Gradient : UnityEngine.Gradient { get; }
@@ -76,6 +78,8 @@ public AdaptySDK.AdaptyOnboardingsSelectParams.ctor(System.String id, System.Str
 public AdaptySDK.AdaptyOnboardingsTextInput.ctor(System.String value)
 public AdaptySDK.AdaptyPaymentMode.value__ : System.Int32
 public AdaptySDK.AdaptyProductIdentifier.ctor(System.String vendorProductId, System.String adaptyProductId, System.String basePlanId)
+public AdaptySDK.AdaptyProfile+AccessLevel.BillingPlan : AdaptySDK.AdaptySubscriptionBillingPlan { get; }
+public AdaptySDK.AdaptyProfile+Subscription.BillingPlan : AdaptySDK.AdaptySubscriptionBillingPlan { get; }
 public AdaptySDK.AdaptyProfile.AccessLevels : System.Collections.Generic.IReadOnlyDictionary<System.String, AdaptySDK.AccessLevel> { get; }
 public AdaptySDK.AdaptyProfile.AppliedExternalAttributionProviders : System.Collections.Generic.IReadOnlyList<AdaptySDK.AdaptyExternalAttributionProvider> { get; }
 public AdaptySDK.AdaptyProfile.CustomAttributes : System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> { get; }
@@ -117,8 +121,12 @@ public AdaptySDK.AdaptyPurchaseResultType.value__ : System.Int32
 public AdaptySDK.AdaptyRefundPreference.value__ : System.Int32
 public AdaptySDK.AdaptyRemoteConfig.Dictionary : System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> { get; }
 public AdaptySDK.AdaptyServerCluster.value__ : System.Int32
+public AdaptySDK.AdaptyStoreMessageType.ctor(System.String rawValue)
+public AdaptySDK.AdaptyStoreMessagesHandling.value__ : System.Int32
+public AdaptySDK.AdaptySubscriptionBillingPlan.ctor(System.String rawValue)
 public AdaptySDK.AdaptySubscriptionOfferType.value__ : System.Int32
 public AdaptySDK.AdaptySubscriptionPeriodUnit.value__ : System.Int32
+public AdaptySDK.AdaptySubscriptionPricingTerms.BillingPlan : AdaptySDK.AdaptySubscriptionBillingPlan { get; }
 public AdaptySDK.AdaptySubscriptionRenewalType.value__ : System.Int32
 public AdaptySDK.AdaptySubscriptionUpdateParameters.OldSubVendorProductId : System.String
 public AdaptySDK.AdaptySubscriptionUpdateParameters.ReplacementMode : AdaptySDK.AdaptySubscriptionUpdateReplacementMode
@@ -153,7 +161,9 @@ public AdaptySDK.AdaptyUIDialogConfiguration.SetSecondaryActionTitle(System.Stri
 public AdaptySDK.AdaptyUIDialogConfiguration.SetTitle(System.String title) : AdaptySDK.AdaptyUIDialogConfiguration
 public AdaptySDK.AdaptyUIDialogConfiguration.Title : System.String
 public AdaptySDK.AdaptyUIDialogConfiguration.ctor()
+public AdaptySDK.AdaptyUIFlowView.Destroy(System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public AdaptySDK.AdaptyUIFlowView.Dismiss(System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public AdaptySDK.AdaptyUIFlowView.Dismiss(System.Boolean destroy, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public AdaptySDK.AdaptyUIFlowView.Id : System.String
 public AdaptySDK.AdaptyUIFlowView.Locale : System.String
 public AdaptySDK.AdaptyUIFlowView.PlacementId : System.String
@@ -218,6 +228,7 @@ public enum AdaptySDK.AdaptyProfileGender : System.IComparable, System.IConverti
 public enum AdaptySDK.AdaptyPurchaseResultType : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptyRefundPreference : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptyServerCluster : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
+public enum AdaptySDK.AdaptyStoreMessagesHandling : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptySubscriptionOfferType : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptySubscriptionPeriodUnit : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
 public enum AdaptySDK.AdaptySubscriptionRenewalType : System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable
@@ -257,15 +268,24 @@ public override AdaptySDK.AdaptyProductIdentifier.ToString() : System.String
 public override AdaptySDK.AdaptyProfile+AccessLevel.ToString() : System.String
 public override AdaptySDK.AdaptyProfile+NonSubscription.ToString() : System.String
 public override AdaptySDK.AdaptyProfile+Subscription.ToString() : System.String
+public override AdaptySDK.AdaptyProfile+SubscriptionCommitmentInfo.ToString() : System.String
 public override AdaptySDK.AdaptyProfile.ToString() : System.String
 public override AdaptySDK.AdaptyProfileParameters.ToString() : System.String
 public override AdaptySDK.AdaptyPromotedProduct.ToString() : System.String
 public override AdaptySDK.AdaptyPurchaseParameters.ToString() : System.String
 public override AdaptySDK.AdaptyPurchaseResult.ToString() : System.String
+public override AdaptySDK.AdaptyStoreMessageType.Equals(System.Object obj) : System.Boolean
+public override AdaptySDK.AdaptyStoreMessageType.GetHashCode() : System.Int32
+public override AdaptySDK.AdaptyStoreMessageType.ToString() : System.String
 public override AdaptySDK.AdaptySubscription.ToString() : System.String
+public override AdaptySDK.AdaptySubscriptionBillingPlan.Equals(System.Object obj) : System.Boolean
+public override AdaptySDK.AdaptySubscriptionBillingPlan.GetHashCode() : System.Int32
+public override AdaptySDK.AdaptySubscriptionBillingPlan.ToString() : System.String
+public override AdaptySDK.AdaptySubscriptionCommitmentInfo.ToString() : System.String
 public override AdaptySDK.AdaptySubscriptionOffer.ToString() : System.String
 public override AdaptySDK.AdaptySubscriptionPeriod.ToString() : System.String
 public override AdaptySDK.AdaptySubscriptionPhase.ToString() : System.String
+public override AdaptySDK.AdaptySubscriptionPricingTerms.ToString() : System.String
 public override AdaptySDK.AdaptySubscriptionUpdateParameters.ToString() : System.String
 public override AdaptySDK.AdaptyUICreateFlowViewParameters.ToString() : System.String
 public override AdaptySDK.AdaptyUIDialogConfiguration.ToString() : System.String
@@ -284,6 +304,7 @@ public readonly AdaptySDK.AdaptyFlow.InstanceIdentity : System.String
 public readonly AdaptySDK.AdaptyFlow.Name : System.String
 public readonly AdaptySDK.AdaptyFlow.Placement : AdaptySDK.AdaptyPlacement
 public readonly AdaptySDK.AdaptyFlow.VariationId : System.String
+public readonly AdaptySDK.AdaptyFlow.VariationName : System.String
 public readonly AdaptySDK.AdaptyFlowPaywall.InstanceIdentity : System.String
 public readonly AdaptySDK.AdaptyFlowPaywall.Name : System.String
 public readonly AdaptySDK.AdaptyFlowPaywall.Placement : AdaptySDK.AdaptyPlacement
@@ -345,6 +366,7 @@ public readonly AdaptySDK.AdaptyProfile+AccessLevel.ActivePromotionalOfferId : S
 public readonly AdaptySDK.AdaptyProfile+AccessLevel.ActivePromotionalOfferType : System.String
 public readonly AdaptySDK.AdaptyProfile+AccessLevel.BillingIssueDetectedAt : System.Nullable<System.DateTime>
 public readonly AdaptySDK.AdaptyProfile+AccessLevel.CancellationReason : System.String
+public readonly AdaptySDK.AdaptyProfile+AccessLevel.CommitmentInfo : AdaptySDK.SubscriptionCommitmentInfo
 public readonly AdaptySDK.AdaptyProfile+AccessLevel.ExpiresAt : System.Nullable<System.DateTime>
 public readonly AdaptySDK.AdaptyProfile+AccessLevel.Id : System.String
 public readonly AdaptySDK.AdaptyProfile+AccessLevel.IsActive : System.Boolean
@@ -372,6 +394,7 @@ public readonly AdaptySDK.AdaptyProfile+Subscription.ActivePromotionalOfferId : 
 public readonly AdaptySDK.AdaptyProfile+Subscription.ActivePromotionalOfferType : System.String
 public readonly AdaptySDK.AdaptyProfile+Subscription.BillingIssueDetectedAt : System.Nullable<System.DateTime>
 public readonly AdaptySDK.AdaptyProfile+Subscription.CancellationReason : System.String
+public readonly AdaptySDK.AdaptyProfile+Subscription.CommitmentInfo : AdaptySDK.SubscriptionCommitmentInfo
 public readonly AdaptySDK.AdaptyProfile+Subscription.ExpiresAt : System.Nullable<System.DateTime>
 public readonly AdaptySDK.AdaptyProfile+Subscription.IsActive : System.Boolean
 public readonly AdaptySDK.AdaptyProfile+Subscription.IsInGracePeriod : System.Boolean
@@ -387,6 +410,9 @@ public readonly AdaptySDK.AdaptyProfile+Subscription.VendorOriginalTransactionId
 public readonly AdaptySDK.AdaptyProfile+Subscription.VendorProductId : System.String
 public readonly AdaptySDK.AdaptyProfile+Subscription.VendorTransactionId : System.String
 public readonly AdaptySDK.AdaptyProfile+Subscription.WillRenew : System.Boolean
+public readonly AdaptySDK.AdaptyProfile+SubscriptionCommitmentInfo.BillingPeriodNumber : System.Int32
+public readonly AdaptySDK.AdaptyProfile+SubscriptionCommitmentInfo.ExpiresAt : System.DateTime
+public readonly AdaptySDK.AdaptyProfile+SubscriptionCommitmentInfo.TotalBillingPeriods : System.Int32
 public readonly AdaptySDK.AdaptyProfile.CustomerUserId : System.String
 public readonly AdaptySDK.AdaptyProfile.ProfileId : System.String
 public readonly AdaptySDK.AdaptyPromotedProduct.IsFamilyShareable : System.Boolean
@@ -404,12 +430,17 @@ public readonly AdaptySDK.AdaptyPurchaseResult.Profile : AdaptySDK.AdaptyProfile
 public readonly AdaptySDK.AdaptyPurchaseResult.Type : AdaptySDK.AdaptyPurchaseResultType
 public readonly AdaptySDK.AdaptyRemoteConfig.Data : System.String
 public readonly AdaptySDK.AdaptyRemoteConfig.Locale : System.String
+public readonly AdaptySDK.AdaptyStoreMessageType.RawValue : System.String
 public readonly AdaptySDK.AdaptySubscription.BasePlanId : System.String
 public readonly AdaptySDK.AdaptySubscription.GroupIdentifier : System.String
 public readonly AdaptySDK.AdaptySubscription.LocalizedPeriod : System.String
 public readonly AdaptySDK.AdaptySubscription.Offer : AdaptySDK.AdaptySubscriptionOffer
 public readonly AdaptySDK.AdaptySubscription.Period : AdaptySDK.AdaptySubscriptionPeriod
+public readonly AdaptySDK.AdaptySubscription.PricingTerms : AdaptySDK.AdaptySubscriptionPricingTerms
 public readonly AdaptySDK.AdaptySubscription.RenewalType : AdaptySDK.AdaptySubscriptionRenewalType
+public readonly AdaptySDK.AdaptySubscriptionBillingPlan.RawValue : System.String
+public readonly AdaptySDK.AdaptySubscriptionCommitmentInfo.Period : AdaptySDK.AdaptySubscriptionPeriod
+public readonly AdaptySDK.AdaptySubscriptionCommitmentInfo.Price : AdaptySDK.AdaptyPrice
 public readonly AdaptySDK.AdaptySubscriptionOffer.Identifier : System.String
 public readonly AdaptySDK.AdaptySubscriptionOffer.OfferTags : System.Collections.Generic.IReadOnlyList<System.String>
 public readonly AdaptySDK.AdaptySubscriptionOffer.Phases : System.Collections.Generic.IReadOnlyList<AdaptySDK.AdaptySubscriptionPhase>
@@ -422,6 +453,9 @@ public readonly AdaptySDK.AdaptySubscriptionPhase.NumberOfPeriods : System.Int32
 public readonly AdaptySDK.AdaptySubscriptionPhase.PaymentMode : AdaptySDK.AdaptyPaymentMode
 public readonly AdaptySDK.AdaptySubscriptionPhase.Price : AdaptySDK.AdaptyPrice
 public readonly AdaptySDK.AdaptySubscriptionPhase.SubscriptionPeriod : AdaptySDK.AdaptySubscriptionPeriod
+public readonly AdaptySDK.AdaptySubscriptionPricingTerms.BillingPeriod : AdaptySDK.AdaptySubscriptionPeriod
+public readonly AdaptySDK.AdaptySubscriptionPricingTerms.BillingPrice : AdaptySDK.AdaptyPrice
+public readonly AdaptySDK.AdaptySubscriptionPricingTerms.CommitmentInfo : AdaptySDK.AdaptySubscriptionCommitmentInfo
 public readonly AdaptySDK.AdaptyUIOnboardingMeta.OnboardingId : System.String
 public readonly AdaptySDK.AdaptyUIOnboardingMeta.ScreenClientId : System.String
 public readonly AdaptySDK.AdaptyUIOnboardingMeta.ScreenIndex : System.Int32
@@ -468,6 +502,7 @@ public sealed class AdaptySDK.AdaptyProfile
 public sealed class AdaptySDK.AdaptyProfile+AccessLevel
 public sealed class AdaptySDK.AdaptyProfile+NonSubscription
 public sealed class AdaptySDK.AdaptyProfile+Subscription
+public sealed class AdaptySDK.AdaptyProfile+SubscriptionCommitmentInfo
 public sealed class AdaptySDK.AdaptyProfileParameters
 public sealed class AdaptySDK.AdaptyProfileParameters+Builder
 public sealed class AdaptySDK.AdaptyPromotedProduct
@@ -475,10 +510,14 @@ public sealed class AdaptySDK.AdaptyPurchaseParameters
 public sealed class AdaptySDK.AdaptyPurchaseParametersBuilder
 public sealed class AdaptySDK.AdaptyPurchaseResult
 public sealed class AdaptySDK.AdaptyRemoteConfig
+public sealed class AdaptySDK.AdaptyStoreMessageType : System.IEquatable<AdaptySDK.AdaptyStoreMessageType>
 public sealed class AdaptySDK.AdaptySubscription
+public sealed class AdaptySDK.AdaptySubscriptionBillingPlan : System.IEquatable<AdaptySDK.AdaptySubscriptionBillingPlan>
+public sealed class AdaptySDK.AdaptySubscriptionCommitmentInfo
 public sealed class AdaptySDK.AdaptySubscriptionOffer
 public sealed class AdaptySDK.AdaptySubscriptionPeriod
 public sealed class AdaptySDK.AdaptySubscriptionPhase
+public sealed class AdaptySDK.AdaptySubscriptionPricingTerms
 public sealed class AdaptySDK.AdaptySubscriptionUpdateParameters
 public sealed class AdaptySDK.AdaptyUICreateFlowViewParameters
 public sealed class AdaptySDK.AdaptyUIDialogConfiguration
@@ -505,6 +544,7 @@ public static AdaptySDK.Adapty.GetOnboardingForDefaultAudience(System.String pla
 public static AdaptySDK.Adapty.GetOnboardingForDefaultAudience(System.String placementId, System.String locale, AdaptySDK.AdaptyPlacementFetchPolicy fetchPolicy, System.Action<AdaptySDK.AdaptyOnboarding, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.GetOnboardingForDefaultAudience(System.String placementId, System.String locale, System.Action<AdaptySDK.AdaptyOnboarding, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.GetPaywallProducts(AdaptySDK.AdaptyFlow flow, System.Action<System.Collections.Generic.IReadOnlyList<AdaptySDK.AdaptyPaywallProduct>, AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.GetPendingStoreMessageTypes(System.Action<System.Collections.Generic.IReadOnlyList<AdaptySDK.AdaptyStoreMessageType>, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.GetProfile(System.Action<AdaptySDK.AdaptyProfile, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.Identify(System.String customerUserId, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.Identify(System.String customerUserId, System.Guid iosAppAccountToken, System.String androidObfuscatedAccountId, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
@@ -518,9 +558,13 @@ public static AdaptySDK.Adapty.OpenWebPaywall(AdaptySDK.AdaptyFlowPaywall paywal
 public static AdaptySDK.Adapty.OpenWebPaywall(AdaptySDK.AdaptyFlowPaywall paywall, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.OpenWebPaywall(AdaptySDK.AdaptyPaywallProduct product, AdaptySDK.AdaptyWebPresentation openIn, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.OpenWebPaywall(AdaptySDK.AdaptyPaywallProduct product, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.PreloadFlows(System.Collections.Generic.IReadOnlyList<System.String> placementIds, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.PreloadFlows(System.Collections.Generic.IReadOnlyList<System.String> placementIds, System.Nullable<System.TimeSpan> loadTimeout, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.PreloadFlowsForDefaultAudience(System.Collections.Generic.IReadOnlyList<System.String> placementIds, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.PresentCodeRedemptionSheet(System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.ReportTransaction(System.String transactionId, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.ReportTransaction(System.String transactionId, System.String variationId, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.ReportTransaction(System.String transactionId, System.String variationId, System.String appleJWSTransaction, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.RestorePurchases(System.Action<AdaptySDK.AdaptyProfile, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.SetEventListener(AdaptySDK.IAdaptyEventListener listener) : System.Void
 public static AdaptySDK.Adapty.SetFallback(System.String fileName, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
@@ -530,6 +574,8 @@ public static AdaptySDK.Adapty.SetLogLevel(AdaptySDK.AdaptyLogLevel level, Syste
 public static AdaptySDK.Adapty.SetObserverModeResolver(AdaptySDK.IAdaptyUIObserverModeResolver resolver) : System.Void
 public static AdaptySDK.Adapty.SetOnboardingsEventsListener(AdaptySDK.IAdaptyOnboardingsEventsListener listener) : System.Void
 public static AdaptySDK.Adapty.SetSystemRequestsHandler(AdaptySDK.IAdaptyUISystemRequestsHandler handler) : System.Void
+public static AdaptySDK.Adapty.ShowStoreMessages(System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.ShowStoreMessages(System.Collections.Generic.IReadOnlyList<AdaptySDK.AdaptyStoreMessageType> iosFilter, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.UpdateAppStoreCollectingRefundDataConsent(System.Boolean consent, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.UpdateAppStoreRefundPreference(AdaptySDK.AdaptyRefundPreference refundPreference, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.UpdateExternalAttribution(System.Collections.Generic.IReadOnlyDictionary<System.String, System.Object> attribution, AdaptySDK.AdaptyExternalAttributionProvider provider, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
@@ -545,11 +591,17 @@ public static AdaptySDK.AdaptyCustomAsset.LocalVideoFile(System.String path) : A
 public static AdaptySDK.AdaptyExternalAttributionProvider.op_Equality(AdaptySDK.AdaptyExternalAttributionProvider a, AdaptySDK.AdaptyExternalAttributionProvider b) : System.Boolean
 public static AdaptySDK.AdaptyExternalAttributionProvider.op_Inequality(AdaptySDK.AdaptyExternalAttributionProvider a, AdaptySDK.AdaptyExternalAttributionProvider b) : System.Boolean
 public static AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad(System.TimeSpan maxAge) : AdaptySDK.AdaptyPlacementFetchPolicy
+public static AdaptySDK.AdaptyStoreMessageType.op_Equality(AdaptySDK.AdaptyStoreMessageType a, AdaptySDK.AdaptyStoreMessageType b) : System.Boolean
+public static AdaptySDK.AdaptyStoreMessageType.op_Inequality(AdaptySDK.AdaptyStoreMessageType a, AdaptySDK.AdaptyStoreMessageType b) : System.Boolean
+public static AdaptySDK.AdaptySubscriptionBillingPlan.op_Equality(AdaptySDK.AdaptySubscriptionBillingPlan a, AdaptySDK.AdaptySubscriptionBillingPlan b) : System.Boolean
+public static AdaptySDK.AdaptySubscriptionBillingPlan.op_Inequality(AdaptySDK.AdaptySubscriptionBillingPlan a, AdaptySDK.AdaptySubscriptionBillingPlan b) : System.Boolean
 public static AdaptySDK.AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow flow, AdaptySDK.AdaptyUICreateFlowViewParameters optionalParameters, System.Action<AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.CreateFlowView(AdaptySDK.AdaptyFlow flow, System.Action<AdaptySDK.AdaptyUIFlowView, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.CreateOnboardingView(AdaptySDK.AdaptyOnboarding onboarding, AdaptySDK.AdaptyWebPresentation externalUrlsPresentation, System.Action<AdaptySDK.AdaptyUIOnboardingView, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.CreateOnboardingView(AdaptySDK.AdaptyOnboarding onboarding, System.Action<AdaptySDK.AdaptyUIOnboardingView, AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.AdaptyUI.DestroyFlowView(AdaptySDK.AdaptyUIFlowView view, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.DismissFlowView(AdaptySDK.AdaptyUIFlowView view, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.AdaptyUI.DismissFlowView(AdaptySDK.AdaptyUIFlowView view, System.Boolean destroy, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.DismissOnboardingView(AdaptySDK.AdaptyUIOnboardingView view, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.OpenUrl(System.String url, AdaptySDK.AdaptyWebPresentation openIn, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.AdaptyUI.PresentFlowView(AdaptySDK.AdaptyUIFlowView view, AdaptySDK.AdaptyUIIOSPresentationStyle iosPresentationStyle, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
@@ -567,6 +619,7 @@ public static const AdaptySDK.AdaptyErrorCode.AnalyticsDisabled : AdaptySDK.Adap
 public static const AdaptySDK.AdaptyErrorCode.BadRequest : AdaptySDK.AdaptyErrorCode = 2003
 public static const AdaptySDK.AdaptyErrorCode.BillingError : AdaptySDK.AdaptyErrorCode = 106
 public static const AdaptySDK.AdaptyErrorCode.BillingNetworkError : AdaptySDK.AdaptyErrorCode = 112
+public static const AdaptySDK.AdaptyErrorCode.BillingPlanUnavailable : AdaptySDK.AdaptyErrorCode = 1060
 public static const AdaptySDK.AdaptyErrorCode.BillingServiceDisconnected : AdaptySDK.AdaptyErrorCode = 99
 public static const AdaptySDK.AdaptyErrorCode.BillingServiceTimeout : AdaptySDK.AdaptyErrorCode = 97
 public static const AdaptySDK.AdaptyErrorCode.BillingServiceUnavailable : AdaptySDK.AdaptyErrorCode = 102
@@ -597,6 +650,7 @@ public static const AdaptySDK.AdaptyErrorCode.NetworkFailed : AdaptySDK.AdaptyEr
 public static const AdaptySDK.AdaptyErrorCode.NoProductIDsFound : AdaptySDK.AdaptyErrorCode = 1000
 public static const AdaptySDK.AdaptyErrorCode.NoPurchasesToRestore : AdaptySDK.AdaptyErrorCode = 1004
 public static const AdaptySDK.AdaptyErrorCode.NotActivated : AdaptySDK.AdaptyErrorCode = 2002
+public static const AdaptySDK.AdaptyErrorCode.OperationInProgress : AdaptySDK.AdaptyErrorCode = 3201
 public static const AdaptySDK.AdaptyErrorCode.OperationInterrupted : AdaptySDK.AdaptyErrorCode = 9000
 public static const AdaptySDK.AdaptyErrorCode.PaymentCancelled : AdaptySDK.AdaptyErrorCode = 2
 public static const AdaptySDK.AdaptyErrorCode.PaymentInvalid : AdaptySDK.AdaptyErrorCode = 3
@@ -608,6 +662,7 @@ public static const AdaptySDK.AdaptyErrorCode.ProductPurchaseFailed : AdaptySDK.
 public static const AdaptySDK.AdaptyErrorCode.ProductRequestFailed : AdaptySDK.AdaptyErrorCode = 1002
 public static const AdaptySDK.AdaptyErrorCode.ProfileWasChanged : AdaptySDK.AdaptyErrorCode = 3006
 public static const AdaptySDK.AdaptyErrorCode.RefreshReceiptFailed : AdaptySDK.AdaptyErrorCode = 1010
+public static const AdaptySDK.AdaptyErrorCode.ResolverFailure : AdaptySDK.AdaptyErrorCode = 3202
 public static const AdaptySDK.AdaptyErrorCode.ServerError : AdaptySDK.AdaptyErrorCode = 2004
 public static const AdaptySDK.AdaptyErrorCode.StoreProductNotAvailable : AdaptySDK.AdaptyErrorCode = 5
 public static const AdaptySDK.AdaptyErrorCode.UnauthorizedRequestData : AdaptySDK.AdaptyErrorCode = 10
@@ -640,6 +695,8 @@ public static const AdaptySDK.AdaptyRefundPreference.NoPreference : AdaptySDK.Ad
 public static const AdaptySDK.AdaptyServerCluster.CN : AdaptySDK.AdaptyServerCluster = 2
 public static const AdaptySDK.AdaptyServerCluster.Default : AdaptySDK.AdaptyServerCluster = 0
 public static const AdaptySDK.AdaptyServerCluster.EU : AdaptySDK.AdaptyServerCluster = 1
+public static const AdaptySDK.AdaptyStoreMessagesHandling.Auto : AdaptySDK.AdaptyStoreMessagesHandling = 0
+public static const AdaptySDK.AdaptyStoreMessagesHandling.Manual : AdaptySDK.AdaptyStoreMessagesHandling = 1
 public static const AdaptySDK.AdaptySubscriptionOfferType.Code : AdaptySDK.AdaptySubscriptionOfferType = 3
 public static const AdaptySDK.AdaptySubscriptionOfferType.Introductory : AdaptySDK.AdaptySubscriptionOfferType = 0
 public static const AdaptySDK.AdaptySubscriptionOfferType.Promotional : AdaptySDK.AdaptySubscriptionOfferType = 1
@@ -680,4 +737,12 @@ public static readonly AdaptySDK.AdaptyExternalAttributionProvider.Tenjin : Adap
 public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.Default : AdaptySDK.AdaptyPlacementFetchPolicy
 public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.ReloadRevalidatingCacheData : AdaptySDK.AdaptyPlacementFetchPolicy
 public static readonly AdaptySDK.AdaptyPlacementFetchPolicy.ReturnCacheDataElseLoad : AdaptySDK.AdaptyPlacementFetchPolicy
+public static readonly AdaptySDK.AdaptyStoreMessageType.BillingIssue : AdaptySDK.AdaptyStoreMessageType
+public static readonly AdaptySDK.AdaptyStoreMessageType.Generic : AdaptySDK.AdaptyStoreMessageType
+public static readonly AdaptySDK.AdaptyStoreMessageType.PriceIncreaseConsent : AdaptySDK.AdaptyStoreMessageType
+public static readonly AdaptySDK.AdaptyStoreMessageType.WinBackOffer : AdaptySDK.AdaptyStoreMessageType
+public static readonly AdaptySDK.AdaptySubscriptionBillingPlan.Monthly : AdaptySDK.AdaptySubscriptionBillingPlan
+public static readonly AdaptySDK.AdaptySubscriptionBillingPlan.UpFront : AdaptySDK.AdaptySubscriptionBillingPlan
 public virtual AdaptySDK.AdaptyExternalAttributionProvider.Equals(AdaptySDK.AdaptyExternalAttributionProvider other) : System.Boolean
+public virtual AdaptySDK.AdaptyStoreMessageType.Equals(AdaptySDK.AdaptyStoreMessageType other) : System.Boolean
+public virtual AdaptySDK.AdaptySubscriptionBillingPlan.Equals(AdaptySDK.AdaptySubscriptionBillingPlan other) : System.Boolean

@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
 using UnityEngine.Scripting;
 
 namespace AdaptySDK
@@ -21,14 +22,12 @@ namespace AdaptySDK
             internal readonly string AccessLevelId;
             [DataMember(Name = "product_type", IsRequired = true)]
             internal readonly string ProductType;
+            // Handed back to the native side as received: C# never reads the offers, and a typed
+            // copy would drop any key a later native adds.
 #if UNITY_IOS
-            [DataMember(Name = "promotional_offer_id")]
+            [DataMember(Name = "pricing_terms")]
 #endif
-            internal readonly string PromotionalOfferId;
-#if UNITY_IOS
-            [DataMember(Name = "win_back_offer_id")]
-#endif
-            internal readonly string WinBackOfferId;
+            internal readonly JArray PricingTerms;
 #if UNITY_ANDROID
             [DataMember(Name = "base_plan_id")]
 #endif
@@ -57,8 +56,7 @@ namespace AdaptySDK
                 + $"{nameof(AdaptyProductId)}: {AdaptyProductId}, "
                 + $"{nameof(AccessLevelId)}: {AccessLevelId}, "
                 + $"{nameof(ProductType)}: {ProductType}, "
-                + $"{nameof(PromotionalOfferId)}: {PromotionalOfferId}, "
-                + $"{nameof(WinBackOfferId)}: {WinBackOfferId}, "
+                + $"{nameof(PricingTerms)}: {PricingTerms?.ToString(Newtonsoft.Json.Formatting.None)}, "
                 + $"{nameof(AndroidBasePlanId)}: {AndroidBasePlanId}, "
                 + $"{nameof(AndroidOfferId)}: {AndroidOfferId}";
         }

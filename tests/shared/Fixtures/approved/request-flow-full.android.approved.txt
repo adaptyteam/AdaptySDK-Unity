@@ -56,6 +56,7 @@
     ]
   },
   "variation_id": "variation-0001",
+  "variation_name": "Variation A",
   "variations": [
     {
       "paywall_id": "paywall-0001",

@@ -4,16 +4,55 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [4.3.0] - 2026-10-28
 
 ### Breaking Changes
 
 - **The minimum supported Unity version is raised from 2022.3 to 6.0 (6000.0)**, declared as
   `unity` in `package.json`. The package will rely on UI Toolkit runtime bindings (2023.2+) for
-  its Editor-side mock UI; projects on 2022.3 stay on 4.1.x.
+  its Editor-side mock UI; projects on 2022.3 stay on 4.1.x. The `.unitypackage` install path —
+  import into a clean project, `Adapty SDK > Install Dependencies`, compile — was verified on
+  6000.0.74f1.
+
+### Added
+
+- [iOS] Commitment subscriptions. `AdaptySubscription.PricingTerms`
+  (`AdaptySubscriptionPricingTerms`) carries the billing plan (`AdaptySubscriptionBillingPlan`:
+  `UpFront`, `Monthly`), the price and period of each payment, and the commitment they add up to.
+  A product goes back to the native side with its plan, so `MakePurchase` buys it on the plan it
+  was offered on. A plan other than up front needs iOS 26.4+ and an app built with Xcode 26.5+;
+  anywhere else the product comes with its up-front terms and is bought up front. On iOS the
+  `Price` of a commitment product and its subscription `Period` are the totals for the whole
+  commitment; one payment is `PricingTerms.BillingPrice`.
+- `AdaptyProfile.AccessLevel` and `AdaptyProfile.Subscription` gain `BillingPlan` and
+  `CommitmentInfo` (`AdaptyProfile.SubscriptionCommitmentInfo`: the current billing period, how
+  many there are, and when the commitment ends). A subscription always has a plan,
+  `UpFront` when the store reports none.
+- `AdaptyFlow.VariationName`.
+- A dismissed flow view can be kept: `AdaptyUI.DismissFlowView(view, destroy: false, ...)` or
+  `AdaptyUIFlowView.Dismiss(false, ...)` hides it, `Present` shows it again where it was, and
+  `AdaptyUI.DestroyFlowView` / `AdaptyUIFlowView.Destroy` releases it. `Dismiss` without the flag
+  releases the view, as before.
+- `Adapty.PreloadFlows` and `Adapty.PreloadFlowsForDefaultAudience` load the flows of several
+  placements into the cache, for a later `GetFlow` with a cache-first fetch policy.
+- Store messages can be held and shown when the app chooses:
+  `AdaptyConfiguration.Builder.SetStoreMessagesHandling(AdaptyStoreMessagesHandling.Manual)`, then
+  `Adapty.ShowStoreMessages`, on iOS optionally filtered by `AdaptyStoreMessageType`.
+  `Adapty.GetPendingStoreMessageTypes` lists what is held on iOS and reports a null list on
+  Android. On iOS all of it needs iOS 16+.
+- [iOS] `AdaptyErrorCode.BillingPlanUnavailable` (1060), `OperationInProgress` (3201) and
+  `ResolverFailure` (3202).
+- [iOS] `Adapty.ReportTransaction(transactionId, variationId, appleJWSTransaction, ...)`: in
+  Observer mode, pass the JWS of the reported StoreKit 2 transaction when your purchase library
+  provides it, with a null `variationId` when there is none. It is sent as is, an empty string
+  is not sent, and nothing is sent on Android.
 
 ### Changed
 
+- [iOS] AdaptySDK-iOS 4.3.1.
+- [Android] AdaptySDK-Android 4.3.0.
+- [iOS] A price without `currency_code` or `localized_string` is now a decoding error, as the
+  contract requires; iOS always sends both.
 - [Android] The package no longer ships a Java wrapper (`io.adapty.internal:unity-wrapper`): the
   bridge calls `CrossplatformHelper` from `io.adapty.internal:crossplatform` directly through JNI.
   Callbacks and events still arrive on the Unity thread while a flow is on screen, so its `close`
