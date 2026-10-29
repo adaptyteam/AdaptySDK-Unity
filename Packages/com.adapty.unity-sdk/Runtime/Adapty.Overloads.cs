@@ -66,7 +66,7 @@ namespace AdaptySDK
         /// After doing this, you'll be able to see metrics in the Adapty Dashboard.
         /// Read more at <see href="https://adapty.io/docs/observer-vs-full-mode">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the transaction identifier from <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see>. For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
+        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the identifier of the StoreKit transaction: <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> (StoreKit 1) or <see href="https://developer.apple.com/documentation/storekit/transaction">Transaction</see> (StoreKit 2). For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
             string transactionId,
@@ -79,8 +79,8 @@ namespace AdaptySDK
         /// <remarks>
         /// See <see cref="ReportTransaction(string, string, string, Action{AdaptyError})"/>.
         /// </remarks>
-        /// <param name="transactionId">A string identifier of your purchased transaction.</param>
-        /// <param name="variationId">An optional string identifier of the variation.</param>
+        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the identifier of the StoreKit transaction: <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> (StoreKit 1) or <see href="https://developer.apple.com/documentation/storekit/transaction">Transaction</see> (StoreKit 2). For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
+        /// <param name="variationId">An optional string identifier of the variation. You can get it using the <see cref="AdaptyFlow.VariationId"/> property of <see cref="AdaptyFlow"/>.</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
             string transactionId,
