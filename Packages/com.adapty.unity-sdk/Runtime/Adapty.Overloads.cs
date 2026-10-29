@@ -71,7 +71,22 @@ namespace AdaptySDK
         public static void ReportTransaction(
             string transactionId,
             Action<AdaptyError> completionHandler
-        ) => ReportTransaction(transactionId, null, completionHandler);
+        ) => ReportTransaction(transactionId, null, null, completionHandler);
+
+        /// <summary>
+        /// Reports a transaction to Adapty in Observer mode, assigning it to a variation.
+        /// </summary>
+        /// <remarks>
+        /// See <see cref="ReportTransaction(string, string, string, Action{AdaptyError})"/>.
+        /// </remarks>
+        /// <param name="transactionId">A string identifier of your purchased transaction.</param>
+        /// <param name="variationId">An optional string identifier of the variation.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void ReportTransaction(
+            string transactionId,
+            string variationId,
+            Action<AdaptyError> completionHandler
+        ) => ReportTransaction(transactionId, variationId, null, completionHandler);
 
         /// <summary>
         /// Updates external attribution data for the profile to track user acquisition sources.

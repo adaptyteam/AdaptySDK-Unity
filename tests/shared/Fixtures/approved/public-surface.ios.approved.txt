@@ -564,6 +564,7 @@ public static AdaptySDK.Adapty.PreloadFlowsForDefaultAudience(System.Collections
 public static AdaptySDK.Adapty.PresentCodeRedemptionSheet(System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.ReportTransaction(System.String transactionId, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.ReportTransaction(System.String transactionId, System.String variationId, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
+public static AdaptySDK.Adapty.ReportTransaction(System.String transactionId, System.String variationId, System.String appleJWSTransaction, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.RestorePurchases(System.Action<AdaptySDK.AdaptyProfile, AdaptySDK.AdaptyError> completionHandler) : System.Void
 public static AdaptySDK.Adapty.SetEventListener(AdaptySDK.IAdaptyEventListener listener) : System.Void
 public static AdaptySDK.Adapty.SetFallback(System.String fileName, System.Action<AdaptySDK.AdaptyError> completionHandler) : System.Void

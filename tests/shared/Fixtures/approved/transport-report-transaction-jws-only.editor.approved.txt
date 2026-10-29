@@ -1,0 +1,5 @@
+{
+  "apple_jws_transaction": "header.payload.signature",
+  "method": "report_transaction",
+  "transaction_id": "txn-1"
+}
