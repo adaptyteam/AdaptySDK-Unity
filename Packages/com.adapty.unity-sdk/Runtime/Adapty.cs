@@ -313,15 +313,6 @@ namespace AdaptySDK
         }
 
         /// <summary>
-        /// Returns the current log level of the Adapty SDK.
-        /// </summary>
-        /// <param name="completionHandler">The action that will be called with the result. The result contains the current <see cref="AdaptyLogLevel"/> value.</param>
-        public static void GetLogLevel(Action<AdaptyLogLevel, AdaptyError> completionHandler)
-        {
-            AdaptyRequest.Send("get_log_level", null, completionHandler);
-        }
-
-        /// <summary>
         /// Sets the log level for the Adapty SDK.
         /// </summary>
         /// <remarks>

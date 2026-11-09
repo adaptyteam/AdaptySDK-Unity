@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   its Editor-side mock UI; projects on 2022.3 stay on 4.1.x. The `.unitypackage` install path —
   import into a clean project, `Adapty SDK > Install Dependencies`, compile — was verified on
   6000.0.74f1.
+- **Removed `Adapty.GetLogLevel`.** The native Android SDK has no such operation, so on Android it
+  never returned a level, and no other Adapty cross-platform SDK exposes it. The level is the one
+  the app sets: `AdaptyConfiguration.Builder.LogLevel` or `Adapty.SetLogLevel`.
 
 ### Added
 
