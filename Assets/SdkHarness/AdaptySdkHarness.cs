@@ -314,9 +314,9 @@ namespace AdaptyExample.SdkHarness
                 return Fail(method, $"neither Adapty.{method} nor AdaptyUI.{method} exists");
             }
 
-            var chosen = candidates.FirstOrDefault(m => Matches(m, provided));
+            var matching = candidates.Where(m => Matches(m, provided)).ToList();
 
-            if (chosen == null)
+            if (matching.Count == 0)
             {
                 return Fail(
                     method,
@@ -325,16 +325,30 @@ namespace AdaptyExample.SdkHarness
                 );
             }
 
+            // Overloads can share parameter names and differ only in type - ShowDialog takes a flow
+            // view or an onboarding view - so the one meant is the first the arguments bind to.
             var call = new Call();
-            object[] bound;
+            MethodInfo chosen = null;
+            object[] bound = null;
+            var failures = new List<string>();
 
-            try
+            foreach (var candidate in matching)
             {
-                bound = Bind(chosen, provided, call);
+                try
+                {
+                    bound = Bind(candidate, provided, call);
+                    chosen = candidate;
+                    break;
+                }
+                catch (Exception e)
+                {
+                    failures.Add(e.Message);
+                }
             }
-            catch (Exception e)
+
+            if (chosen == null)
             {
-                return Fail(method, "binding: " + e.Message);
+                return Fail(method, "binding: " + string.Join("; ", failures));
             }
 
             Ledger("→", $"{method}  {provided.ToString(Formatting.None)}");
