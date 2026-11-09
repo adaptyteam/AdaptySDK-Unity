@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [iOS] AdaptySDK-iOS 4.3.1.
+- [iOS] AdaptySDK-iOS 4.3.2.
 - [Android] AdaptySDK-Android 4.3.0.
 - [iOS] A price without `currency_code` or `localized_string` is now a decoding error, as the
   contract requires; iOS always sends both.
