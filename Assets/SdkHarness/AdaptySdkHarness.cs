@@ -803,25 +803,34 @@ namespace AdaptyExample.SdkHarness
 
         /// <summary>
         /// Recorded and granted: the harness has no user to ask, and a request left unanswered would hold
-        /// the view open for the rest of the run.
+        /// the view open for the rest of the run. Granted from a pool thread, where an OS permission
+        /// callback lands, so a run also checks that the answer reaches a view that is on screen.
         /// </summary>
         public void FlowViewDidAskPermission(AdaptyUIFlowView view, string permission, IReadOnlyDictionary<string, string> customArgs, Action<bool, string> respond)
         {
             Record("flow_view_did_ask_permission", ("view", view), ("permission", permission), ("customArgs", customArgs));
-            respond(true, null);
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                Debug.Log("SdkHarness: permission answered from a pool thread");
+                respond(true, null);
+            });
         }
 
         public void FlowViewDidRequestAppReview(AdaptyUIFlowView view) => Record("flow_view_did_request_app_review", ("view", view));
 
         /// <summary>
         /// Observer mode leaves the purchase to the app; the harness has none, so it reports both stages
-        /// at once and lets the view continue.
+        /// at once and lets the view continue - from a pool thread, as a store callback would.
         /// </summary>
         public void FlowViewDidInitiatePurchase(AdaptyUIFlowView view, AdaptyPaywallProduct product, Action onStartPurchase, Action onFinishPurchase)
         {
             Record("flow_view_did_initiate_purchase", ("view", view), ("product", product));
-            onStartPurchase();
-            onFinishPurchase();
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                Debug.Log("SdkHarness: purchase reported from a pool thread");
+                onStartPurchase();
+                onFinishPurchase();
+            });
         }
 
         public void FlowViewDidInitiateRestore(AdaptyUIFlowView view, Action onStartRestore, Action onFinishRestore)
