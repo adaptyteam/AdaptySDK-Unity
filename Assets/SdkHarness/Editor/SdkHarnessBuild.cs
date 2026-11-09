@@ -60,6 +60,16 @@ namespace AdaptyExample.SdkHarness.Editor
             MainThreadRequired = true, Tags = new[] { "adapty" })]
         public static object Build()
         {
+            // AddLocalStoreKit is compiled for the platform the Editor is on, so from any other one
+            // the build would come out without the local StoreKit and purchases would hit the sandbox.
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.iOS)
+            {
+                throw new InvalidOperationException(
+                    "harness_build needs the Editor switched to iOS (File > Build Profiles); it is on "
+                        + EditorUserBuildSettings.activeBuildTarget
+                );
+            }
+
             var sdkVersion = PlayerSettings.iOS.sdkVersion;
             PlayerSettings.iOS.sdkVersion = iOSSdkVersion.SimulatorSDK;
 
