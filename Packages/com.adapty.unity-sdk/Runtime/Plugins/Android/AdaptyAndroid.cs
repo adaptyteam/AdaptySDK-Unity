@@ -12,7 +12,7 @@ namespace AdaptySDK.Android
     /// The helper's four callbacks are plain Java interfaces with a single <c>invoke</c>, which is
     /// the shape <see cref="AndroidJavaProxy"/> implements by method name. They arrive on the
     /// thread the native SDK calls from, never Unity's, and are posted to Unity's through
-    /// <see cref="AdaptyAndroidLooper"/> - not through <see cref="Adapty.RunOnMainThread"/>, which
+    /// <see cref="AdaptyAndroidLooper"/> - not through a <c>SynchronizationContext</c>, which
     /// waits for a frame that does not come while a flow is on screen.
     /// </remarks>
     internal static class AdaptyAndroid
@@ -58,19 +58,16 @@ namespace AdaptySDK.Android
                 using var context = activity.Call<AndroidJavaObject>("getApplicationContext");
                 using var helperClass = new AndroidJavaClass(HelperClass);
 
-                // True on the first initialisation of the process only; the activity provider is
-                // installed once, like the wrapper it replaces did.
-                var first = helperClass.CallStatic<bool>(
+                // init returns whether this was the process's first initialisation; the activity
+                // provider is set either way, as the other cross-platform SDKs do.
+                helperClass.CallStatic<bool>(
                     "init",
                     context,
                     new EventCallback(),
                     new FileLocationTransformer()
                 );
                 s_Helper = helperClass.CallStatic<AndroidJavaObject>("getShared");
-                if (first)
-                {
-                    s_Helper.Call("setActivity", new ActivityProvider());
-                }
+                s_Helper.Call("setActivity", new ActivityProvider());
 
                 return s_Helper;
             }

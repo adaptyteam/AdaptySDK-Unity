@@ -19,7 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Callbacks and events still arrive on the Unity thread while a flow is on screen, so its `close`
   action reaches the listener in time. Nothing changes for an app on the Activity entry point
   (GameActivity: see Fixed); a project that reached the wrapper's `com.adapty.unity.*` classes
-  itself will no longer find them.
+  itself will no longer find them. If you install from a `.unitypackage`, delete
+  `Assets/AdaptySDK/Plugins/Android/Local` before importing: a `.unitypackage` never removes
+  files, and the old wrapper's AAR there would still go into the build.
 
 ### Fixed
 
@@ -28,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Looper on Unity's thread, which GameActivity does not have. Callbacks now go through the
   thread's native looper, which both entry points poll, so a flow's `close` and Back also reach
   the listener while the flow is on screen.
+- [Android] A permission `respond` or an observer-mode report made off Unity's thread while a
+  flow is on screen reaches the flow at once; it used to wait for the flow to close.
 
 ## [4.1.2] - 2026-09-14
 

@@ -65,14 +65,18 @@ namespace AdaptySDK
 
         /// <summary>
         /// Runs the action on the main thread: inline when the caller is already there, posted
-        /// through the captured <see cref="SynchronizationContext"/> otherwise.
+        /// otherwise - through the captured <see cref="SynchronizationContext"/>, and on Android
+        /// through the thread's native looper.
         /// </summary>
         /// <remarks>
         /// For the requests behind the delegates the SDK hands to app code - the permission
         /// <c>respond</c> and the observer-mode reports - which the app may invoke from any thread.
         /// On Android the bridge is JNI, and a thread Unity did not attach cannot enter it, so the
-        /// hop is what makes "any thread" true off the main one. Without a captured context the
-        /// action runs inline, which is where every call was made before the capture existed.
+        /// hop is what makes "any thread" true off the main one. Both requests answer a flow that is
+        /// on screen, and on Android Unity's player loop is paused under it: a context post would
+        /// wait for the flow to close, the looper does not (see <c>AdaptyAndroidLooper</c>). Without
+        /// a captured context the action runs inline, which is where every call was made before the
+        /// capture existed.
         /// </remarks>
         internal static void RunOnMainThread(Action action)
         {
@@ -83,7 +87,11 @@ namespace AdaptySDK
                 return;
             }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            AdaptySDK.Android.AdaptyAndroidLooper.Post(action);
+#else
             context.Post(_ => action(), null);
+#endif
         }
 
         /// <summary>
