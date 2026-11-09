@@ -105,14 +105,15 @@ namespace AdaptyExample.SdkHarness
         private int m_MaxWorkItemsPerFrame;
 
         // AfterSceneLoad runs once the bootstrap (BeforeSceneLoad) has created the driver, and
-        // before the driver's Start, which is where it would start the stock server.
+        // before the driver's Start, which is where it would start the stock server. There is a
+        // driver only in a harness build: any other player of this project, the demo's included,
+        // is built with Enable In Builds off and gets nothing from here.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Install()
         {
             var driver = RuntimePipelineBootstrap.Instance;
             if (driver == null)
             {
-                Debug.LogError("SdkHarness: no Pipeline runtime driver - Enable In Builds is off in Project Settings > Pipeline > Runtime");
                 return;
             }
 

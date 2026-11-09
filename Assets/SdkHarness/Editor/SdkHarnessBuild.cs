@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using Unity.Pipeline.Commands;
+using Unity.Pipeline.Config;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -58,13 +60,43 @@ namespace AdaptyExample.SdkHarness.Editor
             MainThreadRequired = true, Tags = new[] { "adapty" })]
         public static object Build()
         {
-            // The Pipeline build processor reads this flag, not the build options: with Enable In
-            // Builds on and the flag off it stops an interactive build on a release-build dialog.
-            EditorUserBuildSettings.development = true;
+            var sdkVersion = PlayerSettings.iOS.sdkVersion;
             PlayerSettings.iOS.sdkVersion = iOSSdkVersion.SimulatorSDK;
+
+            try
+            {
+                return BuildHarness(BuildTarget.iOS, Output);
+            }
+            finally
+            {
+                PlayerSettings.iOS.sdkVersion = sdkVersion;
+            }
+        }
+
+        /// <summary>
+        /// Builds the harness scene with what a harness build needs switched on, and puts every
+        /// setting it touched back afterwards.
+        /// </summary>
+        /// <remarks>
+        /// Enable In Builds puts the Pipeline runtime server into any player built while it is on,
+        /// release ones included, so the project keeps it off and only a harness build turns it on.
+        /// The Pipeline build processor reads <c>EditorUserBuildSettings.development</c>, not the
+        /// build options: with Enable In Builds on and the flag off it stops an interactive build on
+        /// a release-build dialog.
+        /// </remarks>
+        private static object BuildHarness(BuildTarget target, string output)
+        {
+            var pipeline = RuntimePipelineConfig.Load()
+                ?? throw new InvalidOperationException("No Pipeline runtime settings in ProjectSettings/Packages/com.unity.pipeline");
+            var enableInBuilds = pipeline.enableInBuilds;
+            var development = EditorUserBuildSettings.development;
+
+            pipeline.enableInBuilds = true;
+            pipeline.Save();
+            EditorUserBuildSettings.development = true;
             s_RigBuild = true;
 
-            UnityEditor.Build.Reporting.BuildReport report;
+            BuildReport report;
 
             try
             {
@@ -72,8 +104,8 @@ namespace AdaptyExample.SdkHarness.Editor
                     new BuildPlayerOptions
                     {
                         scenes = new[] { Scene },
-                        locationPathName = Output,
-                        target = BuildTarget.iOS,
+                        locationPathName = output,
+                        target = target,
                         options = BuildOptions.Development,
                     }
                 );
@@ -81,6 +113,10 @@ namespace AdaptyExample.SdkHarness.Editor
             finally
             {
                 s_RigBuild = false;
+                EditorUserBuildSettings.development = development;
+                pipeline.enableInBuilds = enableInBuilds;
+                pipeline.Save();
+                UnityEngine.Object.DestroyImmediate(pipeline);
             }
 
             return new
@@ -112,37 +148,20 @@ namespace AdaptyExample.SdkHarness.Editor
             MainThreadRequired = true, Tags = new[] { "adapty" })]
         public static object BuildAndroid()
         {
-            EditorUserBuildSettings.development = true;
+            var architectures = PlayerSettings.Android.targetArchitectures;
+            var identifier = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
-            PlayerSettings.SetApplicationIdentifier(UnityEditor.Build.NamedBuildTarget.Android, "com.adaptytest");
-            s_RigBuild = true;
-
-            UnityEditor.Build.Reporting.BuildReport report;
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, "com.adaptytest");
 
             try
             {
-                report = BuildPipeline.BuildPlayer(
-                    new BuildPlayerOptions
-                    {
-                        scenes = new[] { Scene },
-                        locationPathName = "android-harness-build.apk",
-                        target = BuildTarget.Android,
-                        options = BuildOptions.Development,
-                    }
-                );
+                return BuildHarness(BuildTarget.Android, "android-harness-build.apk");
             }
             finally
             {
-                s_RigBuild = false;
+                PlayerSettings.Android.targetArchitectures = architectures;
+                PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, identifier);
             }
-
-            return new
-            {
-                result = report.summary.result.ToString(),
-                errors = report.summary.totalErrors,
-                output = report.summary.outputPath,
-                seconds = (int)report.summary.totalTime.TotalSeconds,
-            };
         }
 
         /// <summary>
