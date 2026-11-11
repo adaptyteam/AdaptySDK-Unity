@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [iOS] AdaptySDK-iOS 4.3.2.
-- [Android] AdaptySDK-Android 4.3.0.
+- [Android] AdaptySDK-Android 4.3.3 (android-sdk 4.3.2, android-ui 4.3.1, crossplatform 4.3.1).
 - [iOS] A price without `currency_code` or `localized_string` is now a decoding error, as the
   contract requires; iOS always sends both.
 - [Android] The package no longer ships a Java wrapper (`io.adapty.internal:unity-wrapper`): the
@@ -72,6 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Looper on Unity's thread, which GameActivity does not have. Callbacks now go through the
   thread's native looper, which both entry points poll, so a flow's `close` and Back also reach
   the listener while the flow is on screen.
+- [Android] Loading a placement no longer outlasts its `loadTimeout` when the backend is slow
+  to answer (AdaptySDK-Android 4.3.3).
 - [Android] A permission `respond` or an observer-mode report made off Unity's thread while a
   flow is on screen reaches the flow at once; it used to wait for the flow to close.
 
