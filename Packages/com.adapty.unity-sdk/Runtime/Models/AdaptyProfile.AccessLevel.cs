@@ -156,6 +156,27 @@ namespace AdaptySDK
             [DataMember(Name = "cancellation_reason")]
             public readonly string CancellationReason;
 
+            [DataMember(Name = "billing_plan_id")]
+            private readonly string _BillingPlan;
+
+            /// <summary>
+            /// The billing plan the subscription was bought on. Null when the store reported no
+            /// plan.
+            /// </summary>
+            public AdaptySubscriptionBillingPlan BillingPlan =>
+                _BillingPlan is null ? null : new AdaptySubscriptionBillingPlan(_BillingPlan);
+
+            /// <summary>
+            /// Where the subscription stands within its commitment. Null unless it was bought on a
+            /// commitment plan such as <see cref="AdaptySubscriptionBillingPlan.Monthly"/>.
+            /// </summary>
+            /// <remarks>
+            /// <see cref="ExpiresAt"/> is the end of the period paid for; the end of the
+            /// commitment is <see cref="SubscriptionCommitmentInfo.ExpiresAt"/>.
+            /// </remarks>
+            [DataMember(Name = "commitment")]
+            public readonly SubscriptionCommitmentInfo CommitmentInfo;
+
             /// <summary>
             /// Whether the purchase was refunded.
             /// </summary>
@@ -184,6 +205,8 @@ namespace AdaptySDK
                        $"{nameof(BillingIssueDetectedAt)}: {BillingIssueDetectedAt}, " +
                        $"{nameof(StartsAt)}: {StartsAt}, " +
                        $"{nameof(CancellationReason)}: {CancellationReason}, " +
+                       $"{nameof(BillingPlan)}: {BillingPlan}, " +
+                       $"{nameof(CommitmentInfo)}: {CommitmentInfo}, " +
                        $"{nameof(IsRefund)}: {IsRefund}";
         }
     }

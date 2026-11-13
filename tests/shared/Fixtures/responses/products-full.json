@@ -24,6 +24,23 @@
       "group_identifier": "group-1",
       "period": { "unit": "month", "number_of_units": 1 },
       "localized_period": "1 month",
+      "pricing_terms": {
+        "billing_plan_id": "up_front",
+        "billing_price": {
+          "amount": 9.99,
+          "currency_code": "USD",
+          "localized_string": "$9.99"
+        },
+        "billing_period": { "unit": "month", "number_of_units": 1 },
+        "commitment_info": {
+          "price": {
+            "amount": 9.99,
+            "currency_code": "USD",
+            "localized_string": "$9.99"
+          },
+          "period": { "unit": "month", "number_of_units": 1 }
+        }
+      },
       "renewal_type": "prepaid",
       "base_plan_id": "base-plan-1",
       "offer": {
@@ -65,6 +82,49 @@
       "currency_code": "USD",
       "currency_symbol": "$",
       "localized_string": "$99.00"
+    }
+  },
+  {
+    "vendor_product_id": "com.adapty.sample.yearly.monthly",
+    "adapty_product_id": "adapty-product-3",
+    "access_level_id": "premium",
+    "product_type": "subscription",
+    "paywall_product_index": 2,
+    "paywall_variation_id": "variation-0001",
+    "paywall_ab_test_name": "winter_test",
+    "paywall_name": "Winter Paywall",
+    "localized_description": "A year of access, paid monthly",
+    "localized_title": "Yearly, monthly payments",
+    "is_family_shareable": false,
+    "price": {
+      "amount": 83.88,
+      "currency_code": "EUR",
+      "currency_symbol": "€",
+      "localized_string": "€83.88"
+    },
+    "subscription": {
+      "group_identifier": "group-1",
+      "period": { "unit": "year", "number_of_units": 1 },
+      "localized_period": "1 year",
+      "pricing_terms": {
+        "billing_plan_id": "monthly",
+        "billing_price": {
+          "amount": 6.99,
+          "currency_code": "EUR",
+          "localized_string": "€6.99"
+        },
+        "billing_period": { "unit": "month", "number_of_units": 1 },
+        "commitment_info": {
+          "price": {
+            "amount": 83.88,
+            "currency_code": "EUR",
+            "localized_string": "€83.88"
+          },
+          "period": { "unit": "year", "number_of_units": 1 }
+        }
+      },
+      "renewal_type": "autorenewable",
+      "base_plan_id": "base-plan-yearly"
     }
   }
 ]

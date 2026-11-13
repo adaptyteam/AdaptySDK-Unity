@@ -28,6 +28,9 @@ and a deployment target of 15.0 or newer: AdaptySDK-iOS 4.x is a `swift-tools-ve
 and an older toolchain refuses to resolve it. Open the exported project as
 **`Unity-iPhone.xcworkspace`** — building `Unity-iPhone.xcodeproj` directly fails at link time with
 `ld: framework 'Pods_UnityFramework' not found`.
+Selling a subscription on a commitment billing plan (monthly payments over a 12-month
+commitment) needs Xcode 26.5 or newer and iOS 26.4 or newer on the device; elsewhere such a
+product can only be bought up front.
 
 ## Why Adapty?
 
@@ -98,10 +101,10 @@ so start new integrations on flows.
 does not sit at the repository root — and the version suffix, which pins the tag:
 
 ```
-https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.1.2
+https://github.com/adaptyteam/AdaptySDK-Unity.git?path=/Packages/com.adapty.unity-sdk#4.3.0
 ```
 
-Drop `#4.1.2` and Package Manager resolves the default branch instead, which moves with every
+Drop `#4.3.0` and Package Manager resolves the default branch instead, which moves with every
 release — you get whatever was merged into `main` last, and it changes under you without notice.
 Pin the tag.
 

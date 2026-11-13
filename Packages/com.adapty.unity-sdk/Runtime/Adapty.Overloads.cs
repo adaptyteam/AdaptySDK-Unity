@@ -20,6 +20,30 @@ namespace AdaptySDK
         ) => GetFlowForDefaultAudience(placementId, null, completionHandler);
 
         /// <summary>
+        /// Loads the flows of the given placements into the cache ahead of time, with the native
+        /// default timeout of 5 seconds.
+        /// </summary>
+        /// <remarks>
+        /// See <see cref="PreloadFlows(IReadOnlyList{string}, TimeSpan?, Action{AdaptyError})"/>.
+        /// </remarks>
+        /// <param name="placementIds">The identifiers of the placements to preload.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void PreloadFlows(
+            IReadOnlyList<string> placementIds,
+            Action<AdaptyError> completionHandler
+        ) => PreloadFlows(placementIds, null, completionHandler);
+
+        /// <summary>
+        /// Shows every store message held back by <see cref="AdaptyStoreMessagesHandling.Manual"/>.
+        /// </summary>
+        /// <remarks>
+        /// See <see cref="ShowStoreMessages(IReadOnlyList{AdaptyStoreMessageType}, Action{AdaptyError})"/>.
+        /// </remarks>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void ShowStoreMessages(Action<AdaptyError> completionHandler) =>
+            ShowStoreMessages(null, completionHandler);
+
+        /// <summary>
         /// Makes a purchase for the specified product.
         /// </summary>
         /// <remarks>
@@ -42,12 +66,27 @@ namespace AdaptySDK
         /// After doing this, you'll be able to see metrics in the Adapty Dashboard.
         /// Read more at <see href="https://adapty.io/docs/observer-vs-full-mode">Adapty Documentation</see>
         /// </remarks>
-        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the transaction identifier from <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see>. For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
+        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the identifier of the StoreKit transaction: <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> (StoreKit 1) or <see href="https://developer.apple.com/documentation/storekit/transaction">Transaction</see> (StoreKit 2). For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
         /// <param name="completionHandler">The action that will be called with the result.</param>
         public static void ReportTransaction(
             string transactionId,
             Action<AdaptyError> completionHandler
-        ) => ReportTransaction(transactionId, null, completionHandler);
+        ) => ReportTransaction(transactionId, null, null, completionHandler);
+
+        /// <summary>
+        /// Reports a transaction to Adapty in Observer mode, assigning it to a variation.
+        /// </summary>
+        /// <remarks>
+        /// See <see cref="ReportTransaction(string, string, string, Action{AdaptyError})"/>.
+        /// </remarks>
+        /// <param name="transactionId">A string identifier of your purchased transaction. For iOS, use the identifier of the StoreKit transaction: <see href="https://developer.apple.com/documentation/storekit/skpaymenttransaction">SKPaymentTransaction</see> (StoreKit 1) or <see href="https://developer.apple.com/documentation/storekit/transaction">Transaction</see> (StoreKit 2). For Android, use the order ID from the purchase object (`purchase.getOrderId()`).</param>
+        /// <param name="variationId">An optional string identifier of the variation. You can get it using the <see cref="AdaptyFlow.VariationId"/> property of <see cref="AdaptyFlow"/>.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void ReportTransaction(
+            string transactionId,
+            string variationId,
+            Action<AdaptyError> completionHandler
+        ) => ReportTransaction(transactionId, variationId, null, completionHandler);
 
         /// <summary>
         /// Updates external attribution data for the profile to track user acquisition sources.
@@ -124,5 +163,18 @@ namespace AdaptySDK
             Action<AdaptyUIFlowView, AdaptyError> completionHandler
         ) => CreateFlowView(flow, null, completionHandler);
 
+        /// <summary>
+        /// Dismisses the flow view and releases it.
+        /// </summary>
+        /// <remarks>
+        /// A released view cannot be presented again. To keep it for another presentation, use
+        /// <see cref="DismissFlowView(AdaptyUIFlowView, bool, Action{AdaptyError})"/>.
+        /// </remarks>
+        /// <param name="view">An <see cref="AdaptyUIFlowView"/> object representing the view to dismiss.</param>
+        /// <param name="completionHandler">The action that will be called with the result.</param>
+        public static void DismissFlowView(
+            AdaptyUIFlowView view,
+            Action<AdaptyError> completionHandler
+        ) => DismissFlowView(view, true, completionHandler);
     }
 }

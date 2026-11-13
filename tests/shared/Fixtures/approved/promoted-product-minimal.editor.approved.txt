@@ -13,5 +13,6 @@
   "RegionCode": null,
   "Subscription": null,
   "VendorProductId": "com.adapty.sample.lifetime",
-  "_PayloadData": null
+  "_PayloadData": null,
+  "_PurchaseIntentId": null
 }

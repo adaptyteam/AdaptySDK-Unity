@@ -34,6 +34,7 @@ namespace AdaptySDK.NextTests
         [TestCase("onboarding-full", typeof(AdaptyOnboarding))]
         [TestCase("onboarding-minimal", typeof(AdaptyOnboarding))]
         [TestCase("purchase-result-success", typeof(AdaptyPurchaseResult))]
+        [TestCase("promoted-product-full", typeof(AdaptyPromotedProduct))]
         public void RequiredKeysAreEnforced(string fixture, System.Type type)
         {
             var json = Snapshots.LoadResponse(fixture);

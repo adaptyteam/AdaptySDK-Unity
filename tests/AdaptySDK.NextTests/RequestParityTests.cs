@@ -157,6 +157,7 @@ namespace AdaptySDK.NextTests
 
         [TestCase("products-full", 0, "request-product-with-offer")]
         [TestCase("products-full", 1, "request-product-plain")]
+        [TestCase("products-full", 2, "request-product-plan-only")]
         public void PaywallProduct(string fixture, int index, string snapshot)
         {
             var products = AdaptyJson.Deserialize<System.Collections.Generic.IList<AdaptyPaywallProduct>>(

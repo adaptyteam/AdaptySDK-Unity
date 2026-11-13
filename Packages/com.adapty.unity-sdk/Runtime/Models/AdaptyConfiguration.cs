@@ -28,6 +28,8 @@ namespace AdaptySDK
         private readonly bool? AdaptyAttributionEnabled;
         [DataMember(Name = "clear_data_on_backup")]
         private readonly bool? AppleClearDataOnBackup;
+        [DataMember(Name = "store_messages_handling")]
+        private readonly AdaptyStoreMessagesHandling? StoreMessagesHandling;
         [DataMember(Name = "server_cluster")]
         private readonly AdaptyServerCluster? ServerCluster;
         [DataMember(Name = "backend_proxy_host")]
@@ -66,6 +68,7 @@ namespace AdaptySDK
             + $"{nameof(IpAddressCollectionDisabled)}: {IpAddressCollectionDisabled}, "
             + $"{nameof(AdaptyAttributionEnabled)}: {AdaptyAttributionEnabled}, "
             + $"{nameof(AppleClearDataOnBackup)}: {AppleClearDataOnBackup}, "
+            + $"{nameof(StoreMessagesHandling)}: {StoreMessagesHandling}, "
             + $"{nameof(ServerCluster)}: {ServerCluster}, "
             + $"{nameof(BackendProxyHost)}: {BackendProxyHost}, "
             + $"{nameof(BackendProxyPort)}: {BackendProxyPort}, "
