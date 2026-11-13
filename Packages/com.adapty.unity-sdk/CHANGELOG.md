@@ -8,74 +8,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
-- **The minimum supported Unity version is raised from 2022.3 to 6.0 (6000.0)**, declared as
-  `unity` in `package.json`. The package will rely on UI Toolkit runtime bindings (2023.2+) for
-  its Editor-side mock UI; projects on 2022.3 stay on 4.1.x. The `.unitypackage` install path —
-  import into a clean project, `Adapty SDK > Install Dependencies`, compile — was verified on
-  6000.0.74f1.
-- **Removed `Adapty.GetLogLevel`.** The native Android SDK has no such operation, so on Android it
-  never returned a level, and no other Adapty cross-platform SDK exposes it. The level is the one
-  the app sets: `AdaptyConfiguration.Builder.LogLevel` or `Adapty.SetLogLevel`.
+- The minimum supported Unity version is now 6.0 (6000.0). Projects on 2022.3 stay on 4.1.x.
+- Removed `Adapty.GetLogLevel`. The level is the one you set with
+  `AdaptyConfiguration.Builder.LogLevel` or `Adapty.SetLogLevel`.
+- [Android] The Java wrapper (`com.adapty.unity.*`) is no longer shipped. If you install from a
+  `.unitypackage`, delete `Assets/AdaptySDK/Plugins/Android/Local` before importing.
 
 ### Added
 
-- [iOS] Commitment subscriptions. `AdaptySubscription.PricingTerms`
-  (`AdaptySubscriptionPricingTerms`) carries the billing plan (`AdaptySubscriptionBillingPlan`:
-  `UpFront`, `Monthly`), the price and period of each payment, and the commitment they add up to.
-  A product goes back to the native side with its plan, so `MakePurchase` buys it on the plan it
-  was offered on. A plan other than up front needs iOS 26.4+ and an app built with Xcode 26.5+;
-  anywhere else the product comes with its up-front terms and is bought up front. On iOS the
-  `Price` of a commitment product and its subscription `Period` are the totals for the whole
-  commitment; one payment is `PricingTerms.BillingPrice`.
-- `AdaptyProfile.AccessLevel` and `AdaptyProfile.Subscription` gain `BillingPlan` and
-  `CommitmentInfo` (`AdaptyProfile.SubscriptionCommitmentInfo`: the current billing period, how
-  many there are, and when the commitment ends). A subscription always has a plan,
-  `UpFront` when the store reports none.
+- [iOS] Commitment subscriptions: `AdaptySubscription.PricingTerms` describes the billing plan,
+  each payment and the commitment, and `MakePurchase` buys on the plan the product was offered on.
+  Plans other than up front need iOS 26.4+ and Xcode 26.5+. The `Price` and `Period` of a
+  commitment product are totals for the whole commitment; one payment is
+  `PricingTerms.BillingPrice`.
+- `BillingPlan` and `CommitmentInfo` on `AdaptyProfile.AccessLevel` and `AdaptyProfile.Subscription`.
 - `AdaptyFlow.VariationName`.
-- A dismissed flow view can be kept: `AdaptyUI.DismissFlowView(view, destroy: false, ...)` or
-  `AdaptyUIFlowView.Dismiss(false, ...)` hides it, `Present` shows it again where it was, and
-  `AdaptyUI.DestroyFlowView` / `AdaptyUIFlowView.Destroy` releases it. `Dismiss` without the flag
-  releases the view, as before.
-- `Adapty.PreloadFlows` and `Adapty.PreloadFlowsForDefaultAudience` load the flows of several
-  placements into the cache, for a later `GetFlow` with a cache-first fetch policy.
-- Store messages can be held and shown when the app chooses:
-  `AdaptyConfiguration.Builder.SetStoreMessagesHandling(AdaptyStoreMessagesHandling.Manual)`, then
-  `Adapty.ShowStoreMessages`, on iOS optionally filtered by `AdaptyStoreMessageType`.
-  `Adapty.GetPendingStoreMessageTypes` lists what is held on iOS and reports a null list on
-  Android. On iOS all of it needs iOS 16+.
+- A dismissed flow view can be kept: `AdaptyUI.DismissFlowView(view, destroy: false)` hides it,
+  `Present` shows it again, `AdaptyUI.DestroyFlowView` releases it.
+- `Adapty.PreloadFlows` and `Adapty.PreloadFlowsForDefaultAudience`.
+- Store messages can be held and shown later:
+  `AdaptyConfiguration.Builder.SetStoreMessagesHandling(AdaptyStoreMessagesHandling.Manual)` and
+  `Adapty.ShowStoreMessages`. `Adapty.GetPendingStoreMessageTypes` is iOS only (iOS 16+).
 - [iOS] `AdaptyErrorCode.BillingPlanUnavailable` (1060), `OperationInProgress` (3201) and
   `ResolverFailure` (3202).
-- [iOS] `Adapty.ReportTransaction(transactionId, variationId, appleJWSTransaction, ...)`: in
-  Observer mode, pass the JWS of the reported StoreKit 2 transaction when your purchase library
-  provides it, with a null `variationId` when there is none. It is sent as is, an empty string
-  is not sent, and nothing is sent on Android.
+- [iOS] `Adapty.ReportTransaction` overload that takes the StoreKit 2 JWS, for Observer mode.
 
 ### Changed
 
 - [iOS] AdaptySDK-iOS 4.3.2.
-- [Android] AdaptySDK-Android 4.3.3 (android-sdk 4.3.2, android-ui 4.3.1, crossplatform 4.3.1).
-- [iOS] A price without `currency_code` or `localized_string` is now a decoding error, as the
-  contract requires; iOS always sends both.
-- [Android] The package no longer ships a Java wrapper (`io.adapty.internal:unity-wrapper`): the
-  bridge calls `CrossplatformHelper` from `io.adapty.internal:crossplatform` directly through JNI.
-  Callbacks and events still arrive on the Unity thread while a flow is on screen, so its `close`
-  action reaches the listener in time. Nothing changes for an app on the Activity entry point
-  (GameActivity: see Fixed); a project that reached the wrapper's `com.adapty.unity.*` classes
-  itself will no longer find them. If you install from a `.unitypackage`, delete
-  `Assets/AdaptySDK/Plugins/Android/Local` before importing: a `.unitypackage` never removes
-  files, and the old wrapper's AAR there would still go into the build.
+- [Android] AdaptySDK-Android 4.3.3.
 
 ### Fixed
 
-- [Android] With GameActivity as the application entry point — the default for a new Unity 6
-  project — no completion handler or event reached C# in 4.1.0–4.1.2: the bridge expected a Java
-  Looper on Unity's thread, which GameActivity does not have. Callbacks now go through the
-  thread's native looper, which both entry points poll, so a flow's `close` and Back also reach
-  the listener while the flow is on screen.
-- [Android] Loading a placement no longer outlasts its `loadTimeout` when the backend is slow
-  to answer (AdaptySDK-Android 4.3.3).
-- [Android] A permission `respond` or an observer-mode report made off Unity's thread while a
-  flow is on screen reaches the flow at once; it used to wait for the flow to close.
+- [Android] With GameActivity as the entry point (the default for new Unity 6 projects),
+  completion handlers and events never reached C# in 4.1.0–4.1.2.
+- [Android] Loading a placement could outlast its `loadTimeout` on a slow backend.
+- [Android] A permission `respond` or an observer-mode report made off Unity's thread while a flow
+  was on screen waited until the flow closed.
 
 ## [4.1.2] - 2026-09-14
 
