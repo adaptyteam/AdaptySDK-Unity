@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 #if UNITY_IOS && !UNITY_EDITOR
 using _AdaptyCallbackAction = AdaptySDK.iOS.AdaptyIOSCallbackAction;
 #elif UNITY_ANDROID && !UNITY_EDITOR
-using _AdaptyCallbackAction = AdaptySDK.Android.AdaptyAndroidCallbackAction;
+using _AdaptyCallbackAction = AdaptySDK.Android.AdaptyAndroid;
 #else
 using _AdaptyCallbackAction = AdaptySDK.Noop.AdaptyNoopCallbackAction;
 #endif
@@ -46,10 +46,11 @@ namespace AdaptySDK
         /// </summary>
         /// <remarks>
         /// Nothing native reaches C# until this has run: on iOS the bridge drops a completion while
-        /// its delegate is null, and on Android the wrapper has no handler to post it to. It used to
-        /// happen inside the listener setters, which made every completion handler depend on a
+        /// its delegate is null, and on Android the helper is not initialised. It used to happen
+        /// inside the listener setters, which made every completion handler depend on a
         /// subscription that is optional and unrelated. The stage covers the whole MonoBehaviour
-        /// lifecycle, and it is what binds Android's handler to the scripting thread.
+        /// lifecycle and runs on the scripting thread, whose looper Android's bridge registers on.
+        /// The context captured here serves only <see cref="RunOnMainThread"/>.
         /// </remarks>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         internal static void InitializeTransport()
@@ -64,14 +65,18 @@ namespace AdaptySDK
 
         /// <summary>
         /// Runs the action on the main thread: inline when the caller is already there, posted
-        /// through the captured <see cref="SynchronizationContext"/> otherwise.
+        /// otherwise - through the captured <see cref="SynchronizationContext"/>, and on Android
+        /// through the thread's native looper.
         /// </summary>
         /// <remarks>
         /// For the requests behind the delegates the SDK hands to app code - the permission
         /// <c>respond</c> and the observer-mode reports - which the app may invoke from any thread.
         /// On Android the bridge is JNI, and a thread Unity did not attach cannot enter it, so the
-        /// hop is what makes "any thread" true off the main one. Without a captured context the
-        /// action runs inline, which is where every call was made before the capture existed.
+        /// hop is what makes "any thread" true off the main one. Both requests answer a flow that is
+        /// on screen, and on Android Unity's player loop is paused under it: a context post would
+        /// wait for the flow to close, the looper does not (see <c>AdaptyAndroidLooper</c>). Without
+        /// a captured context the action runs inline, which is where every call was made before the
+        /// capture existed.
         /// </remarks>
         internal static void RunOnMainThread(Action action)
         {
@@ -82,7 +87,11 @@ namespace AdaptySDK
                 return;
             }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            AdaptySDK.Android.AdaptyAndroidLooper.Post(action);
+#else
             context.Post(_ => action(), null);
+#endif
         }
 
         /// <summary>

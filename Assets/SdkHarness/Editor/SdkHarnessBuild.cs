@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using Unity.Pipeline.Commands;
+using Unity.Pipeline.Config;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -58,10 +60,53 @@ namespace AdaptyExample.SdkHarness.Editor
             MainThreadRequired = true, Tags = new[] { "adapty" })]
         public static object Build()
         {
+            // AddLocalStoreKit is compiled for the platform the Editor is on, so from any other one
+            // the build would come out without the local StoreKit and purchases would hit the sandbox.
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.iOS)
+            {
+                throw new InvalidOperationException(
+                    "harness_build needs the Editor switched to iOS (File > Build Profiles); it is on "
+                        + EditorUserBuildSettings.activeBuildTarget
+                );
+            }
+
+            var sdkVersion = PlayerSettings.iOS.sdkVersion;
             PlayerSettings.iOS.sdkVersion = iOSSdkVersion.SimulatorSDK;
+
+            try
+            {
+                return BuildHarness(BuildTarget.iOS, Output);
+            }
+            finally
+            {
+                PlayerSettings.iOS.sdkVersion = sdkVersion;
+            }
+        }
+
+        /// <summary>
+        /// Builds the harness scene with what a harness build needs switched on, and puts every
+        /// setting it touched back afterwards.
+        /// </summary>
+        /// <remarks>
+        /// Enable In Builds puts the Pipeline runtime server into any player built while it is on,
+        /// release ones included, so the project keeps it off and only a harness build turns it on.
+        /// The Pipeline build processor reads <c>EditorUserBuildSettings.development</c>, not the
+        /// build options: with Enable In Builds on and the flag off it stops an interactive build on
+        /// a release-build dialog.
+        /// </remarks>
+        private static object BuildHarness(BuildTarget target, string output)
+        {
+            var pipeline = RuntimePipelineConfig.Load()
+                ?? throw new InvalidOperationException("No Pipeline runtime settings in ProjectSettings/Packages/com.unity.pipeline");
+            var enableInBuilds = pipeline.enableInBuilds;
+            var development = EditorUserBuildSettings.development;
+
+            pipeline.enableInBuilds = true;
+            pipeline.Save();
+            EditorUserBuildSettings.development = true;
             s_RigBuild = true;
 
-            UnityEditor.Build.Reporting.BuildReport report;
+            BuildReport report;
 
             try
             {
@@ -69,8 +114,8 @@ namespace AdaptyExample.SdkHarness.Editor
                     new BuildPlayerOptions
                     {
                         scenes = new[] { Scene },
-                        locationPathName = Output,
-                        target = BuildTarget.iOS,
+                        locationPathName = output,
+                        target = target,
                         options = BuildOptions.Development,
                     }
                 );
@@ -78,6 +123,10 @@ namespace AdaptyExample.SdkHarness.Editor
             finally
             {
                 s_RigBuild = false;
+                EditorUserBuildSettings.development = development;
+                pipeline.enableInBuilds = enableInBuilds;
+                pipeline.Save();
+                UnityEngine.Object.DestroyImmediate(pipeline);
             }
 
             return new
@@ -98,6 +147,30 @@ namespace AdaptyExample.SdkHarness.Editor
                 var path = Path.GetFullPath("Temp/SdkHarness.link.xml");
                 File.WriteAllText(path, s_RigBuild ? LinkXml : "<linker />");
                 return path;
+            }
+        }
+
+        /// <summary>
+        /// The same scene for an Android device: a Development build, so the player is debuggable
+        /// and <c>run-as</c> can read the runtime descriptor <c>AndroidHarnessServer</c> writes.
+        /// </summary>
+        [CliCommand("harness_build_android", "Build the SDK harness scene for an Android device into android-harness-build.apk (Development, ARM64). Submit with --detach, then unity job wait.",
+            MainThreadRequired = true, Tags = new[] { "adapty" })]
+        public static object BuildAndroid()
+        {
+            var architectures = PlayerSettings.Android.targetArchitectures;
+            var identifier = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android);
+            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, "com.adaptytest");
+
+            try
+            {
+                return BuildHarness(BuildTarget.Android, "android-harness-build.apk");
+            }
+            finally
+            {
+                PlayerSettings.Android.targetArchitectures = architectures;
+                PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, identifier);
             }
         }
 
