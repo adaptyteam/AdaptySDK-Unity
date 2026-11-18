@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `AdaptyConfiguration.Builder.LogLevel` or `Adapty.SetLogLevel`.
 - [Android] The Java wrapper (`com.adapty.unity.*`) is no longer shipped. If you install from a
   `.unitypackage`, delete `Assets/AdaptySDK/Plugins/Android/Local` before importing.
+- [Android] Google Play in-app messages, such as payment decline notices, are now shown
+  automatically each time an activity starts. To keep the previous behavior, activate with
+  `SetStoreMessagesHandling(AdaptyStoreMessagesHandling.Manual)`; on iOS 16+ that also holds
+  App Store messages until you call `Adapty.ShowStoreMessages`.
+- [Android] Whole-number parameters of `FlowViewDidReceiveAnalyticEvent` arrive as `long` instead
+  of `double`.
 
 ### Added
 
@@ -28,15 +34,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Adapty.PreloadFlows` and `Adapty.PreloadFlowsForDefaultAudience`.
 - Store messages can be held and shown later:
   `AdaptyConfiguration.Builder.SetStoreMessagesHandling(AdaptyStoreMessagesHandling.Manual)` and
-  `Adapty.ShowStoreMessages`. `Adapty.GetPendingStoreMessageTypes` is iOS only (iOS 16+).
+  `Adapty.ShowStoreMessages`. On iOS 16+, `Adapty.GetPendingStoreMessageTypes` lists the held
+  messages and `ShowStoreMessages(iosFilter, ...)` shows only the given types.
 - [iOS] `AdaptyErrorCode.BillingPlanUnavailable` (1060), `OperationInProgress` (3201) and
   `ResolverFailure` (3202).
 - [iOS] `Adapty.ReportTransaction` overload that takes the StoreKit 2 JWS, for Observer mode.
+- Flows: product texts can show the installment price and period of a commitment plan.
 
 ### Changed
 
 - [iOS] AdaptySDK-iOS 4.3.2.
-- [Android] AdaptySDK-Android 4.3.3.
+- [Android] AdaptySDK-Android 4.3.4.
 
 ### Fixed
 
@@ -45,6 +53,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Android] Loading a placement could outlast its `loadTimeout` on a slow backend.
 - [Android] A permission `respond` or an observer-mode report made off Unity's thread while a flow
   was on screen waited until the flow closed.
+- [Android] `Adapty.ReportTransaction` in Observer mode could fail to link the transaction to the
+  given `variationId`.
+- [Android] `Adapty.ReportTransaction` failed with `NoPurchasesToRestore` when there was nothing
+  to restore.
+- [iOS] Crashes while choosing a flow's A/B test variation, in a flow showing the same product on
+  several screens, in a flow date picker with an out-of-range value, and in a flow script
+  producing `NaN`.
+- Flows: rendering fixes on both platforms.
 
 ## [4.1.2] - 2026-09-14
 
