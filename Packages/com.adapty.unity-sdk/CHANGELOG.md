@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [iOS] AdaptySDK-iOS 4.3.2.
-- [Android] AdaptySDK-Android 4.3.3.
+- [Android] AdaptySDK-Android 4.3.4.
 
 ### Fixed
 
@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Android] Loading a placement could outlast its `loadTimeout` on a slow backend.
 - [Android] A permission `respond` or an observer-mode report made off Unity's thread while a flow
   was on screen waited until the flow closed.
+- [Android] `Adapty.ReportTransaction` in Observer mode could fail to link the transaction to the
+  given `variationId`.
 
 ## [4.1.2] - 2026-09-14
 
